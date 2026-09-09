@@ -2,17 +2,19 @@
 
 ## Layout
 
-This repo uses a single-context layout: `CONTEXT.md` at the repo root for domain vocabulary, and `docs/adr/` for architecture decision records.
+This repo uses a multi-context layout. Root `CONTEXT-MAP.md` identifies the contexts, links to their glossaries, and describes their relationships. Context documents live under `docs/contexts/<context>/CONTEXT.md`.
+
+System-wide architecture decisions belong in `docs/adr/`; context-specific decisions belong in `docs/contexts/<context>/docs/adr/`. Create ADRs when a decision warrants one.
 
 ## Before exploring
 
-Read root `CONTEXT.md` and the ADRs in `docs/adr/` that touch the area being explored.
+Read `CONTEXT-MAP.md`, then each `CONTEXT.md` relevant to the topic. Read applicable system-wide and context-specific ADRs. For changes spanning contexts, read every affected glossary.
 
-If these files do not exist, proceed silently. The domain-modeling skill creates them lazily when terms or decisions are resolved.
+If a referenced glossary or ADR directory does not yet exist, proceed silently. The domain-modeling skill creates these lazily when terms or decisions are resolved.
 
 ## Use the glossary's vocabulary
 
-Use terms defined in `CONTEXT.md` when naming domain concepts in issues, proposals, hypotheses, and tests. If a needed concept is absent, reconsider the term or note the gap for domain modeling.
+Use terms defined in the relevant `CONTEXT.md` when naming domain concepts in issues, proposals, hypotheses, and tests. Keep glossaries limited to domain terms; specifications and implementation decisions belong in their own documents. If a needed concept is absent, reconsider the term or note the gap for domain modeling.
 
 ## Flag ADR conflicts
 

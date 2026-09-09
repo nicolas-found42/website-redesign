@@ -16,4 +16,4 @@ Use the five default triage labels. Before triaging or changing issue labels, re
 
 ### Domain docs
 
-Use a single-context layout: root `CONTEXT.md` and `docs/adr/`. Before exploring the codebase, read `docs/agents/domain.md`.
+Use a multi-context layout: root `CONTEXT-MAP.md` points to domain glossaries under `docs/contexts/`. Before exploring the codebase, read `docs/agents/domain.md`.
