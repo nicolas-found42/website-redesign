@@ -1,5 +1,7 @@
 # Found42 live-site audit — September 9, 2026
 
+> Historical baseline. The [deep site audit](../docs/contexts/SITE-AUDIT.md) expands this coverage with toolkit assets, article contents, policy pages, assessment entry, and additional public routes.
+
 This audit informed the revised website specification. Public pages were read with Firecrawl and the homepage was inspected in a rendered browser at desktop and mobile sizes. No production forms were submitted, gated resources retrieved, accounts changed, or public pages edited.
 
 ## Findings that change the plan

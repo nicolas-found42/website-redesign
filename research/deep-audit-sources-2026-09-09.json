@@ -1,0 +1,228 @@
+{
+  "checkedDate": "2026-09-09",
+  "method": "Live page retrieval (cache disabled); browser checks recorded separately in audit. Status describes retrieval, not fulfillment. Embedded metadata can differ from parent-page metadata.",
+  "sources": [
+    {
+      "key": "home",
+      "requestedUrl": "https://www.found42.com",
+      "finalUrl": "https://www.found42.com/",
+      "statusCode": 200,
+      "title": "Found42 | Unlock AI-Driven Growth Today",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "about",
+      "requestedUrl": "https://www.found42.com/about",
+      "finalUrl": "https://www.found42.com/about",
+      "statusCode": 200,
+      "title": "About | Enhance AI Skills Today — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "contact",
+      "requestedUrl": "https://www.found42.com/contact",
+      "finalUrl": "https://www.found42.com/contact",
+      "statusCode": 200,
+      "title": "Contact | Get in Touch Today — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "industryprompts",
+      "requestedUrl": "https://www.found42.com/industryprompts",
+      "finalUrl": "https://www.found42.com/industryprompts",
+      "statusCode": 200,
+      "title": "Industry-Specific Prompt Packs — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "ai-failure-modes-playbook",
+      "requestedUrl": "https://www.found42.com/ai-failure-modes-playbook",
+      "finalUrl": "https://www.found42.com/ai-failure-modes-playbook",
+      "statusCode": 200,
+      "title": "AI Failure Modes Playbook — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "blog",
+      "requestedUrl": "https://www.found42.com/blog",
+      "finalUrl": "https://www.found42.com/blog",
+      "statusCode": 200,
+      "title": "Blog 3 — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "appointments",
+      "requestedUrl": "https://www.found42.com/appointments",
+      "finalUrl": "https://www.found42.com/appointments",
+      "statusCode": 404,
+      "title": "Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "clevelai",
+      "requestedUrl": "https://www.found42.com/clevelai",
+      "finalUrl": "https://www.found42.com/clevelai",
+      "statusCode": 200,
+      "title": "Found42 | Unlock AI-Driven Growth Today",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "toolkit",
+      "requestedUrl": "https://www.found42.com/toolkit",
+      "finalUrl": "https://www.found42.com/toolkit",
+      "statusCode": 200,
+      "title": "C-Level AI Toolkit — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "mediaassets",
+      "requestedUrl": "https://www.found42.com/mediaassets",
+      "finalUrl": "https://www.found42.com/mediaassets",
+      "statusCode": 200,
+      "title": "mediaassets — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "member-site-homepage-2",
+      "requestedUrl": "https://www.found42.com/member-site-homepage-2",
+      "finalUrl": "https://www.found42.com/member-site-homepage-2",
+      "statusCode": 200,
+      "title": "General 1 — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "new-page-2",
+      "requestedUrl": "https://www.found42.com/new-page-2",
+      "finalUrl": "https://www.found42.com/new-page-2",
+      "statusCode": 200,
+      "title": "New Page — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "privacy-policy",
+      "requestedUrl": "https://www.found42.com/privacy-policy",
+      "finalUrl": "https://www.found42.com/privacy-policy",
+      "statusCode": 200,
+      "title": "Privacy Policy | Review Privacy & Secure Data Now — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "terms-of-use",
+      "requestedUrl": "https://www.found42.com/terms-of-use",
+      "finalUrl": "https://www.found42.com/terms-of-use",
+      "statusCode": 200,
+      "title": "Terms of Use | Understand Your Rights – Act Now — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "blog/csuite-ai-series-how-to-use-ai-for-culturally-sensitive-negotiations",
+      "requestedUrl": "https://www.found42.com/blog/csuite-ai-series-how-to-use-ai-for-culturally-sensitive-negotiations",
+      "finalUrl": "https://www.found42.com/blog/csuite-ai-series-how-to-use-ai-for-culturally-sensitive-negotiations",
+      "statusCode": 200,
+      "title": "CSuite AI: Using AI for Culturally-Sensitive Negotiations (Part 1) — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "blog/blog-post-title-three-ecr97",
+      "requestedUrl": "https://www.found42.com/blog/blog-post-title-three-ecr97",
+      "finalUrl": "https://www.found42.com/blog/blog-post-title-three-ecr97",
+      "statusCode": 200,
+      "title": "What are AI Growth Platforms? — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "blog/choosing-to-inspire",
+      "requestedUrl": "https://www.found42.com/blog/choosing-to-inspire",
+      "finalUrl": "https://www.found42.com/blog/choosing-to-inspire",
+      "statusCode": 200,
+      "title": "Think Like a CxO with AI Agents and Workflows — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "blog/blog-post-title-two-cep4t",
+      "requestedUrl": "https://www.found42.com/blog/blog-post-title-two-cep4t",
+      "finalUrl": "https://www.found42.com/blog/blog-post-title-two-cep4t",
+      "statusCode": 200,
+      "title": "Introducing Found42 — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "scorecard",
+      "requestedUrl": "https://found42.io/",
+      "finalUrl": "https://found42.scoreapp.com/",
+      "statusCode": 200,
+      "title": "AI Readiness Assessment",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "key": "course",
+      "requestedUrl": "https://clevelai.found42.com/",
+      "finalUrl": "https://clevelai.found42.com/inactive",
+      "statusCode": 402,
+      "title": "Account inactive (402)",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "key": "exercise-1",
+      "requestedUrl": "https://www.found42.com/s/1-MA-Mock-Business-Case_-LexyAI-Acquisition-of-DocuWise-AI.pdf",
+      "finalUrl": "https://static1.squarespace.com/static/68488bfd173fc83bd35b3d01/t/68f0d473fda8f46e54a0ab90/1760613491271/%281%29+%F0%9F%93%8A+M%26A+Mock+Business+Case_+LexyAI+Acquisition+of+DocuWise+AI.pdf",
+      "statusCode": 200,
+      "title": "(1) 📊 M&A Mock Business Case: LexAI Acquisition of DocuWise AI",
+      "contentType": "application/pdf"
+    },
+    {
+      "key": "exercise-2",
+      "requestedUrl": "https://www.found42.com/s/CEOAlexisMyersDocuWyzeAIpdfcopy.pdf",
+      "finalUrl": "https://static1.squarespace.com/static/68488bfd173fc83bd35b3d01/t/68f0e3882059c314831734a3/1760617352389/CEO%2BAlexis%2BMyers%2BDocuWyze%2BAI.pdf%2Bcopy.pdf",
+      "statusCode": 200,
+      "contentType": "application/pdf"
+    },
+    {
+      "key": "exercise-3",
+      "requestedUrl": "https://www.found42.com/s/CFO-James-Briggs-DocuWyze-AIpdf.pdf",
+      "finalUrl": "https://static1.squarespace.com/static/68488bfd173fc83bd35b3d01/t/68f0e2ef7c96b27f354ba08a/1760617199509/CFO+James+Briggs+DocuWyze+AI.pdf.pdf",
+      "statusCode": 200,
+      "contentType": "application/pdf"
+    },
+    {
+      "key": "free-tools",
+      "requestedUrl": "https://www.found42.com/free-tools",
+      "finalUrl": "https://www.found42.com/industryprompts",
+      "statusCode": 200,
+      "title": "Industry-Specific Prompt Packs — Found42",
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "key": "gpt-1",
+      "requestedUrl": "https://chatgpt.com/g/g-68b13edcd36c819198f8c75baa0056bc-personalization-assistant-gpt",
+      "finalUrl": "https://chatgpt.com/g/g-68b13edcd36c819198f8c75baa0056bc-c-level-ai-personalization-gpt",
+      "statusCode": 200,
+      "title": "ChatGPT - C-Level AI Personalization GPT",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "key": "gpt-2",
+      "requestedUrl": "https://chatgpt.com/g/g-68b09c8e00748191ae27ea0d8c4ef192-c-level-ai-board-of-advisors",
+      "finalUrl": "https://chatgpt.com/g/g-68b09c8e00748191ae27ea0d8c4ef192-c-level-ai-board-of-advisors",
+      "statusCode": 200,
+      "title": "ChatGPT - C-Level AI Board of Advisors",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "key": "gpt-3",
+      "requestedUrl": "https://chatgpt.com/g/g-689e10510cf08191b5adce9746d0460c-c-level-ai-negotiator-gpt",
+      "finalUrl": "https://chatgpt.com/g/g-689e10510cf08191b5adce9746d0460c-c-level-ai-negotiator-gpt",
+      "statusCode": 200,
+      "title": "ChatGPT - C-Level AI - Negotiator GPT",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "key": "gpt-4",
+      "requestedUrl": "https://chatgpt.com/g/g-684867f3faa4819184d8bf92afcb24dc-vossgpt-v2",
+      "finalUrl": "https://chatgpt.com/g/g-684867f3faa4819184d8bf92afcb24dc-vossgpt-culturally-responsive-negotiation-expert",
+      "statusCode": 200,
+      "title": "ChatGPT - VossGPT - Culturally Responsive Negotiation Expert",
+      "contentType": "text/html; charset=utf-8"
+    }
+  ]
+}
