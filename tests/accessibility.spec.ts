@@ -36,7 +36,10 @@ test("reduced-motion visitors can operate the workflow without animated movement
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const automate = page.getByRole("button", { name: "02 Automate" });
+  const automate = page.getByRole("button", {
+    name: "Automation",
+    exact: true,
+  });
   await automate.focus();
   await page.keyboard.press("Enter");
   await expect(automate).toHaveAttribute("aria-pressed", "true");
@@ -73,3 +76,26 @@ for (const width of [390, 768, 1440])
       ),
     ).toBe(true);
   });
+
+test("enlarged text keeps mobile resource disclosures and controls within the viewport", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await expect(
+    page.getByText("Requires email, LinkedIn profile and CAPTCHA.", {
+      exact: false,
+    }),
+  ).toBeVisible();
+  const choice = page.getByRole("button", { name: "Automation", exact: true });
+  await choice.click();
+  await expect(choice).toHaveAttribute("aria-pressed", "true");
+});

@@ -1,0 +1,189 @@
+{
+  "checked": "2026-09-10T01:34:12.805Z",
+  "results": [
+    {
+      "url": "https://www.found42.com/industryprompts",
+      "finalUrl": "https://www.found42.com/industryprompts",
+      "status": 200,
+      "title": "Industry-Specific Prompt Packs — Found42",
+      "headings": [
+        "Found42 LLC"
+      ],
+      "inputLabels": []
+    },
+    {
+      "url": "https://found42.scoreapp.com/",
+      "finalUrl": "https://found42.scoreapp.com/",
+      "status": 200,
+      "title": "AI Readiness Assessment",
+      "headings": [
+        "Why We Built This"
+      ],
+      "inputLabels": [],
+      "testimonialExcerptPresent": false,
+      "assessmentGateFields": [
+        {
+          "name": "contact_me_by_jbc_only",
+          "type": "checkbox",
+          "required": false
+        },
+        {
+          "name": "first_name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "last_name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true
+        },
+        {
+          "name": "questions.key_3480070",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "note": "Opened the pre-question details gate; no values entered or forms submitted."
+    },
+    {
+      "url": "https://www.found42.com/ai-failure-modes-playbook",
+      "finalUrl": "https://www.found42.com/ai-failure-modes-playbook",
+      "status": 200,
+      "title": "AI Failure Modes Playbook — Found42",
+      "headings": [
+        "\n        Download the AI Failure Modes Playbook\n      ",
+        "Found42 LLC"
+      ],
+      "inputLabels": [
+        {
+          "name": "u",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "f",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "s",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "c",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "m",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "act",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "v",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "or",
+          "type": "hidden",
+          "required": false
+        },
+        {
+          "name": "firstname",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "lastname",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "field[2]",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "url": "https://www.found42.com/blog/choosing-to-inspire",
+      "finalUrl": "https://www.found42.com/blog/choosing-to-inspire",
+      "status": 200,
+      "title": "Think Like a CxO with AI Agents and Workflows — Found42",
+      "headings": [
+        "Think Like a CxO with AI Agents and Workflows",
+        "What are AI Growth Platforms?",
+        "Introducing Found42"
+      ],
+      "inputLabels": []
+    },
+    {
+      "url": "https://www.found42.com/blog",
+      "finalUrl": "https://www.found42.com/blog",
+      "status": 200,
+      "title": "Blog 3 — Found42",
+      "headings": [
+        "\n  \n    \n  \n    CSuite AI: Using AI for Culturally-Sensitive Negotiations (Part 1)\n  \n",
+        "\n  \n    \n  \n    What are AI Growth Platforms?\n  \n",
+        "\n  \n    \n  \n    Think Like a CxO with AI Agents and Workflows\n  \n"
+      ],
+      "inputLabels": []
+    },
+    {
+      "url": "https://www.found42.com/about",
+      "finalUrl": "https://www.found42.com/about",
+      "status": 200,
+      "title": "About | Enhance AI Skills Today — Found42",
+      "headings": [
+        "Who we are",
+        "Found42 LLC"
+      ],
+      "inputLabels": []
+    },
+    {
+      "url": "https://www.found42.com/contact",
+      "finalUrl": "https://www.found42.com/contact",
+      "status": 200,
+      "title": "Contact | Get in Touch Today — Found42",
+      "headings": [
+        "Found42 LLC"
+      ],
+      "inputLabels": []
+    },
+    {
+      "url": "https://www.found42.com/",
+      "finalUrl": "https://www.found42.com/",
+      "status": 200,
+      "title": "Found42 | Unlock AI-Driven Growth Today",
+      "headings": [
+        "C-Level AI Workshop",
+        "Industry Prompt Packs ",
+        "AI Readiness Scorecard "
+      ],
+      "inputLabels": [],
+      "testimonialExcerptPresent": true
+    }
+  ]
+}

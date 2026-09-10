@@ -4,8 +4,7 @@ export const resources = [
     title: "Industry-specific prompt packs",
     category: "Put it into practice",
     kind: "Free · Request form",
-    description:
-      "Move beyond the blank prompt. Explore prompts designed around your industry and the work your role needs to deliver.",
+    description: "Prompts shaped around your industry, role and everyday work.",
     gate: "Requires name, email, job title, industry and company website. Company name is optional.",
     action: "Request a prompt pack",
     url: "https://www.found42.com/industryprompts",
@@ -19,7 +18,7 @@ export const resources = [
     category: "Find your starting point",
     kind: "Free · External assessment",
     description:
-      "Reflect on how your business uses AI today, from tools and data to workflows and automation goals.",
+      "Take stock of your AI tools, data, workflows and automation goals.",
     gate: "Continues on ScoreApp. Personal and business details are required before the questions.",
     action: "Explore the scorecard",
     url: "https://found42.scoreapp.com/",
@@ -43,7 +42,7 @@ export const playbook = {
 export const article = {
   title: "Think Like a CxO with AI Agents and Workflows",
   description:
-    "Richard Achée on empowering employees to think strategically and bring more work in-house with AI agents and workflows.",
+    "Richard Achée on employee empowerment and bringing work in-house with AI agents and workflows.",
   url: "https://www.found42.com/blog/choosing-to-inspire",
   provider: "Found42 blog",
   gate: "No form. Read the full article.",
@@ -79,7 +78,7 @@ export const testimonials = [
     role: "Co-founder / Managing Director, Palladium Security LLC",
   },
   {
-    quote: "Richard’s C-Level AI workshop went beyond theory.",
+    quote: "It’s already changing how I approach client conversations.",
     name: "Andrew Miller",
     role: "Former Co-Founder and CEO, Cameyo (acquired by Google)",
   },

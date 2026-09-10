@@ -20,7 +20,7 @@ The three service names and substantive scope come from the [existing homepage](
 The same homepage was rechecked for these exact short excerpts:
 
 - Paul Keely: “What stood out in the C-Level AI workshop was how practical it was.” Attribution: Co-founder / Managing Director, Palladium Security LLC.
-- Andrew Miller: “Richard’s C-Level AI workshop went beyond theory.” Attribution: Former Co-Founder and CEO, Cameyo (acquired by Google).
+- Andrew Miller: “It’s already changing how I approach client conversations.” Attribution: Former Co-Founder and CEO, Cameyo (acquired by Google).
 
 They appear in block quotations under an explicit workshop heading and link to their publication source. They are neither evidence of automation/product delivery nor employer endorsements. The inactive mini-course has no signup link.
 
@@ -35,3 +35,9 @@ Both actual brand assets are listed on [Found42 media assets](https://www.found4
 - Manrope and Space Grotesk variable fonts: bundled from Fontsource npm packages, SIL Open Font License. The dependency lockfile pins the delivered versions.
 
 Public availability alone does not establish an independent asset license; Found42’s assets are used for its requested redesign. External resource fulfillment, biography verification, policy adequacy and live-site fixes remain outside prototype scope.
+
+## Expressive design pass
+
+The rendered entry pages for all four resources, the blog, About, Contact and the testimonial homepage returned HTTP 200 during the September 9 follow-up (local date). Andrew Miller’s client-conversations excerpt was found in the rendered homepage. See `preview/expressive/destination-checks.json`. Entry-page checks do not verify resource fulfillment or inquiry routing. Resource descriptions were shortened for mobile without changing their purposes, fields or destinations.
+
+The two new connection drawings are original SVG artwork generated from `src/workflow.ts`, optimized with SVGO through `npm run artwork`. Lucide’s ISC/Feather MIT notices and Motion’s MIT notice are bundled in `public/assets/`. No reference-site artwork or React Bits code was copied.

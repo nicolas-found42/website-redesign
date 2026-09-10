@@ -8,17 +8,21 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "test": "playwright test"
+    "test": "playwright test",
+    "artwork": "node --experimental-strip-types scripts/build-artwork.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.55.0",
     "prettier": "^3.9.6",
+    "svgo": "^4.1.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.5"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
-    "@fontsource-variable/space-grotesk": "^5.3.0"
+    "@fontsource-variable/space-grotesk": "^5.3.0",
+    "lucide": "^1.43.0",
+    "motion": "^13.2.0"
   }
 }

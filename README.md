@@ -8,10 +8,10 @@ Requires Node.js 22.12+ (Node 26.8.1 used locally) and npm.
 
 ```sh
 npm ci
-npm run dev
+npm run dev -- --port 4173
 ```
 
-Open the URL Vite prints (normally http://127.0.0.1:5173). The running implementation session uses http://127.0.0.1:4173.
+Open http://127.0.0.1:4173/. This is also the running development preview. Vite will print an alternative port if 4173 is occupied.
 
 ```sh
 npm run typecheck
@@ -21,17 +21,21 @@ npm run build
 npm run preview
 ```
 
-`npm run preview` serves the production `dist` directory, normally on port 4173; if another server uses it, Vite prints the next available port. Screenshots from implementation are in `docs/preview/`.
+`npm run preview` serves the production `dist` directory, normally on port 4173; if another server uses it, Vite prints the next available port. Current screenshots are in `docs/preview/expressive/`; earlier `docs/preview/` captures are historical.
 
 ## Edit
 
 - `src/content.ts`: resource titles, gates, links, service summaries, testimonial excerpts, and evidence metadata.
-- `src/main.ts`: semantic page composition, opening/founder/inquiry copy, responsive navigation, workflow interaction and section entrances.
+- `src/main.ts`: semantic page composition, opening/founder/inquiry copy, responsive navigation and section entrances.
+- `src/workflow.ts`: original ribbon geometry, three illustrative states and interruptible Motion transitions.
+- `src/icons.ts`: selected Lucide SVG icons.
 - `src/style.css`: palette, typography, layout, breakpoints, visible focus, and reduced-motion treatment.
 - `public/assets/`: bundled Found42 logo and portrait. Logo padding is cropped by the CSS viewport; the original file is unmodified.
 - `tests/`: public browser journeys, accessibility and local asset checks; no external form submissions.
 
 Vite + TypeScript builds a static page. Fonts come from local Fontsource packages, with their OFL license files in those packages. There is no runtime content service, analytics, cookie overlay, form backend or secret requirement. Resource, About, blog, policy and inquiry links deliberately navigate to the existing external destinations in the same tab.
+
+Run `npm run artwork` after changing the ribbon path source to regenerate the two optimized static SVGs. Generated artwork is committed; normal preview/build commands do not require regeneration. The script uses Node’s TypeScript stripping flag, supported by the documented Node version.
 
 ## GitHub Pages
 
