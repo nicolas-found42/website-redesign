@@ -1,0 +1,130 @@
+[
+  {
+    "name": "chromium",
+    "version": "153.0.8010.12",
+    "width": 1440,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 2856,
+      "cls": 0.05253517691320517
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 6,
+    "bytes": 556025
+  },
+  {
+    "name": "chromium",
+    "version": "153.0.8010.12",
+    "width": 390,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 1772,
+      "cls": 0
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 6,
+    "bytes": 556025
+  },
+  {
+    "name": "firefox",
+    "version": "155.0",
+    "width": 1440,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 97,
+      "cls": 0
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 7,
+    "bytes": 556785
+  },
+  {
+    "name": "firefox",
+    "version": "155.0",
+    "width": 390,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 29,
+      "cls": 0
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 7,
+    "bytes": 556785
+  },
+  {
+    "name": "webkit",
+    "version": "26.6",
+    "width": 1440,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 1780,
+      "cls": 0
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 6,
+    "bytes": 173771
+  },
+  {
+    "name": "webkit",
+    "version": "26.6",
+    "width": 390,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 1744,
+      "cls": 0
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 6,
+    "bytes": 173771
+  },
+  {
+    "name": "chrome",
+    "version": "152.0.7977.83",
+    "width": 1440,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 488,
+      "cls": 0
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 7,
+    "bytes": 556785
+  },
+  {
+    "name": "chrome",
+    "version": "152.0.7977.83",
+    "width": 390,
+    "motion": 1,
+    "failures": [],
+    "metrics": {
+      "lcp": 1764,
+      "cls": 0
+    },
+    "overflow": false,
+    "fonts": "loaded",
+    "assets": true,
+    "requests": 6,
+    "bytes": 556025
+  }
+]
