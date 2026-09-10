@@ -1,0 +1,43 @@
+{
+  "method": "Single unthrottled localhost run, installed Chrome; two-frame response samples are not INP or real-device measurements.",
+  "performance": [
+    {
+      "width": 390,
+      "lcp": 36,
+      "cls": 0,
+      "transferBytes": 248614,
+      "clickToTwoFramesMs": [
+        17.19999998807907,
+        30.80000001192093,
+        31.5,
+        32.20000000298023,
+        31.799999997019768
+      ]
+    },
+    {
+      "width": 1440,
+      "lcp": 44,
+      "cls": 0,
+      "transferBytes": 248614,
+      "clickToTwoFramesMs": [
+        23.900000005960464,
+        65.90000000596046,
+        65,
+        64,
+        64.79999999701977
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "name": "index-B3UfdFUI.css",
+      "bytes": 28172,
+      "gzipBytes": 8757
+    },
+    {
+      "name": "index-DhQ50VjV.js",
+      "bytes": 80592,
+      "gzipBytes": 28923
+    }
+  ]
+}
