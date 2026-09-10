@@ -27,7 +27,7 @@ Found42's prompt offering organized by industry. The published inventory claims 
 Found42's guide offering about AI failure modes, requested through a resource access gate.
 
 **AI Readiness Scorecard**:
-Found42's assessment of a business's current AI use and readiness, described as producing a personalized score and recommendations.
+Found42's assessment of a business's current AI use and readiness, presented as a scorecard with personalized recommendations; actual scoring and report delivery remain unverified.
 _Avoid_: Certification, audited ROI measurement
 
 **Readiness report**:
