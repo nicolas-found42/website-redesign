@@ -2,6 +2,8 @@
 
 Status: updated from the live-site audit on September 9, 2026; implementation not started. Website-specific rendered-browser testing proposal sent to Nicolas; confirmation pending.
 
+> The expanded [live-site audit](docs/contexts/SITE-AUDIT.md) adds verified article content, public toolkit assets, assessment entry requirements, and policy/navigation findings. Consult it and the linked context audits before implementing this plan; new recommendations there do not automatically approve changes to commercial offers or production integrations.
+
 ## Problem Statement
 
 Found42 needs a homepage that catches the eye immediately, explains practical AI value to business leaders and private-equity/portfolio-company decision-makers, and offers useful material before asking visitors to inquire about tailored work.

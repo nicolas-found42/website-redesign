@@ -14,6 +14,12 @@ Article content a visitor can read without submitting details.
 **Resource access gate**:
 A form or other requirement a visitor must satisfy to request or access a resource.
 
+**Resource request**:
+A submission seeking access to a free resource. It does not by itself establish a consultation inquiry or confirmed delivery.
+
+**Resource fulfillment**:
+The delivery or successful opening of the material or result requested by a visitor, beyond reaching its landing page or submitting its form.
+
 **Industry-specific prompt packs**:
 Found42's prompt offering organized by industry. The published inventory claims are distinct from an inspected inventory of delivered content.
 
@@ -21,4 +27,11 @@ Found42's prompt offering organized by industry. The published inventory claims 
 Found42's guide offering about AI failure modes, requested through a resource access gate.
 
 **AI Readiness Scorecard**:
-The externally hosted assessment offered as a route to evaluating AI readiness.
+Found42's assessment of a business's current AI use and readiness, described as producing a personalized score and recommendations.
+_Avoid_: Certification, audited ROI measurement
+
+**Readiness report**:
+The personalized report promised after completing the AI Readiness Scorecard, distinct from the example report image used to promote it.
+
+**Depth Deficit**:
+Found42's name for the gap between basic AI use and applying it to role-specific work deliverables.

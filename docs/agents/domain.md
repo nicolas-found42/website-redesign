@@ -10,6 +10,8 @@ System-wide architecture decisions belong in `docs/adr/`; context-specific decis
 
 Read `CONTEXT-MAP.md`, then each `CONTEXT.md` relevant to the topic. Read applicable system-wide and context-specific ADRs. For changes spanning contexts, read every affected glossary.
 
+Before changing site copy, resource destinations, service positioning, or inquiry journeys, also read the affected context's `AUDIT.md` and `docs/contexts/SITE-AUDIT.md`. These files contain dated observations, recommendations, and unverified claims; treat them as evidence for decisions, not as approval of new commercial promises. Recheck volatile destinations before publication.
+
 If a referenced glossary or ADR directory does not yet exist, proceed silently. The domain-modeling skill creates these lazily when terms or decisions are resolved.
 
 ## Use the glossary's vocabulary
