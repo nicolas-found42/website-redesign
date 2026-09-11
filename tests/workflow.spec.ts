@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 test("an executive can explore three distinct service illustrations with the keyboard", async ({
   page,
@@ -34,38 +34,63 @@ test("an executive can explore three distinct service illustrations with the key
   await expect(product).toBeFocused();
 });
 
+/** Everything the illustration shows, as a browser would report it. */
+const illustration = (target: Page) =>
+  target.evaluate(() => {
+    const round = (value) => Math.round(value * 10) / 10;
+    const nodes = [...document.querySelectorAll(".workflow-node")];
+    return {
+      labels: nodes.map((node) => node.textContent?.trim()),
+      boxes: nodes.map((node) => {
+        const { x, y, width, height } = node.getBoundingClientRect();
+        return [round(x), round(y), round(width), round(height)];
+      }),
+      paths: [...document.querySelectorAll(".workflow-art svg path")].map(
+        (path) => path.getAttribute("d"),
+      ),
+      drawing: [...document.querySelectorAll(".workflow-art svg path")].map(
+        (path) => {
+          const style = getComputedStyle(path);
+          return [style.strokeDasharray, style.strokeDashoffset];
+        },
+      ),
+      describedBy: document
+        .querySelector("[role='img']")
+        ?.getAttribute("aria-label"),
+      detail: document.querySelector(".workflow-detail")?.textContent,
+      pressed: [...document.querySelectorAll("[data-workflow]")].map((button) =>
+        button.getAttribute("aria-pressed"),
+      ),
+    };
+  });
+
+test("a completed choice rests in the same still composition as a fresh page", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  await page.getByRole("button", { name: "Automation", exact: true }).click();
+  const motionlessPage = await context.newPage();
+  await motionlessPage.emulateMedia({ reducedMotion: "reduce" });
+  await motionlessPage.goto("/");
+  await motionlessPage.evaluate(() => document.fonts.ready);
+  await motionlessPage
+    .getByRole("button", { name: "Automation", exact: true })
+    .click();
+  await expect
+    .poll(async () => illustration(page), {
+      message: "a settled illustration should leave no drawing state behind",
+      timeout: 5000,
+    })
+    .toEqual(await illustration(motionlessPage));
+  await motionlessPage.close();
+});
+
 test("switching to reduced motion during rapid choices leaves a complete final illustration", async ({
   page,
   context,
 }) => {
-  const illustration = (target) =>
-    target.evaluate(() => {
-      const round = (value) => Math.round(value * 10) / 10;
-      const nodes = [...document.querySelectorAll(".workflow-node")];
-      return {
-        labels: nodes.map((node) => node.textContent?.trim()),
-        boxes: nodes.map((node) => {
-          const { x, y, width, height } = node.getBoundingClientRect();
-          return [round(x), round(y), round(width), round(height)];
-        }),
-        paths: [...document.querySelectorAll(".workflow-art svg path")].map(
-          (path) => path.getAttribute("d"),
-        ),
-        drawing: [...document.querySelectorAll(".workflow-art svg path")].map(
-          (path) => {
-            const style = getComputedStyle(path);
-            return [style.strokeDasharray, style.strokeDashoffset];
-          },
-        ),
-        describedBy: document
-          .querySelector("[role='img']")
-          ?.getAttribute("aria-label"),
-        detail: document.querySelector(".workflow-detail")?.textContent,
-        pressed: [...document.querySelectorAll("[data-workflow]")].map(
-          (button) => button.getAttribute("aria-pressed"),
-        ),
-      };
-    });
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
   // Four choices in one task, so the last transition is genuinely in flight

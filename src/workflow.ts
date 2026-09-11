@@ -155,7 +155,8 @@ export function mountWorkflow(
           });
         },
         onComplete() {
-          if (active === index) settle(index);
+          if (active !== index) return;
+          nodes.forEach((node, i) => place(node, next.points[i]));
         },
       }),
     );
@@ -163,7 +164,16 @@ export function mountWorkflow(
       animate(
         svg.querySelectorAll("path"),
         { pathLength: [0, 1] },
-        { duration: 0.75, ease: "easeInOut" },
+        {
+          duration: 0.75,
+          ease: "easeInOut",
+          onComplete() {
+            // The draw is finished, so swapping in the still composition cannot
+            // be seen; it leaves no drawing state behind for the next choice.
+            if (active === index && !motionPreference.matches)
+              svg.innerHTML = ribbonPaths(workflows[index].ribbon);
+          },
+        },
       ),
     );
   }
