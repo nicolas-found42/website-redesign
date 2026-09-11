@@ -1,0 +1,69 @@
+{
+  "refactor": "homepage module seams",
+  "branch": "refactor/homepage-module-seams",
+  "fixedPoint": "b5ce532",
+  "recorded": "2026-09-10",
+  "note": "Before/after comparison between the production build of main@b5ce532 and the production build of this branch, taken on one machine in one sitting. This file records the results, not the tooling that produced them.",
+  "captures": {
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "scenarios": [
+      "390px full page",
+      "768px full page",
+      "1440px full page",
+      "doubled root text size at 390px",
+      "doubled root text size at 768px"
+    ],
+    "mainVersusBranch": "0 of 15 capture pairs differ: byte-identical PNGs in all three engines, including the enlarged-text scenarios",
+    "enlargedText": "verified to engage the container-query layout rather than duplicating the default case: .workflow-node computes to position: relative at 200% root text and absolute at default size",
+    "againstCommittedPreviews": {
+      "compared": "docs/preview/expressive/<engine>-full-<390|1440>.png",
+      "chromium": "0 differences at 390px and 1440px",
+      "firefox": "0 differences at 390px and 1440px",
+      "webkit": "1.23% of pixels at 1440px and 2.02% at 390px, in the same regions for main and for this branch: engine drift against the September captures, unchanged by this refactor",
+      "chrome": "not compared: those captures use an installed Google Chrome, which this check does not run"
+    }
+  },
+  "geometry": {
+    "method": "whole-document snapshot of 52 computed properties and the bounding box of every element, aligned by tag, class and ordinal",
+    "cases": 15,
+    "engines": 3,
+    "layoutOrStyleDifferences": 0,
+    "expectedDifferences": [
+      "15 × div.hero-illustration added: the element the illustration is mounted into",
+      "45 × svg.ribbon-motif keys moved: the class attribute no longer carries a trailing space",
+      "3 × div.workflow max-width relocated to the wrapper element; the rendered box is unchanged"
+    ]
+  },
+  "dom": {
+    "method": "element map aligned by tag, class and ordinal, comparing every attribute, plus body text",
+    "elementKeys": 334,
+    "bodyText": "identical",
+    "differences": [
+      "div.hero-illustration added: the element the illustration is mounted into",
+      "the four workflow nodes moved their inline offsets from left/top to --node-x/--node-y",
+      "the workflow ribbon svg gained xmlns and stroke-width attributes",
+      "the service ribbons' class attribute no longer carries a trailing space"
+    ]
+  },
+  "animation": {
+    "drawDuration": "measured during a transition: stroke-dasharray progresses 0.14 → 0.55 → 0.95 at 620ms and reaches complete by 900ms, so the 600ms node transition does not cut the 750ms draw short (a version that settled on node completion measured complete at 620ms)",
+    "restingState": "a completed choice rests in the same still composition as a fresh page; tests/workflow.spec.ts asserts this and fails without the completion cleanup"
+  },
+  "artwork": {
+    "pathData": "identical for both regenerated assets",
+    "attributeChange": "the class attribute was dropped from the standalone files; no stylesheet can reach it there"
+  },
+  "regression": {
+    "test": "tests/workflow.spec.ts, interrupted illustration compared with a fresh motionless rendering",
+    "mutation": "removing the reduced-motion settle fails the test on all three engines"
+  },
+  "not_verified": [
+    "physical iOS/Android devices and branded browsers",
+    "screen-reader sessions and outside-reader comprehension",
+    "public deployment and resource fulfillment"
+  ]
+}

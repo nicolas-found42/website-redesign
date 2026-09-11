@@ -49,3 +49,20 @@ Physical iOS/Android devices, branded Edge/Safari/Firefox, screen-reader session
 The GitHub Pages workflow is present, and a production build works locally under `/website-redesign/`. **No public deployment is claimed for this branch.** Public hosting remains pending merge and deployment verification. The expected future repository URL remains `https://nicolas-found42.github.io/website-redesign/`.
 
 Nicolas selected the original light direction; final visual/content acceptance of this expressive version remains pending. Resource fulfillment, assessment scoring/report delivery and inquiry email routing remain unverified and outside this prototype's acceptance scope.
+
+## Refactor validation: homepage module seams (2026-09-10)
+
+Current implementation: `refactor/homepage-module-seams`, branched from `main` at `b5ce532`. The refactor adds no visible behaviour; it changes where the page is composed, how the illustration is mounted, and how the stylesheet is organised. Design decisions are recorded in `docs/adr/0001-homepage-module-seams.md`.
+
+- `npm run typecheck`: passed.
+- `npm test`: **46 passed** — 42 browser tests across Chromium, Firefox and WebKit, plus 4 rendering assertions in the new `unit` project that cross `renderHomepage()` without an engine.
+- `npm run build`: passed. `npm run artwork`: passed; both regenerated assets keep byte-identical path data, and the only byte change is the dropped `class` attribute that no stylesheet can reach inside a standalone file.
+- Rendering parity: 390px, 768px and 1440px full-page captures, plus **doubled root text size** at 390px and 768px, taken from the production builds of `main` and of this branch in all three engines. **0 of 15 capture pairs differ**: byte-identical PNGs. The enlarged-text cases are verified to engage the `@container (width < 20rem)` layout rather than repeating the default size — the illustration's nodes compute to `position: relative` at 200% root text and `absolute` at default.
+- Against the committed September captures (`preview/expressive/<engine>-full-<390|1440>.png`): Chromium and Firefox show **no differences**, and WebKit differs by 1.23% (1440px) and 2.02% (390px) of pixels in the same regions for `main` and for this branch — engine drift in the baseline record, not an effect of this refactor. The `chrome-*` baselines were not compared: they use an installed Google Chrome, which these checks do not run.
+- Layout parity: a whole-document snapshot of 52 computed properties and the bounding box of every element, aligned by tag, class and ordinal, over 5 scenarios × 3 engines: **no layout or style difference**. The only findings are the reserved illustration element, the dropped trailing space in the service ribbons' class, and `max-width` moving with the illustration to its wrapper — its rendered box is unchanged.
+- DOM parity: an element map aligned by tag, class and ordinal compares every attribute and the body text against the previous build. 334 element keys, identical text, and the same intended differences.
+- The illustration's 750ms path draw is no longer cut short by its 600ms node transition: measured during a transition, the drawing is still in progress at 620ms and completes by 900ms. The interrupted-illustration regression compares nodes, paths and drawing state against a fresh motionless rendering instead of comparing screenshots; removing the reduced-motion settle fails it on all three engines, and dropping the completion cleanup fails the new "rests in the same still composition" case.
+
+The measurements behind these numbers are recorded in [`preview/refactor-2026-09-10/parity.json`](preview/refactor-2026-09-10/parity.json).
+
+Not re-verified by this refactor: every item under "Remaining coverage and acceptance" above still stands, including physical devices, branded browsers, screen readers and public deployment.

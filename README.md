@@ -25,17 +25,19 @@ npm run preview
 
 ## Edit
 
-- `src/content.ts`: resource titles, gates, links, service summaries, testimonial excerpts, and evidence metadata.
-- `src/main.ts`: semantic page composition, opening/founder/inquiry copy, responsive navigation and section entrances.
-- `src/workflow.ts`: original ribbon geometry, three illustrative states and interruptible Motion transitions.
-- `src/icons.ts`: selected Lucide SVG icons.
-- `src/style.css`: palette, typography, layout, breakpoints, visible focus, and reduced-motion treatment.
+- `src/content.ts`: resource titles, gates, links, service summaries, testimonial excerpts, and evidence metadata. The fields the page renders are asserted against these records; the audit fields are not.
+- `src/homepage.ts`: the page's interface — `renderHomepage()` and `mountHomepage()`, with the navigation and section entrances as its implementation.
+- `src/homepage/`: one renderer per band — chrome, hero, resources, services, credibility, inquiry — each owning its band's copy and markup.
+- `src/workflow.ts`: the interactive illustration; renders its three choices, still compositions and interruptible Motion transitions into the element the hero reserves.
+- `src/artwork.ts`: the ribbon geometry and SVG shells, shared by the illustration and the two generated assets.
+- `src/icons.ts`: selected Lucide SVG icons, serialized to markup strings.
+- `src/style.css`: palette, type scale, layout, each band's width rules, visible focus, and reduced-motion treatment.
 - `public/assets/`: bundled Found42 logo and portrait. Logo padding is cropped by the CSS viewport; the original file is unmodified.
-- `tests/`: public browser journeys, accessibility and local asset checks; no external form submissions.
+- `tests/`: public browser journeys, accessibility and local asset checks; no external form submissions. `tests/render.spec.ts` asserts the page through `renderHomepage()` and runs once in the `unit` project rather than once per engine.
 
 Vite + TypeScript builds a static page. Fonts come from local Fontsource packages, with their OFL license files in those packages. There is no runtime content service, analytics, cookie overlay, form backend or secret requirement. Resource, About, blog, policy and inquiry links deliberately navigate to the existing external destinations in the same tab.
 
-Run `npm run artwork` after changing the ribbon path source to regenerate the two optimized static SVGs. Generated artwork is committed; normal preview/build commands do not require regeneration. The script uses Node’s TypeScript stripping flag, supported by the documented Node version.
+Run `npm run artwork` after changing the ribbon path source in `src/artwork.ts` to regenerate the two optimized static SVGs. Generated artwork is committed; normal preview/build commands do not require regeneration. The script uses Node’s TypeScript stripping flag, supported by the documented Node version.
 
 ## GitHub Pages
 
