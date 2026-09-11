@@ -22,7 +22,7 @@ This map organizes the Found42 website's domain vocabulary. The contexts describ
 
 ## Supporting documents
 
-- [Project specification](SPEC-PLAN.md): scope, visitor journeys, requirements, and unresolved decisions.
+- [Found42 website prototype map](https://github.com/nicolas-found42/website-redesign/issues/9) (issue tracker): destination, settled direction, open decisions and scope. Supersedes the removed `SPEC-PLAN.md`.
 - [Deep site audit](docs/contexts/SITE-AUDIT.md): current findings, priorities, coverage, and evidence limits; read before proposing navigation, content, or journey changes.
 - [Source register](research/deep-audit-sources-2026-09-09.json): requested and final URLs, response status, and page titles for 28 retrieved sources.
 - [Earlier site audit](research/site-audit-2026-09-09.md): historical baseline; expanded and qualified by the deep audit.

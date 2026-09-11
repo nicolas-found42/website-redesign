@@ -1,6 +1,6 @@
 # Found42 homepage prototype
 
-A complete, responsive homepage based on `SPEC-PLAN.md` and the September 9, 2026 audit. Nicolas selected the **light editorial** direction after reviewing desktop and 390px hero renders. Black/red identity, the original logo and Richard Achée’s portrait are preserved.
+A complete, responsive homepage built from the September 9, 2026 audit. The project's current specification is the [Found42 website prototype map](https://github.com/nicolas-found42/website-redesign/issues/9); `SPEC-PLAN.md` was removed when that direction superseded it. Nicolas selected the **light editorial** direction after reviewing desktop and 390px hero renders. Black/red identity, the original logo and Richard Achée’s portrait are preserved.
 
 ## Run the preview
 
