@@ -25,7 +25,7 @@ npm run preview
 
 ## Edit
 
-- `src/content.ts`: resource titles, gates, links, service summaries, testimonial excerpts, and evidence metadata. The rendered page is asserted against these records.
+- `src/content.ts`: resource titles, gates, links, service summaries, testimonial excerpts, and evidence metadata. The fields the page renders are asserted against these records; the audit fields are not.
 - `src/homepage.ts`: the page's interface — `renderHomepage()` and `mountHomepage()`, with the navigation and section entrances as its implementation.
 - `src/homepage/`: one renderer per band — chrome, hero, resources, services, credibility, inquiry — each owning its band's copy and markup.
 - `src/workflow.ts`: the interactive illustration; renders its three choices, still compositions and interruptible Motion transitions into the element the hero reserves.

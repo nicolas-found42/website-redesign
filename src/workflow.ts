@@ -1,10 +1,11 @@
 import { animate, type AnimationPlaybackControls } from "motion";
-import { ribbonPaths, ribbonSvg } from "./artwork";
+import { ribbonPaths, ribbonSvg, type RibbonVariant } from "./artwork";
 
 type Point = readonly [number, number];
 type Workflow = {
-  /** Choice label, state illustration and description travel together. */
+  /** Choice label, ribbon composition and description travel together. */
   choice: string;
+  ribbon: RibbonVariant;
   description: string;
   detail: string;
   nodes: readonly string[];
@@ -14,6 +15,7 @@ type Workflow = {
 const workflows: readonly Workflow[] = [
   {
     choice: "Training",
+    ribbon: "loop",
     description:
       "Training illustration: a work task, useful prompts and human review support putting AI into practice.",
     detail: "Give people the skills to apply AI to their own work.",
@@ -32,6 +34,7 @@ const workflows: readonly Workflow[] = [
   },
   {
     choice: "Automation",
+    ribbon: "route",
     description:
       "Automation illustration: connect sales, operations and finance through a shared workflow with human direction.",
     detail: "Connect tasks into workflows your team can use.",
@@ -45,6 +48,7 @@ const workflows: readonly Workflow[] = [
   },
   {
     choice: "Product value",
+    ribbon: "combine",
     description:
       "Product illustration: combine business expertise, product context and AI capabilities in a customer workflow.",
     detail: "Turn business expertise into new product value.",
@@ -68,7 +72,7 @@ function renderWorkflow() {
   return `<div class="workflow">
     <div class="diagram-heading"><span>Business expertise, connected.</span><span class="diagram-dot" aria-hidden="true"></span></div>
     <div class="workflow-art" role="img" aria-label="${workflow.description}">
-      ${ribbonSvg(0, { className: "workflow-ribbons" })}
+      ${ribbonSvg(workflow.ribbon, { className: "workflow-ribbons" })}
       <div class="workflow-center" aria-hidden="true"><span>Human<br><strong>direction.</strong></span></div>
       ${workflow.nodes.map((text, index) => `<span class="workflow-node" aria-hidden="true" style="--node-x:${workflow.points[index][0]}%;--node-y:${workflow.points[index][1]}%"><i></i><span>${text}</span></span>`).join("")}
     </div>
@@ -111,7 +115,7 @@ export function mountWorkflow(
   /** The complete still composition of one state, with no tween left running. */
   function settle(index = active) {
     stopTweens();
-    svg.innerHTML = ribbonPaths(index);
+    svg.innerHTML = ribbonPaths(workflows[index].ribbon);
     nodes.forEach((node, i) => place(node, workflows[index].points[i]));
   }
 
@@ -121,7 +125,7 @@ export function mountWorkflow(
     const next = workflows[index];
     active = index;
     stopTweens();
-    svg.innerHTML = ribbonPaths(index);
+    svg.innerHTML = ribbonPaths(workflows[index].ribbon);
     art.setAttribute("aria-label", next.description);
     buttons.forEach((button, i) =>
       button.setAttribute("aria-pressed", String(i === index)),
