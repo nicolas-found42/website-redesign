@@ -1,6 +1,6 @@
 # Homepage source and access inventory
 
-Source of truth: `SPEC-PLAN.md`, `research/site-audit-2026-09-09.md`, and its linked expanded domain audit. Entry pages re-fetched with Firecrawl on September 9, 2026 (local date). No personal details were entered and no production forms were submitted.
+Source of truth: `research/site-audit-2026-09-09.md`, its linked expanded domain audit, and the [production website map](https://github.com/nicolas-found42/website-redesign/issues/9), which supersedes the removed `SPEC-PLAN.md`. Entry pages re-fetched with Firecrawl on September 9, 2026 (local date). No personal details were entered and no production forms were submitted.
 
 | Selected item                                 | Purpose / source and destination                                                                                      | Provider / access gate                                                                                              | Observed state                                        | Delivered content inspected                                     |
 | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------- |
