@@ -49,3 +49,16 @@ Physical iOS/Android devices, branded Edge/Safari/Firefox, screen-reader session
 The GitHub Pages workflow is present, and a production build works locally under `/website-redesign/`. **No public deployment is claimed for this branch.** Public hosting remains pending merge and deployment verification. The expected future repository URL remains `https://nicolas-found42.github.io/website-redesign/`.
 
 Nicolas selected the original light direction; final visual/content acceptance of this expressive version remains pending. Resource fulfillment, assessment scoring/report delivery and inquiry email routing remain unverified and outside this prototype's acceptance scope.
+
+## Refactor validation: homepage module seams (2026-09-10)
+
+Current implementation: `refactor/homepage-module-seams`, branched from `main` at `b5ce532`. The refactor adds no visible behaviour; it changes where the page is composed, how the illustration is mounted, and how the stylesheet is organised. Design decisions are recorded in `docs/adr/0001-homepage-module-seams.md`.
+
+- `npm run typecheck`: passed.
+- `npm test`: **43 passed** — 39 browser tests across Chromium, Firefox and WebKit, plus 4 rendering assertions in the new `unit` project that cross `renderHomepage()` without an engine.
+- `npm run build`: passed. `npm run artwork`: passed; both regenerated assets keep byte-identical path data, and the only byte change is the dropped `class` attribute that no stylesheet can reach inside a standalone file.
+- Rendering parity: the production build was captured at 320, 390, 700, 768, 960, 1024 and 1440px, at doubled root text size, in all three illustration states, in a keyboard-focus state, and with motion settled, before and after the refactor. Chromium and Firefox captures are byte-identical. WebKit varies by up to **0.19% of pixels between two captures of the same build**, which is the measured noise floor for that engine on this machine and is the bound applied to its comparison.
+- Cascade parity: a whole-document geometry and computed-style snapshot (52 properties per element) over 11 scenarios × 3 engines reports **0 differences** after the stylesheet was reorganised into one block per band, twelve declarations that could never apply were removed, and the repeated font sizes became type-scale tokens.
+- The interrupted-illustration regression now compares nodes, paths and drawing state against a fresh motionless rendering instead of comparing screenshots. Removing the reduced-motion settle from the controller fails this regression on all three engines, which is how its coverage was checked.
+
+Not re-verified by this refactor: every item under "Remaining coverage and acceptance" above still stands, including physical devices, branded browsers, screen readers and public deployment.

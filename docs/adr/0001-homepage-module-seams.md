@@ -1,0 +1,14 @@
+# Homepage module seams
+
+**Status:** accepted (2026-09-10)
+
+`src/homepage.ts` is the homepage's module: `renderHomepage()` returns the whole page as a string, and `mountHomepage(root, { motionPreference })` renders it and wires its behaviours. One renderer per band lives under `src/homepage/` — chrome, hero, resources, services, credibility, inquiry — and each owns its band's copy and markup. The interface is deliberately a plain rendering function rather than a component or dependency-injection layer, because it is the same seam the runtime crosses and the tests cross: `tests/render.spec.ts` imports the module, asserts the rendered page against `src/content.ts`, and runs once in the `unit` Playwright project instead of re-driving every band through three engines.
+
+Consequences and rejected alternatives worth knowing:
+
+- `src/main.ts` keeps only the side-effectful imports (fonts, stylesheet, `#app`) plus the mount.
+- `src/content.ts` stays the provenance record for resource copy, and the page is asserted against it rather than the register being duplicated, so `provider`, `observed`, `checked` and `deliveredContentInspected` have a consumer.
+- Two entries on one module are intentional; the per-band renderers are implementation, not a component layer. This revisits `docs/reviews/standards.md` — "The plain static rendering function does not introduce speculative component abstractions" — for a measured reason: before this decision the page module could not be imported outside Vite at all (`Unknown file extension ".css"`), so nothing smaller than the whole document inside a browser could be verified. It preserves the stance in `docs/reviews/expressive-standards.md` that tests observe journeys rather than private functions, since tests and runtime cross the same interface.
+- `mountWorkflow(root, { motionPreference })` renders and wires the illustration in one call; node positions reach the stylesheet as custom properties instead of inline `left`/`top` that the stylesheet had to defeat with `!important`.
+- `src/artwork.ts` owns the ribbon geometry; the asset build asks for the presentation it needs instead of patching generated markup text, and the two committed assets no longer carry a class name no stylesheet can reach.
+- Rejected: keeping the page as one literal (no seam, copy verified only through browser journeys); an injected content parameter on `renderHomepage()` (one adapter only — a hypothetical seam); moving provenance to `docs/CONTENT-SOURCES.md` and leaving the module with rendered fields only (the page could then drift from the record without anything noticing).
