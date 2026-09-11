@@ -1,7 +1,19 @@
 import { animate, type AnimationPlaybackControls } from "motion";
+import { ribbonPaths, ribbonSvg } from "./artwork";
 
-const states = [
+type Point = readonly [number, number];
+type Workflow = {
+  /** Choice label, state illustration and description travel together. */
+  choice: string;
+  description: string;
+  detail: string;
+  nodes: readonly string[];
+  points: readonly Point[];
+};
+
+const workflows: readonly Workflow[] = [
   {
+    choice: "Training",
     description:
       "Training illustration: a work task, useful prompts and human review support putting AI into practice.",
     detail: "Give people the skills to apply AI to their own work.",
@@ -19,6 +31,7 @@ const states = [
     ],
   },
   {
+    choice: "Automation",
     description:
       "Automation illustration: connect sales, operations and finance through a shared workflow with human direction.",
     detail: "Connect tasks into workflows your team can use.",
@@ -31,6 +44,7 @@ const states = [
     ],
   },
   {
+    choice: "Product value",
     description:
       "Product illustration: combine business expertise, product context and AI capabilities in a customer workflow.",
     detail: "Turn business expertise into new product value.",
@@ -47,116 +61,123 @@ const states = [
       [81, 80],
     ],
   },
-] as const;
+];
 
-// Original line artwork: three complete still compositions, never a results dashboard.
-export function ribbonPaths(state: number, count = 14) {
-  return Array.from({ length: count }, (_, i) => {
-    const n = (i - (count - 1) / 2) * 4;
-    const shapes = [
-      `M102 ${86 + n} C105 ${245 + n} 500 ${240 - n} 486 ${82 + n} C474 ${-10 + n} 225 ${75 - n} ${300 + n} 218 C${375 + n} 367 532 ${387 - n} 486 ${344 + n} C400 ${269 + n} 80 ${232 - n} 108 ${344 + n} C150 ${487 + n} 431 ${362 - n} ${300 + n} 218 C${169 + n} 75 100 ${-35 + n} 102 ${86 + n}`,
-      `M102 ${86 + n} H${404 + n} Q${492 + n} ${86 + n} ${492 + n} 129 Q${492 + n} ${172 - n} ${405 + n} ${172 - n} H${196 - n} Q${102 - n} ${172 - n} ${102 - n} 284 Q${102 - n} ${361 + n} ${196 - n} ${361 + n} H486`,
-      `M108 ${82 + n} C${130 + n} ${182 + n} ${265 + n} ${185 - n} 486 ${344 + n} M486 ${82 + n} C${490 + n} ${210 + n} ${340 - n} ${240 + n} 108 ${344 + n} M108 ${82 + n} C${107 - n} ${354 - n} ${297 + n} ${420 - n} 486 ${344 + n}`,
-    ];
-    return `<path d="${shapes[state]}"/>`;
-  }).join("");
-}
-export function motif(state = 0, className = "") {
-  return `<svg class="ribbon-motif ${className}" viewBox="0 0 600 430" fill="none" aria-hidden="true" focusable="false">${ribbonPaths(state)}</svg>`;
-}
-export function workflowMarkup() {
-  const state = states[0];
+function renderWorkflow() {
+  const workflow = workflows[0];
   return `<div class="workflow">
     <div class="diagram-heading"><span>Business expertise, connected.</span><span class="diagram-dot" aria-hidden="true"></span></div>
-    <div class="workflow-art" role="img" aria-label="${state.description}">
-      <svg class="workflow-ribbons" viewBox="0 0 600 430" fill="none" aria-hidden="true" focusable="false">${ribbonPaths(0)}</svg>
+    <div class="workflow-art" role="img" aria-label="${workflow.description}">
+      ${ribbonSvg(0, { className: "workflow-ribbons" })}
       <div class="workflow-center" aria-hidden="true"><span>Human<br><strong>direction.</strong></span></div>
-      ${state.nodes.map((text, i) => `<span class="workflow-node" aria-hidden="true" style="left:${state.points[i][0]}%;top:${state.points[i][1]}%"><i></i><span>${text}</span></span>`).join("")}
+      ${workflow.nodes.map((text, index) => `<span class="workflow-node" aria-hidden="true" style="--node-x:${workflow.points[index][0]}%;--node-y:${workflow.points[index][1]}%"><i></i><span>${text}</span></span>`).join("")}
     </div>
-    <div class="workflow-choices" role="group" aria-label="Explore the illustrative workflow">${["Training", "Automation", "Product value"].map((label, i) => `<button type="button" data-workflow="${i}" aria-pressed="${i === 0}">${label}</button>`).join("")}</div>
-    <p class="workflow-detail" aria-live="polite">${state.detail}</p>
+    <div class="workflow-choices" role="group" aria-label="Explore the illustrative workflow">${workflows.map((state, index) => `<button type="button" data-workflow="${index}" aria-pressed="${index === 0}">${state.choice}</button>`).join("")}</div>
+    <p class="workflow-detail" aria-live="polite">${workflow.detail}</p>
     <p class="diagram-caption">Explore an illustration of the possibilities.</p>
   </div>`;
 }
-export function mountWorkflow(preference: MediaQueryList) {
-  const art = document.querySelector<HTMLElement>(".workflow-art")!;
+
+/**
+ * Renders the illustration into `root` and drives its three states: one complete
+ * still composition per choice, animated when motion is welcome.
+ */
+export function mountWorkflow(
+  root: HTMLElement,
+  options: { motionPreference: MediaQueryList },
+) {
+  const { motionPreference } = options;
+  root.innerHTML = renderWorkflow();
+  const art = root.querySelector<HTMLElement>(".workflow-art")!;
   const svg = art.querySelector<SVGSVGElement>("svg")!;
   const nodes = [...art.querySelectorAll<HTMLElement>(".workflow-node")];
   const buttons = [
-    ...document.querySelectorAll<HTMLButtonElement>("[data-workflow]"),
+    ...root.querySelectorAll<HTMLButtonElement>("[data-workflow]"),
   ];
+  const detail = root.querySelector<HTMLElement>(".workflow-detail")!;
   let active = 0;
-  let generation = 0;
-  let animations: AnimationPlaybackControls[] = [];
-  function settle() {
-    generation++;
-    animations.forEach((animation) => animation.stop());
-    animations = [];
-    nodes.forEach((node, i) => {
-      node.style.left = `${states[active].points[i][0]}%`;
-      node.style.top = `${states[active].points[i][1]}%`;
-    });
-    // Replace the paths so queued SVG updates cannot touch the settled drawing.
-    svg.innerHTML = ribbonPaths(active);
+  let tweens: AnimationPlaybackControls[] = [];
+
+  function stopTweens() {
+    tweens.forEach((tween) => tween.stop());
+    tweens = [];
   }
+
+  function place(node: HTMLElement, [x, y]: Point) {
+    node.style.setProperty("--node-x", `${x}%`);
+    node.style.setProperty("--node-y", `${y}%`);
+  }
+
+  /** The complete still composition of one state, with no tween left running. */
+  function settle(index = active) {
+    stopTweens();
+    svg.innerHTML = ribbonPaths(index);
+    nodes.forEach((node, i) => place(node, workflows[index].points[i]));
+  }
+
   function select(index: number) {
     if (index === active) return;
-    const previous = states[active];
-    settle();
-    const transitionGeneration = generation;
+    const previous = workflows[active];
+    const next = workflows[index];
     active = index;
-    const state = states[index];
-    art.setAttribute("aria-label", state.description);
+    stopTweens();
     svg.innerHTML = ribbonPaths(index);
+    art.setAttribute("aria-label", next.description);
     buttons.forEach((button, i) =>
       button.setAttribute("aria-pressed", String(i === index)),
     );
-    document.querySelector(".workflow-detail")!.textContent = state.detail;
+    detail.textContent = next.detail;
     nodes.forEach((node, i) => {
-      node.querySelector("span")!.textContent = state.nodes[i];
-      const position = {
-        left: `${state.points[i][0]}%`,
-        top: `${state.points[i][1]}%`,
-      };
-      if (preference.matches) Object.assign(node.style, position);
+      node.querySelector("span")!.textContent = next.nodes[i];
+      place(node, previous.points[i]);
     });
-    if (!preference.matches) {
-      animations.push(
-        animate(0, 1, {
-          duration: 0.6,
-          ease: [0.22, 1, 0.36, 1],
-          onUpdate(progress) {
-            if (generation !== transitionGeneration) return;
-            nodes.forEach((node, i) => {
-              node.style.left = `${previous.points[i][0] + (state.points[i][0] - previous.points[i][0]) * progress}%`;
-              node.style.top = `${previous.points[i][1] + (state.points[i][1] - previous.points[i][1]) * progress}%`;
-            });
-          },
-        }),
-      );
-      animations.push(
-        animate(
-          svg.querySelectorAll("path"),
-          { pathLength: [0, 1] },
-          { duration: 0.75, ease: "easeInOut" },
-        ),
-      );
+    if (motionPreference.matches) {
+      settle(index);
+      return;
     }
+    tweens.push(
+      animate(0, 1, {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+        onUpdate(progress) {
+          if (active !== index) return;
+          nodes.forEach((node, i) => {
+            const [fromX, fromY] = previous.points[i];
+            const [toX, toY] = next.points[i];
+            place(node, [
+              fromX + (toX - fromX) * progress,
+              fromY + (toY - fromY) * progress,
+            ]);
+          });
+        },
+        onComplete() {
+          if (active === index) settle(index);
+        },
+      }),
+    );
+    tweens.push(
+      animate(
+        svg.querySelectorAll("path"),
+        { pathLength: [0, 1] },
+        { duration: 0.75, ease: "easeInOut" },
+      ),
+    );
   }
+
   const handlers = buttons.map((button, index) => {
     const handler = () => select(index);
     button.addEventListener("click", handler);
     return handler;
   });
   const preferenceChanged = () => {
-    if (preference.matches) settle();
+    if (motionPreference.matches) settle();
   };
-  preference.addEventListener("change", preferenceChanged);
+  motionPreference.addEventListener("change", preferenceChanged);
   return () => {
-    settle();
+    stopTweens();
     buttons.forEach((button, i) =>
       button.removeEventListener("click", handlers[i]),
     );
-    preference.removeEventListener("change", preferenceChanged);
+    motionPreference.removeEventListener("change", preferenceChanged);
   };
 }
