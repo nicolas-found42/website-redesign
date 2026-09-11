@@ -1,0 +1,37 @@
+[
+  {
+    "width": 320,
+    "baseNoOverflow": true,
+    "doubleTextNoOverflow": true
+  },
+  {
+    "width": 390,
+    "baseNoOverflow": true,
+    "doubleTextNoOverflow": true
+  },
+  {
+    "width": 700,
+    "baseNoOverflow": true,
+    "doubleTextNoOverflow": true
+  },
+  {
+    "width": 768,
+    "baseNoOverflow": true,
+    "doubleTextNoOverflow": true
+  },
+  {
+    "width": 960,
+    "baseNoOverflow": true,
+    "doubleTextNoOverflow": true
+  },
+  {
+    "width": 1024,
+    "baseNoOverflow": true,
+    "doubleTextNoOverflow": true
+  },
+  {
+    "width": 1440,
+    "baseNoOverflow": true,
+    "doubleTextNoOverflow": true
+  }
+]
