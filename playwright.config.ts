@@ -8,8 +8,13 @@ export default defineConfig({
     reuseExistingServer: true,
   },
   projects: [
-    { name: "chromium", use: { browserName: "chromium" } },
-    { name: "firefox", use: { browserName: "firefox" } },
-    { name: "webkit", use: { browserName: "webkit" } },
+    // Rendering assertions cross the homepage module's own interface and need no
+    // engine, so they run once instead of once per browser.
+    { name: "unit", testMatch: /render\.spec\.ts/ },
+    ...["chromium", "firefox", "webkit"].map((name) => ({
+      name,
+      testIgnore: /render\.spec\.ts/,
+      use: { browserName: name },
+    })),
   ],
 });
