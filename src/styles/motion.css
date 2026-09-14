@@ -14,21 +14,35 @@ html[data-motion="on"] [data-reveal] {
 html[data-motion="on"] [data-reveal].is-in {
   opacity: 1;
   transform: none;
+  /* Opacity resolves well before the travel does, so text spends as little
+     time as possible at a reduced contrast on its way in. */
   transition:
-    opacity 620ms var(--ease-out),
+    opacity 300ms var(--ease-out),
     transform 720ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
   will-change: auto;
 }
 
 /* A headline arrives line by line, each line rising out of its own mask. */
+/**
+ * The mask clips vertically only. `overflow: hidden` would also clip sideways,
+ * which truncates a long word mid-entrance at large text sizes on a narrow
+ * screen; an inset clip path leaves the horizontal axis alone.
+ */
 html[data-motion="on"] [data-reveal-lines] .line {
   padding-bottom: 0.16em;
   margin-bottom: -0.16em;
-  overflow: hidden;
+  clip-path: inset(0 -50vw);
 }
+/**
+ * A split word is an inline-block, whose minimum width is the whole word — so a
+ * headline waiting to play could push the document sideways at large text
+ * sizes. `anywhere` lets that minimum collapse; it only takes effect when the
+ * word genuinely cannot fit.
+ */
 html[data-motion="on"] [data-reveal-lines] .word {
   display: inline-block;
+  overflow-wrap: anywhere;
   will-change: transform;
   transition: transform 940ms var(--ease-out);
   transition-delay: var(--word-delay, 0ms);

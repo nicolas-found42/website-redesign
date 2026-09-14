@@ -80,13 +80,27 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     tweens = [];
   }
 
-  /** Clears anything a draw left on a path, so nothing is half-drawn at rest. */
+  /**
+   * Clears everything a draw leaves on a path.
+   *
+   * A `pathLength` tween draws a route by writing `stroke-dasharray` and
+   * `stroke-dashoffset` as presentation *attributes*. Left behind, they hold
+   * every route at a one-unit dash pattern — a solid line rendered as dots —
+   * and they override the stylesheet's own dash on the feedback route. The
+   * geometry underneath is already complete, so clearing them is all a
+   * finished draw needs.
+   */
   function clearDrawing() {
     for (const path of paths) {
-      path.style.removeProperty("stroke-dasharray");
-      path.style.removeProperty("stroke-dashoffset");
-      path.style.removeProperty("pathLength");
-      path.removeAttribute("pathLength");
+      path.getAnimations().forEach((animation) => animation.cancel());
+      for (const name of [
+        "stroke-dasharray",
+        "stroke-dashoffset",
+        "pathLength",
+      ]) {
+        path.removeAttribute(name);
+        path.style.removeProperty(name);
+      }
     }
   }
 
@@ -314,7 +328,12 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
         animate(
           paths,
           { pathLength: [0, 1] },
-          { duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: stagger(0.05) },
+          {
+            duration: 0.75,
+            ease: [0.16, 1, 0.3, 1],
+            delay: stagger(0.05),
+            onComplete: clearDrawing,
+          },
         ),
       );
     }, 300);

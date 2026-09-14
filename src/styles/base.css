@@ -6,6 +6,12 @@ body {
   margin: 0;
   overflow-x: clip;
   background: var(--paper);
+  /**
+   * At 200% text size a narrow column cannot fit a long display word on one
+   * line. Breaking it is the accepted outcome; pushing the document sideways
+   * is not. This only ever applies to a word that genuinely does not fit.
+   */
+  overflow-wrap: break-word;
 }
 img,
 svg {
@@ -87,6 +93,24 @@ body::after {
 #app {
   position: relative;
   z-index: 1;
+}
+
+/**
+ * A grid or flex item is at least as wide as its own longest word unless it is
+ * told otherwise, which lets one long word at 200% text size push a column past
+ * its track and the document sideways. Every multi-column band opts out.
+ */
+.section-head > *,
+.services-head > *,
+.services-stage > *,
+.proof-grid > *,
+.contact-grid > *,
+.resource-grid > *,
+.resource-column > *,
+.footer-grid > *,
+.resource-strip > *,
+.index > * {
+  min-width: 0;
 }
 
 /* ── Layout ── */

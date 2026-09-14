@@ -18,7 +18,7 @@ export function servicesSection() {
   const rail = schematics
     .map(
       (schematic, index) =>
-        `<button class="choice" type="button" data-service="${index}" aria-pressed="${index === 0}"><span class="choice-index">0${index + 1}</span><span>${schematic.choice}</span></button>`,
+        `<button class="choice" type="button" data-service="${index}" aria-pressed="${index === 0}"><span class="choice-index" aria-hidden="true">0${index + 1}</span><span>${schematic.choice}</span></button>`,
     )
     .join("");
 

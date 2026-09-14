@@ -5,15 +5,23 @@
  * gains its rule and its paper only once the visitor has left the opening
  * spread, so the hero reads as a full sheet.
  */
+/**
+ * The header wraps rather than overflows. At a large text size the desktop
+ * navigation is wider than the row it sits in, and the viewport-width
+ * breakpoint that hands over to the menu cannot see that — media-query `rem`
+ * is relative to the browser's initial font size, not the page's.
+ */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 40;
   display: flex;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 12px 24px;
   align-items: center;
   justify-content: space-between;
-  height: clamp(72px, 5vw, 96px);
+  min-height: clamp(72px, 5vw, 96px);
+  padding-block: 8px;
   background: rgb(250 249 246 / 0%);
   transition:
     background 320ms var(--ease-out),
@@ -114,8 +122,10 @@
 
 #navigation {
   display: flex;
-  gap: clamp(18px, 2vw, 34px);
+  flex-wrap: wrap;
+  gap: 6px clamp(18px, 2vw, 34px);
   align-items: center;
+  justify-content: flex-end;
 }
 #navigation a {
   position: relative;
@@ -181,6 +191,8 @@
   .menu-toggle {
     display: inline-flex;
   }
+  /* A wrapping *column* would spill into extra columns sideways, so the panel
+     is explicitly a single column that scrolls if it runs out of height. */
   #navigation {
     position: fixed;
     top: 0;
@@ -190,10 +202,13 @@
     z-index: 50;
     display: flex;
     flex-direction: column;
+    flex-wrap: nowrap;
     gap: 4px;
     align-items: flex-start;
     justify-content: center;
-    padding: 0 var(--gutter);
+    padding: var(--gutter);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     visibility: hidden;
     background: var(--paper);
     opacity: 0;
