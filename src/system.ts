@@ -230,14 +230,22 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
       animate(
         [...markersLayer.querySelectorAll(".marker-body")],
         { opacity: [0, 1], scale: [0.4, 1] },
-        { duration: 0.5, ease: [0.34, 1.32, 0.64, 1], delay: stagger(0.06, { startDelay: 0.45 }) },
+        {
+          duration: 0.5,
+          ease: [0.34, 1.32, 0.64, 1],
+          delay: stagger(0.06, { startDelay: 0.45 }),
+        },
       ),
     );
     tweens.push(
       animate(
         [...labelsLayer.querySelectorAll(".system-label-text")],
         { opacity: [0, 1], y: [8, 0] },
-        { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: stagger(0.06, { startDelay: 0.6 }) },
+        {
+          duration: 0.5,
+          ease: [0.16, 1, 0.3, 1],
+          delay: stagger(0.06, { startDelay: 0.6 }),
+        },
       ),
     );
     runLoop();

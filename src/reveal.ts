@@ -119,7 +119,10 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
       sentence.replaceWith(mask);
       mask.append(sentence);
       sentence.classList.add("line-move");
-      sentence.style.setProperty("--word-delay", `${index * WORD_STAGGER * 3}ms`);
+      sentence.style.setProperty(
+        "--word-delay",
+        `${index * WORD_STAGGER * 3}ms`,
+      );
     });
     return {
       count: sentences.length,

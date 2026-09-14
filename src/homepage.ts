@@ -71,7 +71,10 @@ export function mountHomepage(
     }
   };
   const closeOnEscape = (event: KeyboardEvent) => {
-    if (event.key === "Escape" && menu.getAttribute("aria-expanded") === "true") {
+    if (
+      event.key === "Escape" &&
+      menu.getAttribute("aria-expanded") === "true"
+    ) {
       closeMenu();
       menu.focus();
     }
@@ -106,9 +109,7 @@ export function mountHomepage(
    * scroll against the header's own box, because the bands change height with
    * the viewport and a precomputed observer margin would drift.
    */
-  const grounds = [
-    ...root.querySelectorAll<HTMLElement>("[data-ground]"),
-  ];
+  const grounds = [...root.querySelectorAll<HTMLElement>("[data-ground]")];
   let ground = "";
   const readGround = () => {
     const line = header.getBoundingClientRect().bottom - 2;

@@ -40,7 +40,9 @@ const drawing = (target: Page) =>
       leaning: [
         ...document.querySelectorAll(".services-art .system-field"),
       ].map((el) =>
-        round(Number((el as HTMLElement).style.getPropertyValue("--lean-x")) || 0),
+        round(
+          Number((el as HTMLElement).style.getPropertyValue("--lean-x")) || 0,
+        ),
       ),
     };
   });
@@ -160,7 +162,9 @@ test("the opening drawing is complete and labelled without any interaction", asy
   await expect
     .poll(() => opening.locator(".system-label").count())
     .toBeGreaterThan(3);
-  await expect(opening.getByText("Human direction", { exact: true })).toBeVisible();
+  await expect(
+    opening.getByText("Human direction", { exact: true }),
+  ).toBeVisible();
   await expect
     .poll(() =>
       opening
@@ -215,9 +219,9 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
   });
   await automation.tap();
   await expect(automation).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.locator('[data-service-article="1"]'),
-  ).toHaveClass(/is-current/);
+  await expect(page.locator('[data-service-article="1"]')).toHaveClass(
+    /is-current/,
+  );
   await context.close();
 });
 
