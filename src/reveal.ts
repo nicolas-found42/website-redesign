@@ -21,10 +21,13 @@ import type { MotionPreference } from "./motion-preference";
  */
 
 const STAGGER = 70;
-const WORD_STAGGER = 42;
-const WORD_TRAVEL = 940;
+const WORD_STAGGER = 26;
+const WORD_TRAVEL = 640;
 
 type Options = { motionPreference: MotionPreference };
+
+/** What a headline's entrance needs: the parts that move, and how to undo it. */
+type Parts = { count: number; revert: () => void };
 
 const settle = (element: Element) => element.classList.add("is-in");
 
@@ -37,7 +40,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
   ];
 
   /** A headline is in this map only while its split is live. */
-  const splits = new Map<HTMLElement, SplitType>();
+  const splits = new Map<HTMLElement, Parts>();
   const played = new WeakSet<HTMLElement>();
   const timers = new Set<number>();
   let observer: IntersectionObserver | undefined;
@@ -97,20 +100,57 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
     new Promise((resolve) => setTimeout(resolve, 1200)),
   ]);
 
+  /**
+   * A headline written as sentences already says where its lines go, so it is
+   * masked exactly there. Measuring it instead would re-break it: the measuring
+   * pass lays every word out as an inline block, which does not always group
+   * the same way the finished text does — and the heading then stood a line
+   * deeper for the length of its own entrance.
+   */
+  function maskSentences(headline: HTMLElement): Parts | undefined {
+    const sentences = [
+      ...headline.querySelectorAll<HTMLElement>(":scope > .sentence"),
+    ];
+    if (!sentences.length) return undefined;
+    const original = headline.innerHTML;
+    sentences.forEach((sentence, index) => {
+      const mask = document.createElement("span");
+      mask.className = "line";
+      sentence.replaceWith(mask);
+      mask.append(sentence);
+      sentence.classList.add("line-move");
+      sentence.style.setProperty("--word-delay", `${index * WORD_STAGGER * 3}ms`);
+    });
+    return {
+      count: sentences.length,
+      revert: () => {
+        headline.innerHTML = original;
+      },
+    };
+  }
+
   function split(headline: HTMLElement) {
     if (played.has(headline) || splits.has(headline)) return;
     try {
+      const sentences = maskSentences(headline);
+      if (sentences) {
+        splits.set(headline, sentences);
+        return;
+      }
       const parts = new SplitType(headline, {
         types: "lines,words",
         tagName: "span",
       });
-      splits.set(headline, parts);
       (parts.words ?? []).forEach((word, index) =>
         (word as HTMLElement).style.setProperty(
           "--word-delay",
           `${index * WORD_STAGGER}ms`,
         ),
       );
+      splits.set(headline, {
+        count: parts.words?.length ?? 0,
+        revert: () => parts.revert(),
+      });
     } catch {
       // A headline that cannot be split still has to be readable.
       played.add(headline);
@@ -122,7 +162,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
     if (played.has(headline)) return;
     played.add(headline);
     settle(headline);
-    const words = splits.get(headline)?.words?.length ?? 0;
+    const words = splits.get(headline)?.count ?? 0;
     if (!words) return;
     // Hand the heading back to the browser as plain text once it has arrived.
     const timer = window.setTimeout(
@@ -130,7 +170,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
         timers.delete(timer);
         if (!disposed) unsplit(headline);
       },
-      WORD_TRAVEL + words * WORD_STAGGER + 120,
+      WORD_TRAVEL + words * WORD_STAGGER * 3 + 120,
     );
     timers.add(timer);
   }
@@ -147,8 +187,19 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
     }
   }
 
+  /**
+   * Split straight away, then split again with the real line boxes once the
+   * fonts have settled. Waiting for the fonts before the first split would
+   * leave the headings painted and readable for a frame and then take them
+   * away to animate them in — visible as a flash on a warm cache.
+   */
+  headlines().forEach(split);
   void fontsSettled.then(() => {
     if (disposed) return;
+    for (const headline of headlines()) {
+      if (played.has(headline)) continue;
+      unsplit(headline);
+    }
     prepare();
   });
 

@@ -191,8 +191,9 @@
 @media (max-width: 960px) {
   .services-head {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
     align-items: start;
+    padding-bottom: clamp(32px, 7vw, 64px);
   }
   .services-stage {
     display: block;
@@ -218,11 +219,28 @@
   }
   /* Stacked, the leading edge is the top of the article rather than its side. */
   .service {
+    gap: 14px;
     min-height: 0;
     padding-left: 0;
-    padding-block: clamp(40px, 9vw, 72px);
+    padding-block: clamp(32px, 7vw, 64px);
     border-top: 1px solid var(--line-ink);
     border-left: 0;
+  }
+  /* The service is named before its drawing is shown. */
+  .service-label {
+    order: 1;
+  }
+  .service h3 {
+    order: 2;
+  }
+  .service-figure {
+    order: 3;
+  }
+  .service .body {
+    order: 4;
+  }
+  .service-detail {
+    order: 5;
   }
   .service::before {
     top: -1px;
@@ -241,8 +259,8 @@
   }
   .service-figure {
     display: block;
-    width: min(100%, 380px);
-    margin-bottom: clamp(8px, 2vw, 18px);
+    width: min(100%, 340px);
+    margin-block: 6px;
   }
   .services-foot {
     justify-content: flex-start;

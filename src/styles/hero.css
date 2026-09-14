@@ -41,12 +41,16 @@
   inset: -14% -28% -14% -40%;
 }
 
+/**
+ * The opening line break is structural rather than left to the measure. Both
+ * automatic modes were wrong here — "pretty" leaves a one-word second line, and
+ * "balance" gave a different grouping while the headline was split for its
+ * entrance than after it, so the whole block moved when the split reverted.
+ */
 .hero h1 {
-  /* Balanced rather than "pretty": pretty pushes words down to protect the last
-     line and leaves a one-word second line in this particular sentence. */
   max-width: 13ch;
   margin-bottom: clamp(20px, 2.2vw, 34px);
-  text-wrap: balance;
+  text-wrap: normal;
 }
 .hero-lead {
   max-width: 40ch;

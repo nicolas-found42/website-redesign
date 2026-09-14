@@ -234,8 +234,10 @@ h3 {
  * heading like "Business experience. A teacher's mindset." breaks mid-sentence
  * and reads as four unrelated fragments.
  */
+/* `!important` so the split, which sets `display` inline on what it wraps,
+   cannot flatten a deliberate sentence break back into the running measure. */
 .display .sentence {
-  display: block;
+  display: block !important;
 }
 
 /* Stripe's move: the claim at full strength, its qualifier stepped back. */

@@ -14,7 +14,7 @@ export function hero() {
  <div class="wrap hero-inner">
   <div class="hero-copy">
    <p class="index"><span class="rule"></span><span class="note">Practical AI. Human ambition.</span></p>
-   <h1 id="hero-title" class="display" data-reveal-lines>Put AI to work on what <span class="signal">moves your business.</span></h1>
+   <h1 id="hero-title" class="display" data-reveal-lines><span class="sentence">Put AI to work</span> <span class="sentence">on what <span class="signal">moves your business.</span></span></h1>
    <p class="lead hero-lead" data-reveal><strong>Help your people apply AI.</strong> Improve the workflows that slow them down. Build new value from what your business knows.</p>
    <div class="hero-actions" data-reveal>
     <a class="action" href="#resources">Explore free resources ${arrow}</a>

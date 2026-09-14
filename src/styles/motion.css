@@ -25,14 +25,15 @@ html[data-motion="on"] [data-reveal].is-in {
 
 /* A headline arrives line by line, each line rising out of its own mask. */
 /**
- * The mask clips vertically only. `overflow: hidden` would also clip sideways,
- * which truncates a long word mid-entrance at large text sizes on a narrow
- * screen; an inset clip path leaves the horizontal axis alone.
+ * The mask clips vertically only, and it does it with a clip path rather than
+ * overflow and padding. `overflow: hidden` would also clip sideways, which
+ * truncates a long word mid-entrance at large text sizes; padding paired with a
+ * negative margin to protect descenders changed the heading's own height when
+ * it was split, which moved the block below it — a layout shift on every load.
+ * A clip path reaches past the line box without occupying any space.
  */
 html[data-motion="on"] [data-reveal-lines] .line {
-  padding-bottom: 0.16em;
-  margin-bottom: -0.16em;
-  clip-path: inset(0 -50vw);
+  clip-path: inset(0 -50vw -0.14em -50vw);
 }
 /**
  * A split word is an inline-block, whose minimum width is the whole word — so a
@@ -40,11 +41,45 @@ html[data-motion="on"] [data-reveal-lines] .line {
  * sizes. `anywhere` lets that minimum collapse; it only takes effect when the
  * word genuinely cannot fit.
  */
+/**
+ * `vertical-align: top` is load-bearing, and it has to reach every inline-block
+ * the split introduces — the word spans and any span of our own that the split
+ * wraps. An inline-block sitting on the baseline makes its line box taller than
+ * the heading's own tight line height, so a split heading stood a whole line
+ * taller than the same text unsplit and the page jumped when it reverted.
+ */
+html[data-motion="on"] [data-reveal-lines] .line > * {
+  vertical-align: top;
+}
+/**
+ * The split also wraps our own spans in inline-blocks, and an inline-block
+ * shrink-to-fits and re-wraps its words independently of the line it sits on —
+ * which laid the opening headline out a line deeper while it was arriving.
+ * `.sentence` is the one span that is meant to be a block; everything else goes
+ * back into the flow.
+ */
+html[data-motion="on"] [data-reveal-lines] .line > :not(.word, .sentence) {
+  display: inline !important;
+}
+/* A sentence-masked headline moves whole lines; a measured one moves words. */
+html[data-motion="on"] [data-reveal-lines] .line-move {
+  display: block;
+  will-change: transform;
+  transition: transform 640ms var(--ease-out);
+  transition-delay: var(--word-delay, 0ms);
+  transform: translateY(104%);
+}
+html[data-motion="on"] [data-reveal-lines].is-in .line-move {
+  will-change: auto;
+  transform: none;
+}
+
 html[data-motion="on"] [data-reveal-lines] .word {
   display: inline-block;
   overflow-wrap: anywhere;
+  vertical-align: top;
   will-change: transform;
-  transition: transform 940ms var(--ease-out);
+  transition: transform 640ms var(--ease-out);
   transition-delay: var(--word-delay, 0ms);
   transform: translateY(105%);
 }
