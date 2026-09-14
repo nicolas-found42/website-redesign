@@ -69,8 +69,8 @@ local run, Playwright Chromium.
 | Observation                | Before (deployed) |  This iteration |
 | -------------------------- | ----------------: | --------------: |
 | Cumulative layout shift    |                 — |       **0.000** |
-| Largest contentful paint   |                 — | 1,000ms / 812ms |
-| First contentful paint     |                 — |     36ms / 20ms |
+| Largest contentful paint   |                 — |   980ms / 816ms |
+| First contentful paint     |                 — |     32ms / 20ms |
 | Frame time, median and p95 |                 — |   16.7 / 16.7ms |
 | Document height at 1440px  |           5,105px |         8,364px |
 | Document height at 390px   |           7,413px |        10,153px |

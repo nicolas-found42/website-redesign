@@ -1,40 +1,40 @@
 {
   "desktop": {
-    "domContentLoaded": 28,
+    "domContentLoaded": 29,
     "load": 38,
     "fcp": 32,
-    "lcp": 996,
+    "lcp": 980,
     "cls": 0,
     "frames": {
       "median": 16.7,
-      "p95": 16.8,
+      "p95": 16.7,
       "worst": 16.8
     },
-    "transferBytes": 336180,
+    "transferBytes": 336169,
     "byType": {
       "text/html": 661,
       "text/css": 32370,
-      "text/javascript": 127725,
+      "text/javascript": 127714,
       "font/woff2": 87528,
       "image/png": 87896
     }
   },
   "mobile": {
-    "domContentLoaded": 31,
-    "load": 42,
+    "domContentLoaded": 34,
+    "load": 43,
     "fcp": 20,
-    "lcp": 828,
+    "lcp": 816,
     "cls": 0,
     "frames": {
       "median": 16.7,
       "p95": 16.8,
       "worst": 16.8
     },
-    "transferBytes": 336180,
+    "transferBytes": 336169,
     "byType": {
       "text/html": 661,
       "text/css": 32370,
-      "text/javascript": 127725,
+      "text/javascript": 127714,
       "font/woff2": 87528,
       "image/png": 87896
     }
