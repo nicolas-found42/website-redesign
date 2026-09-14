@@ -84,12 +84,20 @@
   position: absolute;
   inset: 0;
 }
-/* `--x` / `--y` arrive unitless, as a share of the field. */
+/**
+ * `--x` / `--y` arrive unitless, as a share of the field.
+ *
+ * `width: max-content` matters: an absolutely positioned box offset from the
+ * left shrink-to-fits into whatever room is left to the *right* of that offset,
+ * so a label that is then translated leftwards would be squeezed to a column
+ * only as wide as the margin it was never going to occupy.
+ */
 .system-label {
   position: absolute;
   top: calc(var(--y) * 1%);
   left: calc(var(--x) * 1%);
   display: block;
+  width: max-content;
   max-width: min(44cqw, 26ch);
   font-family: var(--font-note);
   font-size: clamp(0.75rem, 0.52rem + 0.62cqw, 0.875rem);

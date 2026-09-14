@@ -23,9 +23,9 @@ export function credibilitySection() {
  <div class="section-head">
   <div>
    <p class="index"><b>03</b><span class="rule"></span><span class="note">People behind the possibilities</span></p>
-   <h2 id="proof-title" class="display" data-reveal-lines>Business experience. <span class="signal">A teacher’s mindset.</span></h2>
+   <h2 id="proof-title" class="display" data-reveal-lines><span class="sentence">Business experience.</span> <span class="sentence signal">A teacher’s mindset.</span></h2>
   </div>
-  <p class="lead" data-reveal>Found42 is Richard Achée — a career in enterprise technology, now spent helping teams turn what they already know into practical AI use.</p>
+  <p class="lead" data-reveal>Found42 is Richard Achée: coaching and mentoring teams to turn what they already know into practical AI use.</p>
  </div>
 
  <div class="proof-grid">

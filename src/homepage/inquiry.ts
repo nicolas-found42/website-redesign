@@ -18,7 +18,7 @@ export function inquirySection() {
  <div class="wrap contact-grid">
   <div class="contact-open">
    <p class="index"><b>04</b><span class="rule"></span><span class="note">Let’s put it to work</span></p>
-   <h2 id="contact-title" class="display" data-reveal-lines>Bring a challenge. Find a way forward.</h2>
+   <h2 id="contact-title" class="display" data-reveal-lines><span class="sentence">Bring a challenge.</span> <span class="sentence">Find a way forward.</span></h2>
   </div>
   <div class="contact-copy">
    <ul class="contact-list">

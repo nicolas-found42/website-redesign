@@ -67,10 +67,10 @@
 }
 .feature-accent {
   position: absolute;
-  top: clamp(120px, 20%, 220px);
+  top: clamp(150px, 30%, 300px);
   right: 0;
   left: 0;
-  height: clamp(120px, 26%, 260px);
+  height: clamp(110px, 24%, 230px);
   pointer-events: none;
 }
 .accent-route {
