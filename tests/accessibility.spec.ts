@@ -89,14 +89,15 @@ async function settle(page: import("@playwright/test").Page) {
     window.scrollTo(0, 0);
   });
   // Wait on the page's own state rather than a fixed delay, so a slow machine
-  // measures a settled page instead of a half-finished entrance.
+  // measures a settled page instead of a half-finished entrance. Only the
+  // blocks are counted: a heading that is still split is one below the fold
+  // waiting its turn, which is the design rather than an unfinished entrance,
+  // and it is already at full opacity either way.
   await expect
     .poll(
       () =>
         page.evaluate(
-          () =>
-            document.querySelectorAll("[data-reveal]:not(.is-in)").length +
-            document.querySelectorAll("[data-reveal-lines] .line").length,
+          () => document.querySelectorAll("[data-reveal]:not(.is-in)").length,
         ),
       { timeout: 15000 },
     )

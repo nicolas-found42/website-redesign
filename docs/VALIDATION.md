@@ -11,7 +11,7 @@ fresh captures of that design taken from the deployed site before any change.
 
 - `npm run typecheck`: passed.
 - `npm run build`: passed.
-- `npm test`: **58 passed** — 54 browser tests across Chromium, Firefox and
+- `npm test`: **61 passed** — 57 browser tests across Chromium, Firefox and
   WebKit, plus 4 rendering assertions in the `unit` project that cross
   `renderHomepage()` without an engine.
 - Axe WCAG 2 / 2.1 / 2.2 A and AA at 390, 768 and 1440px: **no violations**.
@@ -124,6 +124,12 @@ Recorded because each was invisible in a passing build:
 - Allowing the header to wrap introduced a wrapping _column_ in the mobile menu
   panel, which spilled into extra columns sideways.
 - `invert(1)` on the logo over an ink band turns its red "42" cyan.
+- The headline entrance waited for the fonts before it played, so a slow font
+  load held a heading that was already on screen invisible for as long as the
+  font took — up to the 1.2s cap. Found by CI on a loaded runner, not locally
+  on a warm cache. The split still waits for the fonts to measure real line
+  boxes; the entrance no longer does. A test now blocks the font files for
+  three seconds and requires the opening headline to have arrived within one.
 
 ## Remaining coverage and acceptance
 

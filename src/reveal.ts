@@ -191,12 +191,17 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
   }
 
   /**
-   * Split straight away, then split again with the real line boxes once the
-   * fonts have settled. Waiting for the fonts before the first split would
-   * leave the headings painted and readable for a frame and then take them
-   * away to animate them in — visible as a flash on a warm cache.
+   * Split and play straight away, then do it again with the real line boxes
+   * once the fonts have settled.
+   *
+   * Both halves matter. Splitting before the fonts avoids painting the
+   * headings, then taking them away to animate them in — a flash on a warm
+   * cache. Playing before the fonts is what stops a slow font load from
+   * holding a heading that is already on screen invisible for as long as the
+   * font takes; a heading still waiting its turn is off screen, and is
+   * re-split with the correct line boxes before it plays.
    */
-  headlines().forEach(split);
+  prepare();
   void fontsSettled.then(() => {
     if (disposed) return;
     for (const headline of headlines()) {

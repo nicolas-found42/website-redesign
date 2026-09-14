@@ -257,3 +257,36 @@ test("a visitor can stop the page's motion and start it again", async ({
     page.getByRole("button", { name: "Pause motion" }),
   ).toHaveAttribute("aria-pressed", "false");
 });
+
+test("a slow font does not hold the opening headline back", async ({
+  page,
+}) => {
+  // The split waits for the fonts so it can measure real line boxes. If that
+  // wait also gated the entrance, a slow font would leave the headline hidden
+  // for as long as it took — so the entrance must not wait for it.
+  await page.route("**/*.woff2", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await route.continue();
+  });
+  await page.goto("/", { waitUntil: "commit" });
+
+  const headline = page.getByRole("heading", { level: 1 });
+  await expect(headline).toHaveClass(/is-in/, { timeout: 1000 });
+  await expect
+    .poll(
+      () =>
+        headline.evaluate((element) =>
+          [...element.querySelectorAll(".line-move, .word")].every((part) => {
+            const transform = getComputedStyle(part).transform;
+            return (
+              transform === "none" || transform === "matrix(1, 0, 0, 1, 0, 0)"
+            );
+          }),
+        ),
+      { timeout: 2000 },
+    )
+    .toBe(true);
+  await expect(headline).toHaveText(
+    "Put AI to work on what moves your business.",
+  );
+});
