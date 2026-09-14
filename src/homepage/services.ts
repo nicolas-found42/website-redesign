@@ -13,6 +13,10 @@ import { schematicFigure, schematics } from "../schematic";
  *
  * Both arrangements contain all three services in full. Nothing is behind an
  * interaction, and the choice rail is a way to jump rather than a way to reveal.
+ *
+ * The caption under the drawing is not a live region. Reading changes it, so
+ * announcing it would narrate an ordinary scroll; every sentence it can show is
+ * already in the article beside it, and the drawing carries its own description.
  */
 export function servicesSection() {
   const rail = schematics
@@ -49,7 +53,7 @@ export function servicesSection() {
     <div class="services-sticky">
      <div class="services-art" data-system-host></div>
      <div class="services-rail" role="group" aria-label="Jump to a way we help">${rail}</div>
-     <p class="services-caption note--plain" aria-live="polite">${schematics[0].detail}</p>
+     <p class="services-caption note--plain" aria-hidden="true">${schematics[0].detail}</p>
     </div>
    </div>
    <div class="services-list">${articles}</div>
