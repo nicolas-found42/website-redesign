@@ -72,4 +72,4 @@ sentence that attributes that career to the published biography.
 
 The rendered entry pages for all four resources, the blog, About, Contact and the testimonial homepage returned HTTP 200 during the September 9 follow-up (local date). Andrew Miller’s client-conversations excerpt was found in the rendered homepage. See `preview/expressive/destination-checks.json`. Entry-page checks do not verify resource fulfillment or inquiry routing. Resource descriptions were shortened for mobile without changing their purposes, fields or destinations.
 
-The two new connection drawings are original SVG artwork generated from `src/workflow.ts`, optimized with SVGO through `npm run artwork`. Lucide’s ISC/Feather MIT notices and Motion’s MIT notice are bundled in `public/assets/`. No reference-site artwork or React Bits code was copied.
+The two connection drawings of that iteration were original SVG artwork generated from `src/workflow.ts` and optimized with SVGO through `npm run artwork`. All three were removed with the ribbon motif; the drawing that replaced it is rendered inline. No reference-site artwork or React Bits code was copied.
