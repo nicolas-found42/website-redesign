@@ -32,9 +32,41 @@ Both actual brand assets are listed on [Found42 media assets](https://www.found4
 
 - Logo: https://images.squarespace-cdn.com/content/v1/68488bfd173fc83bd35b3d01/1752714805616-YV4IUTIG9C7M5XJA6CXV/Found42+logo+transparent.png → `public/assets/found42-logo.png`. Original bytes preserved; CSS crops transparent padding without changing artwork proportions.
 - Richard portrait: https://images.squarespace-cdn.com/content/v1/68488bfd173fc83bd35b3d01/c62c93d1-8a52-40fd-b6d8-c72fa10f56cc/687860b5affe67f038ffe50b-HeadshotPro+%281%29.png?format=750w → `public/assets/richard-achee.png`.
-- Manrope and Space Grotesk variable fonts: bundled from Fontsource npm packages, SIL Open Font License. The dependency lockfile pins the delivered versions.
+- Manrope, Space Grotesk and JetBrains Mono variable fonts: bundled from Fontsource npm packages, SIL Open Font License. Each face is declared individually in `src/styles/fonts.css`, so only the three Latin weight-axis files are published. The dependency lockfile pins the delivered versions, and the three OFL texts travel with the built assets.
 
 Public availability alone does not establish an independent asset license; Found42’s assets are used for its requested redesign. External resource fulfillment, biography verification, policy adequacy and live-site fixes remain outside prototype scope.
+
+## Library attribution
+
+Licence notices for every bundled runtime dependency accompany the built assets
+in `public/assets/`: Motion (MIT), Lucide (ISC, with Feather's MIT notice),
+Lenis (MIT), the three OFL font licences, and an attribution notice for
+SplitType, whose npm package declares ISC but ships no licence file — the notice
+points to the repository that holds the canonical text rather than asserting a
+copyright line on the author's behalf. No third-party source was copied into
+this project; all four libraries are used through their public APIs.
+
+## Working Drawings pass
+
+The drawing that replaced the ribbon motif is original geometry generated in
+`src/schematic.ts`. Its node labels are the page's own vocabulary — people,
+workflows, what the business knows, human direction, practical AI at work, and
+the four labelled steps already carried by each service illustration. They are
+presented as an illustration of the possibilities and captioned as one; none of
+them names a product, an integration, a customer system or a measured result.
+
+The reference sites studied for this direction are listed in
+`research/art-direction-2026-09-14.md`. They informed technique — type scale and
+tracking, grid structure, how a section index is set, where credibility sits —
+and nothing else. No imagery, client logo, wording or commercial claim was
+reused from any of them.
+
+Section, service and resource copy is unchanged from the records above, with two
+exceptions, both rewrites of the page's own connecting sentences rather than of
+any sourced claim: the free-resources introduction now says that each route
+states what it asks for before you get it, which is what the four access notes
+show; and the founder introduction no longer summarises a career outside the
+sentence that attributes that career to the published biography.
 
 ## Expressive design pass
 

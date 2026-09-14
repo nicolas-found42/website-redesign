@@ -99,6 +99,53 @@
   text-transform: none;
   letter-spacing: 0.02em;
 }
+/**
+ * The control that stops the page's own movement. It is a real switch, not a
+ * hint: pausing settles every drawing, stops the signals, ends smooth scrolling
+ * and drops pointer depth. When the operating system has already asked for
+ * reduced motion there is nothing left for it to stop, so it is not shown.
+ */
+.motion-toggle {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  color: var(--muted);
+  transition: color 200ms var(--ease-out);
+}
+.motion-toggle:hover {
+  color: var(--red);
+}
+.motion-toggle-mark {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  background: var(--red);
+  border-radius: 50%;
+}
+/* A halo, not a pulse: one more thing moving forever is what this control is
+   here to stop. The state reads from the mark's shape and colour instead. */
+.motion-toggle-mark::after {
+  position: absolute;
+  content: "";
+  background: var(--red);
+  border-radius: 50%;
+  opacity: 0.22;
+  inset: -5px;
+}
+.motion-toggle[aria-pressed="true"] .motion-toggle-mark {
+  background: var(--muted);
+  border-radius: 1px;
+}
+.motion-toggle[aria-pressed="true"] .motion-toggle-mark::after {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-toggle {
+    display: none;
+  }
+}
+
 .hero-cue {
   display: inline-flex;
   gap: 10px;

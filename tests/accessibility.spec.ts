@@ -88,7 +88,20 @@ async function settle(page: import("@playwright/test").Page) {
     }
     window.scrollTo(0, 0);
   });
-  await page.waitForTimeout(1200);
+  // Wait on the page's own state rather than a fixed delay, so a slow machine
+  // measures a settled page instead of a half-finished entrance.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(
+          () =>
+            document.querySelectorAll("[data-reveal]:not(.is-in)").length +
+            document.querySelectorAll("[data-reveal-lines] .line").length,
+        ),
+      { timeout: 15000 },
+    )
+    .toBe(0);
+  await page.waitForTimeout(400);
 }
 
 for (const width of [390, 768, 1440])

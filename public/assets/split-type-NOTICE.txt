@@ -1,0 +1,18 @@
+SplitType — attribution notice
+==============================
+
+The homepage bundles SplitType to measure the line boxes of the headings that
+carry a masked entrance.
+
+  Package:    split-type 0.3.4 (npm)
+  Author:     Luke Peavey
+  Licence:    ISC, as declared in the package manifest
+  Repository: https://github.com/lukePeavey/SplitType
+
+The published npm package does not include a licence file, so the canonical
+licence text is the LICENSE file in the repository above rather than a copy
+made here. This notice is reproduced rather than the licence itself so that no
+copyright line is asserted on the author's behalf.
+
+No SplitType source was copied into this project; it is used as a dependency
+through its public API.

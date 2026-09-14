@@ -1,27 +1,145 @@
 # Design decisions
 
-Nicolas selected **light editorial** after the original desktop/mobile hero review, then requested all recommendations from `research/visual-design-critique-2026-09-09.md`, with creative ambition. This iteration preserves that selection and replaces the initial visual system. The original light/dark captures are historical; the old `?direction=dark` switch is retired. The selected design is at `/`.
+The homepage is drawn in a direction called **Working Drawings**. It replaces
+the ribbon motif and the flat band rhythm that preceded it; the earlier light
+editorial selection, the black/red identity, the original logo and Richard
+Achée's portrait are carried forward. Screenshots of the previous iteration are
+kept under `preview/expressive/` and `preview/` as historical record.
 
-## Art direction: business expertise, connected
+## Art direction: the working system, drawn
 
-The signature artwork is an original family of red ribbon connections. Training uses an interconnected loop; automation draws a route across functions; product value combines inputs into a customer workflow. It is an illustrative visual language, with no fabricated metrics, software interface or client proof. The geometry appears at three scales: the interactive hero, service illustrations and oversized fragments in the editorial resource feature and closing invitation.
+Found42's argument is that a business already has the expertise, and the work is
+connecting it into something people actually use. The page makes that argument
+with one graphic idea used at three scales rather than with decoration.
 
-The page pairs an open, pale hero with assertive Space Grotesk typography, a featured black/red reading composition, quieter supporting resources, a dark services section, a portrait/workshop spread and a full red inquiry invitation. The original Found42 logo and portrait bytes are preserved; the portrait is shown in grayscale through CSS. The original Manrope/Space Grotesk families remain locally bundled. The palette uses provisional Found42 red `#B70611`, ink `#20201F`, paper `#FAF9F6`, supporting grays and blue keyboard focus.
+A **composition** is a transit-map drawing of one way a business works: labelled
+nodes joined by routes that only ever run horizontally, vertically or at 45°,
+with rounded corners. Five node identities recur in every composition — four
+labelled steps and the human anchor that sits in the middle of the work — so
+switching between compositions rearranges the same cast rather than replacing
+one picture with another.
 
-At 390px the H1 and both primary journeys precede the illustration. Supporting resource decoration is reduced, and shorter descriptions preserve each resource's purpose and access contract. Information labels are at least 14px at default settings and body copy is 16px or larger. Controls remain stationary while their icons respond to hover/focus. Normal scrolling is preserved. Enlarged text wraps; container queries give the diagram a readable grid when its labels need more space.
+The drawing is an ink technical plan. **Red is signal**: it marks the human
+direction node and the dots running the routes, and nothing else inside the
+drawing. That discipline is what keeps red meaningful when it reappears on a
+button, a section index or an access note. Nothing depicts a product interface,
+a customer system or a measured result.
 
-## Motion and implementation
+Four compositions exist. The **master** drawing opens the page: people,
+workflows and what the business knows, connected through human direction into
+practical AI at work. **Training**, **automation** and **product value** are the
+three services, each with the geometry its own argument needs — a loop that
+returns, three functions converging on one spine, and inputs combining then
+reaching a customer more than one way.
 
-Vite and strict TypeScript remain the application foundation. Motion's JavaScript hybrid `animate` API coordinates a 600ms node transition with 750ms SVG path drawing. Training, Automation and Product value are separate choices, not numbered required steps. They share click, keyboard and touch behavior; pressed state, the illustration's accessible name and its live description update together.
+Every composition is drawn twice. The landscape layout is the wide editorial
+one; the portrait layout is a _separate composition_ for narrow screens, not the
+wide drawing scaled down — different node placement, different routes, labels
+anchored where they will not cross a route at that shape.
 
-Complete still states are present independently of animation. Each transition starts from the previous still composition and returns to the still composition of the target when it finishes; a superseded transition is stopped rather than trusted, so an interrupted switch cannot leave partial lines. On a reduced-motion change the illustration settles immediately to the current choice, without a tween. A browser regression compares an interrupted illustration with a fresh motionless rendering, node by node and path by path. Section entrances briefly move already-visible content once. Reduced motion also disables these entrances, smooth scrolling and decorative hover movement. No effect blocks the headline or actions.
+## Composition and type
 
-Selected Lucide SVG icons unify arrows, menu and resource categories. SVGO prepares two static artwork assets; `npm run artwork` regenerates them from the same module as the interactive illustration. Motion and icon licenses accompany the built assets. React Bits informed the research but no source was copied; GSAP and Anime.js remain researched alternatives, not additional engines. This follows the report's recommendations to select one engine and preserve the existing framework.
+The page sits on a drawing surface: a 96px printed grid and a fine grain, both
+painted once and never animated. Full-bleed ink and red bands interrupt the
+paper so the rhythm is not five variations of the same pale sheet.
+
+Space Grotesk carries display type with tracking that tightens as the type grows
+(−0.04em at the opening, −0.02em at subheads, normal in body copy). Manrope
+carries body copy. **JetBrains Mono** is new: every label, section index, access
+note, gate, caption and call to action speaks in the drawing's annotation voice,
+which is what ties the schematic's own labels to the rest of the page. All three
+are declared face by face in `styles/fonts.css`, so the build publishes three
+Latin weight-axis files rather than every subset the packages ship.
+
+Two-sentence headlines set one sentence to a line, declared in the markup. Both
+automatic modes were wrong here: `pretty` leaves a one-word line, and `balance`
+grouped the opening headline differently while it was split for its entrance
+than after it.
+
+The resources band is one editorial feature and a column of compact entries
+rather than a row of equal cards: the ungated article is the only thing on the
+page a visitor can use without giving anything, so it is the one with weight.
+Each of the four routes in carries the same access note in the same place — what
+it costs, how it is reached, and exactly what it asks for first.
+
+## Motion
+
+Entrances share one easing family and one rule: content is never hidden by
+anything that might not finish. Every starting state lives behind
+`html[data-motion="on"]`, which only the reveal module sets, and every path out
+of that module ends with the finished state applied.
+
+The **opening drawing** draws itself in — routes first, then markers, then
+annotations — and then runs continuously: red dots travel every carrying route
+at a constant pace, and on a fine pointer three layers lean by different amounts
+so the drawing has depth without leaving its coordinates.
+
+The **flagship** is `02 / How we help`. On a wide screen one drawing holds still
+beside three articles that scroll past it and reconfigures to whichever article
+is being read: the outgoing routes retract, the nodes travel to their new
+places, the labels change their words at the midpoint of their own travel, and
+the new routes draw in. The choice rail reports that state and lets anyone jump
+straight to a service. Scrolling is never intercepted — the pane is `sticky`, so
+the page scrolls natively throughout. On a narrow screen the sticky split is
+abandoned and each article carries its own still portrait drawing.
+
+All three services are on the page in full at every width. Nothing is behind an
+interaction, and the article being read is marked by a rule filling red rather
+than by fading the other two, which would drop live body copy under the contrast
+minimum for anyone reading ahead.
+
+Smaller recurrences of the same signal motif: a dot travels the rule under a
+text link, a fill sweeps a button, a rule draws under a navigation item.
+
+### Stopping it
+
+The travelling signals are movement presented alongside other content and they
+do not stop on their own, so the page carries a **pause control** in the opening
+rail (WCAG 2.2.2). It is a genuine page-wide switch: pausing settles every
+drawing into its still composition, stops the signal loop, ends smooth scrolling
+and disables pointer depth. The operating system's reduced-motion setting does
+the same thing, and the control hides itself when that setting is already on.
+
+Reduced motion is a designed still page, not a disabled one: the same
+compositions, the same annotations, the signals placed at rest along their
+routes rather than hidden, no smooth scrolling, no entrance states.
+
+## Libraries
+
+Vite and strict TypeScript remain the foundation. `motion` remains the single
+animation engine — GSAP is genuinely free since 3.13, but a second full engine
+would duplicate work `motion` already does. Two dependencies are new:
+
+- **Lenis** (MIT) smooths wheel scrolling without taking the scrollbar, the
+  keyboard or touch physics. It is never instantiated under reduced motion and
+  is destroyed the moment that preference arrives.
+- **SplitType** (ISC) measures line boxes for headings that are a single run of
+  text. Headings written as sentences skip it entirely.
+
+**No WebGL.** The research surveyed OGL, Three.js and `@paper-design/shaders`,
+and an animated gradient field was rejected as decoration unrelated to the
+argument the page makes. The same judgement rejected Rive and Lottie (each a
+second binary runtime for content authored elsewhere) and CountUp/text-scramble
+packages (~20 lines of `motion` each). `research/motion-libraries-2026-09-14.md`
+records the candidates, licences and reasoning; `research/art-direction-2026-09-14.md`
+records the reference study. Lucide and Motion licence notices travel with the
+built assets in `public/assets/`.
+
+The retired ribbon artwork, its generator, its two static SVGs and `svgo` were
+removed: the drawing is rendered inline from one module, and nothing referenced
+the generated files.
 
 ## Evidence and content
 
-Work & Co informed editorial hierarchy, Red Antler the commitment to original artwork, and Linear the relationship between message and illustration. Their imagery, client logos and commercial claims were not reused. These are design references, not evidence of improved conversion.
+Every published claim is unchanged. The three service names and scopes, the four
+resource routes and their different gates, the ungated blog, the two attributed
+workshop excerpts, the published-biography framing and the inquiry wording are
+the records in `src/content.ts` and `CONTENT-SOURCES.md`. The opening drawing's
+node labels — people, workflows, what the business knows, human direction,
+practical AI at work — are the page's own vocabulary, presented as an
+illustration of the possibilities and captioned as one.
 
-The portrait and published founder biography sit alongside two explicitly attributed workshop excerpts. Andrew Miller's excerpt now addresses client conversations; it remains a report of his workshop experience. All three service scopes, four resource routes and their different gates, the ungated blog, and the inquiry form wording remain intact. No inactive course signup or unsupported numerical/ROI claims were added.
-
-Current captures and measurements are in `preview/expressive/`; `VALIDATION.md` records actual coverage and limits. Main content contains approximately 620 words, plus navigation/footer. The measured JavaScript bundle is about 81kB raw / 29kB gzip, including the new motion engine; this is an application measurement, not a vendor size estimate.
+No inventory totals, guarantees, ROI figures, customer logos, invented
+testimonials or product capabilities were introduced; a rendering test asserts
+that. Reference sites informed technique only: no imagery, client logo or
+commercial claim was reused, and no third-party source was copied.

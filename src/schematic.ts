@@ -15,8 +15,12 @@
 
 export type Point = readonly [number, number];
 
-/** Where a node's annotation sits, so a label never crosses a route. */
-export type Anchor = "start" | "end" | "above" | "below";
+/**
+ * Where a node's annotation sits, so a label never crosses a route.
+ * `start` sits above and to the right of the node, `under` below and to the
+ * right — which is what a node whose route leaves upwards needs.
+ */
+export type Anchor = "start" | "under" | "end" | "above" | "below";
 
 export type NodeKind = "source" | "human" | "result";
 
@@ -212,7 +216,7 @@ const automationLandscape: Layout = {
     n1: { at: [168, 120], anchor: "start" },
     n2: { at: [168, 310], anchor: "start" },
     human: { at: [612, 310], anchor: "below" },
-    n3: { at: [168, 500], anchor: "start" },
+    n3: { at: [168, 500], anchor: "under" },
     n4: { at: [880, 310], anchor: "end" },
   },
   routes: [
@@ -277,7 +281,7 @@ const productLandscape: Layout = {
     n1: { at: [168, 128], anchor: "start" },
     n2: { at: [168, 310], anchor: "start" },
     human: { at: [512, 310], anchor: "below" },
-    n3: { at: [168, 492], anchor: "start" },
+    n3: { at: [168, 492], anchor: "under" },
     n4: { at: [880, 310], anchor: "end" },
   },
   routes: [
@@ -445,7 +449,8 @@ export const schematicFigure = (
   schematic: Schematic,
   orientation: Orientation,
   className = "system system--quiet",
-): string => `<div class="${className}">${fieldMarkup(schematic, orientation)}</div>`;
+): string =>
+  `<div class="${className}">${fieldMarkup(schematic, orientation)}</div>`;
 
 /* ── The master drawing: the whole proposition, not one of its three routes ── */
 
@@ -456,7 +461,7 @@ const masterLandscape: Layout = {
     n1: { at: [176, 118], anchor: "start" },
     n2: { at: [176, 306], anchor: "start" },
     human: { at: [556, 306], anchor: "below" },
-    n3: { at: [176, 494], anchor: "start" },
+    n3: { at: [176, 494], anchor: "under" },
     n4: { at: [884, 306], anchor: "end" },
   },
   routes: [

@@ -1,0 +1,42 @@
+{
+  "desktop": {
+    "domContentLoaded": 52,
+    "load": 60,
+    "fcp": 48,
+    "lcp": 1032,
+    "cls": 0,
+    "frames": {
+      "median": 16.7,
+      "p95": 16.7,
+      "worst": 16.8
+    },
+    "transferBytes": 335382,
+    "byType": {
+      "text/html": 661,
+      "text/css": 31599,
+      "text/javascript": 127698,
+      "font/woff2": 87528,
+      "image/png": 87896
+    }
+  },
+  "mobile": {
+    "domContentLoaded": 37,
+    "load": 47,
+    "fcp": 24,
+    "lcp": 844,
+    "cls": 0,
+    "frames": {
+      "median": 16.7,
+      "p95": 16.8,
+      "worst": 16.8
+    },
+    "transferBytes": 335382,
+    "byType": {
+      "text/html": 661,
+      "text/css": 31599,
+      "text/javascript": 127698,
+      "font/woff2": 87528,
+      "image/png": 87896
+    }
+  }
+}
