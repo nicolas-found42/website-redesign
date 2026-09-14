@@ -1,40 +1,40 @@
 {
   "desktop": {
-    "domContentLoaded": 34,
-    "load": 43,
-    "fcp": 36,
-    "lcp": 1000,
-    "cls": 0,
-    "frames": {
-      "median": 16.7,
-      "p95": 16.7,
-      "worst": 16.8
-    },
-    "transferBytes": 336047,
-    "byType": {
-      "text/html": 661,
-      "text/css": 32264,
-      "text/javascript": 127698,
-      "font/woff2": 87528,
-      "image/png": 87896
-    }
-  },
-  "mobile": {
-    "domContentLoaded": 31,
-    "load": 41,
-    "fcp": 20,
-    "lcp": 812,
+    "domContentLoaded": 28,
+    "load": 38,
+    "fcp": 32,
+    "lcp": 996,
     "cls": 0,
     "frames": {
       "median": 16.7,
       "p95": 16.8,
       "worst": 16.8
     },
-    "transferBytes": 336047,
+    "transferBytes": 336180,
     "byType": {
       "text/html": 661,
-      "text/css": 32264,
-      "text/javascript": 127698,
+      "text/css": 32370,
+      "text/javascript": 127725,
+      "font/woff2": 87528,
+      "image/png": 87896
+    }
+  },
+  "mobile": {
+    "domContentLoaded": 31,
+    "load": 42,
+    "fcp": 20,
+    "lcp": 828,
+    "cls": 0,
+    "frames": {
+      "median": 16.7,
+      "p95": 16.8,
+      "worst": 16.8
+    },
+    "transferBytes": 336180,
+    "byType": {
+      "text/html": 661,
+      "text/css": 32370,
+      "text/javascript": 127725,
       "font/woff2": 87528,
       "image/png": 87896
     }

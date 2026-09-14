@@ -55,7 +55,7 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
   let revealed = false;
   let pointer = { x: 0, y: 0 };
   let eased = { x: 0, y: 0 };
-  const timers: number[] = [];
+  const timers = new Set<number>();
 
   const schematic = () => compositions[active];
   const layout = (): Layout => schematic()[orientation];
@@ -319,6 +319,7 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
 
     // Swap in the new routes once the old ones have gone, then draw them.
     const drawIn = window.setTimeout(() => {
+      timers.delete(drawIn);
       if (active !== index) return;
       routesLayer.innerHTML = routeMarkup(nextLayout);
       paths = [...routesLayer.querySelectorAll("path")];
@@ -337,7 +338,7 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
         ),
       );
     }, 300);
-    timers.push(drawIn);
+    timers.add(drawIn);
 
     frameEl.setAttribute("aria-label", next.description);
   }
@@ -407,6 +408,7 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     dispose() {
       stopTweens();
       timers.forEach((timer) => clearTimeout(timer));
+      timers.clear();
       pauseLoop();
       observer.disconnect();
       motionPreference.removeEventListener("change", onPreference);

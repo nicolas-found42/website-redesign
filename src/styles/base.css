@@ -113,6 +113,16 @@ body::after {
   min-width: 0;
 }
 
+/* An anchored band stops clear of the sticky header rather than under it. */
+#main,
+#resources,
+#services,
+#about,
+#contact,
+[data-service-article] {
+  scroll-margin-top: clamp(88px, 6vw, 116px);
+}
+
 /* ── Layout ── */
 .wrap {
   width: min(100% - (var(--gutter) * 2), 1320px);
