@@ -1,3 +1,8 @@
+/* Wide enough that each declared sentence sets on one line. */
+.proof .section-head h2 {
+  max-width: 16ch;
+}
+
 /**
  * People behind the possibilities.
  *

@@ -58,8 +58,8 @@ carries are the ones recorded in `CONTENT-SOURCES.md`.
 
 All three engines reported zero page errors, document width equal to viewport
 width, 25 annotations rendered and no drawing state left on any route. Document
-heights agree to within 0.3%: 10,129 / 10,156 / 10,131px at 390 and 8,492 /
-8,496 / 8,491px at 1440 (`render-report.json`).
+heights agree to within 0.3%: 10,153 / 10,178 / 10,152px at 390 and 8,364 /
+8,368 / 8,364px at 1440 (`render-report.json`).
 
 ## Layout and performance
 
@@ -69,11 +69,11 @@ local run, Playwright Chromium.
 | Observation                | Before (deployed) |  This iteration |
 | -------------------------- | ----------------: | --------------: |
 | Cumulative layout shift    |                 — |       **0.000** |
-| Largest contentful paint   |                 — | 1,032ms / 844ms |
-| First contentful paint     |                 — |     48ms / 24ms |
+| Largest contentful paint   |                 — | 1,000ms / 812ms |
+| First contentful paint     |                 — |     36ms / 20ms |
 | Frame time, median and p95 |                 — |   16.7 / 16.7ms |
-| Document height at 1440px  |           5,105px |         8,492px |
-| Document height at 390px   |           7,413px |        10,129px |
+| Document height at 1440px  |           5,105px |         8,364px |
+| Document height at 390px   |           7,413px |        10,153px |
 
 Desktop and mobile figures are given in that order. The signal loop holds a
 steady 16.7ms frame at both sizes. Each drawing runs one
@@ -90,12 +90,12 @@ written as sentences are now masked at the sentences they declare, and the two
 line boxes agree exactly at every width (`allheads` measurements: 117.3 /
 117.3px at 390, 217.9 / 217.9px at 1440).
 
-The page is **longer than the one it replaces** — 66% at 1440px and 37% at
+The page is **longer than the one it replaces** — 64% at 1440px and 37% at
 390px. That is the cost of the drawings: each service carries a labelled
 schematic of its own, and on a narrow screen all three are present rather than
 one shared pane. It is a measured layout change, not a conversion claim.
 
-Built output: **127kB JavaScript / 43kB gzip**, **31kB CSS / 7kB gzip**, and
+Built output: **128kB JavaScript / 43kB gzip**, **32kB CSS / 8kB gzip**, and
 three Latin variable font files totalling 88kB. First view transfers about
 328kB including the portrait. The previous iteration's application JavaScript
 was about 29kB gzip; the increase pays for Lenis, SplitType and the drawing
