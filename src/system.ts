@@ -75,9 +75,16 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
   let paths: SVGPathElement[] = [];
   let lengths: number[] = [];
 
+  /**
+   * Stops everything in flight, including the timeout that swaps a transition's
+   * routes in. Left running, that timeout fires after a pause or an orientation
+   * change and starts a route draw the drawing has already settled out of.
+   */
   function stopTweens() {
     tweens.forEach((tween) => tween.stop());
     tweens = [];
+    timers.forEach((timer) => clearTimeout(timer));
+    timers.clear();
   }
 
   /**

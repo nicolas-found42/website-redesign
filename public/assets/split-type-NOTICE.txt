@@ -9,10 +9,16 @@ carry a masked entrance.
   Licence:    ISC, as declared in the package manifest
   Repository: https://github.com/lukePeavey/SplitType
 
-The published npm package does not include a licence file, so the canonical
-licence text is the LICENSE file in the repository above rather than a copy
-made here. This notice is reproduced rather than the licence itself so that no
-copyright line is asserted on the author's behalf.
+No licence text is reproduced here because the author has not published one.
+The npm package ships no licence file, the repository contains no licence file,
+and GitHub reports no detected licence for it; the single declaration of terms
+anywhere is the `"license": "ISC"` field in the package manifest, checked on
+2026-09-14. Writing out an ISC notice here would mean composing a copyright
+line — a year and a holder — that the author has never asserted, so this notice
+records the attribution and the declaration instead.
+
+Confirming the terms with the author is recorded as pre-production work in
+docs/LAUNCH-BACKLOG.md.
 
 No SplitType source was copied into this project; it is used as a dependency
 through its public API.

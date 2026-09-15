@@ -10,6 +10,7 @@
 - Verify prompt-pack and playbook fulfillment, assessment questions/results/report delivery and inquiry routing in an appropriately authorized test environment. No forms were submitted during this prototype work.
 - Restore or replace the inactive C-Level AI mini-course before promotion. Verify toolkit media and exercise corrections separately.
 - Substantiate any numerical/ROI claims before reintroducing them; obtain any needed asset rights and higher-resolution brand masters.
+- Confirm SplitType's licence terms with its author before production. The package manifest declares ISC, but neither the published package nor the repository contains a licence file and GitHub detects none, so there is no copyright and permission notice to ship with the bundle. See `public/assets/split-type-NOTICE.txt`.
 - Correct the live Terms page’s Privacy Policy target and review legal adequacy with the appropriate owner.
 - Consider pre-rendering the page's markup into `index.html` at build time. The page is composed by a pure function, so the markup could be emitted by the build and the script left to enhance it; today the document is empty until the script runs, which is the architecture this prototype has always had. That would give the page content without JavaScript and paint real content before the bundle arrives, at the cost of a build-time render step.
 - Plan production migration, domain/redirect changes, analytics and conversion baselines as separate work.

@@ -11,7 +11,7 @@ fresh captures of that design taken from the deployed site before any change.
 
 - `npm run typecheck`: passed.
 - `npm run build`: passed.
-- `npm test`: **61 passed** — 57 browser tests across Chromium, Firefox and
+- `npm test`: **70 passed** — 66 browser tests across Chromium, Firefox and
   WebKit, plus 4 rendering assertions in the `unit` project that cross
   `renderHomepage()` without an engine.
 - Axe WCAG 2 / 2.1 / 2.2 A and AA at 390, 768 and 1440px: **no violations**.
@@ -66,14 +66,14 @@ heights agree to within 0.3%: 10,153 / 10,178 / 10,152px at 390 and 8,364 /
 Measured on the production build at the repository subpath, one unthrottled
 local run, Playwright Chromium.
 
-| Observation                | Before (deployed) |  This iteration |
-| -------------------------- | ----------------: | --------------: |
-| Cumulative layout shift    |                 — |       **0.000** |
-| Largest contentful paint   |                 — |   980ms / 816ms |
-| First contentful paint     |                 — |     32ms / 20ms |
-| Frame time, median and p95 |                 — |   16.7 / 16.7ms |
-| Document height at 1440px  |           5,105px |         8,364px |
-| Document height at 390px   |           7,413px |        10,153px |
+| Observation                | Before (deployed) | This iteration |
+| -------------------------- | ----------------: | -------------: |
+| Cumulative layout shift    |                 — |      **0.000** |
+| Largest contentful paint   |                 — |  980ms / 816ms |
+| First contentful paint     |                 — |    32ms / 20ms |
+| Frame time, median and p95 |                 — |  16.7 / 16.7ms |
+| Document height at 1440px  |           5,105px |        8,364px |
+| Document height at 390px   |           7,413px |       10,153px |
 
 Desktop and mobile figures are given in that order. The signal loop holds a
 steady 16.7ms frame at both sizes. Each drawing runs one
@@ -124,6 +124,13 @@ Recorded because each was invisible in a passing build:
 - Allowing the header to wrap introduced a wrapping _column_ in the mobile menu
   panel, which spilled into extra columns sideways.
 - `invert(1)` on the logo over an ink band turns its red "42" cyan.
+- A transition swaps its routes in on a timer that `stopTweens()` did not
+  cancel, so pausing motion mid-transition started a route draw 300ms later on
+  a drawing that had already settled — and an orientation change could restore
+  the previous orientation's routes. Found in review.
+- `r: 5.5` on the result marker has no unit. Chromium accepts it and Firefox
+  and WebKit drop it, so that marker was a different size per browser — a
+  difference too small for the cross-engine captures to show. Found in review.
 - The headline entrance waited for the fonts before it played, so a slow font
   load held a heading that was already on screen invisible for as long as the
   font took — up to the 1.2s cap. Found by CI on a loaded runner, not locally

@@ -290,3 +290,111 @@ test("a slow font does not hold the opening headline back", async ({
     "Put AI to work on what moves your business.",
   );
 });
+
+test("pausing during a transition leaves the drawing settled, not mid-draw", async ({
+  page,
+}) => {
+  await page.goto("/#services");
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page.getByRole("button", { name: "Training" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+
+  /**
+   * Driven from inside the page so the pause lands at a known point: the routes
+   * of a transition are swapped in on a timer, and the whole question is
+   * whether that timer survives the pause. Round-tripping each click through
+   * the driver would let its latency drift past the window being tested.
+   *
+   * Sampled across that window rather than polled for an eventual state — a
+   * stale draw finishes on its own, so waiting for quiet would pass whether or
+   * not it ever started.
+   */
+  const disturbed = await page.evaluate(async () => {
+    const sleep = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+    const field = document.querySelector(".services-art")!;
+    document.querySelector<HTMLButtonElement>('[data-service="1"]')!.click();
+    await sleep(120);
+    document.querySelector<HTMLButtonElement>("[data-motion-toggle]")!.click();
+
+    const seen = { drawing: 0, running: 0 };
+    for (let sample = 0; sample < 15; sample += 1) {
+      await sleep(60);
+      seen.drawing = Math.max(
+        seen.drawing,
+        // A draw writes these as attributes; a settled route carries neither.
+        [...field.querySelectorAll(".route")].filter((route) =>
+          route.hasAttribute("stroke-dasharray"),
+        ).length,
+      );
+      seen.running = Math.max(
+        seen.running,
+        field
+          .getAnimations({ subtree: true })
+          .filter((animation) => animation.playState === "running").length,
+      );
+    }
+    return seen;
+  });
+  expect(disturbed).toEqual({ drawing: 0, running: 0 });
+
+  await expect(
+    page.locator(".services-art .system-field .system-label").first(),
+  ).toBeVisible();
+});
+
+test("the service drawings are three different drawings, not one repeated", async ({
+  browser,
+}) => {
+  // Descriptions and copy are per-service already, so a drawing that lost its
+  // own geometry would still satisfy every other check in this file.
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+  });
+  const page = await context.newPage();
+  await page.goto("http://127.0.0.1:4173/#services");
+  await page.evaluate(() => document.fonts.ready);
+
+  const signatures = await page.evaluate(() =>
+    [...document.querySelectorAll(".service-figure .system-field")].map(
+      (field) =>
+        JSON.stringify([
+          [...field.querySelectorAll(".route")].map((route) =>
+            route.getAttribute("d"),
+          ),
+          [...field.querySelectorAll(".marker")].map((marker) =>
+            marker.getAttribute("transform"),
+          ),
+          [...field.querySelectorAll(".system-label")].map((label) => [
+            (label as HTMLElement).style.getPropertyValue("--x"),
+            (label as HTMLElement).style.getPropertyValue("--y"),
+            label.textContent,
+          ]),
+        ]),
+    ),
+  );
+  expect(signatures).toHaveLength(3);
+  expect(new Set(signatures).size).toBe(3);
+  await context.close();
+});
+
+test("the drawing's CSS geometry resolves the same in every engine", async ({
+  page,
+}) => {
+  // `r` takes a length. A unitless value is accepted by one engine and dropped
+  // by the other two, which sized the result marker differently per browser.
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          getComputedStyle(
+            document.querySelector(".hero-art .marker--result .marker-core")!,
+          ).r,
+      ),
+    )
+    .toBe("5.5px");
+});

@@ -1,5 +1,14 @@
 # Art Direction Research — Found42 Homepage Redesign
 
+> **What shipped.** This is the research as it was written, kept as the record of
+> what was studied and recommended. The direction that shipped is "Working
+> Drawings", which takes the techniques below — asymmetric hero, restrained red,
+> oversized indices, a schematic texture, an editorial feature over equal cards —
+> but builds them around an original drawing rather than the "Field Notes"
+> treatment recommended at the end. See
+> [`docs/DESIGN.md`](../docs/DESIGN.md). The references informed technique only;
+> no imagery, wording or claim was reused from any of them.
+
 Brand: red `#B70611`, ink `#20201F`, paper `#FAF9F6`, Space Grotesk (display) + Manrope (text). Direction: "light editorial." Stack: Vite + vanilla TS + CSS, static GitHub Pages.
 
 ## 1. Curated "awesome" lists reviewed

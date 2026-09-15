@@ -6,20 +6,20 @@ This audit informed the revised website specification. Public pages were read wi
 
 ## Findings that change the plan
 
-| Finding | Implication |
-| --- | --- |
-| The homepage already contains three service categories, five testimonials, and several resource routes | Reorganize verified existing content; new proof collection is not a prerequisite |
-| The first screen emphasizes a large graphic and sequential introduction without a direct hero action | Make the practical message and resource/inquiry actions prominent, especially on mobile |
-| Header logo contains black and red artwork with substantial transparent padding | Preserve the palette and improve displayed legibility; approximate sampled red is #B70611, not an official brand swatch |
-| The inspected homepage has no H1; the opening heading is H3 | Implement meaningful semantic heading hierarchy |
-| Prompt packs and playbook have different lead forms | Label gates truthfully; free does not mean immediately accessible |
-| Readiness short domain redirects to ScoreApp | Explain the external journey; reachable landing does not prove assessment fulfillment |
-| Mini-course destination reports inactive, HTTP 402 | Exclude active course CTA until its replacement/restoration is verified; cause is unknown |
-| Consultation actions lead to a contact form | Use inquiry wording, not confirmed booking or instant scheduling |
-| Contact interests differ from service headings | Record alignment work for later form scope without blocking link-only prototype |
-| Public blog offers an ungated reading route | Inspect a selected article before featuring its contents; no new lead magnet is required |
-| Startup metadata and executive page copy differ, and numerical guarantees appear | Align positioning and substantiate or omit numerical claims |
-| Mobile cookie banner occupies significant viewport space | Check privacy controls and overlays during responsive validation |
+| Finding                                                                                                | Implication                                                                                                             |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| The homepage already contains three service categories, five testimonials, and several resource routes | Reorganize verified existing content; new proof collection is not a prerequisite                                        |
+| The first screen emphasizes a large graphic and sequential introduction without a direct hero action   | Make the practical message and resource/inquiry actions prominent, especially on mobile                                 |
+| Header logo contains black and red artwork with substantial transparent padding                        | Preserve the palette and improve displayed legibility; approximate sampled red is #B70611, not an official brand swatch |
+| The inspected homepage has no H1; the opening heading is H3                                            | Implement meaningful semantic heading hierarchy                                                                         |
+| Prompt packs and playbook have different lead forms                                                    | Label gates truthfully; free does not mean immediately accessible                                                       |
+| Readiness short domain redirects to ScoreApp                                                           | Explain the external journey; reachable landing does not prove assessment fulfillment                                   |
+| Mini-course destination reports inactive, HTTP 402                                                     | Exclude active course CTA until its replacement/restoration is verified; cause is unknown                               |
+| Consultation actions lead to a contact form                                                            | Use inquiry wording, not confirmed booking or instant scheduling                                                        |
+| Contact interests differ from service headings                                                         | Record alignment work for later form scope without blocking link-only prototype                                         |
+| Public blog offers an ungated reading route                                                            | Inspect a selected article before featuring its contents; no new lead magnet is required                                |
+| Startup metadata and executive page copy differ, and numerical guarantees appear                       | Align positioning and substantiate or omit numerical claims                                                             |
+| Mobile cookie banner occupies significant viewport space                                               | Check privacy controls and overlays during responsive validation                                                        |
 
 ## Public evidence already available
 

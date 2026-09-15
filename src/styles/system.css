@@ -55,8 +55,10 @@
 .marker-core {
   fill: var(--ink);
 }
+/* `r` takes a length: unitless, Chromium accepts it and the other two engines
+   drop it, which left the result marker a different size per browser. */
 .marker--result .marker-core {
-  r: 5.5;
+  r: 5.5px;
 }
 .marker--human .marker-halo {
   fill: var(--red);

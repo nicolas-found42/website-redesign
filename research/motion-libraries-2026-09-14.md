@@ -1,5 +1,14 @@
 # Animation & Creative-Coding Research for Found42 Homepage Redesign
 
+> **What shipped.** This is the research as it was written, kept as the record of
+> what was surveyed and recommended. The decision it fed differs: the shader
+> background below was **not** adopted — an animated gradient field is decoration
+> unrelated to what the page argues — so the shipped additions are `lenis` (MIT)
+> and `split-type` (ISC), and no WebGL library. The reasoning is in
+> [`docs/adr/0002-working-system-drawing.md`](../docs/adr/0002-working-system-drawing.md)
+> and [`docs/DESIGN.md`](../docs/DESIGN.md). Recommendations below are left
+> unedited; corrections are marked where a stated fact was wrong.
+
 Stack constraint: Vite + vanilla TypeScript + plain CSS, no React/framework, static
 GitHub Pages deploy (`/website-redesign/` subpath). Already installed: `motion` v13,
 `lucide`, Fontsource. Build: `tsc --noEmit && vite build`.
@@ -334,6 +343,11 @@ animate((progress) => pathEl.setAttribute("d", morph(progress)), {
 npm i lenis split-type @paper-design/shaders
 ```
 
-All three are MIT/Apache-2.0, ESM-native, zero/near-zero peer dependencies,
-and compatible with static Vite builds + GitHub Pages hosting (no SSR, no
-Node-only APIs).
+All three are ESM-native, have zero or near-zero peer dependencies, and are
+compatible with static Vite builds + GitHub Pages hosting (no SSR, no Node-only
+APIs).
+
+> **Correction.** The original text read "all three are MIT/Apache-2.0". Lenis is
+> MIT and `@paper-design/shaders` is Apache-2.0, but **SplitType is ISC**, as
+> declared in its package manifest. Two of these three were adopted; see the note
+> at the top.

@@ -41,10 +41,13 @@ Public availability alone does not establish an independent asset license; Found
 Licence notices for every bundled runtime dependency accompany the built assets
 in `public/assets/`: Motion (MIT), Lucide (ISC, with Feather's MIT notice),
 Lenis (MIT), the three OFL font licences, and an attribution notice for
-SplitType, whose npm package declares ISC but ships no licence file — the notice
-points to the repository that holds the canonical text rather than asserting a
-copyright line on the author's behalf. No third-party source was copied into
-this project; all four libraries are used through their public APIs.
+SplitType. That last one carries no licence text: the package manifest declares
+ISC, but neither the published package nor the repository contains a licence
+file and GitHub detects none, so there is no published copyright and permission
+notice to reproduce. Composing one would mean asserting a year and a holder on
+the author's behalf. Confirming the terms is recorded in `LAUNCH-BACKLOG.md`.
+No third-party source was copied into this project; all four libraries are used
+through their public APIs.
 
 ## Working Drawings pass
 
