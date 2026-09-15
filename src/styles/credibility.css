@@ -1,0 +1,146 @@
+/* Wide enough that each declared sentence sets on one line. */
+.proof .section-head h2 {
+  max-width: 16ch;
+}
+
+/**
+ * People behind the possibilities.
+ *
+ * The portrait and the excerpts sit in one composition: a tall grayscale plate
+ * on the left, and a column of quotations set as pulled type on the right.
+ */
+.proof-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(36px, 5vw, 96px);
+  align-items: start;
+}
+
+.founder {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 2.4vw, 34px);
+}
+.portrait {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper-sunk);
+}
+.portrait img {
+  width: 100%;
+  height: auto;
+  filter: grayscale(1) contrast(1.06);
+  transition: transform 900ms var(--ease-out);
+}
+.portrait:hover img {
+  transform: scale(1.03);
+}
+.portrait figcaption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  color: #fff;
+  background: var(--red);
+}
+.founder-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+.founder-copy .body {
+  max-width: 44ch;
+  color: var(--muted);
+}
+
+/* ── The excerpts ── */
+.workshop {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: clamp(0px, 2vw, 24px);
+}
+.workshop-kicker {
+  color: var(--muted);
+}
+.workshop h3 {
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.4rem);
+}
+.quotes {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.4vw, 34px);
+  margin-top: clamp(12px, 1.6vw, 24px);
+}
+/**
+ * A quotation is set as display type with a red rule on its leading edge — the
+ * same mark the current service article carries, so the page has one way of
+ * saying "this is the part that matters here".
+ */
+.quote {
+  position: relative;
+  padding-left: clamp(20px, 2vw, 32px);
+  border-left: 2px solid var(--red);
+}
+.quote blockquote p {
+  max-width: 30ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1rem + 1.05vw, 1.9rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: var(--track-h3);
+  text-wrap: pretty;
+}
+.quote figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 14px;
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  color: var(--muted);
+}
+.quote figcaption strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.proof-note {
+  max-width: 46ch;
+  margin-top: clamp(10px, 1.4vw, 18px);
+  color: var(--muted);
+}
+.proof-note a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.proof-note a:hover {
+  color: var(--red);
+}
+
+@media (max-width: 960px) {
+  .proof-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(36px, 8vw, 64px);
+  }
+  .founder {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: clamp(20px, 4vw, 36px);
+    align-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .founder {
+    display: flex;
+  }
+  .portrait {
+    max-width: 320px;
+  }
+}

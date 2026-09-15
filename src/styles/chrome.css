@@ -1,0 +1,342 @@
+/**
+ * Site chrome.
+ *
+ * The header rides the page rather than floating over it: it is sticky, and it
+ * gains its rule and its paper only once the visitor has left the opening
+ * spread, so the hero reads as a full sheet.
+ */
+/**
+ * The header wraps rather than overflows. At a large text size the desktop
+ * navigation is wider than the row it sits in, and the viewport-width
+ * breakpoint that hands over to the menu cannot see that — media-query `rem`
+ * is relative to the browser's initial font size, not the page's.
+ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: clamp(72px, 5vw, 96px);
+  padding-block: 8px;
+  background: rgb(250 249 246 / 0%);
+  transition:
+    background 320ms var(--ease-out),
+    box-shadow 320ms var(--ease-out);
+}
+.site-header::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: var(--line);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 520ms var(--ease-out);
+}
+.site-header.is-lifted {
+  background: rgb(250 249 246 / 88%);
+  backdrop-filter: blur(14px) saturate(1.1);
+}
+.site-header.is-lifted::after {
+  transform: scaleX(1);
+}
+
+/**
+ * Over a dark or red band the header takes that band's ground instead of
+ * stamping a strip of paper across it. The class is set from the band actually
+ * crossing the header, so it changes exactly when the ground behind it does.
+ */
+.site-header.is-over-ink,
+.site-header.is-over-red {
+  color: #faf9f6;
+}
+.site-header.is-over-ink.is-lifted {
+  background: rgb(19 19 18 / 86%);
+}
+.site-header.is-over-red.is-lifted {
+  background: rgb(143 4 13 / 86%);
+}
+.site-header.is-over-ink::after,
+.site-header.is-over-red::after {
+  background: rgb(250 249 246 / 26%);
+}
+.site-header.is-over-ink .nav-contact,
+.site-header.is-over-red .nav-contact,
+.site-header.is-over-ink .menu-toggle,
+.site-header.is-over-red .menu-toggle {
+  color: #faf9f6;
+  border-color: rgb(250 249 246 / 38%);
+}
+.site-header.is-over-ink .nav-contact:hover,
+.site-header.is-over-ink .nav-contact:focus-visible {
+  color: var(--ink-deep);
+  background: #faf9f6;
+  border-color: #faf9f6;
+}
+.site-header.is-over-red .nav-contact:hover,
+.site-header.is-over-red .nav-contact:focus-visible {
+  color: var(--red);
+  background: #fff;
+  border-color: #fff;
+}
+.site-header.is-over-ink #navigation a:not(.nav-contact)::after {
+  background: var(--red-on-ink);
+}
+.site-header.is-over-red #navigation a:not(.nav-contact)::after {
+  background: #fff;
+}
+.site-header.is-over-ink a:focus-visible,
+.site-header.is-over-ink button:focus-visible,
+.site-header.is-over-red a:focus-visible,
+.site-header.is-over-red button:focus-visible {
+  outline-color: #fff;
+}
+
+/**
+ * The supplied logo is a 1024px square whose artwork occupies 924 x 172 px at
+ * (66, 408). The original bytes are untouched; this box is a viewport onto that
+ * rectangle, so the wordmark sits on the baseline grid instead of floating in
+ * its own transparent padding. Percentage margins resolve against this box's
+ * width, which is what makes the crop hold at every size.
+ */
+.brand {
+  display: block;
+  flex-shrink: 0;
+  width: clamp(104px, 9vw, 132px);
+  aspect-ratio: 924 / 172;
+  overflow: hidden;
+}
+.brand img {
+  width: 110.82%;
+  max-width: none;
+  height: auto;
+  margin-top: -44.16%;
+  margin-left: -7.14%;
+}
+
+#navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px clamp(18px, 2vw, 34px);
+  align-items: center;
+  justify-content: flex-end;
+}
+#navigation a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+#navigation a:not(.nav-contact)::after {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  content: "";
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 420ms var(--ease-out);
+}
+#navigation a:not(.nav-contact):hover::after,
+#navigation a:not(.nav-contact):focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.nav-contact {
+  gap: 10px;
+  padding: 12px 18px;
+  font-weight: 600 !important;
+  color: var(--ink);
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  transition:
+    color 220ms var(--ease-out),
+    background 220ms var(--ease-out),
+    border-color 220ms var(--ease-out);
+}
+.nav-contact:hover,
+.nav-contact:focus-visible {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.menu-toggle {
+  display: none;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 14px;
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+}
+
+@media (max-width: 960px) {
+  .menu-toggle {
+    display: inline-flex;
+  }
+  /* A wrapping *column* would spill into extra columns sideways, so the panel
+     is explicitly a single column that scrolls if it runs out of height. */
+  #navigation {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 4px;
+    align-items: flex-start;
+    justify-content: center;
+    padding: var(--gutter);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    visibility: hidden;
+    background: var(--paper);
+    opacity: 0;
+    transition:
+      opacity 320ms var(--ease-out),
+      visibility 0s linear 320ms;
+  }
+  #navigation.is-open {
+    visibility: visible;
+    opacity: 1;
+    transition:
+      opacity 320ms var(--ease-out),
+      visibility 0s;
+  }
+  #navigation a {
+    min-height: 62px;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 8vw, 2.6rem);
+    font-weight: 500;
+    letter-spacing: var(--track-h3);
+    text-transform: none;
+  }
+  #navigation a::after {
+    bottom: 12px;
+  }
+  .nav-contact {
+    margin-top: 20px;
+    font-size: var(--size-note) !important;
+    letter-spacing: 0.06em;
+  }
+  /* The close control sits where the toggle is, so the eye does not travel. */
+  .menu-toggle[aria-expanded="true"] {
+    position: relative;
+    z-index: 60;
+  }
+}
+
+/* ── Footer ── */
+.site-footer {
+  position: relative;
+  padding-block: clamp(56px, 6vw, 96px) 32px;
+  color: var(--muted);
+  background: var(--ink-deep);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(32px, 4vw, 72px);
+  padding-bottom: clamp(40px, 5vw, 72px);
+}
+.footer-mark .brand {
+  width: clamp(124px, 12vw, 168px);
+}
+/**
+ * Inverting alone turns the mark's red "42" cyan. Rotating the hue back through
+ * 180° restores it to red on the inverted ground, so the logo keeps its two
+ * colours on ink without a second asset.
+ */
+.on-ink .brand img,
+.site-header.is-over-ink .brand img,
+.site-header.is-over-red .brand img {
+  filter: invert(1) hue-rotate(180deg);
+}
+.footer-mark p {
+  max-width: 24ch;
+  margin-top: 20px;
+  font-family: var(--font-display);
+  font-size: var(--size-h4);
+  line-height: 1.25;
+  color: #faf9f6;
+  letter-spacing: var(--track-h3);
+}
+.footer-group h2 {
+  margin: 0 0 18px;
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  font-weight: 500;
+  color: var(--muted-ink);
+  letter-spacing: var(--track-note);
+  text-transform: uppercase;
+}
+.footer-group ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.footer-group a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  font-size: var(--size-small);
+  color: #d9d7cf;
+  transition: color 200ms var(--ease-out);
+}
+.footer-group a:hover,
+.footer-group a:focus-visible {
+  color: var(--red-on-ink);
+}
+.footer-base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 28px;
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  color: var(--muted-ink);
+  border-top: 1px solid var(--line-ink);
+}
+.footer-flag {
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+}
+.footer-flag::before {
+  width: 6px;
+  height: 6px;
+  content: "";
+  background: var(--red-on-ink);
+  border-radius: 50%;
+}
+
+@media (max-width: 860px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .footer-mark {
+    grid-column: 1 / -1;
+  }
+}

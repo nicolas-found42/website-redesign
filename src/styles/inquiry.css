@@ -1,0 +1,131 @@
+/**
+ * The closing invitation.
+ *
+ * The one full-red band on the page, and the only place red is a ground rather
+ * than a signal — because here the whole page *is* the signal.
+ */
+.contact {
+  position: relative;
+  color: #fff;
+  background: var(--red);
+  isolation: isolate;
+  overflow: hidden;
+}
+.contact::before {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 7%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 7%) 1px, transparent 1px);
+  background-position: calc(50% + 0.5px) 0;
+  background-size: 96px 96px;
+  inset: 0;
+}
+.contact-accent {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  z-index: 0;
+  height: clamp(160px, 40%, 380px);
+  pointer-events: none;
+  translate: 0 -50%;
+}
+.contact .accent-route {
+  stroke: #fff;
+  stroke-width: 1.4;
+  opacity: 0.32;
+}
+.contact-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 96px);
+  align-items: start;
+}
+.contact .index {
+  color: rgb(255 255 255 / 76%);
+}
+.contact .index b {
+  color: #fff;
+}
+.contact .index .rule {
+  background: rgb(255 255 255 / 45%);
+}
+.contact h2 {
+  max-width: 17ch;
+}
+.contact h2 .signal {
+  color: #fff;
+}
+
+.contact-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: flex-start;
+  padding-top: clamp(8px, 2vw, 32px);
+}
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.contact-list li {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  padding-block: 14px;
+  font-size: var(--size-lead);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid rgb(255 255 255 / 26%);
+}
+.step-index {
+  width: 1.4em;
+  color: rgb(255 255 255 / 72%);
+}
+.contact-body {
+  max-width: 34ch;
+  font-size: var(--size-lead);
+  color: rgb(255 255 255 / 88%);
+}
+/* On red, the action inverts: paper ground, red type. */
+.contact-action {
+  color: var(--red);
+  background: #fff;
+}
+.contact-action::before {
+  background: var(--ink-deep);
+}
+.contact-action:hover,
+.contact-action:focus-visible {
+  color: #fff;
+}
+.contact-action:focus-visible {
+  outline-color: #fff;
+}
+.inquiry-note {
+  max-width: 50ch;
+  color: rgb(255 255 255 / 82%);
+}
+
+@media (max-width: 860px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .contact h2 {
+    max-width: 15ch;
+  }
+  .contact-action {
+    width: 100%;
+  }
+}

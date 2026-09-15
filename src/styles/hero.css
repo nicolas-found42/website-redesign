@@ -1,0 +1,231 @@
+/**
+ * The opening spread.
+ *
+ * The drawing is the field; the type sits on it. A warm radial wash — the paper
+ * equivalent of a dark site's glow behind its hero object — lifts the headline
+ * clear of the linework without hiding the drawing behind a panel.
+ */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: min(89svh, 880px);
+  padding-top: clamp(24px, 2.6vh, 44px);
+  isolation: isolate;
+  overflow: clip;
+}
+.hero-inner {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  /* Sized so the headline sets in three lines at the wide sizes, which is what
+     keeps the lead and both actions inside the opening viewport. */
+  width: min(100%, 640px);
+  padding-block: clamp(16px, 2.4vh, 40px);
+}
+.hero-copy::before {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background: radial-gradient(
+    62% 58% at 32% 50%,
+    rgb(250 249 246 / 96%) 0%,
+    rgb(250 249 246 / 88%) 42%,
+    rgb(250 249 246 / 0%) 100%
+  );
+  inset: -14% -28% -14% -40%;
+}
+
+/**
+ * The opening line break is structural rather than left to the measure. Both
+ * automatic modes were wrong here — "pretty" leaves a one-word second line, and
+ * "balance" gave a different grouping while the headline was split for its
+ * entrance than after it, so the whole block moved when the split reverted.
+ */
+.hero h1 {
+  max-width: 13ch;
+  margin-bottom: clamp(20px, 2.2vw, 34px);
+  text-wrap: normal;
+}
+.hero-lead {
+  max-width: 40ch;
+  margin-bottom: clamp(24px, 2.6vw, 38px);
+}
+.hero-lead strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* ── The drawing ── */
+/**
+ * It bleeds past the content column and off the right edge: a working drawing
+ * continues beyond the sheet. Its dense half stays clear of the type.
+ */
+.hero-art {
+  position: absolute;
+  top: 54%;
+  right: max(-2vw, -36px);
+  z-index: 1;
+  width: min(61vw, 880px);
+  translate: 0 -50%;
+}
+
+/* ── The rail ── */
+.hero-rail {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: clamp(16px, 2vh, 26px);
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+.hero-rail i {
+  padding-inline: 6px;
+  font-style: normal;
+  color: var(--red);
+}
+.hero-caption {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+/**
+ * The control that stops the page's own movement. It is a real switch, not a
+ * hint: pausing settles every drawing, stops the signals, ends smooth scrolling
+ * and drops pointer depth. When the operating system has already asked for
+ * reduced motion there is nothing left for it to stop, so it is not shown.
+ */
+.motion-toggle {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  color: var(--muted);
+  transition: color 200ms var(--ease-out);
+}
+.motion-toggle:hover {
+  color: var(--red);
+}
+.motion-toggle-mark {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  background: var(--red);
+  border-radius: 50%;
+}
+/* A halo, not a pulse: one more thing moving forever is what this control is
+   here to stop. The state reads from the mark's shape and colour instead. */
+.motion-toggle-mark::after {
+  position: absolute;
+  content: "";
+  background: var(--red);
+  border-radius: 50%;
+  opacity: 0.22;
+  inset: -5px;
+}
+.motion-toggle[aria-pressed="true"] .motion-toggle-mark {
+  background: var(--muted);
+  border-radius: 1px;
+}
+.motion-toggle[aria-pressed="true"] .motion-toggle-mark::after {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-toggle {
+    display: none;
+  }
+}
+
+.hero-cue {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+}
+.hero-cue .icon {
+  transition: transform 420ms var(--ease-out);
+}
+.hero-cue:hover {
+  color: var(--red);
+}
+.hero-cue:hover .icon {
+  transform: translateY(4px);
+}
+
+@media (max-width: 1240px) {
+  .hero-art {
+    right: max(-8vw, -110px);
+    width: 68vw;
+  }
+  .hero-copy {
+    width: min(100%, 52%);
+  }
+}
+
+/* ── Narrow: the drawing is its own composition, under the message ── */
+@media (max-width: 860px) {
+  .hero {
+    min-height: 0;
+    padding-bottom: 0;
+    overflow: visible;
+  }
+  .hero-inner {
+    display: block;
+  }
+  .hero-copy {
+    width: 100%;
+    padding-block: clamp(24px, 5vh, 56px) 0;
+  }
+  .hero-copy::before {
+    display: none;
+  }
+  .hero h1 {
+    max-width: 16ch;
+  }
+  /**
+   * In flow the drawing would come first, because the wide layout takes it out
+   * of flow and places it. Ordering puts the message and both actions ahead of
+   * it, which is the rule for the narrow layout.
+   *
+   * It is also a child of the full-bleed section, so 100% is already the whole
+   * viewport; anything wider pushes the document sideways.
+   */
+  .hero-inner {
+    order: 1;
+  }
+  .hero-art {
+    position: relative;
+    top: auto;
+    right: auto;
+    order: 2;
+    width: 100%;
+    margin-block: clamp(32px, 7vw, 56px) clamp(8px, 2vw, 20px);
+    translate: none;
+  }
+  .hero-rail {
+    order: 3;
+  }
+  .hero-rail {
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+  .hero-caption {
+    order: 3;
+    width: 100%;
+  }
+}
+@media (max-width: 560px) {
+  .hero-actions .action {
+    flex: 1 1 100%;
+  }
+}

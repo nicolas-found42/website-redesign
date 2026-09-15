@@ -1,0 +1,50 @@
+{
+ "chromium-390": {
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "documentHeight": 10153,
+  "pageErrors": []
+ },
+ "chromium-1440": {
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "documentHeight": 8364,
+  "pageErrors": []
+ },
+ "firefox-390": {
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "documentHeight": 10178,
+  "pageErrors": []
+ },
+ "firefox-1440": {
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "documentHeight": 8368,
+  "pageErrors": []
+ },
+ "webkit-390": {
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "documentHeight": 10152,
+  "pageErrors": []
+ },
+ "webkit-1440": {
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "documentHeight": 8364,
+  "pageErrors": []
+ },
+ "reduced-390": {
+  "runningAnimations": 0,
+  "annotations": 25,
+  "motionAttribute": null,
+  "scrollBehavior": "auto"
+ },
+ "reduced-1440": {
+  "runningAnimations": 0,
+  "annotations": 25,
+  "motionAttribute": null,
+  "scrollBehavior": "auto"
+ }
+}

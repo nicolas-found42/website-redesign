@@ -4,7 +4,12 @@ import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
 import { credibilitySection } from "./homepage/credibility";
 import { inquirySection } from "./homepage/inquiry";
-import { mountWorkflow } from "./workflow";
+import { mountSystem } from "./system";
+import { masterSchematic } from "./schematic";
+import { mountServices } from "./homepage/services-behaviour";
+import { mountReveals } from "./reveal";
+import { mountSmoothScroll } from "./scroll";
+import type { PageMotion } from "./motion-preference";
 
 /**
  * Every band the homepage shows, with each context's copy and markup owned by
@@ -24,25 +29,30 @@ ${siteFooter()}`;
 
 /**
  * Renders the page into `root` and returns a disposer that releases every
- * listener and observation the page added.
+ * listener, observation and animation the page added.
  */
 export function mountHomepage(
   root: HTMLElement,
-  options: { motionPreference: MediaQueryList },
+  options: { motionPreference: PageMotion },
 ) {
   const { motionPreference } = options;
   root.innerHTML = renderHomepage();
 
+  const disposers: (() => void)[] = [];
+
+  /* ── Navigation ── */
   const menu = root.querySelector<HTMLButtonElement>(".menu-toggle")!;
   const nav = root.querySelector<HTMLElement>("#navigation")!;
   const closeMenu = () => {
     menu.setAttribute("aria-expanded", "false");
     nav.classList.remove("is-open");
+    document.body.style.removeProperty("overflow");
   };
   const toggleMenu = () => {
     const open = menu.getAttribute("aria-expanded") !== "true";
     menu.setAttribute("aria-expanded", String(open));
     nav.classList.toggle("is-open", open);
+    document.body.style.overflow = open ? "hidden" : "";
   };
   const followLink = (event: Event) => {
     const link = (event.target as HTMLElement).closest("a");
@@ -75,41 +85,88 @@ export function mountHomepage(
   nav.addEventListener("click", followLink);
   document.addEventListener("keydown", closeOnEscape);
   wide.addEventListener("change", closeWhenWide);
-
-  const illustration = root.querySelector<HTMLElement>("[data-illustration]")!;
-  const disposeWorkflow = mountWorkflow(illustration, { motionPreference });
-
-  // Entrances enhance visible content; nothing depends on an animation finishing.
-  const entranceObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        if (!motionPreference.matches)
-          entry.target.animate(
-            [{ transform: "translateY(12px)" }, { transform: "translateY(0)" }],
-            { duration: 450, easing: "ease-out" },
-          );
-        entranceObserver.unobserve(entry.target);
-      }
-    },
-    { threshold: 0.12 },
-  );
-  root
-    .querySelectorAll(".reveal")
-    .forEach((element) => entranceObserver.observe(element));
-  const cancelMovement = () => {
-    if (motionPreference.matches)
-      root.getAnimations().forEach((animation) => animation.cancel());
-  };
-  motionPreference.addEventListener("change", cancelMovement);
-
-  return () => {
-    disposeWorkflow();
-    entranceObserver.disconnect();
-    motionPreference.removeEventListener("change", cancelMovement);
+  disposers.push(() => {
     menu.removeEventListener("click", toggleMenu);
     nav.removeEventListener("click", followLink);
     document.removeEventListener("keydown", closeOnEscape);
     wide.removeEventListener("change", closeWhenWide);
+    document.body.style.removeProperty("overflow");
+  });
+
+  /* ── The header takes its paper once the opening spread is behind it ── */
+  const header = root.querySelector<HTMLElement>(".site-header")!;
+  const sentinel = root.querySelector<HTMLElement>(".hero-rail")!;
+  const lift = new IntersectionObserver(
+    ([entry]) =>
+      header.classList.toggle("is-lifted", entry.boundingClientRect.top < 0),
+    { threshold: 0 },
+  );
+  lift.observe(sentinel);
+  disposers.push(() => lift.disconnect());
+
+  /**
+   * The header takes the ground of whichever band is behind it. Measured on
+   * scroll against the header's own box, because the bands change height with
+   * the viewport and a precomputed observer margin would drift.
+   */
+  const grounds = [...root.querySelectorAll<HTMLElement>("[data-ground]")];
+  let ground = "";
+  const readGround = () => {
+    const line = header.getBoundingClientRect().bottom - 2;
+    const behind = grounds.find((band) => {
+      const box = band.getBoundingClientRect();
+      return box.top <= line && box.bottom >= line;
+    });
+    const next = behind?.dataset.ground ?? "";
+    if (next === ground) return;
+    header.classList.toggle("is-over-ink", next === "ink");
+    header.classList.toggle("is-over-red", next === "red");
+    ground = next;
   };
+  addEventListener("scroll", readGround, { passive: true });
+  addEventListener("resize", readGround);
+  readGround();
+  disposers.push(() => {
+    removeEventListener("scroll", readGround);
+    removeEventListener("resize", readGround);
+  });
+
+  /* ── The opening drawing ── */
+  const heroHost = root.querySelector<HTMLElement>(".hero-art")!;
+  const heroSystem = mountSystem(heroHost, {
+    motionPreference,
+    compositions: [masterSchematic],
+    live: true,
+  });
+  disposers.push(heroSystem.dispose);
+
+  /* ── Pausing the page's motion (WCAG 2.2.2) ── */
+  const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]")!;
+  const label = toggle.querySelector("span:last-child")!;
+  const syncToggle = () => {
+    toggle.setAttribute("aria-pressed", String(motionPreference.byVisitor));
+    label.textContent = motionPreference.byVisitor
+      ? "Resume motion"
+      : "Pause motion";
+  };
+  const onToggle = () => {
+    motionPreference.setPaused(!motionPreference.byVisitor);
+    syncToggle();
+  };
+  toggle.addEventListener("click", onToggle);
+  motionPreference.addEventListener("change", syncToggle);
+  syncToggle();
+  disposers.push(() => {
+    toggle.removeEventListener("click", onToggle);
+    motionPreference.removeEventListener("change", syncToggle);
+  });
+
+  /* ── The scroll-linked services sequence ── */
+  disposers.push(mountServices(root, { motionPreference }));
+
+  /* ── Page-wide entrances and scroll feel ── */
+  disposers.push(mountReveals(root, { motionPreference }));
+  disposers.push(mountSmoothScroll({ motionPreference }));
+
+  return () => disposers.forEach((dispose) => dispose());
 }

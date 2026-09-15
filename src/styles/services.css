@@ -1,0 +1,268 @@
+/**
+ * How we help — the sticky sequence.
+ *
+ * The drawing holds still while three articles scroll past it. Nothing is
+ * revealed by the interaction: all three services are on the page in full at
+ * every width, and the sticky pane is an accompaniment to reading them.
+ */
+.services {
+  color: #faf9f6;
+}
+.services-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 96px);
+  align-items: end;
+  padding-bottom: clamp(48px, 6vw, 96px);
+  border-bottom: 1px solid var(--line-ink);
+}
+.services-head h2 {
+  max-width: 13ch;
+}
+
+/**
+ * The aside must stretch to the full height of the article column: a sticky
+ * child can only travel inside its own container, so an aside sized to its
+ * contents would not stick at all.
+ */
+.services-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr);
+  gap: clamp(40px, 6vw, 112px);
+  align-items: stretch;
+}
+.services-aside {
+  height: 100%;
+}
+.services-sticky {
+  position: sticky;
+  top: clamp(88px, 12vh, 132px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.4vw, 32px);
+  justify-content: center;
+  min-height: min(74svh, 720px);
+}
+.services-art {
+  width: 100%;
+}
+.services-caption {
+  min-height: 3em;
+  color: var(--muted-ink);
+}
+
+/* ── The choice rail ── */
+.services-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.choice {
+  position: relative;
+  display: inline-flex;
+  gap: 10px;
+  align-items: baseline;
+  min-height: 46px;
+  padding: 12px 18px;
+  overflow: hidden;
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  font-weight: 500;
+  color: var(--muted-ink);
+  letter-spacing: 0.04em;
+  border: 1px solid var(--line-ink);
+  transition:
+    color 260ms var(--ease-out),
+    border-color 260ms var(--ease-out);
+}
+.choice-index {
+  font-weight: 400;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+.choice::before {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  background: rgb(250 249 246 / 8%);
+  transition: transform 420ms var(--ease-out);
+  transform: scaleX(0);
+  transform-origin: left;
+  inset: 0;
+}
+.choice:hover {
+  color: #faf9f6;
+  border-color: var(--line-ink-strong);
+}
+.choice:hover::before {
+  transform: scaleX(1);
+}
+.choice[aria-pressed="true"] {
+  color: #faf9f6;
+  border-color: var(--red-on-ink);
+}
+.choice[aria-pressed="true"] .choice-index {
+  color: var(--red-on-ink);
+  opacity: 1;
+}
+
+/* ── The articles ── */
+.services-list {
+  display: flex;
+  flex-direction: column;
+}
+/**
+ * The article being read is marked, not spotlit: a rule on its leading edge
+ * fills red. Fading the other two would drop live body copy under the contrast
+ * minimum for anyone reading ahead of the drawing.
+ */
+.service {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: center;
+  min-height: 84vh;
+  padding-block: clamp(32px, 6vh, 72px);
+  padding-left: clamp(20px, 2.4vw, 36px);
+  border-left: 1px solid var(--line-ink);
+}
+.service::before {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 2px;
+  height: 100%;
+  content: "";
+  background: var(--red-on-ink);
+  transition: transform 620ms var(--ease-out);
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.service.is-current::before {
+  transform: scaleY(1);
+}
+.service-figure {
+  display: none;
+}
+.service-label {
+  color: var(--red-on-ink);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  font-weight: 500;
+}
+.service h3 {
+  max-width: 18ch;
+  font-size: clamp(1.7rem, 1.1rem + 2.2vw, 3.1rem);
+  line-height: 1.04;
+}
+.service .body {
+  max-width: 48ch;
+  color: var(--muted-ink);
+}
+.service-detail {
+  position: relative;
+  max-width: 44ch;
+  padding-left: 20px;
+  color: #faf9f6;
+}
+.service-detail::before {
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  content: "";
+  background: var(--red-on-ink);
+  border-radius: 50%;
+}
+
+.services-foot {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: clamp(40px, 5vw, 80px);
+  margin-top: clamp(32px, 4vw, 64px);
+  border-top: 1px solid var(--line-ink);
+}
+
+/* ── Narrow: no sticky pane; every article carries its own drawing ── */
+@media (max-width: 960px) {
+  .services-head {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+    padding-bottom: clamp(32px, 7vw, 64px);
+  }
+  .services-stage {
+    display: block;
+  }
+  .services-aside {
+    position: static;
+  }
+  .services-sticky {
+    position: static;
+    gap: 18px;
+    padding-top: clamp(28px, 5vh, 48px);
+  }
+  .services-art,
+  .services-caption {
+    display: none;
+  }
+  .services-rail {
+    margin-bottom: clamp(16px, 4vw, 32px);
+  }
+  .choice {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  /* Stacked, the leading edge is the top of the article rather than its side. */
+  .service {
+    gap: 14px;
+    min-height: 0;
+    padding-left: 0;
+    padding-block: clamp(32px, 7vw, 64px);
+    border-top: 1px solid var(--line-ink);
+    border-left: 0;
+  }
+  /* The service is named before its drawing is shown. */
+  .service-label {
+    order: 1;
+  }
+  .service h3 {
+    order: 2;
+  }
+  .service-figure {
+    order: 3;
+  }
+  .service .body {
+    order: 4;
+  }
+  .service-detail {
+    order: 5;
+  }
+  .service::before {
+    top: -1px;
+    left: 0;
+    width: 64px;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .service.is-current::before {
+    transform: scaleX(1);
+  }
+  .services-list .service:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .service-figure {
+    display: block;
+    width: min(100%, 340px);
+    margin-block: 6px;
+  }
+  .services-foot {
+    justify-content: flex-start;
+  }
+}

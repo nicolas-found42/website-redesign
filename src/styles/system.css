@@ -1,0 +1,203 @@
+/**
+ * The working-system drawing.
+ *
+ * The drawing itself is an ink technical plan; red is reserved for the two
+ * things that are alive in it — the human direction node, and the signals
+ * running the routes. That discipline is what keeps the red meaningful when it
+ * reappears on a button or a section index.
+ */
+.system {
+  container-type: inline-size;
+  width: 100%;
+}
+.system-field {
+  position: relative;
+  aspect-ratio: var(--ratio, 1000 / 620);
+  width: 100%;
+}
+.system-svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  inset: 0;
+}
+
+/* ── Routes ── */
+.route {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.route--trunk {
+  stroke-width: 2;
+  opacity: 0.55;
+}
+.route--branch {
+  stroke-width: 1.5;
+  opacity: 0.3;
+}
+/* The feedback loop is drawn as one: dashed, and quietest of the three. */
+.route--return {
+  stroke-width: 1.25;
+  stroke-dasharray: 2 9;
+  opacity: 0.28;
+}
+
+/* ── Node markers ── */
+.marker-ring {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  opacity: 0.55;
+}
+.marker-core {
+  fill: var(--ink);
+}
+/* `r` takes a length: unitless, Chromium accepts it and the other two engines
+   drop it, which left the result marker a different size per browser. */
+.marker--result .marker-core {
+  r: 5.5px;
+}
+.marker--human .marker-halo {
+  fill: var(--red);
+  opacity: 0.1;
+}
+.marker--human .marker-ring {
+  stroke: var(--red);
+  stroke-width: 2;
+  opacity: 1;
+}
+.marker--human .marker-core {
+  fill: var(--red);
+}
+
+/* ── Signals ── */
+.signal {
+  fill: var(--red);
+}
+.on-ink .signal {
+  fill: var(--red-on-ink);
+}
+
+/* ── Annotations ── */
+.system-labels {
+  position: absolute;
+  inset: 0;
+}
+/**
+ * `--x` / `--y` arrive unitless, as a share of the field.
+ *
+ * `width: max-content` matters: an absolutely positioned box offset from the
+ * left shrink-to-fits into whatever room is left to the *right* of that offset,
+ * so a label that is then translated leftwards would be squeezed to a column
+ * only as wide as the margin it was never going to occupy.
+ */
+.system-label {
+  position: absolute;
+  top: calc(var(--y) * 1%);
+  left: calc(var(--x) * 1%);
+  display: block;
+  width: max-content;
+  max-width: min(44cqw, 26ch);
+  font-family: var(--font-note);
+  font-size: clamp(0.75rem, 0.52rem + 0.62cqw, 0.875rem);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  text-wrap: pretty;
+}
+/**
+ * The label is placed by its anchor class; the text inside it is what any
+ * entrance moves. Keeping those on two elements means an animation can never
+ * overwrite the transform that positions an annotation.
+ */
+.system-label-text {
+  display: block;
+  font-style: normal;
+}
+/**
+ * Side annotations sit *above* their node rather than level with it. Level with
+ * it, a label lands on top of any route that runs horizontally through the
+ * node — which the trunk routes all do.
+ */
+.system-label--start {
+  padding-bottom: 9px;
+  padding-left: 19px;
+  transform: translateY(-100%);
+}
+.system-label--under {
+  padding-top: 9px;
+  padding-left: 19px;
+}
+.system-label--end {
+  padding-right: 19px;
+  padding-bottom: 9px;
+  text-align: right;
+  transform: translate(-100%, -100%);
+}
+.system-label--above {
+  padding-bottom: 20px;
+  text-align: center;
+  transform: translate(-50%, -100%);
+}
+.system-label--below {
+  padding-top: 20px;
+  text-align: center;
+  transform: translate(-50%, 0);
+}
+/* Human direction is the drawing's thesis, so it is the one label in voice. */
+.system-label--human {
+  font-weight: 700;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.system-label--result {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── Pointer depth ── */
+/**
+ * Three layers lean by different amounts, so the drawing has depth without
+ * anything actually moving away from its coordinates. Touch pointers never set
+ * `--lean-*`, so this resolves to zero there.
+ */
+.system-svg .routes {
+  transform: translate(
+    calc(var(--lean-x, 0) * 9px),
+    calc(var(--lean-y, 0) * 9px)
+  );
+}
+.system-svg .signals,
+.system-svg .markers {
+  transform: translate(
+    calc(var(--lean-x, 0) * 16px),
+    calc(var(--lean-y, 0) * 16px)
+  );
+}
+.system-labels {
+  transform: translate(
+    calc(var(--lean-x, 0) * 16px),
+    calc(var(--lean-y, 0) * 16px)
+  );
+}
+
+/* Very narrow fields would set annotations below the readable minimum. */
+@container (width < 300px) {
+  .system-label {
+    font-size: 0.75rem;
+    max-width: 14ch;
+  }
+}
+
+/* ── The still service drawings ── */
+.system--quiet .route--trunk {
+  opacity: 0.7;
+}
+.system--quiet .marker--human .marker-halo {
+  opacity: 0.14;
+}
