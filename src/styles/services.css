@@ -204,6 +204,7 @@
   .services-sticky {
     position: static;
     gap: 18px;
+    min-height: 0;
     padding-top: clamp(28px, 5vh, 48px);
   }
   .services-art,
@@ -241,6 +242,12 @@
   }
   .service-detail {
     order: 5;
+  }
+  .service .scope-list {
+    order: 6;
+  }
+  .service > .link {
+    order: 7;
   }
   .service::before {
     top: -1px;

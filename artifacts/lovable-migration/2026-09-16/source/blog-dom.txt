@@ -1,0 +1,59 @@
+- banner:
+  - link "Found42 home":
+    - /url: /
+    - img "Found42"
+  - button "Toggle menu":
+- main:
+  - paragraph: Operator notes
+  - heading "Useful thinking, plainly written." [level=1]
+  - paragraph: Field notes on training teams, designing Claude skills, and deciding what should,and should not,be automated.
+  - button "Talk to our team":
+    - text: Talk to our team
+  - paragraph: New essays are coming.
+  - paragraph: Get the first issue when it’s ready.
+  - textbox "Work email":
+    - /placeholder: you@company.com
+  - button "Join the list":
+    - text: Join the list
+  - article:
+    - generic: Essay 01
+    - generic: 07 min
+    - heading "Why prompt libraries fail teams" [level=2]
+    - paragraph: A folder of clever instructions is not an operating system. Skills need context, examples, and ownership.
+    - text: Coming soon
+  - article:
+    - generic: Essay 02
+    - generic: 05 min
+    - heading "The first workflow test" [level=2]
+    - paragraph: Four questions that reveal whether a task is ready for Claude,or still too ambiguous to automate.
+    - text: Coming soon
+  - article:
+    - generic: Essay 03
+    - generic: 09 min
+    - heading "Design the failure review first" [level=2]
+    - paragraph: How to make weak outputs visible before they become polished, plausible mistakes.
+    - text: Coming soon
+- contentinfo:
+  - img "Found42"
+  - paragraph: Practical Claude skills, workflows, and automations for business teams that need measurable results.
+  - paragraph: Explore
+  - link "Free Resources":
+    - /url: /resources
+  - link "Services":
+    - /url: /services
+  - link "About":
+    - /url: /about
+  - link "Blog":
+    - /url: /blog
+  - paragraph: Industries
+  - link "Private Equity":
+    - /url: /industries/private-equity
+  - link "B2B SaaS":
+    - /url: /industries/b2b-saas
+  - generic: © 2026 Found42
+  - generic: Practical AI. Built around the work.
+- complementary "Made with Lovable":
+  - link "Made with Lovable":
+    - /url: https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled
+    - generic: Made with
+  - button "Dismiss":

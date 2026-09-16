@@ -1,0 +1,59 @@
+- banner:
+  - link "Found42 home":
+    - /url: /
+    - img "Found42"
+  - button "Toggle menu":
+- main:
+  - paragraph: B2B SaaS
+  - heading "Make expertise repeatable." [level=1]
+  - paragraph: Claude skills for customer, product, and go-to-market teams,built to improve throughput without making the work generic.
+  - button "Talk to our team":
+    - text: Talk to our team
+  - paragraph: 1→N
+  - paragraph: Turn expert practice into team practice
+  - paragraph: Where we work
+  - heading "Closer to customers. Faster to action." [level=2]
+  - article:
+    - generic: "01"
+    - heading "Customer success" [level=2]
+    - paragraph: Turn account context into sharper briefs, risk reviews, and consistent follow-through.
+  - article:
+    - generic: "02"
+    - heading "Feedback triage" [level=2]
+    - paragraph: Group signal without losing the customer language product teams need to hear.
+  - article:
+    - generic: "03"
+    - heading "GTM enablement" [level=2]
+    - paragraph: Build reusable skills for research, account planning, call review, and message testing.
+  - article:
+    - generic: "04"
+    - heading "Team adoption" [level=2]
+    - paragraph: Train operators on the same quality bar, then improve it with real examples.
+  - heading "Choose one customer workflow." [level=2]
+  - paragraph: We’ll show you where Claude can add speed, where judgment stays human, and what a safe first build looks like.
+  - button "Talk to us":
+    - text: Talk to us
+- contentinfo:
+  - img "Found42"
+  - paragraph: Practical Claude skills, workflows, and automations for business teams that need measurable results.
+  - paragraph: Explore
+  - link "Free Resources":
+    - /url: /resources
+  - link "Services":
+    - /url: /services
+  - link "About":
+    - /url: /about
+  - link "Blog":
+    - /url: /blog
+  - paragraph: Industries
+  - link "Private Equity":
+    - /url: /industries/private-equity
+  - link "B2B SaaS":
+    - /url: /industries/b2b-saas
+  - generic: © 2026 Found42
+  - generic: Practical AI. Built around the work.
+- complementary "Made with Lovable":
+  - link "Made with Lovable":
+    - /url: https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled
+    - generic: Made with
+  - button "Dismiss":

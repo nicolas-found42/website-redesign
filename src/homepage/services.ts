@@ -34,7 +34,7 @@ export function servicesSection() {
   <p class="service-label note">${service.label}</p>
   <h3 id="service-${schematic.id}-title">${service.title}</h3>
   <p class="body">${service.description}</p>
-  <p class="service-detail note--plain">${schematic.detail}</p>
+  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact">Discuss ${service.title.toLowerCase()} →</button>
  </article>`;
     })
     .join("");
@@ -46,7 +46,7 @@ export function servicesSection() {
     <p class="index"><b>02</b><span class="rule"></span><span class="note">How we help</span></p>
     <h2 id="services-title" class="display" data-reveal-lines>From possibility to practical work.</h2>
    </div>
-   <p class="lead" data-reveal>For leadership teams and portfolio-company operators ready to apply AI to real challenges. Start with your people, your workflows, or your product.</p>
+   <p class="lead" data-reveal>Built around your role, your industry, and your company—not a generic AI curriculum. We train teams, build custom skills, and automate repeatable work.</p>
   </div>
   <div class="services-stage">
    <div class="services-aside">
@@ -59,7 +59,7 @@ export function servicesSection() {
    <div class="services-list">${articles}</div>
   </div>
   <div class="services-foot">
-   <a class="link" href="https://www.found42.com/contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</a>
+   <button class="link" data-dialog="contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</button>
   </div>
  </div>
 </section>`;

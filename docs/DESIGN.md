@@ -1,6 +1,6 @@
 # Design decisions
 
-The homepage is drawn in a direction called **Working Drawings**. It replaces
+The multi-page preview extends a direction called **Working Drawings**. It replaces
 the ribbon motif and the flat band rhythm that preceded it; the earlier light
 editorial selection, the black/red identity, the original logo and Richard
 Achée's portrait are carried forward. Screenshots of the previous iteration are
@@ -27,8 +27,9 @@ a customer system or a measured result.
 
 Four compositions exist. The **master** drawing opens the page: people,
 workflows and what the business knows, connected through human direction into
-practical AI at work. **Training**, **automation** and **product value** are the
-three services, each with the geometry its own argument needs — a loop that
+practical AI at work. The original **training**, **automation** and **product value** geometry now
+supports Workshops, Workflows and Automations, respectively, with source-aligned
+labels and descriptions. Each keeps the geometry its own argument needs — a loop that
 returns, three functions converging on one spine, and inputs combining then
 reaching a customer more than one way.
 
@@ -129,17 +130,25 @@ The retired ribbon artwork, its generator, its two static SVGs and `svgo` were
 removed: the drawing is rendered inline from one module, and nothing referenced
 the generated files.
 
-## Evidence and content
+## Multi-page extension and content
 
-Every published claim is unchanged. The three service names and scopes, the four
-resource routes and their different gates, the ungated blog, the two attributed
-workshop excerpts, the published-biography framing and the inquiry wording are
-the records in `src/content.ts` and `CONTENT-SOURCES.md`. The opening drawing's
-node labels — people, workflows, what the business knows, human direction,
-practical AI at work — are the page's own vocabulary, presented as an
-illustration of the possibilities and captioned as one.
+The September 16 Lovable migration supersedes the previous homepage-only content
+baseline. `CONTENT-SOURCES.md` and the migration manifest record the current
+seven-page scope and every editorial replacement. Typography, colors, spacing
+tokens, grid, original assets, schematic geometry and the single motion engine
+are retained. `pages.css` extends the visual vocabulary with indexed industry
+rows, a readable biography, a resource assessment and forthcoming essay entries.
 
-No inventory totals, guarantees, ROI figures, customer logos, invented
-testimonials or product capabilities were introduced; a rendering test asserts
-that. Reference sites informed technique only: no imagery, client logo or
-commercial claim was reused, and no third-party source was copied.
+Executives are directed toward usable systems; domain experts toward training
+around their actual role, industry and company. Workshops, Workflows and
+Automations replace the older offer names. The third drawing keeps its geometry
+but describes company context, human review and repeatable work rather than a
+new product promise. Internal geometry identifiers remain stable.
+
+The full founder biography remains faithful to the source. Source samples stay
+labeled as samples. Eight-hour savings remain a qualified target. Unconnected
+forms state their limits and never claim delivery. Shared chrome and native
+modal dialogs use the existing paper/ink surfaces, annotation font and focus
+rules. Normal links preserve browser navigation and history across generated
+static pages. Page-specific headers become opaque early enough to keep scrolled
+copy clear, and mobile menus retain paper contrast over dark sections.

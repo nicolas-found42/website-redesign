@@ -24,10 +24,10 @@ test("mobile menu supports keyboard navigation and returns focus to the chosen s
       : "Tab",
   );
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/#resources$/);
+  await expect(page).toHaveURL(/\/resources\/$/);
   await expect(
-    page.getByRole("heading", { name: "A useful place to start." }),
-  ).toBeFocused();
+    page.getByRole("heading", { name: "Start with the work." }),
+  ).toBeVisible();
   await expect(menu).toHaveAttribute("aria-expanded", "false");
 });
 
@@ -37,7 +37,7 @@ test("reduced-motion visitors can operate the drawing without animated movement"
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/#services");
   const automate = page.getByRole("button", {
-    name: "Automation",
+    name: "Workflows",
     exact: true,
   });
   await automate.focus();
@@ -138,11 +138,11 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
     ),
   ).toBe(true);
   await expect(
-    page.getByText("Requires email, LinkedIn profile and CAPTCHA.", {
+    page.getByText("Enrollment is not connected in this preview.", {
       exact: false,
     }),
   ).toBeVisible();
-  const choice = page.getByRole("button", { name: "Automation", exact: true });
+  const choice = page.getByRole("button", { name: "Workflows", exact: true });
   await choice.click();
   await expect(choice).toHaveAttribute("aria-pressed", "true");
 });

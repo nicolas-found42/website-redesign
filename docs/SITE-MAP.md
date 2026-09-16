@@ -1,21 +1,32 @@
-# Prototype site map
+# Multi-page preview site map
 
-Only the homepage is implemented. All listed anchors exist; supporting destinations remain on the current site.
+All seven publicly discovered Lovable pages are implemented. Paths are preserved
+and receive a trailing slash for static directory-index hosting.
 
-| Entry              | Destination                                                                     | Purpose                                                                         |
-| ------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Homepage           | `/`                                                                             | Explain practical AI value and offer resource or inquiry entry                  |
-| Free resources     | `#resources`                                                                    | Compare public reading, prompt-pack request, assessment and playbook request    |
-| Services           | `#services`                                                                     | Distinguish team training, workflow implementation and B2B SaaS differentiation |
-| About summary      | `#about`                                                                        | Introduce Richard Achée with a published-biography attribution                  |
-| Inquiry invitation | `#contact`                                                                      | Explain fit and lead to the existing inquiry form                               |
-| Blog / Insights    | https://www.found42.com/blog                                                    | Ungated article discovery                                                       |
-| Featured article   | https://www.found42.com/blog/choosing-to-inspire                                | Public reading on AI Insourcing and employee empowerment                        |
-| Prompt packs       | https://www.found42.com/industryprompts                                         | Request through personal/business details form                                  |
-| Scorecard          | https://found42.scoreapp.com/                                                   | External assessment; details required before questions                          |
-| Playbook           | https://www.found42.com/ai-failure-modes-playbook                               | Guide request through email, LinkedIn and CAPTCHA gate                          |
-| Founder biography  | https://www.found42.com/about                                                   | Read the published career context                                               |
-| Consultation       | https://www.found42.com/contact                                                 | Submit an inquiry, not schedule an appointment                                  |
-| Privacy / Terms    | https://www.found42.com/privacy-policy and https://www.found42.com/terms-of-use | Existing legal information                                                      |
+| Source path | Destination under `/website-redesign/` | Purpose and next steps |
+| --- | --- | --- |
+| `/` | `/` | Two audience pathways, four resources, services, sample proof, inquiry |
+| `/resources` | `/resources/` | Four-question assessment, resource access forms and course dialog |
+| `/services` | `/services/` | Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
+| `/industries/private-equity` | `/industries/private-equity/` | Deal screening, diligence, portfolio operations and firm-specific criteria |
+| `/industries/b2b-saas` | `/industries/b2b-saas/` | Customer success, feedback triage, GTM enablement and team adoption |
+| `/about` | `/about/` | Complete founder biography and operating principles |
+| `/blog` | `/blog/` | Three forthcoming essay descriptions and newsletter preview |
 
-Future supporting pages should serve these distinct purposes rather than introduce empty prototype routes. The inactive mini-course is omitted; toolkit verification and production migration are deferred.
+Header, industry disclosure, mobile menu, footer and contextual links stay within
+the deployment prefix. Resource links reach `#scorecard`, `#playbook`, `#library`
+and `#course`. Existing homepage anchors remain. Service schematic identifiers
+(`training`, `automation`, `product`) remain stable internal geometry keys; the
+visible offering names are Workshops, Workflows and Automations.
+
+Talk to us opens a shared inquiry dialog. Start free opens the Strategic Advisor
+Mini-Course dialog. The assessment result opens the inquiry dialog. These are
+client states, not extra page routes.
+
+The source has no article-body routes, legal routes, downloadable-file links,
+service-detail routes or confirmation pages in its public route registry. The
+three essays remain explicitly Coming soon. Legal and live inquiry links retain
+the existing external found42.com destinations; those are not additional
+migrated pages. `/404.html` is an additional implementation utility page.
+
+See the migration manifest for the closed discovery queue and all source links.

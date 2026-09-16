@@ -1,0 +1,82 @@
+- banner:
+  - link "Found42 home":
+    - /url: /
+    - img "Found42"
+  - button "Toggle menu":
+- main:
+  - paragraph: Free resources
+  - heading "Start with the work." [level=1]
+  - paragraph: Four practical tools to help your team choose better use cases, build stronger skills, and catch weak outputs.
+  - button "Talk to our team":
+    - text: Talk to our team
+  - paragraph: "04"
+  - paragraph: Free working resources
+  - paragraph: No abstract AI curriculum.
+  - paragraph: 01 / Interactive preview
+  - heading "AI Readiness Scorecard" [level=2]
+  - paragraph: "Test one workflow against the factors that matter: repetition, output clarity, review safety, and frequency."
+  - generic: Readiness check
+  - generic: 1 / 4
+  - heading "How repeatable is the work you want to improve?" [level=3]
+  - button "Different every time":
+    - text: Different every time
+  - button "Some patterns exist":
+    - text: Some patterns exist
+  - button "Highly repeatable":
+    - text: Highly repeatable
+  - paragraph: 02 / Free resource
+  - heading "Failure Mode Playbook" [level=2]
+  - paragraph: Spot weak outputs, missing context, and false confidence before they reach the business.
+  - button "Want this tailored? Talk to us":
+    - text: Want this tailored? Talk to us
+  - paragraph: Get 12 checks for safer adoption
+  - textbox "Work email":
+    - /placeholder: you@company.com
+  - button "Get the resource":
+    - text: Get the resource
+  - paragraph: 03 / Free resource
+  - heading "Skills Starter Library" [level=2]
+  - paragraph: Start with reusable skills for analysis, synthesis, review, and decision support.
+  - button "Want this tailored? Talk to us":
+    - text: Want this tailored? Talk to us
+  - paragraph: Get four working skill patterns
+  - textbox "Work email":
+    - /placeholder: you@company.com
+  - button "Get the resource":
+    - text: Get the resource
+  - paragraph: 04 / Free resource
+  - heading "Strategic Advisor Mini-Course" [level=2]
+  - paragraph: Build a disciplined thinking partner that challenges assumptions and sharpens decisions.
+  - button "Want this tailored? Talk to us":
+    - text: Want this tailored? Talk to us
+  - paragraph: Get five practical daily lessons
+  - button "Start the mini-course":
+    - text: Start the mini-course
+  - heading "Want this built for your team?" [level=2]
+  - paragraph: Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.
+  - button "Talk to us":
+    - text: Talk to us
+- contentinfo:
+  - img "Found42"
+  - paragraph: Practical Claude skills, workflows, and automations for business teams that need measurable results.
+  - paragraph: Explore
+  - link "Free Resources":
+    - /url: /resources
+  - link "Services":
+    - /url: /services
+  - link "About":
+    - /url: /about
+  - link "Blog":
+    - /url: /blog
+  - paragraph: Industries
+  - link "Private Equity":
+    - /url: /industries/private-equity
+  - link "B2B SaaS":
+    - /url: /industries/b2b-saas
+  - generic: © 2026 Found42
+  - generic: Practical AI. Built around the work.
+- complementary "Made with Lovable":
+  - link "Made with Lovable":
+    - /url: https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled
+    - generic: Made with
+  - button "Dismiss":

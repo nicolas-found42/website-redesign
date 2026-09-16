@@ -1,0 +1,87 @@
+- banner:
+  - link "Found42 home":
+    - /url: /
+    - img "Found42"
+  - button "Toggle menu":
+- main:
+  - paragraph: Services
+  - heading "Build capability. Remove drag." [level=1]
+  - paragraph: We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem,not the technology.
+  - button "Talk to our team":
+    - text: Talk to our team
+  - paragraph: “Use free resources to learn. Bring us the workflow when it needs to work under pressure.”
+  - paragraph: Three pillars
+  - heading "From learning to leverage." [level=2]
+  - article:
+    - generic: "01"
+    - heading "Workshops" [level=2]
+    - paragraph: Live or on-demand enablement using your team’s real decisions, documents, and operating rhythms.
+    - list:
+      - generic: "1"
+      - text: Role-specific practice
+      - generic: "2"
+      - text: Reusable skills, not prompt lists
+      - generic: "3"
+      - text: Manager rollout guidance
+    - button "Discuss workshops":
+      - text: Discuss workshops
+  - article:
+    - generic: "02"
+    - heading "Workflows" [level=2]
+    - paragraph: Custom Claude skills and plugins designed around one high-value job to be done.
+    - list:
+      - generic: "1"
+      - text: Discovery
+      - generic: "2"
+      - text: Co-design skills & plugins
+      - generic: "3"
+      - text: Testing & failure-mode review
+    - button "Discuss workflows":
+      - text: Discuss workflows
+  - article:
+    - generic: "03"
+    - heading "Automations" [level=2]
+    - paragraph: Bespoke end-to-end workflows for repetitive work that should not consume expert attention.
+    - list:
+      - generic: "1"
+      - text: Human review points
+      - generic: "2"
+      - text: System handoffs
+      - generic: "3"
+      - text: "Target: 8 hours saved weekly"
+    - button "Discuss automations":
+      - text: Discuss automations
+  - paragraph: Clear boundary
+  - heading "Free shows the pattern." [level=2]
+  - paragraph: Our resources help you test the method and improve individual practice.
+  - paragraph: Bespoke changes the system.
+  - heading "Paid builds the advantage." [level=2]
+  - paragraph: Custom engagements encode your context, quality bar, controls, and workflows.
+  - heading "Want this built for your team?" [level=2]
+  - paragraph: Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.
+  - button "Talk to us":
+    - text: Talk to us
+- contentinfo:
+  - img "Found42"
+  - paragraph: Practical Claude skills, workflows, and automations for business teams that need measurable results.
+  - paragraph: Explore
+  - link "Free Resources":
+    - /url: /resources
+  - link "Services":
+    - /url: /services
+  - link "About":
+    - /url: /about
+  - link "Blog":
+    - /url: /blog
+  - paragraph: Industries
+  - link "Private Equity":
+    - /url: /industries/private-equity
+  - link "B2B SaaS":
+    - /url: /industries/b2b-saas
+  - generic: © 2026 Found42
+  - generic: Practical AI. Built around the work.
+- complementary "Made with Lovable":
+  - link "Made with Lovable":
+    - /url: https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled
+    - generic: Made with
+  - button "Dismiss":

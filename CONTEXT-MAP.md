@@ -20,6 +20,14 @@ This map organizes the Found42 website's domain vocabulary. The contexts describ
 - **Learning ↔ Services**: a free workshop can introduce tailored team training, but the C-Level AI sequence and the 3-Step ROI Accelerator describe different engagements.
 - **Credibility → Learning / Services / Resources**: biography, testimonials, and reported results support specific accounts. Fictional exercises and promotional examples are not customer outcome evidence.
 
+## Current implementation scope
+
+The September 16 Lovable migration expands this repository to seven pages. Its
+[teardown](artifacts/lovable-migration/2026-09-16/teardown.md) and
+[manifest](artifacts/lovable-migration/2026-09-16/manifest.json) record the current
+content authority. Earlier found42.com audits and homepage-only specifications
+remain historical context. See [site map](docs/SITE-MAP.md) for current routes.
+
 ## Supporting documents
 
 - [Found42 website prototype map](https://github.com/nicolas-found42/website-redesign/issues/9) (issue tracker): destination, settled direction, open decisions and scope. Supersedes the removed `SPEC-PLAN.md`.

@@ -1,0 +1,4834 @@
+{
+  "captured": "2026-09-16",
+  "baselineCommit": "46fa96c168e8218ac8d55deb04fb4fb7d8102c8c",
+  "sourceOrigin": "https://found42-claude-lab.lovable.app",
+  "destinationBase": "/website-redesign/",
+  "pages": [
+    {
+      "id": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": [
+        "source/home.json",
+        "source/home-browser.json",
+        "source/home-1440.png",
+        "source/home-390.png"
+      ],
+      "destination": "/",
+      "status": "implemented",
+      "routeDecision": "same path; canonical directory trailing slash for static hosting",
+      "metadata": {
+        "og:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "ogTitle": "Found42 | Practical Claude Training for Teams",
+        "ogDescription": "Build practical Claude skills around the work your team already does.",
+        "og:type": "website",
+        "twitter:description": "Build practical Claude skills around the work your team already does.",
+        "ogSiteName": "Found42",
+        "og:title": "Found42 | Practical Claude Training for Teams",
+        "twitter:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "author": "Found42",
+        "twitter:card": "summary_large_image",
+        "og:description": "Build practical Claude skills around the work your team already does.",
+        "description": "Hands-on Claude skills, workflows, and automations that help business teams save eight hours a week per person.",
+        "twitter:title": "Found42 | Practical Claude Training for Teams",
+        "title": "Found42 | Practical Claude Training for Teams",
+        "og:site_name": "Found42",
+        "viewport": "width=device-width, initial-scale=1",
+        "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "language": "en",
+        "favicon": "https://found42-claude-lab.lovable.app/favicon.png",
+        "scrapeId": "01a0aac8-428c-7015-9056-011e5f1ba220",
+        "sourceURL": "https://found42-claude-lab.lovable.app/",
+        "url": "https://found42-claude-lab.lovable.app/",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "proxyUsed": "basic",
+        "cacheState": "hit",
+        "cachedAt": "2026-09-16T15:13:47.337Z",
+        "creditsUsed": 1,
+        "concurrencyLimited": false
+      },
+      "assets": [
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        },
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        }
+      ],
+      "links": [
+        {
+          "href": "/",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "Home"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/resources",
+          "text": "01AI Readiness ScorecardA 5-minute operational baseline"
+        },
+        {
+          "href": "/resources",
+          "text": "02Failure Mode Playbook12 checks for safer adoption"
+        },
+        {
+          "href": "/resources",
+          "text": "03Skills Starter LibraryFour working skill patterns"
+        },
+        {
+          "href": "/resources",
+          "text": "04Strategic Advisor Mini-CourseFive practical daily lessons"
+        },
+        {
+          "href": "/resources",
+          "text": "Open resource "
+        },
+        {
+          "href": "/resources",
+          "text": "Open resource "
+        },
+        {
+          "href": "/resources",
+          "text": "Open resource "
+        },
+        {
+          "href": "/resources",
+          "text": "Open resource "
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+          "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+        }
+      ],
+      "validation": [
+        "tests/content-coverage.spec.ts",
+        "tests/pages-production.spec.ts",
+        "destination/home-1440.png",
+        "destination/home-390.png"
+      ]
+    },
+    {
+      "id": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": [
+        "source/resources.json",
+        "source/resources-browser.json",
+        "source/resources-1440.png",
+        "source/resources-390.png"
+      ],
+      "destination": "/resources/",
+      "status": "implemented",
+      "routeDecision": "same path; canonical directory trailing slash for static hosting",
+      "metadata": {
+        "og:description": "Practical resources for safer, more useful Claude adoption.",
+        "language": "en",
+        "ogDescription": "Practical resources for safer, more useful Claude adoption.",
+        "og:site_name": "Found42",
+        "twitter:title": "Free Claude Resources | Found42",
+        "twitter:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "og:type": "website",
+        "og:title": "Free Claude Resources | Found42",
+        "viewport": "width=device-width, initial-scale=1",
+        "author": "Found42",
+        "og:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "twitter:card": "summary_large_image",
+        "twitter:description": "Practical resources for safer, more useful Claude adoption.",
+        "description": "Score your AI readiness and get practical Claude playbooks, skills, and training for business teams.",
+        "title": "Free Claude Resources | Found42",
+        "ogSiteName": "Found42",
+        "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "ogTitle": "Free Claude Resources | Found42",
+        "favicon": "https://found42-claude-lab.lovable.app/favicon.png",
+        "scrapeId": "01a0aac8-4743-7068-8e66-724ce998539d",
+        "sourceURL": "https://found42-claude-lab.lovable.app/resources",
+        "url": "https://found42-claude-lab.lovable.app/resources",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "proxyUsed": "basic",
+        "cacheState": "hit",
+        "cachedAt": "2026-09-16T14:51:45.023Z",
+        "creditsUsed": 1,
+        "concurrencyLimited": false
+      },
+      "assets": [
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        },
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        }
+      ],
+      "links": [
+        {
+          "href": "/",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "Home"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+          "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+        }
+      ],
+      "validation": [
+        "tests/content-coverage.spec.ts",
+        "tests/pages-production.spec.ts",
+        "destination/resources-1440.png",
+        "destination/resources-390.png"
+      ]
+    },
+    {
+      "id": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": [
+        "source/services.json",
+        "source/services-browser.json",
+        "source/services-1440.png",
+        "source/services-390.png"
+      ],
+      "destination": "/services/",
+      "status": "implemented",
+      "routeDecision": "same path; canonical directory trailing slash for static hosting",
+      "metadata": {
+        "twitter:card": "summary_large_image",
+        "og:title": "Claude Training & Workflow Services | Found42",
+        "twitter:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "ogSiteName": "Found42",
+        "language": "en",
+        "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "og:type": "website",
+        "description": "Workshops, custom Claude skills, and bespoke automations for non-technical business teams.",
+        "viewport": "width=device-width, initial-scale=1",
+        "ogTitle": "Claude Training & Workflow Services | Found42",
+        "twitter:title": "Claude Training &amp; Workflow Services | Found42",
+        "og:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "og:site_name": "Found42",
+        "author": "Found42",
+        "og:description": "Training, skills, and automation built around real business work.",
+        "twitter:description": "Training, skills, and automation built around real business work.",
+        "title": "Claude Training & Workflow Services | Found42",
+        "ogDescription": "Training, skills, and automation built around real business work.",
+        "favicon": "https://found42-claude-lab.lovable.app/favicon.png",
+        "scrapeId": "01a0aac8-447e-758d-92c4-5a0527b88581",
+        "sourceURL": "https://found42-claude-lab.lovable.app/services",
+        "url": "https://found42-claude-lab.lovable.app/services",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "proxyUsed": "basic",
+        "cacheState": "hit",
+        "cachedAt": "2026-09-16T14:51:37.261Z",
+        "creditsUsed": 1,
+        "concurrencyLimited": false
+      },
+      "assets": [
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        },
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        }
+      ],
+      "links": [
+        {
+          "href": "/",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "Home"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+          "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+        }
+      ],
+      "validation": [
+        "tests/content-coverage.spec.ts",
+        "tests/pages-production.spec.ts",
+        "destination/services-1440.png",
+        "destination/services-390.png"
+      ]
+    },
+    {
+      "id": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": [
+        "source/industries-private-equity.json",
+        "source/industries-private-equity-browser.json",
+        "source/industries-private-equity-1440.png",
+        "source/industries-private-equity-390.png"
+      ],
+      "destination": "/industries/private-equity/",
+      "status": "implemented",
+      "routeDecision": "same path; canonical directory trailing slash for static hosting",
+      "metadata": {
+        "og:title": "Claude for Private Equity | Found42",
+        "ogSiteName": "Found42",
+        "title": "Claude for Private Equity | Found42",
+        "twitter:card": "summary_large_image",
+        "og:description": "Build Claude skills for the work between the data room and the decision.",
+        "twitter:title": "Claude for Private Equity | Found42",
+        "viewport": "width=device-width, initial-scale=1",
+        "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "language": "en",
+        "ogDescription": "Build Claude skills for the work between the data room and the decision.",
+        "og:site_name": "Found42",
+        "author": "Found42",
+        "ogTitle": "Claude for Private Equity | Found42",
+        "twitter:description": "Build Claude skills for the work between the data room and the decision.",
+        "twitter:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "description": "Practical Claude workflows for deal screening, diligence synthesis, and portfolio operations.",
+        "og:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "og:type": "website",
+        "favicon": "https://found42-claude-lab.lovable.app/favicon.png",
+        "scrapeId": "01a0aac8-48ac-75ce-9f29-12c598406a9e",
+        "sourceURL": "https://found42-claude-lab.lovable.app/industries/private-equity",
+        "url": "https://found42-claude-lab.lovable.app/industries/private-equity",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "timezone": "America/New_York",
+        "proxyUsed": "basic",
+        "cacheState": "miss",
+        "indexId": "afb4e6b7-260b-472b-94b5-7ccf3b85daad",
+        "creditsUsed": 1,
+        "concurrencyLimited": false
+      },
+      "assets": [
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        },
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        }
+      ],
+      "links": [
+        {
+          "href": "/",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "Home"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+          "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+        }
+      ],
+      "validation": [
+        "tests/content-coverage.spec.ts",
+        "tests/pages-production.spec.ts",
+        "destination/industries-private-equity-1440.png",
+        "destination/industries-private-equity-390.png"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": [
+        "source/industries-b2b-saas.json",
+        "source/industries-b2b-saas-browser.json",
+        "source/industries-b2b-saas-1440.png",
+        "source/industries-b2b-saas-390.png"
+      ],
+      "destination": "/industries/b2b-saas/",
+      "status": "implemented",
+      "routeDecision": "same path; canonical directory trailing slash for static hosting",
+      "metadata": {
+        "viewport": "width=device-width, initial-scale=1",
+        "ogDescription": "Build Claude skills across customer success, product, and GTM work.",
+        "og:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "title": "Claude for B2B SaaS Teams | Found42",
+        "language": "en",
+        "ogTitle": "Claude for B2B SaaS Teams | Found42",
+        "og:title": "Claude for B2B SaaS Teams | Found42",
+        "og:description": "Build Claude skills across customer success, product, and GTM work.",
+        "twitter:title": "Claude for B2B SaaS Teams | Found42",
+        "description": "Practical Claude workflows for customer success, product feedback, and go-to-market teams.",
+        "og:site_name": "Found42",
+        "og:type": "website",
+        "twitter:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "ogSiteName": "Found42",
+        "author": "Found42",
+        "twitter:description": "Build Claude skills across customer success, product, and GTM work.",
+        "twitter:card": "summary_large_image",
+        "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "favicon": "https://found42-claude-lab.lovable.app/favicon.png",
+        "scrapeId": "01a0aac8-5135-7457-8f7e-26bb39e08574",
+        "sourceURL": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+        "url": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "timezone": "America/New_York",
+        "proxyUsed": "basic",
+        "cacheState": "miss",
+        "indexId": "fe2c8879-db81-4534-95d0-851d40732724",
+        "creditsUsed": 1,
+        "concurrencyLimited": false
+      },
+      "assets": [
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        },
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        }
+      ],
+      "links": [
+        {
+          "href": "/",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "Home"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+          "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+        }
+      ],
+      "validation": [
+        "tests/content-coverage.spec.ts",
+        "tests/pages-production.spec.ts",
+        "destination/industries-b2b-saas-1440.png",
+        "destination/industries-b2b-saas-390.png"
+      ]
+    },
+    {
+      "id": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": [
+        "source/about.json",
+        "source/about-browser.json",
+        "source/about-1440.png",
+        "source/about-390.png"
+      ],
+      "destination": "/about/",
+      "status": "implemented",
+      "routeDecision": "same path; canonical directory trailing slash for static hosting",
+      "metadata": {
+        "twitter:description": "AI consulting built around business experience, coaching, and practical results.",
+        "title": "About Found42 | Richard Achée, Founder and CEO",
+        "ogSiteName": "Found42",
+        "ogTitle": "About Found42 | Richard Achée, Founder and CEO",
+        "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "twitter:title": "About Found42 | Richard Achée, Founder and CEO",
+        "language": "en",
+        "viewport": "width=device-width, initial-scale=1",
+        "og:description": "AI consulting built around business experience, coaching, and practical results.",
+        "description": "Meet Richard Achée, Founder and CEO of Found42, and learn how his global enterprise and start-up experience shapes practical AI training.",
+        "og:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "og:type": "website",
+        "og:title": "About Found42 | Richard Achée, Founder and CEO",
+        "twitter:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "author": "Found42",
+        "twitter:card": "summary_large_image",
+        "og:site_name": "Found42",
+        "ogDescription": "AI consulting built around business experience, coaching, and practical results.",
+        "favicon": "https://found42-claude-lab.lovable.app/favicon.png",
+        "scrapeId": "01a0aac8-5d83-72fe-91b6-95b58ebb15f5",
+        "sourceURL": "https://found42-claude-lab.lovable.app/about",
+        "url": "https://found42-claude-lab.lovable.app/about",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "timezone": "America/New_York",
+        "proxyUsed": "basic",
+        "cacheState": "miss",
+        "indexId": "6171c29a-b1af-4065-8abb-94cd3ca44fc9",
+        "creditsUsed": 1,
+        "concurrencyLimited": false
+      },
+      "assets": [
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        },
+        {
+          "alt": "Richard Achée, Founder and CEO of Found42",
+          "src": "/__l5e/assets-v1/7feb3a89-34a3-4b58-934c-51a8c80ea30d/richard-achee.webp"
+        },
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        }
+      ],
+      "links": [
+        {
+          "href": "/",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "Home"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+          "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+        }
+      ],
+      "validation": [
+        "tests/content-coverage.spec.ts",
+        "tests/pages-production.spec.ts",
+        "destination/about-1440.png",
+        "destination/about-390.png"
+      ]
+    },
+    {
+      "id": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": [
+        "source/blog.json",
+        "source/blog-browser.json",
+        "source/blog-1440.png",
+        "source/blog-390.png"
+      ],
+      "destination": "/blog/",
+      "status": "implemented",
+      "routeDecision": "same path; canonical directory trailing slash for static hosting",
+      "metadata": {
+        "title": "Operator Notes | Found42",
+        "language": "en",
+        "og:site_name": "Found42",
+        "og:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "twitter:title": "Operator Notes | Found42",
+        "twitter:description": "Practical notes for teams putting Claude to work.",
+        "description": "Practical essays on Claude skills, workflow design, adoption, and automation for business teams.",
+        "og:type": "website",
+        "og:title": "Operator Notes | Found42",
+        "author": "Found42",
+        "og:description": "Practical notes for teams putting Claude to work.",
+        "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "ogSiteName": "Found42",
+        "twitter:card": "summary_large_image",
+        "viewport": "width=device-width, initial-scale=1",
+        "ogTitle": "Operator Notes | Found42",
+        "ogDescription": "Practical notes for teams putting Claude to work.",
+        "twitter:image": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_4thcq6jfmq8nn86xt9xkt5jabc/5565f74039d375cb86e5982e767d405f_1789566941453.png",
+        "favicon": "https://found42-claude-lab.lovable.app/favicon.png",
+        "scrapeId": "01a0aac8-5710-71fa-b4bb-f71620962491",
+        "sourceURL": "https://found42-claude-lab.lovable.app/blog",
+        "url": "https://found42-claude-lab.lovable.app/blog",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "timezone": "America/New_York",
+        "proxyUsed": "basic",
+        "cacheState": "miss",
+        "indexId": "2047a11e-9843-471c-9b77-012af5e5a20e",
+        "creditsUsed": 1,
+        "concurrencyLimited": false
+      },
+      "assets": [
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        },
+        {
+          "alt": "Found42",
+          "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+        }
+      ],
+      "links": [
+        {
+          "href": "/",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "Home"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/resources",
+          "text": "Free Resources"
+        },
+        {
+          "href": "/services",
+          "text": "Services"
+        },
+        {
+          "href": "/about",
+          "text": "About"
+        },
+        {
+          "href": "/blog",
+          "text": "Blog"
+        },
+        {
+          "href": "/industries/private-equity",
+          "text": "Private Equity"
+        },
+        {
+          "href": "/industries/b2b-saas",
+          "text": "B2B SaaS"
+        },
+        {
+          "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+          "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+        }
+      ],
+      "validation": [
+        "tests/content-coverage.spec.ts",
+        "tests/pages-production.spec.ts",
+        "destination/blog-1440.png",
+        "destination/blog-390.png"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "home-001",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/0",
+      "original": "The only Claude training your team will ever need",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Practical AI. Human ambition.",
+      "status": "implemented",
+      "reason": "Replace unsupported exclusivity claim with outcome-led brand framing.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-002",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/1",
+      "original": "Hands-on Claude skills and training for businesses",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "AI built around your work.",
+      "status": "implemented",
+      "reason": "CEO positioning: lead with customized outcomes, retain Claude skills and training detail in service/resource descriptions.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-003",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/2",
+      "original": "Save eight hours a week, per person.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "An eight-hour weekly saving is a target where workflow fit supports it, not a universal promise.",
+      "status": "implemented",
+      "reason": "Qualify unsupported universal savings claim; retain the eight-hour ambition.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-004",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/3",
+      "original": "Start free",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Start free",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-005",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/4",
+      "original": "or talk to our team",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Talk to us",
+      "status": "implemented",
+      "reason": "Consolidate repeated inquiry action into shared header and closing band.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-006",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/5",
+      "original": "“The useful part wasn’t learning Claude. It was turning our actual work into a repeatable system.”Sample testimonial. Replace with verified client quote.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "“The useful part wasn’t learning Claude. It was turning our actual work into a repeatable system.” Sample testimonial. Replace with verified client quote.",
+      "status": "implemented",
+      "reason": "Move intact quotation and sample label to proof section; whitespace between elements normalized.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-007",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/6",
+      "original": "Four ways to start with real work.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Four ways to start with real work.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-008",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/7",
+      "original": "AI Readiness Scorecard",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "AI Readiness Scorecard",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-009",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/8",
+      "original": "A 5-minute operational baseline",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "A 5-minute operational baseline",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-010",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/9",
+      "original": "Failure Mode Playbook",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Failure Mode Playbook",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-011",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/10",
+      "original": "12 checks for safer adoption",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "12 checks for safer adoption",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-012",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/11",
+      "original": "Skills Starter Library",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Skills Starter Library",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-013",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/12",
+      "original": "Four working skill patterns",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Four working skill patterns",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-014",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/13",
+      "original": "Strategic Advisor Mini-Course",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Strategic Advisor Mini-Course",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-015",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/14",
+      "original": "Five practical daily lessons",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Five practical daily lessons",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-016",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/15",
+      "original": "Start with value. Build what proves useful.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Start with value. Build what proves useful.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-017",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/16",
+      "original": "Each resource reveals where a tailored workflow can earn its keep.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Each resource reveals where a tailored workflow can earn its keep.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-018",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/17",
+      "original": "Free resources",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Free resources",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-019",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/18",
+      "original": "Useful before the call.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Useful before the call.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-020",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/19",
+      "original": "Practical tools your team can use today. Each one helps you identify where a tailored skill or workflow will earn its keep.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Practical tools your team can use today. Each one helps you identify where a tailored skill or workflow will earn its keep.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-022",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/21",
+      "original": "Find the work worth changing first, and the work Claude should not touch.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Find the work worth changing first, and the work Claude should not touch.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-025",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/24",
+      "original": "Spot weak outputs, missing context, and false confidence before they reach the business.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Spot weak outputs, missing context, and false confidence before they reach the business.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-028",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/27",
+      "original": "Start with reusable skills for analysis, synthesis, review, and decision support.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Start with reusable skills for analysis, synthesis, review, and decision support.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-031",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/30",
+      "original": "Build a disciplined thinking partner that challenges assumptions and sharpens decisions.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Build a disciplined thinking partner that challenges assumptions and sharpens decisions.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-033",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/32",
+      "original": "From the work",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "From the work",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-034",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/33",
+      "original": "Proof, not promises.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Proof, not promises.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-035",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/34",
+      "original": "“We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.”Name to be confirmedTitle · Company · Sample testimonial placeholder",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "“We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.” Name to be confirmed · Title · Company · Sample testimonial placeholder",
+      "status": "implemented",
+      "reason": "Preserve quotation and sample status, separate attribution labels for readability.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-036",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/35",
+      "original": "“We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.”",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "“We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.”",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-037",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/36",
+      "original": "Name to be confirmed",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Name to be confirmed",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-038",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/37",
+      "original": "Title · Company · Sample testimonial placeholder",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Title · Company · Sample testimonial placeholder",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-039",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/38",
+      "original": "Add verified client proof",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Add verified client proof",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-040",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/39",
+      "original": "Want this built for your team?",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Want this built for your team?",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-041",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/40",
+      "original": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "home-042",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/",
+      "evidence": "source/home-browser.json#items/41",
+      "original": "Talk to us",
+      "destination": "/",
+      "component": "src/homepage/",
+      "replacement": "Talk to us",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-001",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/0",
+      "original": "Free resources",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Free resources",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-002",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/1",
+      "original": "Start with the work.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Start with the work.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-003",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/2",
+      "original": "Four practical tools to help your team choose better use cases, build stronger skills, and catch weak outputs.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Four practical tools to help your team choose better use cases, build stronger skills, and catch weak outputs.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-004",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/3",
+      "original": "Talk to our team",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to our team",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-005",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/4",
+      "original": "04",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "04",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-006",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/5",
+      "original": "Free working resources",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Free working resources",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-007",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/6",
+      "original": "No abstract AI curriculum.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "No abstract AI curriculum.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-008",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/7",
+      "original": "01 / Interactive preview",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "01 / Interactive preview",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-009",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/8",
+      "original": "AI Readiness Scorecard",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "AI Readiness Scorecard",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-010",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/9",
+      "original": "Test one workflow against the factors that matter: repetition, output clarity, review safety, and frequency.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Test one workflow against the factors that matter: repetition, output clarity, review safety, and frequency.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-011",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/10",
+      "original": "How repeatable is the work you want to improve?",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "How repeatable is the work you want to improve?",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-1",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-012",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/11",
+      "original": "Different every time",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Different every time",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-1",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-013",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/12",
+      "original": "Some patterns exist",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Some patterns exist",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-1",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-014",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/13",
+      "original": "Highly repeatable",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Highly repeatable",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-1",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-015",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/14",
+      "original": "02 / Free resource",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "02 / Free resource",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-016",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/15",
+      "original": "Failure Mode Playbook",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Failure Mode Playbook",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-017",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/16",
+      "original": "Spot weak outputs, missing context, and false confidence before they reach the business.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Spot weak outputs, missing context, and false confidence before they reach the business.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-018",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/17",
+      "original": "Want this tailored? Talk to us",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Want this tailored? Talk to us",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-019",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/18",
+      "original": "Get 12 checks for safer adoption",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Get 12 checks for safer adoption",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-020",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/19",
+      "original": "Get the resource",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Get the resource",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-021",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/20",
+      "original": "03 / Free resource",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "03 / Free resource",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-022",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/21",
+      "original": "Skills Starter Library",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Skills Starter Library",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-023",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/22",
+      "original": "Start with reusable skills for analysis, synthesis, review, and decision support.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Start with reusable skills for analysis, synthesis, review, and decision support.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-025",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/24",
+      "original": "Get four working skill patterns",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Get four working skill patterns",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-027",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/26",
+      "original": "04 / Free resource",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "04 / Free resource",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-028",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/27",
+      "original": "Strategic Advisor Mini-Course",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Strategic Advisor Mini-Course",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-029",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/28",
+      "original": "Build a disciplined thinking partner that challenges assumptions and sharpens decisions.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Build a disciplined thinking partner that challenges assumptions and sharpens decisions.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-031",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/30",
+      "original": "Get five practical daily lessons",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Get five practical daily lessons",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-032",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/31",
+      "original": "Start the mini-course",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Start the mini-course",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-033",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/32",
+      "original": "Want this built for your team?",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Want this built for your team?",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-034",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/33",
+      "original": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "resources-035",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources-browser.json#items/34",
+      "original": "Talk to us",
+      "destination": "/resources/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to us",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-001",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/0",
+      "original": "Services",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Services",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-002",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/1",
+      "original": "Build capability. Remove drag.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Build capability. Remove drag.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-003",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/2",
+      "original": "We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem,not the technology.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem, not the technology.",
+      "status": "implemented",
+      "reason": "Repair missing spaces after source punctuation; meaning unchanged.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-004",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/3",
+      "original": "Talk to our team",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to our team",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-005",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/4",
+      "original": "“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-006",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/5",
+      "original": "Three pillars",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Three pillars",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-007",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/6",
+      "original": "From learning to leverage.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "From learning to leverage.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-008",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/7",
+      "original": "Workshops",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Workshops",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-009",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/8",
+      "original": "Live or on-demand enablement using your team’s real decisions, documents, and operating rhythms.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Live or on-demand enablement using your team’s real decisions, documents, and operating rhythms.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-010",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/9",
+      "original": "1Role-specific practice",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Role-specific practice",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-011",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/10",
+      "original": "2Reusable skills, not prompt lists",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Reusable skills, not prompt lists",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-012",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/11",
+      "original": "3Manager rollout guidance",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Manager rollout guidance",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-013",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/12",
+      "original": "Discuss workshops",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Discuss workshops",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-014",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/13",
+      "original": "Workflows",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Workflows",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-015",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/14",
+      "original": "Custom Claude skills and plugins designed around one high-value job to be done.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Custom Claude skills and plugins designed around one high-value job to be done.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-016",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/15",
+      "original": "1Discovery",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Discovery",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-017",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/16",
+      "original": "2Co-design skills & plugins",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Co-design skills & plugins",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-018",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/17",
+      "original": "3Testing & failure-mode review",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Testing & failure-mode review",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-019",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/18",
+      "original": "Discuss workflows",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Discuss workflows",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-020",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/19",
+      "original": "Automations",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Automations",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-021",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/20",
+      "original": "Bespoke end-to-end workflows for repetitive work that should not consume expert attention.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Bespoke end-to-end workflows for repetitive work that should not consume expert attention.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-022",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/21",
+      "original": "1Human review points",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Human review points",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-023",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/22",
+      "original": "2System handoffs",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "System handoffs",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-024",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/23",
+      "original": "3Target: 8 hours saved weekly",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Target: 8 hours saved weekly",
+      "status": "implemented",
+      "reason": "Use semantic list markers instead of duplicated literal numbering.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-025",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/24",
+      "original": "Discuss automations",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Discuss automations",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-026",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/25",
+      "original": "Clear boundary",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Clear boundary",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-027",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/26",
+      "original": "Free shows the pattern.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Free shows the pattern.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-028",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/27",
+      "original": "Our resources help you test the method and improve individual practice.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Our resources help you test the method and improve individual practice.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-029",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/28",
+      "original": "Bespoke changes the system.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Bespoke changes the system.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-030",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/29",
+      "original": "Paid builds the advantage.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Paid builds the advantage.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-031",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/30",
+      "original": "Custom engagements encode your context, quality bar, controls, and workflows.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Custom engagements encode your context, quality bar, controls, and workflows.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-032",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/31",
+      "original": "Want this built for your team?",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Want this built for your team?",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-033",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/32",
+      "original": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "services-034",
+      "page": "services",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/services",
+      "evidence": "source/services-browser.json#items/33",
+      "original": "Talk to us",
+      "destination": "/services/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to us",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-001",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/0",
+      "original": "Private Equity",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Private Equity",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-002",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/1",
+      "original": "More signal per deal.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "More signal per deal.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-003",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/2",
+      "original": "Claude skills for the work between the data room and the decision,designed around evidence, judgment, and review.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Claude skills for the work between the data room and the decision, designed around evidence, judgment, and review.",
+      "status": "implemented",
+      "reason": "Repair missing spaces after source punctuation; meaning unchanged.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-004",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/3",
+      "original": "Talk to our team",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to our team",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-005",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/4",
+      "original": "8h",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "8h",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-006",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/5",
+      "original": "Target weekly capacity returned",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Target weekly capacity returned",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-007",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/6",
+      "original": "Per person, where workflow fit supports it.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Per person, where workflow fit supports it.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-008",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/7",
+      "original": "Where we work",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Where we work",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-009",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/8",
+      "original": "High context. Clear controls.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "High context. Clear controls.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-010",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/9",
+      "original": "Deal screening",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Deal screening",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-011",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/10",
+      "original": "Turn a house view into a consistent first-pass screen without flattening judgment.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Turn a house view into a consistent first-pass screen without flattening judgment.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-012",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/11",
+      "original": "Diligence synthesis",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Diligence synthesis",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-013",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/12",
+      "original": "Structure source-grounded findings across commercial, operational, and market workstreams.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Structure source-grounded findings across commercial, operational, and market workstreams.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-014",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/13",
+      "original": "Portfolio operations",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Portfolio operations",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-015",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/14",
+      "original": "Give operating teams repeatable skills for reviews, plans, and performance narratives.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Give operating teams repeatable skills for reviews, plans, and performance narratives.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-016",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/15",
+      "original": "Custom skills",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Custom skills",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-017",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/16",
+      "original": "Encode the firm’s criteria, review steps, and language into the work itself.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Encode the firm’s criteria, review steps, and language into the work itself.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-018",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/17",
+      "original": "Bring us one live workflow.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Bring us one live workflow.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-019",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/18",
+      "original": "We’ll map the decision, source material, failure modes, and review points before recommending a build.",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "We’ll map the decision, source material, failure modes, and review points before recommending a build.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-private-equity-020",
+      "page": "industries-private-equity",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "evidence": "source/industries-private-equity-browser.json#items/19",
+      "original": "Talk to us",
+      "destination": "/industries/private-equity/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to us",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-001",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/0",
+      "original": "B2B SaaS",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "B2B SaaS",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-002",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/1",
+      "original": "Make expertise repeatable.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Make expertise repeatable.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-003",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/2",
+      "original": "Claude skills for customer, product, and go-to-market teams,built to improve throughput without making the work generic.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Claude skills for customer, product, and go-to-market teams, built to improve throughput without making the work generic.",
+      "status": "implemented",
+      "reason": "Repair missing spaces after source punctuation; meaning unchanged.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-004",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/3",
+      "original": "Talk to our team",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to our team",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-005",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/4",
+      "original": "1→N",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "1→N",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-006",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/5",
+      "original": "Turn expert practice into team practice",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Turn expert practice into team practice",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-007",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/6",
+      "original": "Where we work",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Where we work",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-008",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/7",
+      "original": "Closer to customers. Faster to action.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Closer to customers. Faster to action.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-009",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/8",
+      "original": "Customer success",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Customer success",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-010",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/9",
+      "original": "Turn account context into sharper briefs, risk reviews, and consistent follow-through.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Turn account context into sharper briefs, risk reviews, and consistent follow-through.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-011",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/10",
+      "original": "Feedback triage",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Feedback triage",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-012",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/11",
+      "original": "Group signal without losing the customer language product teams need to hear.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Group signal without losing the customer language product teams need to hear.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-013",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/12",
+      "original": "GTM enablement",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "GTM enablement",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-014",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/13",
+      "original": "Build reusable skills for research, account planning, call review, and message testing.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Build reusable skills for research, account planning, call review, and message testing.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-015",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/14",
+      "original": "Team adoption",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Team adoption",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-016",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/15",
+      "original": "Train operators on the same quality bar, then improve it with real examples.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Train operators on the same quality bar, then improve it with real examples.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-017",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/16",
+      "original": "Choose one customer workflow.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Choose one customer workflow.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-018",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/17",
+      "original": "We’ll show you where Claude can add speed, where judgment stays human, and what a safe first build looks like.",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "We’ll show you where Claude can add speed, where judgment stays human, and what a safe first build looks like.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "industries-b2b-saas-019",
+      "page": "industries-b2b-saas",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "evidence": "source/industries-b2b-saas-browser.json#items/18",
+      "original": "Talk to us",
+      "destination": "/industries/b2b-saas/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to us",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-001",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/0",
+      "original": "Who we are",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Who we are",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-002",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/1",
+      "original": "Built for operators.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Built for operators.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-003",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/2",
+      "original": "Found42 helps non-technical teams make Claude useful in the work they already own, without outsourcing judgment or buying into theatre.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Found42 helps non-technical teams make Claude useful in the work they already own, without outsourcing judgment or buying into theatre.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-004",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/3",
+      "original": "Talk to our team",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to our team",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-005",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/4",
+      "original": "The goal is not more AI activity. It is better work, with less drag.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "The goal is not more AI activity. It is better work, with less drag.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-006",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/5",
+      "original": "Founder and CEO",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Founder and CEO",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-007",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/6",
+      "original": "Richard Achée",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Richard Achée",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-008",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/7",
+      "original": "Richard has over two decades of experience leading teams and driving innovation in enterprise across three continents.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Richard has over two decades of experience leading teams and driving innovation in enterprise across three continents.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-009",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/8",
+      "original": "As an M&A business sponsor, he closed two successful strategic acquisitions at Google: Cameyo and Neverware.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "As an M&A business sponsor, he closed two successful strategic acquisitions at Google: Cameyo and Neverware.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-010",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/9",
+      "original": "As a business development leader, he helped dozens of start-ups grow from solopreneurs to category leaders.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "As a business development leader, he helped dozens of start-ups grow from solopreneurs to category leaders.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-011",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/10",
+      "original": "As a board advisor and fractional GTM lead, he has supported lean start-ups in the US, EMEA, and APAC.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "As a board advisor and fractional GTM lead, he has supported lean start-ups in the US, EMEA, and APAC.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-012",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/11",
+      "original": "Richard now channels his business expertise, lifelong love of coaching and mentoring, and teacher’s mindset to help everyone learn how to use AI effectively to address their most pressing challenges.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Richard now channels his business expertise, lifelong love of coaching and mentoring, and teacher’s mindset to help everyone learn how to use AI effectively to address their most pressing challenges.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-013",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/12",
+      "original": "His expansive network of founders, fractional CxOs, domain experts, and strategic partners creates opportunities to bring the right skills and experience to meet each person at their point of need.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "His expansive network of founders, fractional CxOs, domain experts, and strategic partners creates opportunities to bring the right skills and experience to meet each person at their point of need.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-014",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/13",
+      "original": "Operating principles",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Operating principles",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-015",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/14",
+      "original": "Useful. Testable. Owned.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Useful. Testable. Owned.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-016",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/15",
+      "original": "Start narrow",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Start narrow",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-017",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/16",
+      "original": "One meaningful workflow beats twenty shallow demos.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "One meaningful workflow beats twenty shallow demos.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-018",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/17",
+      "original": "Design for failure",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Design for failure",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-019",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/18",
+      "original": "A skill is only useful when the team knows where it can break.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "A skill is only useful when the team knows where it can break.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-020",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/19",
+      "original": "Leave capability",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Leave capability",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-021",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/20",
+      "original": "The people doing the work should understand, own, and improve the system.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "The people doing the work should understand, own, and improve the system.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-022",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/21",
+      "original": "Want this built for your team?",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Want this built for your team?",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-023",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/22",
+      "original": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "about-024",
+      "page": "about",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/about",
+      "evidence": "source/about-browser.json#items/23",
+      "original": "Talk to us",
+      "destination": "/about/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to us",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-001",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/0",
+      "original": "Operator notes",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Operator notes",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-002",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/1",
+      "original": "Useful thinking, plainly written.",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Useful thinking, plainly written.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-003",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/2",
+      "original": "Field notes on training teams, designing Claude skills, and deciding what should,and should not,be automated.",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Field notes on training teams, designing Claude skills, and deciding what should, and should not, be automated.",
+      "status": "implemented",
+      "reason": "Repair missing spaces after source punctuation; meaning unchanged.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-004",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/3",
+      "original": "Talk to our team",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Talk to our team",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-005",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/4",
+      "original": "New essays are coming.",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "New essays are coming.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-006",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/5",
+      "original": "Get the first issue when it’s ready.",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Get the first issue when it’s ready.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-007",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/6",
+      "original": "Join the list",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Join the list",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-008",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/7",
+      "original": "Why prompt libraries fail teams",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Why prompt libraries fail teams",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-009",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/8",
+      "original": "A folder of clever instructions is not an operating system. Skills need context, examples, and ownership.",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "A folder of clever instructions is not an operating system. Skills need context, examples, and ownership.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-010",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/9",
+      "original": "The first workflow test",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "The first workflow test",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-011",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/10",
+      "original": "Four questions that reveal whether a task is ready for Claude,or still too ambiguous to automate.",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Four questions that reveal whether a task is ready for Claude, or still too ambiguous to automate.",
+      "status": "implemented",
+      "reason": "Repair missing spaces after source punctuation; meaning unchanged.",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-012",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/11",
+      "original": "Design the failure review first",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "Design the failure review first",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-013",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json#items/12",
+      "original": "How to make weak outputs visible before they become polished, plausible mistakes.",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "replacement": "How to make weak outputs visible before they become polished, plausible mistakes.",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q2",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "How clear is a good output?",
+      "replacement": "How clear is a good output?",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-2",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q2-option1",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Mostly subjective",
+      "replacement": "Mostly subjective",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-2",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q2-option2",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Examples exist",
+      "replacement": "Examples exist",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-2",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q2-option3",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "A clear standard exists",
+      "replacement": "A clear standard exists",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-2",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q3",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "How safely can a person review the result?",
+      "replacement": "How safely can a person review the result?",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-3",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q3-option1",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Hard to verify",
+      "replacement": "Hard to verify",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-3",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q3-option2",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Needs specialist review",
+      "replacement": "Needs specialist review",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-3",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q3-option3",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Quick to verify",
+      "replacement": "Quick to verify",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-3",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q4",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "How often does the team do this work?",
+      "replacement": "How often does the team do this work?",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-4",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q4-option1",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Monthly",
+      "replacement": "Monthly",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-4",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q4-option2",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Weekly",
+      "replacement": "Weekly",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-4",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-q4-option3",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Daily",
+      "replacement": "Daily",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-question-4",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-result-0-title",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Clarify before building",
+      "replacement": "Clarify before building",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-result-0",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-result-0-body",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "The opportunity may be real, but the work needs a clearer standard or safer review path first.",
+      "replacement": "The opportunity may be real, but the work needs a clearer standard or safer review path first.",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-result-0",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-result-1-title",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Promising, with guardrails",
+      "replacement": "Promising, with guardrails",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-result-1",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-result-1-body",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Start with a narrow task, define examples, and keep a human review step while the skill improves.",
+      "replacement": "Start with a narrow task, define examples, and keep a human review step while the skill improves.",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-result-1",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-result-2-title",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "Strong first workflow",
+      "replacement": "Strong first workflow",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-result-2",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment-result-2-body",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/resources.js",
+      "original": "You have the repetition, quality bar, and review capacity needed for a useful Claude skill.",
+      "replacement": "You have the repetition, quality bar, and review capacity needed for a useful Claude skill.",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "assessment-result-2",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-0",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "Free 5-day mini-course",
+      "replacement": "Free 5-day mini-course",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-1",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "Build your Strategic Advisor",
+      "replacement": "Build your Strategic Advisor",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-2",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "Five practical lessons to turn Claude into a rigorous thinking partner, not another chat window.",
+      "replacement": "Five practical lessons to turn Claude into a rigorous thinking partner, not another chat window.",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-3",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "A reusable advisor skill",
+      "replacement": "A reusable advisor skill",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-4",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "A quality-control checklist",
+      "replacement": "A quality-control checklist",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-5",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "A safe rollout pattern",
+      "replacement": "A safe rollout pattern",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-6",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "Start the course",
+      "replacement": "Start the course",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "course-7",
+      "page": "resources",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "evidence": "source/index.js",
+      "original": "No fluff. One useful lesson each day. Unsubscribe anytime.",
+      "replacement": "No fluff. One useful lesson each day. Unsubscribe anytime.",
+      "destination": "/resources/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "course",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-0",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "Start with the bottleneck",
+      "replacement": "Start with the bottleneck",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-1",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "Talk to our team",
+      "replacement": "Talk to our team",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-2",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "Tell us where work is slow, repetitive, or inconsistent.",
+      "replacement": "Tell us where work is slow, repetitive, or inconsistent.",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-3",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "Your name",
+      "replacement": "Your name",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-4",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "Work email",
+      "replacement": "Work email",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-5",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "Company",
+      "replacement": "Company",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-6",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "What should work better?",
+      "replacement": "What should work better?",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "contact-submit",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/index.js",
+      "original": "Request a conversation",
+      "replacement": "Review inquiry",
+      "destination": "/",
+      "component": "src/interactions.ts",
+      "status": "implemented",
+      "reason": "No submission integration; action validates a local draft and clearly offers the existing live inquiry form.",
+      "state": "contact",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-reading-time-0",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json",
+      "original": "07 min",
+      "replacement": "07 min",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-reading-time-1",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json",
+      "original": "05 min",
+      "replacement": "05 min",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-reading-time-2",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json",
+      "original": "09 min",
+      "replacement": "09 min",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "blog-coming-soon",
+      "page": "blog",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "evidence": "source/blog-browser.json",
+      "original": "Coming soon",
+      "replacement": "Coming soon",
+      "destination": "/blog/",
+      "component": "src/pages.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    },
+    {
+      "id": "global-footer",
+      "page": "home",
+      "sourceUrl": "https://found42-claude-lab.lovable.app",
+      "evidence": "source/home-browser.json",
+      "original": "Practical Claude skills, workflows, and automations for business teams that need measurable results.",
+      "replacement": "Practical Claude skills, workflows, and automations for business teams that need measurable results.",
+      "destination": "/",
+      "component": "src/pages.ts",
+      "status": "implemented",
+      "reason": "unchanged",
+      "state": "initial",
+      "editorialReview": "Meaning preserved",
+      "validation": [
+        "tests/content-coverage.spec.ts"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "id": "navigation",
+      "scope": "all pages",
+      "observed": "desktop industry disclosure and mobile menu; all seven route links",
+      "destination": "shared chrome",
+      "status": "implemented",
+      "validation": [
+        "tests/migration.spec.ts",
+        "tests/pages-production.spec.ts"
+      ]
+    },
+    {
+      "id": "assessment",
+      "scope": "resources",
+      "observed": "4 steps, Back, Retake, 3 results, result inquiry action",
+      "sourceEvidence": [
+        "source/resources.js",
+        "source/assessment-middle.png"
+      ],
+      "destination": "#assessment",
+      "status": "implemented",
+      "validation": [
+        "tests/render.spec.ts: 81 answer combinations",
+        "tests/migration.spec.ts"
+      ]
+    },
+    {
+      "id": "inquiry",
+      "scope": "all pages",
+      "observed": "modal; four fields; client validation; simulated success only",
+      "destination": "contact dialog + existing live form fallback",
+      "status": "partial",
+      "missing": "No inquiry backend. Local review and external fallback do not establish submission delivery.",
+      "validation": [
+        "tests/migration.spec.ts"
+      ]
+    },
+    {
+      "id": "playbook-access",
+      "scope": "resources",
+      "observed": "email field and validation; simulated resource-sent message",
+      "destination": "#playbook",
+      "status": "blocked",
+      "missing": "12-check file and fulfillment integration not supplied",
+      "validation": [
+        "tests/migration.spec.ts: truthful local validation only"
+      ]
+    },
+    {
+      "id": "library-access",
+      "scope": "resources",
+      "observed": "email field and validation; simulated resource-sent message",
+      "destination": "#library",
+      "status": "blocked",
+      "missing": "Four skill-pattern files and fulfillment integration not supplied",
+      "validation": [
+        "tests/migration.spec.ts"
+      ]
+    },
+    {
+      "id": "course-enrollment",
+      "scope": "shared Start free action and resources",
+      "observed": "email modal, advertised contents; simulated resource-sent message",
+      "destination": "course dialog",
+      "status": "blocked",
+      "missing": "Five lesson bodies, enrollment and delivery integration not supplied",
+      "validation": [
+        "tests/migration.spec.ts"
+      ]
+    },
+    {
+      "id": "newsletter",
+      "scope": "blog",
+      "observed": "email field and validation; simulated resource-sent message",
+      "destination": "newsletter form",
+      "status": "blocked",
+      "missing": "Subscription integration not supplied",
+      "validation": [
+        "tests/migration.spec.ts"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "inquiry",
+      "detail": "No inquiry backend. Local review and external fallback do not establish submission delivery.",
+      "status": "incomplete"
+    },
+    {
+      "id": "playbook-access",
+      "detail": "12-check file and fulfillment integration not supplied",
+      "status": "incomplete"
+    },
+    {
+      "id": "library-access",
+      "detail": "Four skill-pattern files and fulfillment integration not supplied",
+      "status": "incomplete"
+    },
+    {
+      "id": "course-enrollment",
+      "detail": "Five lesson bodies, enrollment and delivery integration not supplied",
+      "status": "incomplete"
+    },
+    {
+      "id": "newsletter",
+      "detail": "Subscription integration not supplied",
+      "status": "incomplete"
+    },
+    {
+      "id": "articles",
+      "detail": "Three source essays explicitly Coming soon. No bodies or article URLs exist in public route registry. Entries preserved, articles unavailable.",
+      "status": "incomplete"
+    },
+    {
+      "id": "proof",
+      "detail": "Two samples preserved as samples. Verified customer quotes and measured outcome evidence required before launch.",
+      "status": "incomplete"
+    }
+  ],
+  "discoveryQueue": [
+    {
+      "url": "https://found42-claude-lab.lovable.app/",
+      "status": "inspected",
+      "mappedTo": "/"
+    },
+    {
+      "url": "https://found42-claude-lab.lovable.app/resources",
+      "status": "inspected",
+      "mappedTo": "/resources/"
+    },
+    {
+      "url": "https://found42-claude-lab.lovable.app/services",
+      "status": "inspected",
+      "mappedTo": "/services/"
+    },
+    {
+      "url": "https://found42-claude-lab.lovable.app/industries/private-equity",
+      "status": "inspected",
+      "mappedTo": "/industries/private-equity/"
+    },
+    {
+      "url": "https://found42-claude-lab.lovable.app/industries/b2b-saas",
+      "status": "inspected",
+      "mappedTo": "/industries/b2b-saas/"
+    },
+    {
+      "url": "https://found42-claude-lab.lovable.app/about",
+      "status": "inspected",
+      "mappedTo": "/about/"
+    },
+    {
+      "url": "https://found42-claude-lab.lovable.app/blog",
+      "status": "inspected",
+      "mappedTo": "/blog/"
+    }
+  ],
+  "discoverySources": [
+    "all seven page browser link graphs, desktop/mobile navigation and footer",
+    "Firecrawl map: same seven routes",
+    "source/index.js public route registry: same seven routes",
+    "source/robots.txt",
+    "source/sitemap.xml: HTML not-found, not a sitemap"
+  ],
+  "exclusions": [
+    {
+      "url": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc",
+      "reason": "Hosting/editor chrome; not Found42 content"
+    },
+    {
+      "text": "Check your inbox. Your resource is on its way.",
+      "replacement": "Delivery is not connected in this preview. Nothing was sent, and you have not been subscribed.",
+      "reason": "Public handler only sets local state; false fulfillment must not be reproduced."
+    },
+    {
+      "text": "Request received. We’ll review your context and follow up with a useful first point of view.",
+      "replacement": "Your details are ready to review. Nothing was sent. Continue using the live inquiry form above to contact Found42.",
+      "reason": "Public handler only sets local state; false submission must not be reproduced."
+    }
+  ],
+  "unavailableContent": [
+    {
+      "id": "playbook-body",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "advertised": "12 checks for safer adoption",
+      "status": "blocked",
+      "reason": "No downloadable asset or delivered body exposed; source email handler is a simulation."
+    },
+    {
+      "id": "library-body",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "advertised": "Four working skill patterns",
+      "status": "blocked",
+      "reason": "No skill files or full pattern content exposed."
+    },
+    {
+      "id": "course-lessons",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
+      "advertised": "Five practical daily lessons",
+      "status": "blocked",
+      "reason": "No lesson bodies exposed; source enrollment is simulated."
+    },
+    {
+      "id": "essay-1-body",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "advertised": "Why prompt libraries fail teams",
+      "status": "blocked",
+      "reason": "Explicitly Coming soon; no article link, route or body exposed."
+    },
+    {
+      "id": "essay-2-body",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "advertised": "The first workflow test",
+      "status": "blocked",
+      "reason": "Explicitly Coming soon; no article link, route or body exposed."
+    },
+    {
+      "id": "essay-3-body",
+      "sourceUrl": "https://found42-claude-lab.lovable.app/blog",
+      "advertised": "Design the failure review first",
+      "status": "blocked",
+      "reason": "Explicitly Coming soon; no article link, route or body exposed."
+    }
+  ],
+  "coverage": {
+    "discoveredPages": 7,
+    "implementedPages": 7,
+    "visibleSourceItems": 215,
+    "implementedVisibleItems": 215,
+    "unavailableContentCollections": 6,
+    "interactionFamilies": 7,
+    "fullyWorkingFamilies": 2,
+    "partialFamilies": 1,
+    "blockedFamilies": 4,
+    "note": "Blocked collections and integrations are incomplete; they are not counted as successfully delivered."
+  },
+  "validationRun": {
+    "command": "npm run build && npm test",
+    "result": "117 passed (39.0s)",
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "report": "validation.md",
+    "screenshots": "capture-metrics.json"
+  },
+  "assetDecisions": [
+    {
+      "source": "found42-logo.webp",
+      "destination": "public/assets/found42-logo.png",
+      "decision": "Reuse existing local Found42 wordmark representing the same brand; retain redesign crop and styling."
+    },
+    {
+      "source": "richard-achee.webp",
+      "destination": "public/assets/richard-achee.png",
+      "decision": "Reuse existing local portrait of the same founder, with preserved source identity and caption."
+    },
+    {
+      "source": "Open Graph social preview and Lovable favicon",
+      "decision": "Captured metadata only; platform presentation is not substantive page media. Preview remains noindex with page-specific titles/descriptions."
+    }
+  ],
+  "positioningAdditions": [
+    {
+      "authority": "CEO brief supplied in migration assignment",
+      "components": [
+        "src/pages.ts:pathways",
+        "src/content.ts:industry context",
+        "src/homepage/hero.ts",
+        "src/homepage/credibility.ts"
+      ],
+      "decision": "Explain executive adoption and domain-specific team training, role/industry/company customization, human review and judgment. No new packages, prices, verified results or customers claimed."
+    }
+  ]
+}

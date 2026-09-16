@@ -1,0 +1,139 @@
+
+Running 30 tests using 5 workers
+
+(node:39558) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39555) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39554) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39557) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths (2.0s)
+  ✓   6 [chromium] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally (174ms)
+(node:39689) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390 (2.9s)
+  ✓   3 [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390 (3.8s)
+  ✓   7 [webkit] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths (2.3s)
+  ✓   8 [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768 (2.4s)
+  ✓  10 [webkit] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally (314ms)
+  ✓   2 [firefox] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths (4.5s)
+  ✓  12 [firefox] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally (358ms)
+  ✓   9 [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768 (2.8s)
+  ✓  11 [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440 (1.9s)
+  ✓  14 [chromium] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text (386ms)
+  ✓  15 [chromium] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior (851ms)
+  ✓   5 [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390 (6.5s)
+  ✓  13 [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440 (2.4s)
+  ✓  16 [chromium] › tests/migration.spec.ts:88:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger (590ms)
+  ✓  18 [webkit] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text (689ms)
+  ✓  20 [webkit] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior (927ms)
+  ✓  21 [webkit] › tests/migration.spec.ts:88:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger (705ms)
+  ✓  17 [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768 (3.1s)
+  ✓  23 [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440 (2.4s)
+  ✘  19 [chromium] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription (5.4s)
+(node:39787) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  24 [firefox] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text (536ms)
+  ✓  25 [chromium] › tests/migration.spec.ts:165:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus (553ms)
+  ✓  26 [firefox] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior (1.3s)
+  ✘  22 [webkit] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription (5.5s)
+  ✓  27 [firefox] › tests/migration.spec.ts:88:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger (772ms)
+(node:39796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  29 [webkit] › tests/migration.spec.ts:165:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus (790ms)
+  ✘  28 [firefox] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription (5.7s)
+(node:39819) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  30 [firefox] › tests/migration.spec.ts:165:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus (1.2s)
+
+
+  1) [chromium] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('dialog').getByRole('button', { name: /Start the course/ })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('dialog').getByRole('button', { name: /Start the course/ }) with timeout 5000ms
+      - waiting for getByRole('dialog').getByRole('button', { name: /Start the course/ })
+        14 × locator resolved to <button type="submit" class="action" data-await-script="">Start the course →</button>
+           - unexpected value "inactive"
+
+
+      149 |   await expect(
+      150 |     course.getByRole("button", { name: /Start the course/ }),
+    > 151 |   ).toBeFocused();
+          |     ^
+      152 |   await page.keyboard.press("Tab");
+      153 |   await expect(close).toBeFocused();
+      154 |   await page.keyboard.press("Escape");
+        at /Users/Nicolas/Documents/found42/website-redesign/tests/migration.spec.ts:151:5
+
+    Error Context: test-results/migration-all-email-gates--1fb58--or-claiming-a-subscription-chromium/error-context.md
+
+  2) [firefox] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('dialog').getByRole('button', { name: /Start the course/ })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('dialog').getByRole('button', { name: /Start the course/ }) with timeout 5000ms
+      - waiting for getByRole('dialog').getByRole('button', { name: /Start the course/ })
+        14 × locator resolved to <button type="submit" class="action" data-await-script="">Start the course →</button>
+           - unexpected value "inactive"
+
+
+      149 |   await expect(
+      150 |     course.getByRole("button", { name: /Start the course/ }),
+    > 151 |   ).toBeFocused();
+          |     ^
+      152 |   await page.keyboard.press("Tab");
+      153 |   await expect(close).toBeFocused();
+      154 |   await page.keyboard.press("Escape");
+        at /Users/Nicolas/Documents/found42/website-redesign/tests/migration.spec.ts:151:5
+
+    Error Context: test-results/migration-all-email-gates--1fb58--or-claiming-a-subscription-firefox/error-context.md
+
+  3) [webkit] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('dialog').getByRole('button', { name: /Start the course/ })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('dialog').getByRole('button', { name: /Start the course/ }) with timeout 5000ms
+      - waiting for getByRole('dialog').getByRole('button', { name: /Start the course/ })
+        14 × locator resolved to <button type="submit" class="action" data-await-script="">Start the course →</button>
+           - unexpected value "inactive"
+
+
+      149 |   await expect(
+      150 |     course.getByRole("button", { name: /Start the course/ }),
+    > 151 |   ).toBeFocused();
+          |     ^
+      152 |   await page.keyboard.press("Tab");
+      153 |   await expect(close).toBeFocused();
+      154 |   await page.keyboard.press("Escape");
+        at /Users/Nicolas/Documents/found42/website-redesign/tests/migration.spec.ts:151:5
+
+    Error Context: test-results/migration-all-email-gates--1fb58--or-claiming-a-subscription-webkit/error-context.md
+
+  3 failed
+    [chromium] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription 
+    [firefox] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription 
+    [webkit] › tests/migration.spec.ts:122:1 › all email gates validate without sending requests or claiming a subscription 
+  27 passed (25.1s)

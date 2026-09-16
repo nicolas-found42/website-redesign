@@ -1,0 +1,290 @@
+[
+  {
+    "group": "destination",
+    "route": "",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 11205,
+    "documentWidth": 390,
+    "h1": "AI built around your work."
+  },
+  {
+    "group": "destination",
+    "route": "resources",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 5908,
+    "documentWidth": 390,
+    "h1": "Start with the work."
+  },
+  {
+    "group": "destination",
+    "route": "services",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 7798,
+    "documentWidth": 390,
+    "h1": "Build capability.Remove drag."
+  },
+  {
+    "group": "destination",
+    "route": "industries/private-equity",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 4702,
+    "documentWidth": 390,
+    "h1": "More signal per deal."
+  },
+  {
+    "group": "destination",
+    "route": "industries/b2b-saas",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 4637,
+    "documentWidth": 390,
+    "h1": "Make expertise repeatable."
+  },
+  {
+    "group": "destination",
+    "route": "about",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 4390,
+    "documentWidth": 390,
+    "h1": "Built for operators."
+  },
+  {
+    "group": "destination",
+    "route": "blog",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 2969,
+    "documentWidth": 390,
+    "h1": "Useful thinking,plainly written."
+  },
+  {
+    "group": "source",
+    "route": "",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 4692,
+    "documentWidth": 390,
+    "h1": "Hands-on Claude skills and training for businesses"
+  },
+  {
+    "group": "source",
+    "route": "resources",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 3655,
+    "documentWidth": 390,
+    "h1": "Start with the work."
+  },
+  {
+    "group": "source",
+    "route": "services",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 3842,
+    "documentWidth": 390,
+    "h1": "Build capability. Remove drag."
+  },
+  {
+    "group": "source",
+    "route": "industries/private-equity",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 2711,
+    "documentWidth": 390,
+    "h1": "More signal per deal."
+  },
+  {
+    "group": "source",
+    "route": "industries/b2b-saas",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 2752,
+    "documentWidth": 390,
+    "h1": "Make expertise repeatable."
+  },
+  {
+    "group": "source",
+    "route": "about",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 3942,
+    "documentWidth": 390,
+    "h1": "Built for operators."
+  },
+  {
+    "group": "source",
+    "route": "blog",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 2397,
+    "documentWidth": 390,
+    "h1": "Useful thinking, plainly written."
+  },
+  {
+    "group": "baseline",
+    "route": "",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 10052,
+    "documentWidth": 390,
+    "h1": "Put AI to work on what moves your business."
+  },
+  {
+    "group": "baseline",
+    "route": "",
+    "width": 390,
+    "height": 844,
+    "documentHeight": 9839,
+    "documentWidth": 390,
+    "h1": "Put AI to work on what moves your business."
+  },
+  {
+    "group": "destination",
+    "route": "",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 8967,
+    "documentWidth": 1440,
+    "h1": "AI built around your work."
+  },
+  {
+    "group": "destination",
+    "route": "resources",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 4556,
+    "documentWidth": 1440,
+    "h1": "Start with the work."
+  },
+  {
+    "group": "destination",
+    "route": "services",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 6473,
+    "documentWidth": 1440,
+    "h1": "Build capability.Remove drag."
+  },
+  {
+    "group": "destination",
+    "route": "industries/private-equity",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 3736,
+    "documentWidth": 1440,
+    "h1": "More signal per deal."
+  },
+  {
+    "group": "destination",
+    "route": "industries/b2b-saas",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 3801,
+    "documentWidth": 1440,
+    "h1": "Make expertise repeatable."
+  },
+  {
+    "group": "destination",
+    "route": "about",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 3474,
+    "documentWidth": 1440,
+    "h1": "Built for operators."
+  },
+  {
+    "group": "destination",
+    "route": "blog",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 2187,
+    "documentWidth": 1440,
+    "h1": "Useful thinking,plainly written."
+  },
+  {
+    "group": "source",
+    "route": "",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 2816,
+    "documentWidth": 1440,
+    "h1": "Hands-on Claude skills and training for businesses"
+  },
+  {
+    "group": "source",
+    "route": "resources",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 2320,
+    "documentWidth": 1440,
+    "h1": "Start with the work."
+  },
+  {
+    "group": "source",
+    "route": "services",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 2152,
+    "documentWidth": 1440,
+    "h1": "Build capability. Remove drag."
+  },
+  {
+    "group": "source",
+    "route": "industries/private-equity",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 1758,
+    "documentWidth": 1440,
+    "h1": "More signal per deal."
+  },
+  {
+    "group": "source",
+    "route": "industries/b2b-saas",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 1831,
+    "documentWidth": 1440,
+    "h1": "Make expertise repeatable."
+  },
+  {
+    "group": "source",
+    "route": "about",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 2235,
+    "documentWidth": 1440,
+    "h1": "Built for operators."
+  },
+  {
+    "group": "source",
+    "route": "blog",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 1341,
+    "documentWidth": 1440,
+    "h1": "Useful thinking, plainly written."
+  },
+  {
+    "group": "baseline",
+    "route": "",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 8695,
+    "documentWidth": 1440,
+    "h1": "Put AI to work on what moves your business."
+  },
+  {
+    "group": "baseline",
+    "route": "",
+    "width": 1440,
+    "height": 1000,
+    "documentHeight": 8634,
+    "documentWidth": 1440,
+    "h1": "Put AI to work on what moves your business."
+  }
+]
