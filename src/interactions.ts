@@ -20,6 +20,34 @@ export function mountInteractions(root: HTMLElement) {
       .forEach((el) => {
         el.disabled = false;
       });
+  let scorecardTimer: ReturnType<typeof setTimeout> | undefined;
+  const loadScorecard = (button: HTMLButtonElement) => {
+    const frameHost = root.querySelector<HTMLElement>("[data-scorecard-frame]");
+    const status = root.querySelector<HTMLElement>("[data-scorecard-status]");
+    if (!frameHost || !status) return;
+    button.disabled = true;
+    status.textContent =
+      "Loading ScoreApp. You can also use the direct link above.";
+    const frame = document.createElement("iframe");
+    frame.title = "Found42 AI Readiness Scorecard on ScoreApp";
+    frame.className = "scorecard-frame";
+    frame.src = "https://found42.scoreapp.com/";
+    frame.addEventListener(
+      "load",
+      () => {
+        clearTimeout(scorecardTimer);
+        status.textContent =
+          "If the assessment is blank or unavailable, open it directly on ScoreApp using the link above.";
+      },
+      { signal, once: true },
+    );
+    scorecardTimer = setTimeout(() => {
+      status.textContent =
+        "ScoreApp is taking longer than expected. Open the scorecard directly using the link above.";
+    }, 12000);
+    frameHost.append(frame);
+    frame.focus();
+  };
   let step = 0;
   let answers: number[] = [];
   const host = root.querySelector<HTMLElement>("#assessment");
@@ -86,7 +114,9 @@ export function mountInteractions(root: HTMLElement) {
         "button",
       );
       if (!target) return;
-      if (target.hasAttribute("data-answer")) {
+      if (target.hasAttribute("data-load-scorecard")) {
+        loadScorecard(target as HTMLButtonElement);
+      } else if (target.hasAttribute("data-answer")) {
         answers = [...answers.slice(0, step), Number(target.dataset.answer)];
         step++;
         renderAssessment(true);
@@ -138,6 +168,7 @@ export function mountInteractions(root: HTMLElement) {
   );
   enableForms();
   return () => {
+    clearTimeout(scorecardTimer);
     controller.abort();
     dialog.remove();
     document.body.classList.remove("dialog-open");

@@ -31,12 +31,12 @@
 }
 .pathways {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  grid-template-columns: 1fr;
   gap: 60px;
 }
 .pathway-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 36px;
 }
 .pathway-grid article {
@@ -491,4 +491,42 @@ summary:focus-visible {
 button:disabled {
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+.workflow-preview {
+  margin-top: 40px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+.workflow-preview summary {
+  cursor: pointer;
+  padding-block: 14px;
+  min-height: 48px;
+}
+.workflow-preview > p {
+  max-width: 70ch;
+  margin-block: 20px;
+}
+.workflow-preview .assessment {
+  max-width: 760px;
+}
+.scorecard-frame {
+  width: 100%;
+  height: min(780px, 85svh);
+  min-height: 480px;
+  border: 1px solid var(--line-strong);
+  margin-top: 32px;
+  background: white;
+}
+/* Keep labels intact and long access disclosures readable on tablets. */
+.index > b {
+  flex-shrink: 0;
+}
+.scorecard-frame {
+  scroll-margin-top: 100px;
+}
+@media (max-width: 860px) {
+  .content-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

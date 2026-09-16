@@ -1,6 +1,6 @@
 # Content authority and migration provenance
 
-The current content baseline is https://found42-claude-lab.lovable.app/, captured
+The migration content baseline is https://found42-claude-lab.lovable.app/, captured
 September 16, 2026. The existing redesign supplies visual and engineering
 conventions. The CEO positioning brief supplies the distinction: role-, industry-
 and company-specific customization, with usable systems for executives and
@@ -12,9 +12,10 @@ files include full markdown, browser text, public route/interaction bundles,
 metadata and screenshots. No private source repository access is assumed.
 
 215 captured visible/interaction text records are mapped to implementation.
-194 are unchanged; 21 record explicit replacements (including punctuation and
-list-marker repairs). The complete biography and both quotations retain their
-source wording. Each quotation remains visibly labeled as a sample. New audience
+The original source strings remain in the manifest; editorial replacements now
+include the September 16 meeting changes. The complete biography is retained.
+Sample quotations were replaced with faithful, attributed excerpts from the
+original site’s C-Level AI workshop accounts. New audience
 and customization explanations connect the existing offerings to actual work;
 no packages, prices, endorsements or performance evidence were invented.
 
@@ -24,8 +25,9 @@ The source's eight-hour service target and qualified PE target remain visible.
 
 ## Access and proof boundaries
 
-- AI Readiness Scorecard: ungated local four-question preview. Scoring matches
-  the public source (answers 1–3, total >=9 strong / >=6 promising / else clarify).
+- AI Readiness Scorecard: original external ScoreApp assessment, loaded on request
+  with a direct fallback. Personal/business details required. The separate local
+  workflow preview retains prototype scoring (1–3, >=9 strong / >=6 promising).
 - Failure Mode Playbook: 12 checks advertised; email gate preserved. No file or
   delivery integration supplied.
 - Skills Starter Library: four patterns advertised; email gate preserved. No
@@ -37,8 +39,8 @@ The source's eight-hour service target and qualified PE target remain visible.
   never a received-request confirmation. Existing live contact form is the fallback.
 - Blog: three titles, descriptions, estimated reading times and Coming soon
   labels retained. No article bodies exist in the discovered public source.
-- Testimonials: samples, not customer evidence. Verified replacements are a
-  launch requirement.
+- Testimonials: attributed workshop excerpts rechecked on found42.com; not
+  generalized evidence for new automation engagements.
 
 Public source form handlers merely change local state; their “sent” and
 “received” confirmations do not establish delivery. The migration replaces those
@@ -53,3 +55,6 @@ its platform badge are deliberately excluded.
 External contact, privacy and terms pages returned HTTP 200 on September 16.
 Reachability does not prove submission routing or legal suitability. Earlier
 found42.com research is retained as dated history, not the new content baseline.
+
+See [meeting coverage](MEETING-COVERAGE.md) for current source checks, editorial
+choices, transcript interpretation and remaining dependencies.

@@ -1,0 +1,337 @@
+[
+  {
+    "route": "",
+    "width": 1440,
+    "height": 900,
+    "status": 200,
+    "title": "Found42 — AI built around your work",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "resources/",
+    "width": 1440,
+    "height": 900,
+    "status": 200,
+    "title": "Free Claude Resources | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "services/",
+    "width": 1440,
+    "height": 900,
+    "status": 200,
+    "title": "Workshops, Workflows & Automations | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/private-equity/",
+    "width": 1440,
+    "height": 900,
+    "status": 200,
+    "title": "AI for Private Equity | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/b2b-saas/",
+    "width": 1440,
+    "height": 900,
+    "status": 200,
+    "title": "AI for B2B SaaS Teams | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "about/",
+    "width": 1440,
+    "height": 900,
+    "status": 200,
+    "title": "About Found42 | Richard Achée, Founder and CEO",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "blog/",
+    "width": 1440,
+    "height": 900,
+    "status": 200,
+    "title": "Operator Notes | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "interaction": "real ScoreApp lead gate opened without submission",
+    "width": 1440
+  },
+  {
+    "route": "",
+    "width": 1366,
+    "height": 768,
+    "status": 200,
+    "title": "Found42 — AI built around your work",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "resources/",
+    "width": 1366,
+    "height": 768,
+    "status": 200,
+    "title": "Free Claude Resources | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "services/",
+    "width": 1366,
+    "height": 768,
+    "status": 200,
+    "title": "Workshops, Workflows & Automations | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/private-equity/",
+    "width": 1366,
+    "height": 768,
+    "status": 200,
+    "title": "AI for Private Equity | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/b2b-saas/",
+    "width": 1366,
+    "height": 768,
+    "status": 200,
+    "title": "AI for B2B SaaS Teams | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "about/",
+    "width": 1366,
+    "height": 768,
+    "status": 200,
+    "title": "About Found42 | Richard Achée, Founder and CEO",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "blog/",
+    "width": 1366,
+    "height": 768,
+    "status": 200,
+    "title": "Operator Notes | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "interaction": "real ScoreApp lead gate opened without submission",
+    "width": 1366
+  },
+  {
+    "route": "",
+    "width": 768,
+    "height": 1024,
+    "status": 200,
+    "title": "Found42 — AI built around your work",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "resources/",
+    "width": 768,
+    "height": 1024,
+    "status": 200,
+    "title": "Free Claude Resources | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "services/",
+    "width": 768,
+    "height": 1024,
+    "status": 200,
+    "title": "Workshops, Workflows & Automations | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/private-equity/",
+    "width": 768,
+    "height": 1024,
+    "status": 200,
+    "title": "AI for Private Equity | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/b2b-saas/",
+    "width": 768,
+    "height": 1024,
+    "status": 200,
+    "title": "AI for B2B SaaS Teams | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "about/",
+    "width": 768,
+    "height": 1024,
+    "status": 200,
+    "title": "About Found42 | Richard Achée, Founder and CEO",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "blog/",
+    "width": 768,
+    "height": 1024,
+    "status": 200,
+    "title": "Operator Notes | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "interaction": "real ScoreApp lead gate opened without submission",
+    "width": 768
+  },
+  {
+    "route": "",
+    "width": 390,
+    "height": 844,
+    "status": 200,
+    "title": "Found42 — AI built around your work",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "resources/",
+    "width": 390,
+    "height": 844,
+    "status": 200,
+    "title": "Free Claude Resources | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "services/",
+    "width": 390,
+    "height": 844,
+    "status": 200,
+    "title": "Workshops, Workflows & Automations | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/private-equity/",
+    "width": 390,
+    "height": 844,
+    "status": 200,
+    "title": "AI for Private Equity | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/b2b-saas/",
+    "width": 390,
+    "height": 844,
+    "status": 200,
+    "title": "AI for B2B SaaS Teams | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "about/",
+    "width": 390,
+    "height": 844,
+    "status": 200,
+    "title": "About Found42 | Richard Achée, Founder and CEO",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "blog/",
+    "width": 390,
+    "height": 844,
+    "status": 200,
+    "title": "Operator Notes | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "interaction": "real ScoreApp lead gate opened without submission",
+    "width": 390
+  },
+  {
+    "route": "",
+    "width": 320,
+    "height": 844,
+    "status": 200,
+    "title": "Found42 — AI built around your work",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "resources/",
+    "width": 320,
+    "height": 844,
+    "status": 200,
+    "title": "Free Claude Resources | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "services/",
+    "width": 320,
+    "height": 844,
+    "status": 200,
+    "title": "Workshops, Workflows & Automations | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/private-equity/",
+    "width": 320,
+    "height": 844,
+    "status": 200,
+    "title": "AI for Private Equity | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "industries/b2b-saas/",
+    "width": 320,
+    "height": 844,
+    "status": 200,
+    "title": "AI for B2B SaaS Teams | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "about/",
+    "width": 320,
+    "height": 844,
+    "status": 200,
+    "title": "About Found42 | Richard Achée, Founder and CEO",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "blog/",
+    "width": 320,
+    "height": 844,
+    "status": 200,
+    "title": "Operator Notes | Found42",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "interaction": "real ScoreApp lead gate opened without submission",
+    "width": 320
+  }
+]

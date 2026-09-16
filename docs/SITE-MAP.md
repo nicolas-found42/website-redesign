@@ -5,8 +5,8 @@ and receive a trailing slash for static directory-index hosting.
 
 | Source path | Destination under `/website-redesign/` | Purpose and next steps |
 | --- | --- | --- |
-| `/` | `/` | Two audience pathways, four resources, services, sample proof, inquiry |
-| `/resources` | `/resources/` | Four-question assessment, resource access forms and course dialog |
+| `/` | `/` | Free resources, three audiences, services, attributed workshop accounts |
+| `/resources` | `/resources/` | Original ScoreApp embed/fallback, separate workflow preview, resource access and course dialog |
 | `/services` | `/services/` | Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
 | `/industries/private-equity` | `/industries/private-equity/` | Deal screening, diligence, portfolio operations and firm-specific criteria |
 | `/industries/b2b-saas` | `/industries/b2b-saas/` | Customer success, feedback triage, GTM enablement and team adoption |
@@ -19,7 +19,7 @@ and `#course`. Existing homepage anchors remain. Service schematic identifiers
 (`training`, `automation`, `product`) remain stable internal geometry keys; the
 visible offering names are Workshops, Workflows and Automations.
 
-Talk to us opens a shared inquiry dialog. Start free opens the Strategic Advisor
+Talk to us opens a shared inquiry dialog. The course entry opens the Strategic Advisor
 Mini-Course dialog. The assessment result opens the inquiry dialog. These are
 client states, not extra page routes.
 

@@ -1,14 +1,16 @@
 import { test, expect } from "@playwright/test";
-test("two audiences can find the right pathway and all source resources", async ({
+test("three audiences can find the right pathway and all source resources", async ({
   page,
 }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "AI built around your work.",
   );
-  await expect(page.getByText("For executives", { exact: true })).toBeVisible();
   await expect(
-    page.getByText("For domain experts & teams", { exact: true }),
+    page.getByText("For C-level executives", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("For individual contributors", { exact: true }),
   ).toBeVisible();
   for (const name of [
     "AI Readiness Scorecard",
@@ -23,22 +25,25 @@ test("two audiences can find the right pathway and all source resources", async 
     .getByRole("link", { name: "Take the scorecard", exact: true })
     .click();
   await expect(page).toHaveURL(/\/resources\/#scorecard$/);
+  await page.locator(".workflow-preview summary").click();
   await expect(
     page.getByRole("heading", {
       name: "How repeatable is the work you want to improve?",
     }),
   ).toBeVisible();
 });
-test("source samples stay explicitly labeled and inquiries never claim delivery", async ({
+test("published workshop quotes remain attributed and inquiries never claim delivery", async ({
   page,
 }) => {
   await page.goto("/");
   await expect(
-    page.getByText("Sample testimonial. Replace with verified client quote."),
+    page.getByText(
+      "Paul Keely · Co-founder / Managing Director, Palladium Security LLC",
+    ),
   ).toBeVisible();
   await expect(
     page.getByText(
-      "Name to be confirmed · Title · Company · Sample testimonial placeholder",
+      "Carmen Paredes Ramirez · Founder & CEO of Ruruka and Maraja",
     ),
   ).toBeVisible();
   await page
