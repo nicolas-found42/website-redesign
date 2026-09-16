@@ -257,3 +257,37 @@
     height: 46px;
   }
 }
+
+/* The meeting progression reads down a single column at every width. */
+.resource-grid,
+.resource-column {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: none;
+}
+.resource-grid {
+  max-width: 980px;
+  margin-inline: auto;
+}
+.feature {
+  flex-direction: row;
+}
+.feature-cover,
+.feature-copy {
+  flex: 1;
+  min-width: 0;
+}
+.feature-cover {
+  min-height: 280px;
+}
+.resource h3,
+.resource .body {
+  max-width: 65ch;
+}
+@media (max-width: 700px) {
+  .feature {
+    flex-direction: column;
+  }
+  .feature-cover {
+    min-height: 0;
+  }
+}

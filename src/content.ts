@@ -1,12 +1,12 @@
 /** Lovable content baseline, captured 2026-09-16. Full provenance is in artifacts/lovable-migration. */
-export const resources = [
+const resourceInventory = [
   {
     id: "scorecard",
     title: "AI Readiness Scorecard",
     description:
-      "Find the work worth changing first, and the work Claude should not touch.",
+      "Assess your current AI use, data practices and workflow readiness before deciding where to focus.",
     outcome: "A 5-minute operational baseline",
-    gate: "Free interactive preview. No email required.",
+    gate: "Free assessment on ScoreApp. Personal and business details required.",
     action: "Take the scorecard",
   },
   {
@@ -36,6 +36,13 @@ export const resources = [
     gate: "Free 5-day mini-course · Work email requested. Enrollment is not connected in this preview.",
     action: "Explore the mini-course",
   },
+];
+/** Provisional later meeting sequence (03:56–04:22); Executive Communications awaits a real offering. */
+export const resources = [
+  resourceInventory[0],
+  resourceInventory[3],
+  resourceInventory[2],
+  resourceInventory[1],
 ];
 export const services = [
   {
@@ -81,14 +88,14 @@ export const services = [
 export const testimonials = [
   {
     quote:
-      "The useful part wasn’t learning Claude. It was turning our actual work into a repeatable system.",
-    label: "Sample testimonial. Replace with verified client quote.",
+      "What stood out in the C-Level AI workshop was how practical it was.",
+    label:
+      "Paul Keely · Co-founder / Managing Director, Palladium Security LLC",
   },
   {
     quote:
-      "We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.",
-    label:
-      "Name to be confirmed · Title · Company · Sample testimonial placeholder",
+      "The sessions were engaging and interactive, which made learning enjoyable.",
+    label: "Carmen Paredes Ramirez · Founder & CEO of Ruruka and Maraja",
   },
 ];
 export const questions = [

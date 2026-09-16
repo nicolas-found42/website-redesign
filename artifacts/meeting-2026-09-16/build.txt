@@ -1,0 +1,16 @@
+
+> found42-website-preview@0.1.0 build
+> tsc --noEmit && vite build && node scripts/prerender.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 2135 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                0.66 kB │ gzip:  0.39 kB
+dist/assets/space-grotesk-latin-wght-normal-BhU9QXUp.woff2    22.29 kB
+dist/assets/manrope-latin-wght-normal-DHIcAJRg.woff2          24.84 kB
+dist/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2   40.40 kB
+dist/assets/index-CayI0ZBc.css                                41.08 kB │ gzip:  9.40 kB
+dist/assets/index-CoNRaIUH.js                                150.63 kB │ gzip: 50.91 kB
+✓ built in 1.10s

@@ -6,8 +6,9 @@ paper and ink, red signals, editorial typography, and responsive schematic
 illustrations. The positioning is customized AI systems and training built
 around a specific role, industry and company.
 
-This is a noindex design preview. Resource delivery, newsletter subscriptions,
-course enrollment and local inquiry submission are not connected. Forms validate
+This is a noindex design preview. Local resource delivery, newsletter subscriptions,
+course enrollment and local inquiry submission are not connected. The original
+ScoreApp assessment is available through an on-demand embed and direct link. Forms validate
 locally and state that nothing was sent. The established Found42 contact form
 remains available as an external inquiry fallback.
 
@@ -84,3 +85,5 @@ migration does not authorize a production-domain change or direct push to main.
 
 The earlier found42.com audits remain historical evidence. Their homepage-only
 scope and older offer/resource taxonomy do not constrain this migration.
+
+September 16 meeting implementation: [requirements and Adejoke handoff](docs/MEETING-COVERAGE.md).

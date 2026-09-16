@@ -57,11 +57,10 @@ automatic modes were wrong here: `pretty` leaves a one-word line, and `balance`
 grouped the opening headline differently while it was split for its entrance
 than after it.
 
-The resources band is one editorial feature and a column of compact entries
-rather than a row of equal cards: the ungated article is the only thing on the
-page a visitor can use without giving anything, so it is the one with weight.
-Each of the four routes in carries the same access note in the same place — what
-it costs, how it is reached, and exactly what it asks for first.
+The resources band reads down one column: the featured scorecard has a dark
+cover, followed by the course, skills library and playbook. Each entry explains
+its purpose, next action and access limits. Free resources precede the separate
+audience and delivery sections. The hero has one primary action.
 
 ## Motion
 
@@ -145,10 +144,12 @@ Automations replace the older offer names. The third drawing keeps its geometry
 but describes company context, human review and repeatable work rather than a
 new product promise. Internal geometry identifiers remain stable.
 
-The full founder biography remains faithful to the source. Source samples stay
-labeled as samples. Eight-hour savings remain a qualified target. Unconnected
+The full founder biography remains faithful to the source. Published workshop excerpts replace sample proof with faithful attribution. Eight-hour savings remain a qualified target. Unconnected
 forms state their limits and never claim delivery. Shared chrome and native
 modal dialogs use the existing paper/ink surfaces, annotation font and focus
 rules. Normal links preserve browser navigation and history across generated
 static pages. Page-specific headers become opaque early enough to keep scrolled
 copy clear, and mobile menus retain paper contrast over dark sections.
+
+The September 16 theme choice is fixed paper/ink with controlled section contrast.
+No theme toggle is needed; reduced motion and the motion pause remain available.

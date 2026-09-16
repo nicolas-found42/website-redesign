@@ -11,7 +11,7 @@ test("every source resource has its description and truthful access terms", () =
     expect(page).toContain(`resources/#${item.id}`);
   }
 });
-test("source offerings and explicitly labeled sample proof are preserved", () => {
+test("source offerings and attributed workshop proof are preserved", () => {
   for (const item of services) {
     expect(page).toContain(item.title);
     expect(page).toContain(item.description);
@@ -22,7 +22,7 @@ test("source offerings and explicitly labeled sample proof are preserved", () =>
     expect(page).toContain(item.label);
   }
   expect(page).not.toContain("Save eight hours a week, per person.");
-  expect(page).toContain("not a universal promise");
+  expect(page).toContain("not a guaranteed result");
 });
 test("all 81 assessment combinations preserve public source thresholds", () => {
   for (let a = 1; a <= 3; a++)

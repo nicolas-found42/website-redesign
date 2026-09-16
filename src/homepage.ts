@@ -5,7 +5,6 @@ import { hero } from "./homepage/hero";
 import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
 import { credibilitySection } from "./homepage/credibility";
-import { inquirySection } from "./homepage/inquiry";
 import { mountSystem } from "./system";
 import { masterSchematic } from "./schematic";
 import { mountServices } from "./homepage/services-behaviour";
@@ -21,11 +20,10 @@ export function renderHomepage() {
   return `${siteHeader()}
 <main id="main">
 ${hero()}
-${pathways()}
 ${resourcesSection()}
+${pathways()}
 ${servicesSection()}
 ${credibilitySection()}
-${inquirySection()}
 </main>
 ${siteFooter()}`;
 }

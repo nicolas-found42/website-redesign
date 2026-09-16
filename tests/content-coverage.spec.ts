@@ -33,6 +33,7 @@ for (const record of manifest.pages)
       await page.keyboard.press("Escape");
     }
     if (record.id === "resources") {
+      await page.locator(".workflow-preview summary").click();
       const host = page.locator("#assessment");
       for (let step = 1; step <= 4; step++) {
         states[`assessment-question-${step}`] = norm(await snapshot());

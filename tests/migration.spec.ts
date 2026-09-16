@@ -67,6 +67,7 @@ test("assessment branches, Back and Retake preserve source behavior", async ({
   page,
 }) => {
   await page.goto("/resources/");
+  await page.locator(".workflow-preview summary").click();
   const host = page.locator("#assessment");
   for (const [choice, title] of [
     [0, "Clarify before building"],
@@ -95,7 +96,7 @@ test("forms validate, disclose unavailable delivery, trap focus and restore trig
   await form.getByLabel("Work email").fill("preview@example.com");
   await form.getByRole("button").click();
   await expect(form).toContainText("Nothing was sent");
-  const trigger = page.getByRole("button", { name: /Start the mini-course/ });
+  const trigger = page.getByRole("button", { name: /Explore the mini-course/ });
   await trigger.click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
