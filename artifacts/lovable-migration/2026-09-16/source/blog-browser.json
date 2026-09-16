@@ -1,0 +1,134 @@
+{
+  "images": [
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    },
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    }
+  ],
+  "items": [
+    {
+      "tag": "P",
+      "text": "Operator notes"
+    },
+    {
+      "tag": "H1",
+      "text": "Useful thinking, plainly written."
+    },
+    {
+      "tag": "P",
+      "text": "Field notes on training teams, designing Claude skills, and deciding what should,and should not,be automated."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Talk to our team "
+    },
+    {
+      "tag": "P",
+      "text": "New essays are coming."
+    },
+    {
+      "tag": "P",
+      "text": "Get the first issue when it’s ready."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Join the list "
+    },
+    {
+      "tag": "H2",
+      "text": "Why prompt libraries fail teams"
+    },
+    {
+      "tag": "P",
+      "text": "A folder of clever instructions is not an operating system. Skills need context, examples, and ownership."
+    },
+    {
+      "tag": "H2",
+      "text": "The first workflow test"
+    },
+    {
+      "tag": "P",
+      "text": "Four questions that reveal whether a task is ready for Claude,or still too ambiguous to automate."
+    },
+    {
+      "tag": "H2",
+      "text": "Design the failure review first"
+    },
+    {
+      "tag": "P",
+      "text": "How to make weak outputs visible before they become polished, plausible mistakes."
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": ""
+    },
+    {
+      "href": "/",
+      "text": "Home"
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+      "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+    }
+  ],
+  "text": "OPERATOR NOTES\n\nUseful thinking, plainly written.\n\nField notes on training teams, designing Claude skills, and deciding what should,and should not,be automated.\n\nTalk to our team\n\nNew essays are coming.\n\nGet the first issue when it’s ready.\n\nJoin the list\nEssay 01\n07 min\nWhy prompt libraries fail teams\n\nA folder of clever instructions is not an operating system. Skills need context, examples, and ownership.\n\nComing soon\nEssay 02\n05 min\nThe first workflow test\n\nFour questions that reveal whether a task is ready for Claude,or still too ambiguous to automate.\n\nComing soon\nEssay 03\n09 min\nDesign the failure review first\n\nHow to make weak outputs visible before they become polished, plausible mistakes.\n\nComing soon",
+  "title": "Operator Notes | Found42",
+  "viewport": {
+    "height": 1000,
+    "width": 1440
+  }
+}

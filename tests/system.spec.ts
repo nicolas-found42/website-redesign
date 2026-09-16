@@ -56,7 +56,7 @@ test("an executive can reach three distinct service drawings with the keyboard",
   ).toBeVisible();
 
   const automation = page.getByRole("button", {
-    name: "Automation",
+    name: "Workflows",
     exact: true,
   });
   await automation.focus();
@@ -67,7 +67,7 @@ test("an executive can reach three distinct service drawings with the keyboard",
   ).toBeVisible();
 
   const product = page.getByRole("button", {
-    name: "Product value",
+    name: "Automations",
     exact: true,
   });
   await product.press("Space");
@@ -75,7 +75,9 @@ test("an executive can reach three distinct service drawings with the keyboard",
   await expect(automation).toHaveAttribute("aria-pressed", "false");
   await expect(product).toBeFocused();
   await expect(
-    page.getByText("Turn business expertise into new product value.").first(),
+    page
+      .getByText("Reduce repetitive work, with human review at each handoff.")
+      .first(),
   ).toBeVisible();
 });
 
@@ -83,11 +85,7 @@ test("every service stays readable on the page whichever drawing is shown", asyn
   page,
 }) => {
   await page.goto("/#services");
-  for (const title of [
-    "AI Empowerment Training",
-    "AI-Powered Automation",
-    "AI Product Differentiation for B2B SaaS",
-  ]) {
+  for (const title of ["Workshops", "Workflows", "Automations"]) {
     await expect(
       page.getByRole("heading", { name: title, exact: true }),
     ).toBeVisible();
@@ -100,14 +98,14 @@ test("a completed choice rests in the same still composition as a fresh page", a
 }) => {
   await page.goto("/#services");
   await page.evaluate(() => document.fonts.ready);
-  await page.getByRole("button", { name: "Automation", exact: true }).click();
+  await page.getByRole("button", { name: "Workflows", exact: true }).click();
 
   const motionlessPage = await context.newPage();
   await motionlessPage.emulateMedia({ reducedMotion: "reduce" });
   await motionlessPage.goto("/#services");
   await motionlessPage.evaluate(() => document.fonts.ready);
   await motionlessPage
-    .getByRole("button", { name: "Automation", exact: true })
+    .getByRole("button", { name: "Workflows", exact: true })
     .click();
 
   await expect
@@ -140,7 +138,7 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
   await expectedPage.goto("/#services");
   await expectedPage.evaluate(() => document.fonts.ready);
   await expectedPage
-    .getByRole("button", { name: "Product value", exact: true })
+    .getByRole("button", { name: "Automations", exact: true })
     .click();
 
   await expect
@@ -192,8 +190,8 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
   // sticky pane, so all three are on the page at once.
   for (const name of [
     /Training illustration:/,
+    /Workflow illustration:/,
     /Automation illustration:/,
-    /Product illustration:/,
   ]) {
     await expect(page.getByRole("img", { name })).toHaveCount(1);
   }
@@ -208,13 +206,13 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
     }),
   ).toBeVisible();
   await expect(
-    page.locator("#service-product").getByText("Customer workflow", {
+    page.locator("#service-product").getByText("Repeatable work", {
       exact: true,
     }),
   ).toBeVisible();
 
   const automation = page.getByRole("button", {
-    name: "Automation",
+    name: "Workflows",
     exact: true,
   });
   await automation.tap();
@@ -286,9 +284,7 @@ test("a slow font does not hold the opening headline back", async ({
       { timeout: 2000 },
     )
     .toBe(true);
-  await expect(headline).toHaveText(
-    "Put AI to work on what moves your business.",
-  );
+  await expect(headline).toHaveText("AI built around your work.");
 });
 
 test("pausing during a transition leaves the drawing settled, not mid-draw", async ({
@@ -296,10 +292,9 @@ test("pausing during a transition leaves the drawing settled, not mid-draw", asy
 }) => {
   await page.goto("/#services");
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.getByRole("button", { name: "Training" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
+  await expect(
+    page.getByRole("button", { name: "Workshops", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
 
   /**
    * Driven from inside the page so the pause lands at a known point: the routes

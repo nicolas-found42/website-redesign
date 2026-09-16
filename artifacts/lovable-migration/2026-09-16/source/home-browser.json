@@ -1,0 +1,282 @@
+{
+  "images": [
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    },
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    }
+  ],
+  "items": [
+    {
+      "tag": "P",
+      "text": "The only Claude training your team will ever need"
+    },
+    {
+      "tag": "H1",
+      "text": "Hands-on Claude skills and training for businesses"
+    },
+    {
+      "tag": "P",
+      "text": "Save eight hours a week, per person."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Start free "
+    },
+    {
+      "tag": "BUTTON",
+      "text": "or talk to our team"
+    },
+    {
+      "tag": "BLOCKQUOTE",
+      "text": "“The useful part wasn’t learning Claude. It was turning our actual work into a repeatable system.”Sample testimonial. Replace with verified client quote."
+    },
+    {
+      "tag": "P",
+      "text": "Four ways to start with real work."
+    },
+    {
+      "tag": "P",
+      "text": "AI Readiness Scorecard"
+    },
+    {
+      "tag": "P",
+      "text": "A 5-minute operational baseline"
+    },
+    {
+      "tag": "P",
+      "text": "Failure Mode Playbook"
+    },
+    {
+      "tag": "P",
+      "text": "12 checks for safer adoption"
+    },
+    {
+      "tag": "P",
+      "text": "Skills Starter Library"
+    },
+    {
+      "tag": "P",
+      "text": "Four working skill patterns"
+    },
+    {
+      "tag": "P",
+      "text": "Strategic Advisor Mini-Course"
+    },
+    {
+      "tag": "P",
+      "text": "Five practical daily lessons"
+    },
+    {
+      "tag": "P",
+      "text": "Start with value. Build what proves useful."
+    },
+    {
+      "tag": "P",
+      "text": "Each resource reveals where a tailored workflow can earn its keep."
+    },
+    {
+      "tag": "P",
+      "text": "Free resources"
+    },
+    {
+      "tag": "H2",
+      "text": "Useful before the call."
+    },
+    {
+      "tag": "P",
+      "text": "Practical tools your team can use today. Each one helps you identify where a tailored skill or workflow will earn its keep."
+    },
+    {
+      "tag": "H3",
+      "text": "AI Readiness Scorecard"
+    },
+    {
+      "tag": "P",
+      "text": "Find the work worth changing first, and the work Claude should not touch."
+    },
+    {
+      "tag": "P",
+      "text": "A 5-minute operational baseline"
+    },
+    {
+      "tag": "H3",
+      "text": "Failure Mode Playbook"
+    },
+    {
+      "tag": "P",
+      "text": "Spot weak outputs, missing context, and false confidence before they reach the business."
+    },
+    {
+      "tag": "P",
+      "text": "12 checks for safer adoption"
+    },
+    {
+      "tag": "H3",
+      "text": "Skills Starter Library"
+    },
+    {
+      "tag": "P",
+      "text": "Start with reusable skills for analysis, synthesis, review, and decision support."
+    },
+    {
+      "tag": "P",
+      "text": "Four working skill patterns"
+    },
+    {
+      "tag": "H3",
+      "text": "Strategic Advisor Mini-Course"
+    },
+    {
+      "tag": "P",
+      "text": "Build a disciplined thinking partner that challenges assumptions and sharpens decisions."
+    },
+    {
+      "tag": "P",
+      "text": "Five practical daily lessons"
+    },
+    {
+      "tag": "P",
+      "text": "From the work"
+    },
+    {
+      "tag": "H2",
+      "text": "Proof, not promises."
+    },
+    {
+      "tag": "BLOCKQUOTE",
+      "text": "“We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.”Name to be confirmedTitle · Company · Sample testimonial placeholder"
+    },
+    {
+      "tag": "P",
+      "text": "“We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.”"
+    },
+    {
+      "tag": "P",
+      "text": "Name to be confirmed"
+    },
+    {
+      "tag": "P",
+      "text": "Title · Company · Sample testimonial placeholder"
+    },
+    {
+      "tag": "P",
+      "text": "Add verified client proof"
+    },
+    {
+      "tag": "H2",
+      "text": "Want this built for your team?"
+    },
+    {
+      "tag": "P",
+      "text": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Talk to us "
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": ""
+    },
+    {
+      "href": "/",
+      "text": "Home"
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/resources",
+      "text": "01AI Readiness ScorecardA 5-minute operational baseline"
+    },
+    {
+      "href": "/resources",
+      "text": "02Failure Mode Playbook12 checks for safer adoption"
+    },
+    {
+      "href": "/resources",
+      "text": "03Skills Starter LibraryFour working skill patterns"
+    },
+    {
+      "href": "/resources",
+      "text": "04Strategic Advisor Mini-CourseFive practical daily lessons"
+    },
+    {
+      "href": "/resources",
+      "text": "Open resource "
+    },
+    {
+      "href": "/resources",
+      "text": "Open resource "
+    },
+    {
+      "href": "/resources",
+      "text": "Open resource "
+    },
+    {
+      "href": "/resources",
+      "text": "Open resource "
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+      "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+    }
+  ],
+  "text": "THE ONLY CLAUDE TRAINING YOUR TEAM WILL EVER NEED\n\nHands-on Claude skills and training for businesses\n\nSave eight hours a week, per person.\n\nStart free\nor talk to our team\n“The useful part wasn’t learning Claude. It was turning our actual work into a repeatable system.”\nSAMPLE TESTIMONIAL. REPLACE WITH VERIFIED CLIENT QUOTE.\nFREE WORKING SET\n\nFour ways to start with real work.\n\nINDEX / 04\n01\n\nAI Readiness Scorecard\n\nA 5-minute operational baseline\n\n02\n\nFailure Mode Playbook\n\n12 checks for safer adoption\n\n03\n\nSkills Starter Library\n\nFour working skill patterns\n\n04\n\nStrategic Advisor Mini-Course\n\nFive practical daily lessons\n\nF42\n\nStart with value. Build what proves useful.\n\nEach resource reveals where a tailored workflow can earn its keep.\n\nFREE RESOURCES\n\nUseful before the call.\n\nPractical tools your team can use today. Each one helps you identify where a tailored skill or workflow will earn its keep.\n\n01\nAI Readiness Scorecard\n\nFind the work worth changing first, and the work Claude should not touch.\n\nA 5-MINUTE OPERATIONAL BASELINE\n\nOpen resource\n02\nFailure Mode Playbook\n\nSpot weak outputs, missing context, and false confidence before they reach the business.\n\n12 CHECKS FOR SAFER ADOPTION\n\nOpen resource\n03\nSkills Starter Library\n\nStart with reusable skills for analysis, synthesis, review, and decision support.\n\nFOUR WORKING SKILL PATTERNS\n\nOpen resource\n04\nStrategic Advisor Mini-Course\n\nBuild a disciplined thinking partner that challenges assumptions and sharpens decisions.\n\nFIVE PRACTICAL DAILY LESSONS\n\nOpen resource\n\nFROM THE WORK\n\nProof, not promises.\n\n“We stopped asking people to become AI experts. We gave them a better way to do one important piece of work.”\n\nName to be confirmed\n\nTitle · Company · Sample testimonial placeholder\n\nADD VERIFIED CLIENT PROOF\n\nSpecific workflow changed\nMeasured time or quality result\nNamed operator and company\nWant this built for your team?\n\nBring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.\n\nTalk to us",
+  "title": "Found42 | Practical Claude Training for Teams",
+  "viewport": {
+    "height": 1000,
+    "width": 1440
+  }
+}

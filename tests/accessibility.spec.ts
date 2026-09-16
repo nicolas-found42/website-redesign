@@ -24,10 +24,10 @@ test("mobile menu supports keyboard navigation and returns focus to the chosen s
       : "Tab",
   );
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/#resources$/);
+  await expect(page).toHaveURL(/\/resources\/$/);
   await expect(
-    page.getByRole("heading", { name: "A useful place to start." }),
-  ).toBeFocused();
+    page.getByRole("heading", { name: "Start with the work." }),
+  ).toBeVisible();
   await expect(menu).toHaveAttribute("aria-expanded", "false");
 });
 
@@ -37,7 +37,7 @@ test("reduced-motion visitors can operate the drawing without animated movement"
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/#services");
   const automate = page.getByRole("button", {
-    name: "Automation",
+    name: "Workflows",
     exact: true,
   });
   await automate.focus();
@@ -80,28 +80,18 @@ test("reduced-motion visitors can operate the drawing without animated movement"
  */
 async function settle(page: import("@playwright/test").Page) {
   await page.evaluate(() => document.fonts.ready);
-  await page.evaluate(async () => {
-    const step = Math.round(innerHeight * 0.6);
-    for (let y = 0; y < document.body.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await new Promise((resolve) => setTimeout(resolve, 120));
-    }
-    window.scrollTo(0, 0);
-  });
-  // Wait on the page's own state rather than a fixed delay, so a slow machine
-  // measures a settled page instead of a half-finished entrance. Only the
-  // blocks are counted: a heading that is still split is one below the fold
-  // waiting its turn, which is the design rather than an unfinished entrance,
-  // and it is already at full opacity either way.
-  await expect
-    .poll(
-      () =>
-        page.evaluate(
-          () => document.querySelectorAll("[data-reveal]:not(.is-in)").length,
-        ),
-      { timeout: 15000 },
-    )
-    .toBe(0);
+  // A timed scroll sweep can leave a viewport before WebKit delivers its
+  // intersection callback on a busy runner. Visit each target and observe its
+  // actual reveal/opacity before advancing, without forcing application state.
+  for (const target of await page.locator("[data-reveal]").all()) {
+    await target.evaluate((element) =>
+      element.scrollIntoView({ block: "center", behavior: "instant" }),
+    );
+    await expect(target).toHaveClass(/\bis-in\b/);
+    await expect(target).toHaveCSS("opacity", "1");
+  }
+  await expect(page.locator("[data-reveal]:not(.is-in)")).toHaveCount(0);
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(400);
 }
 
@@ -138,11 +128,11 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
     ),
   ).toBe(true);
   await expect(
-    page.getByText("Requires email, LinkedIn profile and CAPTCHA.", {
+    page.getByText("Enrollment is not connected in this preview.", {
       exact: false,
     }),
   ).toBeVisible();
-  const choice = page.getByRole("button", { name: "Automation", exact: true });
+  const choice = page.getByRole("button", { name: "Workflows", exact: true });
   await choice.click();
   await expect(choice).toHaveAttribute("aria-pressed", "true");
 });

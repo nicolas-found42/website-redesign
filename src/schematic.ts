@@ -331,7 +331,7 @@ const productPortrait: Layout = {
 export const schematics: readonly Schematic[] = [
   {
     id: "training",
-    choice: "Training",
+    choice: "Workshops",
     detail: "Give people the skills to apply AI to their own work.",
     description:
       "Training illustration: a work task and useful prompts pass through human direction and human review, go into practice, and return as the next task.",
@@ -346,25 +346,25 @@ export const schematics: readonly Schematic[] = [
   },
   {
     id: "automation",
-    choice: "Automation",
+    choice: "Workflows",
     detail: "Connect tasks into workflows your team can use.",
     description:
-      "Automation illustration: sales, operations and finance converge through human direction into one shared workflow.",
+      "Workflow illustration: sales, operations and finance converge through human direction into one shared workflow.",
     nodes: cast("Sales", "Operations", "Finance", "Shared workflow"),
     landscape: automationLandscape,
     portrait: automationPortrait,
   },
   {
     id: "product",
-    choice: "Product value",
-    detail: "Turn business expertise into new product value.",
+    choice: "Automations",
+    detail: "Reduce repetitive work, with human review at each handoff.",
     description:
-      "Product illustration: your expertise, product context and AI capabilities combine through human direction and reach a customer workflow.",
+      "Automation illustration: your expertise, company context and human review combine through human direction into repeatable work.",
     nodes: cast(
       "Your expertise",
-      "Product context",
-      "AI capabilities",
-      "Customer workflow",
+      "Company context",
+      "Human review",
+      "Repeatable work",
     ),
     landscape: productLandscape,
     portrait: productPortrait,

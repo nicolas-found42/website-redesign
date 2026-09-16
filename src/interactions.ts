@@ -1,0 +1,145 @@
+import { questions, results } from "./content";
+import { emailForm } from "./pages";
+/** Source scoring preserved: four 1–3 answers, thresholds 6 and 9. */
+export const readinessResult = (answers: number[]) =>
+  results[
+    answers.reduce((a, b) => a + b, 0) >= 9
+      ? 2
+      : answers.reduce((a, b) => a + b, 0) >= 6
+        ? 1
+        : 0
+  ];
+export function mountInteractions(root: HTMLElement) {
+  const controller = new AbortController();
+  const { signal } = controller;
+  const enableForms = () =>
+    root
+      .querySelectorAll<HTMLInputElement | HTMLButtonElement>(
+        "[data-await-script]",
+      )
+      .forEach((el) => {
+        el.disabled = false;
+      });
+  let step = 0;
+  let answers: number[] = [];
+  const host = root.querySelector<HTMLElement>("#assessment");
+  function renderAssessment(focus = false) {
+    if (!host) return;
+    const done = step === questions.length;
+    const result = readinessResult(answers);
+    const q = questions[step];
+    host.innerHTML = `<div class="assessment-rail note">Readiness check <span>${done ? "Result" : `${step + 1} / 4`}</span></div><div class="assessment-body">${done ? `<p class="note">Your result</p><h3 tabindex="-1">${result.title}</h3><p>${result.body}</p><div class="form-actions"><button class="action" data-dialog="contact">Plan the next step →</button><button class="link" data-retake>Retake</button></div>` : `<h3 tabindex="-1">${q.text}</h3><div class="answer-options">${q.options.map((t, i) => `<button class="answer" data-answer="${i + 1}">${t}<span aria-hidden="true">→</span></button>`).join("")}</div>${step > 0 ? '<button class="link" data-back>← Back</button>' : ""}`}</div>`;
+    if (focus) host.querySelector("h3")?.focus({ preventScroll: true });
+  }
+  renderAssessment();
+  const dialog = document.createElement("dialog");
+  dialog.className = "site-dialog";
+  dialog.setAttribute("aria-labelledby", "dialog-title");
+  root.append(dialog);
+  let trigger: HTMLElement | null = null;
+  const close = () => dialog.close();
+  const fields = `<label>Your name <input name="name" autocomplete="name" required minlength="2" maxlength="100"></label><label>Work email <input name="email" type="email" autocomplete="email" required maxlength="255"></label><label>Company <input name="company" autocomplete="organization" required minlength="2" maxlength="120"></label><label>What should work better? <textarea name="challenge" required minlength="10" maxlength="1000" rows="4"></textarea></label>`;
+  function openDialog(type: string, from: HTMLElement) {
+    trigger = from;
+    dialog.innerHTML =
+      `<button class="dialog-close" aria-label="Close dialog" data-close>Close ×</button>` +
+      (type === "course"
+        ? `<p class="note">Free 5-day mini-course</p><h2 id="dialog-title">Build your Strategic Advisor</h2><p>Five practical lessons to turn Claude into a rigorous thinking partner, not another chat window.</p><ul class="scope-list"><li>A reusable advisor skill</li><li>A quality-control checklist</li><li>A safe rollout pattern</li></ul>${emailForm("course-dialog", "Start the course")}<p class="note--plain">No fluff. One useful lesson each day. Unsubscribe anytime.</p><p class="note--plain">This describes the intended course. Enrollment and email delivery are not yet available.</p>`
+        : `<p class="note">Start with the bottleneck</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><p class="note--plain">All fields required. This preview cannot send inquiries. Use the existing Found42 contact form to make a request; entries below stay in this page only.</p><a class="link" href="https://www.found42.com/contact">Open the live inquiry form →</a><form data-contact-form novalidate>${fields}<p class="form-status" role="status"></p><button class="action" type="submit">Review inquiry →</button></form>`);
+    enableForms();
+    dialog.showModal();
+    document.body.classList.add("dialog-open");
+  }
+  dialog.addEventListener(
+    "close",
+    () => {
+      document.body.classList.remove("dialog-open");
+      trigger?.focus();
+    },
+    { signal },
+  );
+  dialog.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key !== "Tab") return;
+      const controls = [
+        ...dialog.querySelectorAll<HTMLElement>(
+          "button:not(:disabled), a[href], input:not(:disabled), textarea",
+        ),
+      ].filter((el) => el.getClientRects().length);
+      const first = controls[0],
+        last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    },
+    { signal },
+  );
+  root.addEventListener(
+    "click",
+    (event) => {
+      const target = (event.target as HTMLElement).closest<HTMLElement>(
+        "button",
+      );
+      if (!target) return;
+      if (target.hasAttribute("data-answer")) {
+        answers = [...answers.slice(0, step), Number(target.dataset.answer)];
+        step++;
+        renderAssessment(true);
+      } else if (target.hasAttribute("data-back")) {
+        step--;
+        renderAssessment(true);
+      } else if (target.hasAttribute("data-retake")) {
+        step = 0;
+        answers = [];
+        renderAssessment(true);
+      } else if (target.dataset.dialog) {
+        openDialog(target.dataset.dialog, target);
+      } else if (target.hasAttribute("data-close")) close();
+    },
+    { signal },
+  );
+  root.addEventListener(
+    "submit",
+    (event) => {
+      const form = event.target as HTMLFormElement;
+      if (!form.matches("[data-email-form],[data-contact-form]")) return;
+      event.preventDefault();
+      let valid = true;
+      for (const input of form.querySelectorAll<
+        HTMLInputElement | HTMLTextAreaElement
+      >("input,textarea")) {
+        const value = input.value.trim();
+        const min = input.minLength > 0 ? input.minLength : 1;
+        const ok =
+          input.checkValidity() &&
+          value.length >= min &&
+          (input.maxLength < 0 || value.length <= input.maxLength);
+        input.setAttribute("aria-invalid", String(!ok));
+        valid = valid && ok;
+      }
+      const status = form.querySelector<HTMLElement>(".form-status")!;
+      if (!valid) {
+        status.textContent = form.hasAttribute("data-email-form")
+          ? "Enter a valid work email."
+          : "Complete every field with a valid work email. Name and company need at least 2 characters; describe the work in at least 10 characters.";
+        form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        return;
+      }
+      status.textContent = form.hasAttribute("data-email-form")
+        ? "Delivery is not connected in this preview. Nothing was sent, and you have not been subscribed."
+        : "Your details are ready to review. Nothing was sent. Continue using the live inquiry form above to contact Found42.";
+    },
+    { signal },
+  );
+  enableForms();
+  return () => {
+    controller.abort();
+    dialog.remove();
+    document.body.classList.remove("dialog-open");
+  };
+}

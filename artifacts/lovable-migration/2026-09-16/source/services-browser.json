@@ -1,0 +1,218 @@
+{
+  "images": [
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    },
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    }
+  ],
+  "items": [
+    {
+      "tag": "P",
+      "text": "Services"
+    },
+    {
+      "tag": "H1",
+      "text": "Build capability. Remove drag."
+    },
+    {
+      "tag": "P",
+      "text": "We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem,not the technology."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Talk to our team "
+    },
+    {
+      "tag": "P",
+      "text": "“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”"
+    },
+    {
+      "tag": "P",
+      "text": "Three pillars"
+    },
+    {
+      "tag": "H2",
+      "text": "From learning to leverage."
+    },
+    {
+      "tag": "H2",
+      "text": "Workshops"
+    },
+    {
+      "tag": "P",
+      "text": "Live or on-demand enablement using your team’s real decisions, documents, and operating rhythms."
+    },
+    {
+      "tag": "LI",
+      "text": "1Role-specific practice"
+    },
+    {
+      "tag": "LI",
+      "text": "2Reusable skills, not prompt lists"
+    },
+    {
+      "tag": "LI",
+      "text": "3Manager rollout guidance"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Discuss workshops "
+    },
+    {
+      "tag": "H2",
+      "text": "Workflows"
+    },
+    {
+      "tag": "P",
+      "text": "Custom Claude skills and plugins designed around one high-value job to be done."
+    },
+    {
+      "tag": "LI",
+      "text": "1Discovery"
+    },
+    {
+      "tag": "LI",
+      "text": "2Co-design skills & plugins"
+    },
+    {
+      "tag": "LI",
+      "text": "3Testing & failure-mode review"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Discuss workflows "
+    },
+    {
+      "tag": "H2",
+      "text": "Automations"
+    },
+    {
+      "tag": "P",
+      "text": "Bespoke end-to-end workflows for repetitive work that should not consume expert attention."
+    },
+    {
+      "tag": "LI",
+      "text": "1Human review points"
+    },
+    {
+      "tag": "LI",
+      "text": "2System handoffs"
+    },
+    {
+      "tag": "LI",
+      "text": "3Target: 8 hours saved weekly"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Discuss automations "
+    },
+    {
+      "tag": "P",
+      "text": "Clear boundary"
+    },
+    {
+      "tag": "H2",
+      "text": "Free shows the pattern."
+    },
+    {
+      "tag": "P",
+      "text": "Our resources help you test the method and improve individual practice."
+    },
+    {
+      "tag": "P",
+      "text": "Bespoke changes the system."
+    },
+    {
+      "tag": "H2",
+      "text": "Paid builds the advantage."
+    },
+    {
+      "tag": "P",
+      "text": "Custom engagements encode your context, quality bar, controls, and workflows."
+    },
+    {
+      "tag": "H2",
+      "text": "Want this built for your team?"
+    },
+    {
+      "tag": "P",
+      "text": "Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Talk to us "
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": ""
+    },
+    {
+      "href": "/",
+      "text": "Home"
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+      "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+    }
+  ],
+  "text": "SERVICES\n\nBuild capability. Remove drag.\n\nWe train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem,not the technology.\n\nTalk to our team\n\n“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”\n\nTHREE PILLARS\n\nFrom learning to leverage.\n01\nWorkshops\n\nLive or on-demand enablement using your team’s real decisions, documents, and operating rhythms.\n\n1\nRole-specific practice\n2\nReusable skills, not prompt lists\n3\nManager rollout guidance\nDiscuss workshops\n02\nWorkflows\n\nCustom Claude skills and plugins designed around one high-value job to be done.\n\n1\nDiscovery\n2\nCo-design skills & plugins\n3\nTesting & failure-mode review\nDiscuss workflows\n03\nAutomations\n\nBespoke end-to-end workflows for repetitive work that should not consume expert attention.\n\n1\nHuman review points\n2\nSystem handoffs\n3\nTarget: 8 hours saved weekly\nDiscuss automations\n\nCLEAR BOUNDARY\n\nFree shows the pattern.\n\nOur resources help you test the method and improve individual practice.\n\nBESPOKE CHANGES THE SYSTEM.\n\nPaid builds the advantage.\n\nCustom engagements encode your context, quality bar, controls, and workflows.\n\nWant this built for your team?\n\nBring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.\n\nTalk to us",
+  "title": "Claude Training & Workflow Services | Found42",
+  "viewport": {
+    "height": 1000,
+    "width": 1440
+  }
+}

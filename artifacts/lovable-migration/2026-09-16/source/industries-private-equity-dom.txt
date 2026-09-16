@@ -1,0 +1,60 @@
+- banner:
+  - link "Found42 home":
+    - /url: /
+    - img "Found42"
+  - button "Toggle menu":
+- main:
+  - paragraph: Private Equity
+  - heading "More signal per deal." [level=1]
+  - paragraph: Claude skills for the work between the data room and the decision,designed around evidence, judgment, and review.
+  - button "Talk to our team":
+    - text: Talk to our team
+  - paragraph: 8h
+  - paragraph: Target weekly capacity returned
+  - paragraph: Per person, where workflow fit supports it.
+  - paragraph: Where we work
+  - heading "High context. Clear controls." [level=2]
+  - article:
+    - generic: "01"
+    - heading "Deal screening" [level=2]
+    - paragraph: Turn a house view into a consistent first-pass screen without flattening judgment.
+  - article:
+    - generic: "02"
+    - heading "Diligence synthesis" [level=2]
+    - paragraph: Structure source-grounded findings across commercial, operational, and market workstreams.
+  - article:
+    - generic: "03"
+    - heading "Portfolio operations" [level=2]
+    - paragraph: Give operating teams repeatable skills for reviews, plans, and performance narratives.
+  - article:
+    - generic: "04"
+    - heading "Custom skills" [level=2]
+    - paragraph: Encode the firm’s criteria, review steps, and language into the work itself.
+  - heading "Bring us one live workflow." [level=2]
+  - paragraph: We’ll map the decision, source material, failure modes, and review points before recommending a build.
+  - button "Talk to us":
+    - text: Talk to us
+- contentinfo:
+  - img "Found42"
+  - paragraph: Practical Claude skills, workflows, and automations for business teams that need measurable results.
+  - paragraph: Explore
+  - link "Free Resources":
+    - /url: /resources
+  - link "Services":
+    - /url: /services
+  - link "About":
+    - /url: /about
+  - link "Blog":
+    - /url: /blog
+  - paragraph: Industries
+  - link "Private Equity":
+    - /url: /industries/private-equity
+  - link "B2B SaaS":
+    - /url: /industries/b2b-saas
+  - generic: © 2026 Found42
+  - generic: Practical AI. Built around the work.
+- complementary "Made with Lovable":
+  - link "Made with Lovable":
+    - /url: https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled
+    - generic: Made with
+  - button "Dismiss":

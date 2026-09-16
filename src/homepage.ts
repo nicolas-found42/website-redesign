@@ -1,3 +1,5 @@
+import { pathways } from "./pages";
+import { mountInteractions } from "./interactions";
 import { siteFooter, siteHeader } from "./homepage/chrome";
 import { hero } from "./homepage/hero";
 import { resourcesSection } from "./homepage/resources";
@@ -19,6 +21,7 @@ export function renderHomepage() {
   return `${siteHeader()}
 <main id="main">
 ${hero()}
+${pathways()}
 ${resourcesSection()}
 ${servicesSection()}
 ${credibilitySection()}
@@ -35,10 +38,24 @@ export function mountHomepage(
   root: HTMLElement,
   options: { motionPreference: PageMotion },
 ) {
-  const { motionPreference } = options;
-  root.innerHTML = renderHomepage();
+  return mountPage(root, renderHomepage(), options);
+}
 
-  const disposers: (() => void)[] = [];
+export function mountPage(
+  root: HTMLElement,
+  markup: string,
+  options: { motionPreference: PageMotion },
+) {
+  const { motionPreference } = options;
+  root.innerHTML = markup;
+
+  const disposers: (() => void)[] = [mountInteractions(root)];
+  root.querySelectorAll<HTMLAnchorElement>("#navigation a").forEach((link) => {
+    if (
+      link.pathname.replace(/\/$/, "") === location.pathname.replace(/\/$/, "")
+    )
+      link.setAttribute("aria-current", "page");
+  });
 
   /* ── Navigation ── */
   const menu = root.querySelector<HTMLButtonElement>(".menu-toggle")!;
@@ -59,7 +76,7 @@ export function mountHomepage(
     if (!link) return;
     const wasOpen = menu.getAttribute("aria-expanded") === "true";
     closeMenu();
-    if (wasOpen && link.hash) {
+    if (wasOpen && link.hash && link.pathname === location.pathname) {
       event.preventDefault();
       history.pushState(null, "", link.hash);
       document.querySelector(link.hash)?.scrollIntoView();
@@ -71,6 +88,28 @@ export function mountHomepage(
     }
   };
   const closeOnEscape = (event: KeyboardEvent) => {
+    if (event.key === "Escape")
+      root
+        .querySelectorAll<HTMLDetailsElement>(".industry-menu[open]")
+        .forEach((el) => {
+          el.open = false;
+          el.querySelector("summary")?.focus();
+        });
+    if (event.key === "Tab" && menu.getAttribute("aria-expanded") === "true") {
+      const controls = [
+        menu,
+        ...nav.querySelectorAll<HTMLElement>("a, button, summary"),
+      ].filter((el) => el.getClientRects().length);
+      const first = controls[0],
+        last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
     if (
       event.key === "Escape" &&
       menu.getAttribute("aria-expanded") === "true"
@@ -95,13 +134,15 @@ export function mountHomepage(
 
   /* ── The header takes its paper once the opening spread is behind it ── */
   const header = root.querySelector<HTMLElement>(".site-header")!;
-  const sentinel = root.querySelector<HTMLElement>(".hero-rail")!;
+  const sentinel = root.querySelector<HTMLElement>(
+    ".page-opening, .hero-rail",
+  )!;
   const lift = new IntersectionObserver(
     ([entry]) =>
       header.classList.toggle("is-lifted", entry.boundingClientRect.top < 0),
     { threshold: 0 },
   );
-  lift.observe(sentinel);
+  if (sentinel) lift.observe(sentinel);
   disposers.push(() => lift.disconnect());
 
   /**
@@ -133,17 +174,20 @@ export function mountHomepage(
 
   /* ── The opening drawing ── */
   const heroHost = root.querySelector<HTMLElement>(".hero-art")!;
-  const heroSystem = mountSystem(heroHost, {
-    motionPreference,
-    compositions: [masterSchematic],
-    live: true,
-  });
-  disposers.push(heroSystem.dispose);
+  const heroSystem = heroHost
+    ? mountSystem(heroHost, {
+        motionPreference,
+        compositions: [masterSchematic],
+        live: true,
+      })
+    : null;
+  if (heroSystem) disposers.push(heroSystem.dispose);
 
   /* ── Pausing the page's motion (WCAG 2.2.2) ── */
   const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]")!;
-  const label = toggle.querySelector("span:last-child")!;
+  const label = toggle?.querySelector("span:last-child")!;
   const syncToggle = () => {
+    if (!toggle || !label) return;
     toggle.setAttribute("aria-pressed", String(motionPreference.byVisitor));
     label.textContent = motionPreference.byVisitor
       ? "Resume motion"
@@ -153,16 +197,17 @@ export function mountHomepage(
     motionPreference.setPaused(!motionPreference.byVisitor);
     syncToggle();
   };
-  toggle.addEventListener("click", onToggle);
+  toggle?.addEventListener("click", onToggle);
   motionPreference.addEventListener("change", syncToggle);
   syncToggle();
   disposers.push(() => {
-    toggle.removeEventListener("click", onToggle);
+    toggle?.removeEventListener("click", onToggle);
     motionPreference.removeEventListener("change", syncToggle);
   });
 
   /* ── The scroll-linked services sequence ── */
-  disposers.push(mountServices(root, { motionPreference }));
+  if (root.querySelector(".services-art"))
+    disposers.push(mountServices(root, { motionPreference }));
 
   /* ── Page-wide entrances and scroll feel ── */
   disposers.push(mountReveals(root, { motionPreference }));

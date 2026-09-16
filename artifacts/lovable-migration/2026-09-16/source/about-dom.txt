@@ -1,0 +1,63 @@
+- banner:
+  - link "Found42 home":
+    - /url: /
+    - img "Found42"
+  - button "Toggle menu":
+- main:
+  - paragraph: Who we are
+  - heading "Built for operators." [level=1]
+  - paragraph: Found42 helps non-technical teams make Claude useful in the work they already own, without outsourcing judgment or buying into theatre.
+  - button "Talk to our team":
+    - text: Talk to our team
+  - paragraph: The goal is not more AI activity. It is better work, with less drag.
+  - figure "Richard Achée, Founder and CEO":
+    - img "Richard Achée, Founder and CEO of Found42"
+    - generic: Richard Achée, Founder and CEO
+  - paragraph: Founder and CEO
+  - heading "Richard Achée" [level=2]
+  - paragraph: Richard has over two decades of experience leading teams and driving innovation in enterprise across three continents.
+  - list:
+    - listitem: "As an M&A business sponsor, he closed two successful strategic acquisitions at Google: Cameyo and Neverware."
+    - listitem: As a business development leader, he helped dozens of start-ups grow from solopreneurs to category leaders.
+    - listitem: As a board advisor and fractional GTM lead, he has supported lean start-ups in the US, EMEA, and APAC.
+  - paragraph: Richard now channels his business expertise, lifelong love of coaching and mentoring, and teacher’s mindset to help everyone learn how to use AI effectively to address their most pressing challenges.
+  - paragraph: His expansive network of founders, fractional CxOs, domain experts, and strategic partners creates opportunities to bring the right skills and experience to meet each person at their point of need.
+  - paragraph: Operating principles
+  - heading "Useful. Testable. Owned." [level=2]
+  - text: "01"
+  - heading "Start narrow" [level=3]
+  - paragraph: One meaningful workflow beats twenty shallow demos.
+  - text: "02"
+  - heading "Design for failure" [level=3]
+  - paragraph: A skill is only useful when the team knows where it can break.
+  - text: "03"
+  - heading "Leave capability" [level=3]
+  - paragraph: The people doing the work should understand, own, and improve the system.
+  - heading "Want this built for your team?" [level=2]
+  - paragraph: Bring us the messy workflow. We’ll turn it into a tested, repeatable Claude skill.
+  - button "Talk to us":
+    - text: Talk to us
+- contentinfo:
+  - img "Found42"
+  - paragraph: Practical Claude skills, workflows, and automations for business teams that need measurable results.
+  - paragraph: Explore
+  - link "Free Resources":
+    - /url: /resources
+  - link "Services":
+    - /url: /services
+  - link "About":
+    - /url: /about
+  - link "Blog":
+    - /url: /blog
+  - paragraph: Industries
+  - link "Private Equity":
+    - /url: /industries/private-equity
+  - link "B2B SaaS":
+    - /url: /industries/b2b-saas
+  - generic: © 2026 Found42
+  - generic: Practical AI. Built around the work.
+- complementary "Made with Lovable":
+  - link "Made with Lovable":
+    - /url: https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled
+    - generic: Made with
+  - button "Dismiss":

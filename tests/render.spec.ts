@@ -1,55 +1,41 @@
 import { test, expect } from "@playwright/test";
 import { renderHomepage } from "../src/homepage";
-import {
-  article,
-  playbook,
-  proofSource,
-  resources,
-  services,
-  testimonials,
-} from "../src/content";
-
-// These assertions cross the homepage's own interface, so they run once rather
-// than once per browser engine: the browser suite keeps the journeys.
+import { resources, services, testimonials } from "../src/content";
+import { readinessResult } from "../src/interactions";
 const page = renderHomepage();
-const records = [...resources, playbook, article];
-
-test("every resource record reaches the page with its access gate", () => {
-  for (const record of records) {
-    expect(page, `${record.title} gate`).toContain(record.gate);
-    expect(page, `${record.title} destination`).toContain(
-      `href="${record.url}"`,
-    );
-  }
-  for (const resource of resources) {
-    expect(page, `${resource.title} kind`).toContain(resource.kind);
+test("every source resource has its description and truthful access terms", () => {
+  for (const item of resources) {
+    expect(page).toContain(item.title);
+    expect(page).toContain(item.description);
+    expect(page).toContain(item.gate);
+    expect(page).toContain(`resources/#${item.id}`);
   }
 });
-
-test("records offering access without a form are exactly the inspected ones", () => {
-  const ungated = records
-    .filter((record) => record.gate.startsWith("No form"))
-    .map((record) => record.title);
-  const inspected = records
-    .filter((record) => record.deliveredContentInspected)
-    .map((record) => record.title);
-  expect(ungated).toEqual(inspected);
-  expect(inspected).toHaveLength(1);
-});
-
-test("no inventory totals, guarantees or ROI metrics reach the page", () => {
-  expect(page).not.toMatch(
-    /\bROI\b|guarantee|instant delivery|\d+\s*(%|hours?|days?|weeks?|months?)/i,
-  );
-});
-
-test("the published offers and attributed excerpts reach the page", () => {
-  for (const service of services) {
-    expect(page, service.title).toContain(service.title);
+test("source offerings and explicitly labeled sample proof are preserved", () => {
+  for (const item of services) {
+    expect(page).toContain(item.title);
+    expect(page).toContain(item.description);
+    for (const detail of item.details) expect(page).toContain(detail);
   }
-  for (const testimonial of testimonials) {
-    expect(page, testimonial.name).toContain(testimonial.name);
-    expect(page, testimonial.name).toContain(testimonial.quote);
+  for (const item of testimonials) {
+    expect(page).toContain(item.quote);
+    expect(page).toContain(item.label);
   }
-  expect(page).toContain(`href="${proofSource}"`);
+  expect(page).not.toContain("Save eight hours a week, per person.");
+  expect(page).toContain("not a universal promise");
+});
+test("all 81 assessment combinations preserve public source thresholds", () => {
+  for (let a = 1; a <= 3; a++)
+    for (let b = 1; b <= 3; b++)
+      for (let c = 1; c <= 3; c++)
+        for (let d = 1; d <= 3; d++) {
+          const sum = a + b + c + d;
+          expect(readinessResult([a, b, c, d]).title).toBe(
+            sum >= 9
+              ? "Strong first workflow"
+              : sum >= 6
+                ? "Promising, with guardrails"
+                : "Clarify before building",
+          );
+        }
 });

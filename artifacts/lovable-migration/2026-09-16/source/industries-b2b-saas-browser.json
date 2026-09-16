@@ -1,0 +1,158 @@
+{
+  "images": [
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    },
+    {
+      "alt": "Found42",
+      "src": "/__l5e/assets-v1/5f2f85ee-d2da-49bd-9955-237fa6111d6c/found42-logo.webp"
+    }
+  ],
+  "items": [
+    {
+      "tag": "P",
+      "text": "B2B SaaS"
+    },
+    {
+      "tag": "H1",
+      "text": "Make expertise repeatable."
+    },
+    {
+      "tag": "P",
+      "text": "Claude skills for customer, product, and go-to-market teams,built to improve throughput without making the work generic."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Talk to our team "
+    },
+    {
+      "tag": "P",
+      "text": "1→N"
+    },
+    {
+      "tag": "P",
+      "text": "Turn expert practice into team practice"
+    },
+    {
+      "tag": "P",
+      "text": "Where we work"
+    },
+    {
+      "tag": "H2",
+      "text": "Closer to customers. Faster to action."
+    },
+    {
+      "tag": "H2",
+      "text": "Customer success"
+    },
+    {
+      "tag": "P",
+      "text": "Turn account context into sharper briefs, risk reviews, and consistent follow-through."
+    },
+    {
+      "tag": "H2",
+      "text": "Feedback triage"
+    },
+    {
+      "tag": "P",
+      "text": "Group signal without losing the customer language product teams need to hear."
+    },
+    {
+      "tag": "H2",
+      "text": "GTM enablement"
+    },
+    {
+      "tag": "P",
+      "text": "Build reusable skills for research, account planning, call review, and message testing."
+    },
+    {
+      "tag": "H2",
+      "text": "Team adoption"
+    },
+    {
+      "tag": "P",
+      "text": "Train operators on the same quality bar, then improve it with real examples."
+    },
+    {
+      "tag": "H2",
+      "text": "Choose one customer workflow."
+    },
+    {
+      "tag": "P",
+      "text": "We’ll show you where Claude can add speed, where judgment stays human, and what a safe first build looks like."
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Talk to us "
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": ""
+    },
+    {
+      "href": "/",
+      "text": "Home"
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/resources",
+      "text": "Free Resources"
+    },
+    {
+      "href": "/services",
+      "text": "Services"
+    },
+    {
+      "href": "/about",
+      "text": "About"
+    },
+    {
+      "href": "/blog",
+      "text": "Blog"
+    },
+    {
+      "href": "/industries/private-equity",
+      "text": "Private Equity"
+    },
+    {
+      "href": "/industries/b2b-saas",
+      "text": "B2B SaaS"
+    },
+    {
+      "href": "https://lovable.dev/projects/lovp_4thcq6jfmq8nn86xt9xkt5jabc?utm_source=lovable-badge&utm_campaign=badge-wording-enabled",
+      "text": "\n\t\tMade with\n\t\t\n  \n  \n  \n  \n    \n      \n      \n      \n      \n    \n  \n\n\n\n\t"
+    }
+  ],
+  "text": "B2B SAAS\n\nMake expertise repeatable.\n\nClaude skills for customer, product, and go-to-market teams,built to improve throughput without making the work generic.\n\nTalk to our team\n\n1→N\n\nTurn expert practice into team practice\n\nWHERE WE WORK\n\nCloser to customers. Faster to action.\n01\nCustomer success\n\nTurn account context into sharper briefs, risk reviews, and consistent follow-through.\n\n02\nFeedback triage\n\nGroup signal without losing the customer language product teams need to hear.\n\n03\nGTM enablement\n\nBuild reusable skills for research, account planning, call review, and message testing.\n\n04\nTeam adoption\n\nTrain operators on the same quality bar, then improve it with real examples.\n\nChoose one customer workflow.\n\nWe’ll show you where Claude can add speed, where judgment stays human, and what a safe first build looks like.\n\nTalk to us",
+  "title": "Claude for B2B SaaS Teams | Found42",
+  "viewport": {
+    "height": 1000,
+    "width": 1440
+  }
+}

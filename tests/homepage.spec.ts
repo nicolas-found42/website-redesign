@@ -1,91 +1,53 @@
 import { test, expect } from "@playwright/test";
-test("an executive can immediately explore resources or make a consultation inquiry", async ({
+test("two audiences can find the right pathway and all source resources", async ({
   page,
 }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Put AI to work on what moves your business.",
+    "AI built around your work.",
   );
-  await page
-    .getByRole("link", { name: "Explore free resources", exact: true })
-    .click();
-  await expect(page).toHaveURL(/#resources$/);
+  await expect(page.getByText("For executives", { exact: true })).toBeVisible();
   await expect(
-    page
-      .getByRole("link", { name: "Request a consultation", exact: true })
-      .first(),
-  ).toHaveAttribute("href", "https://www.found42.com/contact");
-});
-
-test("a resource seeker can distinguish form gates, external assessment and public reading", async ({
-  page,
-}) => {
-  await page.goto("/#resources");
-  const prompt = page
-    .getByRole("article")
-    .filter({
-      has: page.getByRole("heading", {
-        name: "Industry-specific prompt packs",
-        exact: true,
-      }),
-    });
-  await expect(prompt).toContainText(
-    "Requires name, email, job title, industry and company website.",
-  );
-  await expect(
-    prompt.getByRole("link", { name: "Request a prompt pack" }),
-  ).toHaveAttribute("href", "https://www.found42.com/industryprompts");
-  const scorecard = page
-    .getByRole("article")
-    .filter({
-      has: page.getByRole("heading", {
-        name: "AI Readiness Scorecard",
-        exact: true,
-      }),
-    });
-  await expect(scorecard).toContainText(
-    "Personal and business details are required before the questions.",
-  );
-  await expect(scorecard.getByRole("link")).toHaveAttribute(
-    "href",
-    "https://found42.scoreapp.com/",
-  );
-  await expect(
-    page.getByText("Requires email, LinkedIn profile and CAPTCHA."),
+    page.getByText("For domain experts & teams", { exact: true }),
   ).toBeVisible();
+  for (const name of [
+    "AI Readiness Scorecard",
+    "Failure Mode Playbook",
+    "Skills Starter Library",
+    "Strategic Advisor Mini-Course",
+  ])
+    await expect(
+      page.getByRole("heading", { name, exact: true }),
+    ).toBeVisible();
+  await page
+    .getByRole("link", { name: "Take the scorecard", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/resources\/#scorecard$/);
   await expect(
-    page.getByRole("link", { name: "Read the article" }),
-  ).toHaveAttribute("href", "https://www.found42.com/blog/choosing-to-inspire");
+    page.getByRole("heading", {
+      name: "How repeatable is the work you want to improve?",
+    }),
+  ).toBeVisible();
 });
-
-test("a prospective client can assess the offers and attributed evidence before opening an inquiry", async ({
+test("source samples stay explicitly labeled and inquiries never claim delivery", async ({
   page,
 }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "AI Empowerment Training", exact: true }),
+    page.getByText("Sample testimonial. Replace with verified client quote."),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "AI-Powered Automation", exact: true }),
+    page.getByText(
+      "Name to be confirmed · Title · Company · Sample testimonial placeholder",
+    ),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Talk to us", exact: true })
+    .first()
+    .click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toContainText("This preview cannot send inquiries.");
   await expect(
-    page.getByRole("heading", {
-      name: "AI Product Differentiation for B2B SaaS",
-      exact: true,
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "From the workshop, in their words." }),
-  ).toBeVisible();
-  await expect(page.getByText("Paul Keely", { exact: true })).toBeVisible();
-  await expect(page.getByText("Andrew Miller", { exact: true })).toBeVisible();
-  await expect(
-    page.getByRole("img", { name: "Richard Achée, founder of Found42" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Open the inquiry form" }),
+    dialog.getByRole("link", { name: "Open the live inquiry form" }),
   ).toHaveAttribute("href", "https://www.found42.com/contact");
-  await expect(
-    page.getByRole("link", { name: /mini-course|sign.up.*course/i }),
-  ).toHaveCount(0);
 });

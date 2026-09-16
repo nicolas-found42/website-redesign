@@ -1,14 +1,15 @@
 {
-  "name": "found42-homepage-prototype",
+  "name": "found42-website-preview",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/prerender.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "test": "playwright test"
+    "test": "playwright test",
+    "preview:pages": "node scripts/serve-pages.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
