@@ -33,3 +33,9 @@ Fixed 320px doubled-text grid overflow; mobile header contrast over ink/red and 
 Resource files/lesson bodies, email subscription/delivery backend and inquiry integration require authorized business inputs. Three essays are explicitly Coming soon. Both testimonials remain unmistakably samples and require authentic approved replacement. Savings targets require evidence before stronger claims. Historical issue #9 was inaccessible; the assignment and public source determine expanded scope.
 
 Local build and verification are complete for the publicly accessible content and local behavior. Full fulfillment is incomplete for the stated dependencies. Feature branch/PR only: no merge, domain change, source-site modification or production launch. The public GitHub Pages deployment remains the previously merged site until the PR is reviewed and merged through the existing workflow. Noindex remains intact.
+
+## PR review follow-up
+
+The initial Linux CI run passed 116 tests but failed the desktop WebKit reveal-settling wait. Five local repetitions passed; a fast-scroll stress harness reproduced skipped observer regions, while visiting those same targets individually revealed all of them. The accessibility traversal now visits each reveal target and waits for its actual class and full opacity before moving on, retaining the all-target completion assertion. No application reveal state is forced and accessibility assertions are unchanged.
+
+Added a manifest orphan-page guard and explicit captured-state diagnostics; retained exact mobile menu geometry with a non-null assertion; moved production failure collection verification after the entire navigation journey. `npm run build` passed; the updated complete local suite passed **120 tests (40.0s)**. See `review-test-log.txt`. GitHub CI must pass before the authorized PR merge; the historical publication status above describes the initial delivery.

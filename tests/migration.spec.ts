@@ -174,8 +174,9 @@ test("mobile menu stays readable over ink, exposes industries, and traps keyboar
   const nav = page.getByRole("navigation");
   await nav.locator("summary").click();
   const bounds = await nav.boundingBox();
-  expect(bounds?.y).toBe(0);
-  expect(bounds?.height).toBe(844);
+  expect(bounds).not.toBeNull();
+  expect(bounds!.y).toBe(0);
+  expect(bounds!.height).toBe(844);
   await expect(nav.getByRole("link", { name: "Private Equity" })).toBeVisible();
   const result = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])

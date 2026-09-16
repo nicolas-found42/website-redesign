@@ -4,6 +4,13 @@ const manifest = JSON.parse(
   readFileSync("artifacts/lovable-migration/2026-09-16/manifest.json", "utf8"),
 );
 const norm = (text: string) => text.replace(/\s+/g, " ").trim();
+test("every manifest item targets a known page", () => {
+  const pageIds = new Set(manifest.pages.map((record: any) => record.id));
+  const orphans = manifest.items
+    .filter((item: any) => !pageIds.has(item.page))
+    .map((item: any) => `${item.id} -> ${item.page}`);
+  expect(orphans).toEqual([]);
+});
 for (const record of manifest.pages)
   test(`source-derived content coverage: ${record.id}`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -44,6 +51,10 @@ for (const record of manifest.pages)
     for (const item of manifest.items.filter(
       (item: any) => item.page === record.id,
     )) {
+      expect(
+        Object.keys(states),
+        `${item.id}: state "${item.state}" was never captured`,
+      ).toContain(item.state);
       expect(states[item.state], `${item.id}: ${item.reason}`).toContain(
         norm(item.replacement),
       );

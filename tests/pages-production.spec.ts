@@ -43,7 +43,6 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
       expect(response.status()).toBe(301);
     }
   }
-  expect(failures).toEqual([]);
   const missing = await page.goto(base + "/missing-route");
   expect(missing?.status()).toBe(404);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -59,6 +58,7 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
   await expect(page).toHaveURL(base + "/resources/");
   await page.goForward();
   await expect(page).toHaveURL(base + "/services/");
+  expect(failures).toEqual([]);
 });
 
 test("prerendered content survives script failure and forms cannot submit accidentally", async ({
