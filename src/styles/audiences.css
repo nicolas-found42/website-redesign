@@ -1,0 +1,388 @@
+/**
+ * Whom we help — three audiences, one method, each drawn its own way.
+ *
+ * All three audiences are on the page in full. With scripts the panels become
+ * a gallery: one shown at a time, chosen from the rail, the arrows or the arrow
+ * keys. Without them the three panels read one after another. Nothing here
+ * depends on hover, on motion or on colour alone: the selected choice carries
+ * a rule as well as its red index, and every panel restates its audience.
+ */
+
+/* ── The stage: the rail across the top, the chosen panel beneath ── */
+.audience-stage {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+}
+.audience-stage > * {
+  min-width: 0;
+}
+
+/* ── The rail ── */
+.audience-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(16px, 2vw, 32px);
+}
+.audience-choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 14px;
+  align-items: baseline;
+  align-content: start;
+  width: 100%;
+  min-height: 56px;
+  padding: 20px 0 22px;
+  text-align: left;
+  color: var(--ink);
+  border-top: 1px solid var(--line-strong);
+  transition: color 220ms var(--ease-out);
+}
+/* The selected choice carries a rule on its leading edge, filled red. */
+.audience-choice::before {
+  position: absolute;
+  top: -1px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  content: "";
+  background: var(--red);
+  transition: transform 460ms var(--ease-out);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.audience-choice[aria-pressed="true"]::before {
+  transform: scaleX(1);
+}
+.audience-choice .choice-index {
+  font-family: var(--font-note);
+  font-size: var(--size-note);
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  transition: color 220ms var(--ease-out);
+  font-variant-numeric: tabular-nums;
+}
+.audience-choice[aria-pressed="true"] .choice-index {
+  color: var(--red);
+}
+.audience-choice-name {
+  font-family: var(--font-display);
+  font-size: var(--size-h4);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: var(--track-h3);
+}
+.audience-choice-note {
+  grid-column: 2;
+  color: var(--muted);
+}
+.audience-choice:hover .choice-index {
+  color: var(--red);
+}
+.audience-choice:focus-visible {
+  z-index: 1;
+  outline-offset: -3px;
+}
+
+/* ── The panels ── */
+.audience-panels {
+  display: grid;
+}
+.audience-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(28px, 5vw, 96px);
+  align-items: start;
+}
+.audience-panel > * {
+  min-width: 0;
+}
+/* Only the chosen panel is shown once the gallery is live. */
+.audience-panel[hidden] {
+  display: none;
+}
+.audience-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.audience-kicker {
+  color: var(--red);
+}
+.audience-copy h3 {
+  max-width: 16ch;
+  font-size: clamp(1.6rem, 1rem + 1.9vw, 2.7rem);
+  line-height: 1.06;
+}
+.audience-copy .body {
+  max-width: 44ch;
+  color: var(--muted);
+}
+.audience-copy .link {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+/**
+ * Annotations are sized for reading, not for the field, so at very large text
+ * sizes one can reach past the figure. Clipping it there keeps the page from
+ * scrolling sideways; the drawing's description still says what it shows.
+ */
+.audience-figure,
+.review-figure {
+  overflow-x: clip;
+}
+.audience-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.audience-caption {
+  max-width: 60ch;
+  color: var(--muted);
+}
+
+/* Panels not yet in a gallery read one after another, each with a rule. */
+.audience-stage:not(.is-gallery) .audience-panels {
+  gap: clamp(40px, 5vw, 72px);
+}
+.audience-stage:not(.is-gallery) .audience-panel + .audience-panel {
+  padding-top: clamp(32px, 4vw, 56px);
+  border-top: 1px solid var(--line);
+}
+
+/* ── The arrows ── */
+.audience-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  margin-top: clamp(8px, 1vw, 16px);
+  border-top: 1px solid var(--line);
+}
+.audience-nav[hidden] {
+  display: none;
+}
+.audience-step {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 4px;
+  color: var(--muted);
+  transition: color 200ms var(--ease-out);
+}
+.audience-step:hover {
+  color: var(--red);
+}
+.audience-step .icon {
+  transition: transform 340ms var(--ease-out);
+}
+.audience-step:hover [data-audience-step="1"] .icon,
+.audience-step[data-audience-step="1"]:hover .icon {
+  transform: translateX(4px);
+}
+.audience-step[data-audience-step="-1"]:hover .icon {
+  transform: translateX(-4px);
+}
+.audience-count {
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Scene primitives beyond the schematic's own ── */
+.frame {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  opacity: 0.4;
+}
+.frame--panel {
+  fill: var(--paper);
+  fill-opacity: 0.6;
+  stroke-width: 1.75;
+  opacity: 0.6;
+}
+.frame--outline {
+  stroke-dasharray: 2 9;
+  stroke-width: 1.25;
+  opacity: 0.32;
+}
+/* A drawn control, not a live one: the paper's own darker tone, no red. */
+.frame--control {
+  fill: var(--paper-sunk);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  opacity: 0.75;
+}
+.frame--block {
+  fill: var(--paper);
+  stroke-width: 1.5;
+  opacity: 0.55;
+}
+.marker--person .marker-ring {
+  fill: var(--paper);
+  opacity: 0.55;
+}
+.marker--person .marker-head {
+  fill: var(--ink);
+}
+.marker--person .marker-shoulders {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+/* A reviewed step: the human's red, without the halo of the direction node. */
+.marker--check .marker-ring {
+  fill: var(--paper);
+  stroke: var(--red);
+  stroke-width: 1.75;
+  opacity: 1;
+}
+.marker--check .marker-tick {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.route--carry.route--branch {
+  opacity: 0.4;
+}
+
+/* ── Annotations the scenes add ── */
+/* Level with its node, to the right: only where no route runs on from it. */
+.system-label--right {
+  max-width: min(66cqw, 30ch);
+  padding-left: 22px;
+  transform: translateY(-50%);
+}
+.system-label--center {
+  width: calc(var(--w, 30) * 1%);
+  max-width: none;
+  padding-inline: 4px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+.system-label--caption {
+  max-width: min(60cqw, 34ch);
+  color: var(--muted);
+}
+.scene-field .system-label--human {
+  max-width: min(60cqw, 26ch);
+}
+.system-label--control {
+  font-weight: 700;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.system-label--card {
+  font-weight: 500;
+  color: var(--ink);
+}
+.audience-scene .system-label--result,
+.review-scene .system-label--result {
+  font-weight: 700;
+}
+
+/* ── The failure-mode review figure ── */
+.review-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+  margin-top: 28px;
+}
+.review-figure .system {
+  max-width: 400px;
+}
+.review-figure .review-scene {
+  padding-block: 8px;
+}
+.review-caption {
+  max-width: 60ch;
+  color: var(--muted);
+}
+
+/* ── Narrow: everything stacks; the scene is its portrait composition ── */
+@media (max-width: 860px) {
+  .audience-panel {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  /* The audience is named before its drawing is shown. */
+  .audience-copy {
+    display: contents;
+  }
+  .audience-kicker {
+    order: 1;
+  }
+  .audience-copy h3 {
+    order: 2;
+  }
+  .audience-figure {
+    order: 3;
+  }
+  .audience-copy .body {
+    order: 4;
+  }
+  .audience-copy .link {
+    order: 5;
+    justify-self: start;
+  }
+  .audience-figure .system {
+    width: min(100%, 420px);
+  }
+  .audience-choice-name {
+    font-size: var(--size-body);
+  }
+  .audience-choice {
+    gap: 6px 10px;
+    padding: 16px 0;
+  }
+  .audience-rail {
+    gap: 0 12px;
+  }
+  .review-figure .system {
+    max-width: 340px;
+  }
+}
+/* Three columns too narrow for a second line: the name alone names it. */
+@media (max-width: 700px) {
+  .audience-choice-note {
+    display: none;
+  }
+}
+/* Very narrow: the rail is a list, and the leading edge is its side. */
+@media (max-width: 480px) {
+  .audience-rail {
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--line-strong);
+  }
+  .audience-choice {
+    padding: 14px 0 14px 16px;
+    border-top: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .audience-choice::before {
+    top: -1px;
+    right: auto;
+    bottom: -1px;
+    width: 2px;
+    height: auto;
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  .audience-choice[aria-pressed="true"]::before {
+    transform: scaleY(1);
+  }
+  .audience-choice-note {
+    display: block;
+    grid-column: 2;
+  }
+}

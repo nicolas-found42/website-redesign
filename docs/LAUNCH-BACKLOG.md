@@ -25,6 +25,11 @@ items remain incomplete and must not be represented as delivered:
 8. Review ScoreApp’s older claims and consent wording; perform an authorized
    end-to-end assessment/report-delivery check. The website preserves provider
    behavior and does not create a substitute scoring system.
+9. To bake the scorecard into the site, supply the genuine question set,
+   option wording, scoring and result bands, report expectation and consent
+   text; the provider page exposes only its lead gate. Precise list in
+   [STANDUP-CONVERGENCE.md](STANDUP-CONVERGENCE.md).
+10. Decide the services section's direction; nothing new was invented there.
 
 No credentials or paid service configuration were created during migration.
 Physical-device, screen-reader and field-performance validation remain separate

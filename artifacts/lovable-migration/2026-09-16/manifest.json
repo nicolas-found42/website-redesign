@@ -925,9 +925,9 @@
       "original": "Hands-on Claude skills and training for businesses",
       "destination": "/",
       "component": "src/homepage/",
-      "replacement": "AI built around your work.",
+      "replacement": "Hands-on Claude skills and training for your business.",
       "status": "implemented",
-      "reason": "CEO positioning: lead with customized outcomes, retain Claude skills and training detail in service/resource descriptions.",
+      "reason": "Stand-up meeting clarity benchmark: the opening names what Found42 does in plain words, with the role/industry/company customization and the executive-system versus practitioner-training distinction carried by the lead.",
       "state": "initial",
       "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
       "validation": [
@@ -4323,11 +4323,11 @@
       "sourceUrl": "https://found42-claude-lab.lovable.app/resources",
       "evidence": "source/index.js",
       "original": "No fluff. One useful lesson each day. Unsubscribe anytime.",
-      "replacement": "No fluff. One useful lesson each day. Unsubscribe anytime.",
+      "replacement": "One short, practical lesson each day for five days. Unsubscribe anytime.",
       "destination": "/resources/",
       "component": "src/interactions.ts",
       "status": "implemented",
-      "reason": "unchanged",
+      "reason": "Stand-up meeting: the phrase “no fluff” is removed from public copy; replaced with what the course provides (five short daily lessons).",
       "state": "course",
       "editorialReview": "Meaning preserved",
       "validation": [
@@ -4823,7 +4823,7 @@
     {
       "authority": "CEO brief supplied in migration assignment",
       "components": [
-        "src/pages.ts:pathways",
+        "src/homepage/audiences.ts + src/audiences.ts (three-audience gallery and scenes)",
         "src/content.ts:industry context",
         "src/homepage/hero.ts",
         "src/homepage/credibility.ts"
@@ -4831,5 +4831,5 @@
       "decision": "Explain executive adoption and domain-specific team training, role/industry/company customization, human review and judgment. No new packages, prices, verified results or customers claimed."
     }
   ],
-  "meetingUpdate": "2026-09-16: original source strings retained; editorial replacements updated against the meeting brief and live original-site sources."
+  "meetingUpdate": "2026-09-16: original source strings retained; editorial replacements updated against the meeting brief and live original-site sources. Stand-up follow-up (see docs/STANDUP-CONVERGENCE.md): opening headline replacement, “no fluff” removal, audience gallery replacing the static pathways grid."
 }

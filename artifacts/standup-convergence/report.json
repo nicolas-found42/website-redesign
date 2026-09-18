@@ -1,0 +1,36 @@
+[
+  {
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "height": 844,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "interaction": "builder scene told after a choice",
+    "frames": 4
+  }
+]

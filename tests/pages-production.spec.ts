@@ -72,6 +72,17 @@ test("prerendered content survives script failure and forms cannot submit accide
   );
   await expect(page.locator("#playbook input")).toBeDisabled();
   await expect(page.locator('#playbook button[type="submit"]')).toBeDisabled();
+  await page.goto(base + "/");
+  // Without a script the gallery is three panels read one after another.
+  await expect(page.locator(".audience-panel")).toHaveCount(3);
+  for (const panel of await page.locator(".audience-panel").all())
+    await expect(panel).toBeVisible();
+  await expect(page.locator(".audience-nav")).toBeHidden();
+  await expect(
+    page
+      .locator("#audience-builders")
+      .getByText("Troubleshoot", { exact: true }),
+  ).toBeVisible();
   await page.goto(base + "/about/");
   await expect(
     page.getByText(

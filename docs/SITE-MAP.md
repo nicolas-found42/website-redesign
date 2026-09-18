@@ -5,9 +5,9 @@ and receive a trailing slash for static directory-index hosting.
 
 | Source path | Destination under `/website-redesign/` | Purpose and next steps |
 | --- | --- | --- |
-| `/` | `/` | Free resources, three audiences, services, attributed workshop accounts |
-| `/resources` | `/resources/` | Original ScoreApp embed/fallback, separate workflow preview, resource access and course dialog |
-| `/services` | `/services/` | Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
+| `/` | `/` | Direct opening, free resources, three-audience gallery with its own scenes, services, attributed workshop accounts |
+| `/resources` | `/resources/` | Original ScoreApp embed/fallback, separate workflow preview, failure-mode review figure, resource access and course dialog |
+| `/services` | `/services/` | Audience gallery, Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
 | `/industries/private-equity` | `/industries/private-equity/` | Deal screening, diligence, portfolio operations and firm-specific criteria |
 | `/industries/b2b-saas` | `/industries/b2b-saas/` | Customer success, feedback triage, GTM enablement and team adoption |
 | `/about` | `/about/` | Complete founder biography and operating principles |
@@ -15,7 +15,9 @@ and receive a trailing slash for static directory-index hosting.
 
 Header, industry disclosure, mobile menu, footer and contextual links stay within
 the deployment prefix. Resource links reach `#scorecard`, `#playbook`, `#library`
-and `#course`. Existing homepage anchors remain. Service schematic identifiers
+and `#course`. Existing homepage anchors remain; `#audiences` is the gallery
+and `#audience-executives`, `#audience-contributors` and `#audience-builders`
+its panels. Service schematic identifiers
 (`training`, `automation`, `product`) remain stable internal geometry keys; the
 visible offering names are Workshops, Workflows and Automations.
 

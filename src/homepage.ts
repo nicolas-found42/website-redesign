@@ -1,13 +1,14 @@
-import { pathways } from "./pages";
 import { mountInteractions } from "./interactions";
 import { siteFooter, siteHeader } from "./homepage/chrome";
 import { hero } from "./homepage/hero";
 import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
+import { audiencesSection } from "./homepage/audiences";
 import { credibilitySection } from "./homepage/credibility";
 import { mountSystem } from "./system";
 import { masterSchematic } from "./schematic";
 import { mountServices } from "./homepage/services-behaviour";
+import { mountAudiences } from "./homepage/audiences-behaviour";
 import { mountReveals } from "./reveal";
 import { mountSmoothScroll } from "./scroll";
 import type { PageMotion } from "./motion-preference";
@@ -21,7 +22,7 @@ export function renderHomepage() {
 <main id="main">
 ${hero()}
 ${resourcesSection()}
-${pathways()}
+${audiencesSection()}
 ${servicesSection()}
 ${credibilitySection()}
 </main>
@@ -206,6 +207,10 @@ export function mountPage(
   /* ── The scroll-linked services sequence ── */
   if (root.querySelector(".services-art"))
     disposers.push(mountServices(root, { motionPreference }));
+
+  /* ── The audience gallery and any scene drawn on its own ── */
+  if (root.querySelector("[data-scene-host]"))
+    disposers.push(mountAudiences(root, { motionPreference }));
 
   /* ── Page-wide entrances and scroll feel ── */
   disposers.push(mountReveals(root, { motionPreference }));

@@ -41,6 +41,29 @@ dist, retaining noindex and prototype disclosures.
 Deployment status will be recorded in the PR and final handoff after the normal
 required-check and merge path. This local report does not assert deployment.
 
+## Stand-up convergence
+
+Baseline at main cb0c8ba: `npm test` — 126 passed (43.7s). Current validation:
+`npm run typecheck` passed; `npm run build` passed; `npm test` — **150 passed
+(46.3s)** across Chromium, Firefox and WebKit. `tests/audiences.spec.ts` adds
+eight checks per engine: discovery and choice of all three audiences with
+synchronized kicker, drawing description, link and pressed state; arrows and
+arrow keys; three distinct drawings; complete still scenes under reduced
+motion and after a pause mid-sequence; portrait scenes and touch at 390px;
+the failure-mode figure's traced content; and a public-copy scan for the
+removed phrase on every route and in the course dialog.
+`tests/pages-production.spec.ts` now also asserts the three panels read in
+full without a script. Existing overflow checks at 320–1024px and 200% text
+pass; a label that reached past its figure at 960px/200% is now clipped at the
+figure rather than pushing the page sideways.
+
+Browser captures: `node scripts/capture-convergence-evidence.mjs` against the
+strict static server. Evidence in `artifacts/standup-convergence/`: opening at
+five widths, three audience states at each, the playbook figure, four frames
+of the builder scene with motion on, and `report.json` (no overflow, no page
+errors). See [STANDUP-CONVERGENCE.md](STANDUP-CONVERGENCE.md) for what was
+inspected by hand in the browser pane and what was not run.
+
 One subsequent run hit local connection failures after an overlapping rebuild
 removed dist while the already-running static server was reading it. The server
 was restarted after the build completed and the suite rerun against fixed output;

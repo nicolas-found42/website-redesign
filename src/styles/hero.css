@@ -24,7 +24,7 @@
   z-index: 2;
   /* Sized so the headline sets in three lines at the wide sizes, which is what
      keeps the lead and both actions inside the opening viewport. */
-  width: min(100%, 640px);
+  width: min(100%, 700px);
   padding-block: clamp(16px, 2.4vh, 40px);
 }
 .hero-copy::before {
@@ -47,9 +47,12 @@
  * "balance" gave a different grouping while the headline was split for its
  * entrance than after it, so the whole block moved when the split reverted.
  */
+/* A longer, plainer headline: three deliberate lines at a size that keeps the
+   lead and the action inside the opening viewport. */
 .hero h1 {
-  max-width: 13ch;
+  max-width: 16ch;
   margin-bottom: clamp(20px, 2.2vw, 34px);
+  font-size: clamp(2.3rem, 1.1rem + 2.9vw, 3.8rem);
   text-wrap: normal;
 }
 .hero-lead {
@@ -190,7 +193,7 @@
     display: none;
   }
   .hero h1 {
-    max-width: 16ch;
+    max-width: 18ch;
   }
   /**
    * In flow the drawing would come first, because the wide layout takes it out

@@ -8,14 +8,16 @@ import {
 import { siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
 import { servicesSection } from "./homepage/services";
+import { audiencesSection } from "./homepage/audiences";
+import { reviewScene, sceneFigure } from "./audiences";
 import { schematicFigure, masterSchematic } from "./schematic";
 import { sitePath } from "./paths";
 export const pageMeta: Record<string, { title: string; description: string }> =
   {
     "": {
-      title: "Found42 — AI built around your work",
+      title: "Found42 — Hands-on Claude skills and training for business",
       description:
-        "Practical AI systems and role-based training for executives, individual contributors and AI builders.",
+        "Hands-on Claude skills and training for your business: usable AI systems for executives, role-specific training for individual contributors and AI builders.",
     },
     resources: {
       title: "Free Claude Resources | Found42",
@@ -54,9 +56,6 @@ export const emailForm = (id: string, button: string) =>
   `<form class="email-form" data-email-form novalidate><label for="${id}-email">Work email <span class="note--plain">(required)</span></label><div class="form-line"><input id="${id}-email" name="email" type="email" disabled data-await-script autocomplete="email" maxlength="255" required aria-describedby="${id}-availability ${id}-error" placeholder="you@company.com"><button class="action" type="submit" disabled data-await-script>${button} →</button></div><p id="${id}-availability" class="note--plain">Preview only. Delivery is not connected; your email will not be sent or stored.</p><p id="${id}-error" class="form-status" role="status"></p><noscript>JavaScript is needed to preview validation. Delivery is not connected.</noscript></form>`;
 const opening = (label: string, title: string, body: string, aside: string) =>
   `<section class="page-opening wrap"><div>${index(label)}<h1 class="display" data-reveal-lines>${title}</h1><p class="lead">${body}</p><button class="action" data-dialog="contact">Talk to our team →</button></div><aside class="page-aside">${aside}</aside></section><div class="wrap hero-rail page-rail"><span class="note">Your role · Your industry · Your company</span><button class="motion-toggle note" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button></div>`;
-export function pathways() {
-  return `<section class="wrap pathways band" aria-labelledby="pathways-title"><div>${index("Whom we help")}<h2 id="pathways-title" class="display">Your expertise.<br><span class="signal">A system around it.</span></h2></div><div class="pathway-grid"><article><p class="note">For C-level executives</p><h3>Adopt a system.<br>Keep your attention.</h3><p>Bring the business problem. Workflows and automations give you a practical system to use, without making tool setup or development your job.</p><a class="link" href="${sitePath("services/#service-automation")}">Explore usable systems →</a></article><article><p class="note">For individual contributors</p><h3>Start with the work<br>you know best.</h3><p>Training is built around your role, industry and company: your recurring decisions, documents, terminology and review standards. Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop.</p><a class="link" href="${sitePath("services/#service-training")}">Explore tailored training →</a></article><article><p class="note">For AI builders</p><h3>Build for the people<br>beside you.</h3><p>You do not need to be an engineer to build AI automations for colleagues and teams. Learn product-engineering principles: testing, troubleshooting and anticipating failure modes, with people reviewing the work.</p><a class="link" href="${sitePath("services/#services")}">Explore how we help builders →</a></article></div></section>`;
-}
 function resourcesPage() {
   return (
     opening(
@@ -70,7 +69,7 @@ function resourcesPage() {
       .slice(1)
       .map(
         (r, i) =>
-          `<section id="${r.id}" class="resource-detail ${i === 1 ? "on-ink" : ""}" ${i === 1 ? 'data-ground="ink"' : ""}><div class="wrap content-split"><div>${index(`0${i + 2} / Free resource`)}<h2 class="display">${r.title}</h2><p>${r.description}</p><button class="link" data-dialog="contact">Want this tailored? Talk to us →</button></div><div class="resource-access"><h3>Get ${r.outcome.toLowerCase()}</h3><p class="note--plain">${r.gate}</p>${r.id === "playbook" ? '<p>The prototype describes 12 checks for spotting weak outputs, missing context and false confidence. Use failure-mode review to question a result before relying on it. The complete checklist has not been supplied here.</p><a class="link" href="https://www.found42.com/ai-failure-modes-playbook">Request the published AI Failure Modes Playbook →</a><p class="note--plain">The published request form requires email, LinkedIn profile and human verification. Delivery has not been tested; its contents have not been confirmed as the prototype’s 12-check edition.</p>' : ""}${r.id === "course" ? '<button class="action" data-dialog="course">Explore the mini-course →</button>' : emailForm(r.id, "Preview the request")}</div></div></section>`,
+          `<section id="${r.id}" class="resource-detail ${i === 1 ? "on-ink" : ""}" ${i === 1 ? 'data-ground="ink"' : ""}><div class="wrap content-split"><div>${index(`0${i + 2} / Free resource`)}<h2 class="display">${r.title}</h2><p>${r.description}</p>${r.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Fig. — three failure modes the playbook is built to catch, and the human review a result passes before it reaches the business. The complete 12-check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact">Want this tailored? Talk to us →</button></div><div class="resource-access"><h3>Get ${r.outcome.toLowerCase()}</h3><p class="note--plain">${r.gate}</p>${r.id === "playbook" ? '<p>The prototype describes 12 checks for spotting weak outputs, missing context and false confidence. Use failure-mode review to question a result before relying on it. The complete checklist has not been supplied here.</p><a class="link" href="https://www.found42.com/ai-failure-modes-playbook">Request the published AI Failure Modes Playbook →</a><p class="note--plain">The published request form requires email, LinkedIn profile and human verification. Delivery has not been tested; its contents have not been confirmed as the prototype’s 12-check edition.</p>' : ""}${r.id === "course" ? '<button class="action" data-dialog="course">Explore the mini-course →</button>' : emailForm(r.id, "Preview the request")}</div></div></section>`,
       )
       .join("") +
     `<section class="wrap band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="https://www.found42.com/toolkit">C-Level AI Toolkit →</a>: video, slides, fictional practice cases and custom GPT links. Some tools require a ChatGPT account. This is separate from the forthcoming Strategic Advisor course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/")}">See how engagements work →</a></section>` +
@@ -85,7 +84,7 @@ function servicesPage() {
       "We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem, not the technology.",
       "<p>“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”</p>",
     ) +
-    pathways() +
+    audiencesSection() +
     servicesSection() +
     `<section class="wrap band"><p class="note">Three pillars · From learning to leverage.</p><div class="boundary-grid"><article>${index("Clear boundary")}<h2 class="display">Free shows the pattern.</h2><p>Our resources help you test the method and improve individual practice.</p><a class="link" href="${sitePath("resources/")}">Explore free resources →</a></article><article>${index("Bespoke changes the system.")}<h2 class="display">Paid builds the advantage.</h2><p>Custom engagements encode your context, quality bar, controls, and workflows.</p><p>Discovery starts with the job to be done. Co-design uses your examples and review standards. Testing and failure-mode review identify where people must stay in control.</p></article></div></section>` +
     inquirySection()

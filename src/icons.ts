@@ -1,6 +1,8 @@
 import {
   ArrowUpRight,
   ArrowDown,
+  ArrowLeft,
+  ArrowRight,
   Menu,
   BookOpen,
   ScanLine,
@@ -11,6 +13,8 @@ import {
 const icons = {
   arrow: ArrowUpRight,
   down: ArrowDown,
+  left: ArrowLeft,
+  right: ArrowRight,
   menu: Menu,
   book: BookOpen,
   scan: ScanLine,

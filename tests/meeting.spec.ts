@@ -9,11 +9,11 @@ test("meeting journey reads in order and separates audiences from delivery", asy
     .locator("main > section")
     .evaluateAll((nodes) => nodes.map((n) => n.id || n.className));
   expect(bands[1]).toBe("resources");
-  expect(bands[2]).toContain("pathways");
+  expect(bands[2]).toBe("audiences");
   expect(bands[3]).toBe("services");
   await expect(page.locator(".hero-actions .action")).toHaveCount(1);
-  await expect(page.locator(".pathway-grid article")).toHaveCount(3);
-  await expect(page.locator(".pathway-grid")).toContainText(
+  await expect(page.locator(".audience-panel")).toHaveCount(3);
+  await expect(page.locator("#audiences")).toContainText(
     "You do not need to be an engineer",
   );
   const names = [

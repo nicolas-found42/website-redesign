@@ -1,5 +1,9 @@
 # September 16 meeting implementation and handoff
 
+This is the September 16 record. The later stand-up (direct opening, audience
+scenes, failure-mode figure, "no fluff" removal) is recorded separately in
+[STANDUP-CONVERGENCE.md](STANDUP-CONVERGENCE.md).
+
 Implementation target: Nicolas’s repository, explicitly required by this work
 order. Richard’s 11:44–12:06 suggestion to continue in Adejoke’s project is not
 followed as a hosting instruction. Her project is unchanged.

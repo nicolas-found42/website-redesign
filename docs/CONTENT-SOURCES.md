@@ -57,4 +57,10 @@ Reachability does not prove submission routing or legal suitability. Earlier
 found42.com research is retained as dated history, not the new content baseline.
 
 See [meeting coverage](MEETING-COVERAGE.md) for current source checks, editorial
-choices, transcript interpretation and remaining dependencies.
+choices, transcript interpretation and remaining dependencies, and
+[STANDUP-CONVERGENCE.md](STANDUP-CONVERGENCE.md) for the later stand-up: the
+opening headline now uses Richard's clarity benchmark ("Hands-on Claude skills
+and training for your business."), the course dialog's "no fluff" line is
+replaced with what the course provides, and the audience scenes draw only
+roles, skills and steps already present in the site's content. The manifest
+keeps the original strings (`home-002`, `course-7`) as provenance.
