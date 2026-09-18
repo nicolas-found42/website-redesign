@@ -97,7 +97,10 @@ export function mountAudiences(
   if (nav) nav.hidden = false;
   stage.addEventListener("click", onClick);
   stage.addEventListener("keydown", onKey);
-  show(0);
+  const initial = panels.findIndex(
+    (panel) => `#${panel.id}` === window.location.hash,
+  );
+  show(initial >= 0 ? initial : 0);
 
   disposers.push(() => {
     stage.removeEventListener("click", onClick);
