@@ -284,7 +284,9 @@ test("a slow font does not hold the opening headline back", async ({
       { timeout: 2000 },
     )
     .toBe(true);
-  await expect(headline).toHaveText("AI built around your work.");
+  await expect(headline).toHaveText(
+    "Hands-on Claude skills and training for your business.",
+  );
 });
 
 test("pausing during a transition leaves the drawing settled, not mid-draw", async ({

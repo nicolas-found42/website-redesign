@@ -4,11 +4,16 @@ test("three audiences can find the right pathway and all source resources", asyn
 }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "AI built around your work.",
+    "Hands-on Claude skills and training for your business.",
   );
+  const rail = page.getByRole("group", { name: "Choose an audience" });
+  await expect(
+    rail.getByRole("button", { name: /C-level executives/ }),
+  ).toBeVisible();
   await expect(
     page.getByText("For C-level executives", { exact: true }),
   ).toBeVisible();
+  await rail.getByRole("button", { name: /Individual contributors/ }).click();
   await expect(
     page.getByText("For individual contributors", { exact: true }),
   ).toBeVisible();

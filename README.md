@@ -3,8 +3,9 @@
 A seven-page Found42 site built with Vite and TypeScript. The Lovable content
 baseline is expressed through the existing **Working Drawings** visual system:
 paper and ink, red signals, editorial typography, and responsive schematic
-illustrations. The positioning is customized AI systems and training built
-around a specific role, industry and company.
+illustrations. The opening says it plainly: hands-on Claude skills and
+training for your business — usable systems for executives, practical training
+for the people doing the work, built around a specific role, industry and company.
 
 This is a noindex design preview. Local resource delivery, newsletter subscriptions,
 course enrollment and local inquiry submission are not connected. The original
@@ -41,7 +42,11 @@ without a development SPA fallback.
   forthcoming essays and assessment wording.
 - `src/homepage.ts`: homepage rendering and shared page mounting; navigation,
   adaptive header, motion controls, reveal and drawing lifecycles.
-- `src/homepage/`: homepage bands and reusable site header/footer/inquiry.
+- `src/homepage/`: homepage bands and reusable site header/footer/inquiry,
+  including the three-audience gallery (`audiences.ts`, `audiences-behaviour.ts`).
+- `src/audiences.ts`, `src/scene.ts`: the audience scenes (executives install
+  and use a system; contributors get a skill per role; builders climb to a
+  workflow in use) and the failure-mode review figure, with their live engine.
 - `src/pages.ts`: dedicated resource, services, industry, biography and blog
   layouts, plus route metadata. Plain render functions match existing conventions.
 - `src/interactions.ts`: assessment state, native dialogs and local validation.
@@ -87,3 +92,5 @@ The earlier found42.com audits remain historical evidence. Their homepage-only
 scope and older offer/resource taxonomy do not constrain this migration.
 
 September 16 meeting implementation: [requirements and Adejoke handoff](docs/MEETING-COVERAGE.md).
+Stand-up convergence (direct opening, audience scenes, failure-mode figure,
+copy changes): [implementation record](docs/STANDUP-CONVERGENCE.md).

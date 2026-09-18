@@ -55,7 +55,10 @@ Latin weight-axis files rather than every subset the packages ship.
 Two-sentence headlines set one sentence to a line, declared in the markup. Both
 automatic modes were wrong here: `pretty` leaves a one-word line, and `balance`
 grouped the opening headline differently while it was split for its entrance
-than after it.
+than after it. The opening headline now says what Found42 does in plain words
+("Hands-on Claude skills and training for your business.") on three declared
+lines at a slightly smaller display size, so the lead and the one action still
+sit inside the opening viewport.
 
 The resources band reads down one column: the featured scorecard has a dark
 cover, followed by the course, skills library and playbook. Each entry explains
@@ -87,6 +90,28 @@ All three services are on the page in full at every width. Nothing is behind an
 interaction, and the article being read is marked by a rule filling red rather
 than by fading the other two, which would drop live body copy under the contrast
 minimum for anyone reading ahead.
+
+### The audience scenes
+
+`Whom we help` is a gallery of three **scenes**, one per audience, drawn in the
+same hand as the schematic but each its own picture. Executives see an
+operating problem pass through a drawn "Install a system" control into an
+illustrative daily planner that then runs with human direction on its edge.
+Contributors see four roles under one company outline, each joined to its own
+skill, all ending at the human in the loop. Builders see a learner climb three
+reviewed steps — test, troubleshoot, anticipate failures — to a workflow in
+use. A scene is told in beats when chosen; its carrying routes then run
+signals for as long as it is on screen. The rail above the panel names all
+three audiences and their propositions at once; arrows and arrow keys move the
+choice. Portrait compositions are authored separately and are sparser and
+taller, because an annotation cannot shrink below the readable minimum at
+320px. The drawn control is paper-toned and never red: it is a picture of an
+install, not a button. See [ADR 0003](adr/0003-audience-scenes.md).
+
+The same scene engine draws the **failure-mode review figure** on the
+resources page: a draft result, the three failure modes the playbook is
+described as catching, human review, then the business — one vertical
+composition at every width, and no invented checks.
 
 Smaller recurrences of the same signal motif: a dot travels the rule under a
 text link, a fill sweeps a button, a rule draws under a navigation item.
