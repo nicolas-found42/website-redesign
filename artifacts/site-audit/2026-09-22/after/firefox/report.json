@@ -1,0 +1,704 @@
+[
+  {
+    "route": "/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/resources/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/services/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/private-equity/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/b2b-saas/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/about/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/blog/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/no-such-page/",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "scrollWidth": 320,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/resources/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"C-Level AI Toolkit →\" 182×20",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/services/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/private-equity/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/b2b-saas/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/about/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/blog/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/no-such-page/",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "scrollWidth": 390,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/resources/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"C-Level AI Toolkit →\" 182×20",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/services/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/private-equity/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/b2b-saas/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/about/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/blog/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/no-such-page/",
+    "width": 430,
+    "height": 932,
+    "overflow": false,
+    "scrollWidth": 430,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/resources/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"C-Level AI Toolkit →\" 182×20",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/services/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/private-equity/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/b2b-saas/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/about/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/blog/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/no-such-page/",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "scrollWidth": 768,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/resources/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"C-Level AI Toolkit →\" 182×20",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/services/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/private-equity/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/b2b-saas/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/about/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/blog/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/no-such-page/",
+    "width": 1024,
+    "height": 768,
+    "overflow": false,
+    "scrollWidth": 1024,
+    "outside": [],
+    "small": [
+      "a \"Found42 home\" 104×19",
+      "a \"Found42 home\" 124×23"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/resources/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [
+      "a \"C-Level AI Toolkit →\" 182×20"
+    ],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/services/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/private-equity/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/industries/b2b-saas/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/about/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/blog/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "route": "/no-such-page/",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "scrollWidth": 1440,
+    "outside": [],
+    "small": [],
+    "hiddenReveals": 0,
+    "errors": [],
+    "failed": []
+  }
+]

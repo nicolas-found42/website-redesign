@@ -68,3 +68,18 @@ One subsequent run hit local connection failures after an overlapping rebuild
 removed dist while the already-running static server was reading it. The server
 was restarted after the build completed and the suite rerun against fixed output;
 no application change was needed for those connection failures.
+
+## September 22 site audit
+
+Baseline at main 6baad73: `npm test` — 150 passed. Audit and remediation of
+17 findings (one High: dialogs and the open mobile menu could not be scrolled
+with a wheel or trackpad because Lenis took their wheel events). Current
+validation: `npm run typecheck` passed; `npm run build` passed; `npm test` —
+**183 passed** across Chromium, Firefox and WebKit, including
+`tests/audit-remediation.spec.ts` (11 checks per engine, 10 of which fail on
+the pre-fix source). Axe clean at 390/1440 on every route, with the menu open
+and in the dialog's error state. After matrix: 8 routes × 6 widths × 3 engines,
+no overflow or page errors. Findings register, coverage matrix, before/after
+evidence and logs: [artifacts/site-audit/2026-09-22](../artifacts/site-audit/2026-09-22/report.md).
+Re-capture with `scripts/capture-audit-evidence.mjs`. Not run: physical devices,
+real Safari, screen readers.

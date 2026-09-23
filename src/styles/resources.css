@@ -209,8 +209,11 @@
   padding-top: 12px;
   margin-top: 12px;
 }
+/* It closes the single centred column, so it keeps that column's edges. */
 .resource-foot {
+  max-width: 980px;
   padding-top: clamp(24px, 2.4vw, 36px);
+  margin-inline: auto;
 }
 
 @media (max-width: 1080px) {

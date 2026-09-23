@@ -1,0 +1,28 @@
+390 / clean
+390 /resources/ [ 'heading-order(1): aside > h3' ]
+390 dialog .nav-contact []
+390 dialog [data-dialog=course] []
+390 /services/ clean
+390 /industries/private-equity/ [ 'heading-order(1): aside > h3' ]
+390 /industries/b2b-saas/ [ 'heading-order(1): aside > h3' ]
+390 /about/ clean
+390 /blog/ [ 'heading-order(1): h3' ]
+390 /nope/ clean
+headings / 12333332323332222
+1440 / clean
+headings /resources/ 132323232322222
+1440 /resources/ [ 'heading-order(1): aside > h3' ]
+1440 dialog .nav-contact []
+1440 dialog [data-dialog=course] []
+headings /services/ 1232333222222
+1440 /services/ clean
+headings /industries/private-equity/ 132333322222
+1440 /industries/private-equity/ [ 'heading-order(1): aside > h3' ]
+headings /industries/b2b-saas/ 132333322222
+1440 /industries/b2b-saas/ [ 'heading-order(1): aside > h3' ]
+headings /about/ 1223332222
+1440 /about/ clean
+headings /blog/ 13222222
+1440 /blog/ [ 'heading-order(1): h3' ]
+headings /nope/ 1222
+1440 /nope/ clean

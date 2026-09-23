@@ -1,0 +1,30 @@
+[122/150] [webkit] › tests/meeting.spec.ts:3:1 › meeting journey reads in order and separates audiences from delivery
+[123/150] [webkit] › tests/meeting.spec.ts:40:1 › scorecard loads on request and keeps a direct fallback during delay and failure
+[124/150] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390
+[125/150] [webkit] › tests/audiences.spec.ts:206:1 › a visitor on a phone gets the portrait scenes and can choose by touch
+[126/150] [webkit] › tests/audiences.spec.ts:238:1 › the failure-mode figure explains the playbook without inventing its checks
+[127/150] [webkit] › tests/audiences.spec.ts:259:1 › public copy no longer says “no fluff” on any route or in the course dialog
+[128/150] [webkit] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths
+[129/150] [webkit] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 1440px
+[130/150] [webkit] › tests/system.spec.ts:50:1 › an executive can reach three distinct service drawings with the keyboard
+[131/150] [webkit] › tests/system.spec.ts:84:1 › every service stays readable on the page whichever drawing is shown
+[132/150] [webkit] › tests/system.spec.ts:95:1 › a completed choice rests in the same still composition as a fresh page
+[133/150] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768
+[134/150] [webkit] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally
+[135/150] [webkit] › tests/system.spec.ts:120:1 › switching to reduced motion during rapid choices leaves a complete drawing
+[136/150] [webkit] › tests/system.spec.ts:153:1 › the opening drawing is complete and labelled without any interaction
+[137/150] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440
+[138/150] [webkit] › tests/system.spec.ts:179:1 › a visitor on a phone gets each service's own drawing and can jump between them
+[139/150] [webkit] › tests/system.spec.ts:226:1 › a visitor can stop the page's motion and start it again
+[140/150] [webkit] › tests/system.spec.ts:259:1 › a slow font does not hold the opening headline back
+[141/150] [webkit] › tests/accessibility.spec.ts:115:1 › enlarged text keeps mobile resource disclosures and controls within the viewport
+[142/150] [webkit] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text
+[143/150] [webkit] › tests/system.spec.ts:292:1 › pausing during a transition leaves the drawing settled, not mid-draw
+[144/150] [webkit] › tests/accessibility.spec.ts:140:1 › no document overflow at the narrow widths, at default and doubled text
+[145/150] [webkit] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior
+[146/150] [webkit] › tests/migration.spec.ts:89:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger
+[147/150] [webkit] › tests/system.spec.ts:345:1 › the service drawings are three different drawings, not one repeated
+[148/150] [webkit] › tests/system.spec.ts:380:1 › the drawing's CSS geometry resolves the same in every engine
+[149/150] [webkit] › tests/migration.spec.ts:123:1 › all email gates validate without sending requests or claiming a subscription
+[150/150] [webkit] › tests/migration.spec.ts:166:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus
+  150 passed (48.1s)
