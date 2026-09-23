@@ -106,7 +106,7 @@ test("F03, F17: each invalid inquiry field says what is wrong, and a clean resul
   await dialog.getByLabel("Work email").fill("not-an-email");
   await dialog.getByLabel("Company").fill("Preview");
   await dialog.getByLabel("What should work better?").fill("Short");
-  await dialog.getByRole("button", { name: "Review inquiry" }).click();
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
 
   const email = dialog.getByLabel("Work email");
   await expect(email).toBeFocused();
@@ -129,7 +129,7 @@ test("F03, F17: each invalid inquiry field says what is wrong, and a clean resul
     .getByLabel("What should work better?")
     .fill("Weekly reporting takes a full day");
   await expect(status).toBeHidden();
-  await dialog.getByRole("button", { name: "Review inquiry" }).click();
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
   await expect(status).toContainText("Nothing was sent.");
   await expect(email).toHaveAccessibleDescription("");
   const [statusColour, errorRed] = await status.evaluate((el) => [

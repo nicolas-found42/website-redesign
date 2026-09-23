@@ -635,3 +635,21 @@ button:disabled {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/*
+ * The inquiry dialog leads with the live form; the draft below it is optional,
+ * so it opens under its own rule and its check is a secondary action.
+ */
+.site-dialog form h3 {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font: 500 var(--size-body) / 1.3 var(--font-display);
+}
+.site-dialog form > .note--plain {
+  margin-block: 0;
+}
+.draft-next:not([hidden]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+}
