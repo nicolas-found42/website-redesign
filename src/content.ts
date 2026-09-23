@@ -334,6 +334,16 @@ export const biography = [
   "Richard now channels his business expertise, lifelong love of coaching and mentoring, and teacher’s mindset to help everyone learn how to use AI effectively to address their most pressing challenges.",
   "His expansive network of founders, fractional CxOs, domain experts, and strategic partners creates opportunities to bring the right skills and experience to meet each person at their point of need.",
 ];
+/**
+ * The founder biography lines an industry page quotes: the published
+ * experience closest to that reader's work. They stay biography, not a client
+ * record or an employer's endorsement (see the Credibility audit).
+ */
+export const industryFounder: Partial<
+  Record<keyof typeof industries, readonly string[]>
+> = {
+  "private-equity": [biography[1], biography[0]],
+};
 export const principles = [
   ["Start narrow", "One meaningful workflow beats twenty shallow demos."],
   [

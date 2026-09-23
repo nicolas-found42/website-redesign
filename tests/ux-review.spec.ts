@@ -225,3 +225,30 @@ test("#37: before handing off, the dialog says what the live form will ask", asy
     "It also asks you to agree to Found42 communications before it sends.",
   );
 });
+
+test("#38: the Private Equity page shows the founder's published M&A experience", async ({
+  page,
+}) => {
+  await page.goto("/industries/private-equity/");
+  const band = page.locator(".founder-band");
+  await expect(band.getByRole("heading", { level: 2 })).toHaveText(
+    "Richard Achée",
+  );
+  await expect(band).toContainText(
+    "As an M&A business sponsor, he closed two successful strategic acquisitions at Google: Cameyo and Neverware.",
+  );
+  await expect(
+    band.getByRole("link", { name: /Meet Richard Achée/ }),
+  ).toHaveAttribute("href", /\/about\/$/);
+  // It sits after what the firm would get, before how it is built.
+  const order = await page
+    .locator("main > section")
+    .evaluateAll((sections) =>
+      sections.map((s) => s.querySelector("h2")?.textContent?.trim()),
+    );
+  expect(order.indexOf("Richard Achée")).toBe(
+    order.indexOf("High context. Clear controls.") + 1,
+  );
+  // Biography only: nothing presents it as a client or an endorsement.
+  await expect(band).not.toContainText(/client|endorse/i);
+});

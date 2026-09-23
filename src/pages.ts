@@ -5,6 +5,7 @@ import {
   principles,
   essays,
   claudeGloss,
+  industryFounder,
 } from "./content";
 import { previewNote, siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
@@ -94,8 +95,15 @@ function servicesPage() {
     inquirySection()
   );
 }
+/**
+ * Who a reader would be dealing with, for an industry whose first question is
+ * whether anyone here has done this before. The About page carries the rest.
+ */
+const founderBand = (lines: readonly string[]) =>
+  `<section class="wrap band biography founder-band" aria-labelledby="founder-title"><figure class="portrait"><img src="${sitePath("assets/richard-achee.png")}" alt="Richard Achée, Founder and CEO of Found42" width="750" height="750" loading="lazy"><figcaption class="note">Richard Achée, Founder and CEO</figcaption></figure><div>${index("Founder and CEO")}<h2 id="founder-title" class="display">Richard Achée</h2>${lines.map((line) => `<p>${line}</p>`).join("")}<a class="link" href="${sitePath("about/")}">Meet Richard Achée&nbsp;→</a></div></section>`;
 function industryPage(key: keyof typeof industries) {
   const d = industries[key];
+  const founder = industryFounder[key];
   return (
     opening(
       d.name,
@@ -103,7 +111,7 @@ function industryPage(key: keyof typeof industries) {
       d.intro,
       `<p class="page-number">${d.aside}</p><h2 class="heading-h3">${d.asideTitle}</h2><p>${d.asideBody}</p>${key === "private-equity" ? '<p class="note--plain">A target, not a guaranteed result.</p>' : ""}`,
     ) +
-    `<section class="band on-ink" data-ground="ink"><div class="wrap"><div class="section-head"><div>${index("Where we work")}<h2 class="display">${d.heading}</h2></div><p class="lead">${d.context}</p></div><div class="industry-grid">${d.items.map(([t, b], i) => `<article><p class="note">0${i + 1}</p><h3>${t}</h3><p>${b}</p></article>`).join("")}</div></div></section><section class="wrap band content-split"><div>${index("Built around your company")}<h2 class="display">Context in.<br>Judgment throughout.</h2><p>Built around your role, your industry, and your company—not a generic AI curriculum.</p><a class="link" href="${sitePath("services/")}">Workshops, Workflows & Automations&nbsp;→</a><a class="link" href="${sitePath("resources/#scorecard")}">Take the AI Readiness Scorecard&nbsp;→</a></div><div class="page-drawing">${schematicFigure(masterSchematic, "portrait")}</div></section>` +
+    `<section class="band on-ink" data-ground="ink"><div class="wrap"><div class="section-head"><div>${index("Where we work")}<h2 class="display">${d.heading}</h2></div><p class="lead">${d.context}</p></div><div class="industry-grid">${d.items.map(([t, b], i) => `<article><p class="note">0${i + 1}</p><h3>${t}</h3><p>${b}</p></article>`).join("")}</div></div></section>${founder ? founderBand(founder) : ""}<section class="wrap band content-split"><div>${index("Built around your company")}<h2 class="display">Context in.<br>Judgment throughout.</h2><p>Built around your role, your industry, and your company—not a generic AI curriculum.</p><a class="link" href="${sitePath("services/")}">Workshops, Workflows & Automations&nbsp;→</a><a class="link" href="${sitePath("resources/#scorecard")}">Take the AI Readiness Scorecard&nbsp;→</a></div><div class="page-drawing">${schematicFigure(masterSchematic, "portrait")}</div></section>` +
     inquirySection(d.cta, d.ctaBody)
   );
 }
