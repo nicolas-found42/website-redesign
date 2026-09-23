@@ -332,8 +332,7 @@ export function mountInteractions(root: HTMLElement) {
   /**
    * Copies what the visitor wrote about their work, the part worth keeping,
    * led by the service they asked about, so it survives the move to the live
-   * form. Where the clipboard is refused
-   * the status says how to copy it by hand.
+   * form. Where the clipboard is refused the status says how to copy it by hand.
    */
   const copyDraft = () => {
     const status = dialog.querySelector<HTMLElement>(".form-status");
@@ -346,19 +345,15 @@ export function mountInteractions(root: HTMLElement) {
     const say = (text: string) => {
       if (status) status.textContent = text;
     };
-    const copied = navigator.clipboard?.writeText(message);
-    if (!copied) {
+    const byHand = () =>
       say(
         "Copying is not available here. Select your message above and copy it.",
       );
-      return;
-    }
+    const copied = navigator.clipboard?.writeText(message);
+    if (!copied) return byHand();
     copied.then(
       () => say("Copied. Paste it into the Message box on the live form."),
-      () =>
-        say(
-          "Copying is not available here. Select your message above and copy it.",
-        ),
+      byHand,
     );
   };
   type Field = HTMLInputElement | HTMLTextAreaElement;
