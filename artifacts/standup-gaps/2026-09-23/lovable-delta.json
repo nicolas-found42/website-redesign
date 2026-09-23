@@ -146,7 +146,7 @@
    "disposition": "adopted",
    "destination": "/",
    "replacement": "Three ways to deliver the same outcome.",
-   "note": "The industries are named in the Delivered for strip beneath the articles."
+   "note": "The industries are named in the Built for strip beneath the articles."
   },
   {
    "original": "Role based enablement using your team's real decisions, documents, and operating rhythms.",
@@ -172,7 +172,8 @@
    "original": "DELIVERED FOR",
    "disposition": "adopted",
    "destination": "/",
-   "replacement": "Delivered for"
+   "replacement": "Built for",
+   "note": "Reworded after the September 23 UX review (#36): \"Delivered for\" reads as completed client work, which the Credibility audit does not establish for either industry. \"Built for\" keeps the strip and its links."
   },
   {
    "original": "See all services",

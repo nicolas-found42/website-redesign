@@ -1,0 +1,411 @@
+import { test, expect, type Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+/**
+ * Regression checks for the September 23 adversarial UX review. Each test is
+ * named for the GitHub issue it closes and asserts what a visitor should
+ * experience instead of the friction the review found.
+ */
+
+/** Replaces the clipboard so every engine reports what a copy would carry. */
+const stubClipboard = (page: Page, accept: boolean) =>
+  page.addInitScript((accept) => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: (text: string) => {
+          (window as unknown as { copied: string }).copied = text;
+          return accept
+            ? Promise.resolve()
+            : Promise.reject(new Error("denied"));
+        },
+      },
+    });
+  }, accept);
+
+const fillInquiry = async (page: Page) => {
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Your name").fill("Richard Thornbury");
+  await dialog.getByLabel("Work email").fill("richard@ashgrove.example");
+  await dialog.getByLabel("Company").fill("Ashgrove Capital");
+  await dialog
+    .getByLabel("What should work better?")
+    .fill("Diligence packs take my team three weeks.");
+  return dialog;
+};
+
+test("#32: the inquiry dialog leads with the live form, and a checked draft can be copied into it", async ({
+  page,
+}) => {
+  await stubClipboard(page, true);
+  await page.goto("/industries/private-equity/");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  const dialog = page.getByRole("dialog");
+  // The way that actually reaches Found42 is the primary action, ahead of the draft.
+  const live = dialog.getByRole("link", { name: "Open the live inquiry form" });
+  await expect(live).toHaveClass(/\baction\b/);
+  await expect(live).toHaveAttribute("href", "https://www.found42.com/contact");
+  const order = await dialog.evaluate((el) => {
+    const link = el.querySelector("a.action")!;
+    const form = el.querySelector("form")!;
+    return (
+      link.compareDocumentPosition(form) & Node.DOCUMENT_POSITION_FOLLOWING
+    );
+  });
+  expect(order).toBeTruthy();
+  // The draft's own action says what it does; nothing promises a review.
+  await expect(dialog.getByRole("button", { name: /Review/ })).toHaveCount(0);
+  const copy = dialog.getByRole("button", { name: "Copy my message" });
+  await expect(copy).toBeHidden();
+
+  await fillInquiry(page);
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  const status = dialog.locator(".form-status");
+  await expect(status).toContainText("Nothing was sent");
+  await copy.click();
+  await expect(status).toHaveText(/Copied/);
+  expect(await page.evaluate(() => (window as any).copied)).toBe(
+    "Diligence packs take my team three weeks.",
+  );
+  await expect(
+    dialog.getByRole("link", { name: "Go to the live form" }),
+  ).toHaveAttribute("href", "https://www.found42.com/contact");
+  const result = await new AxeBuilder({ page })
+    .include("dialog")
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+    .analyze();
+  expect(result.violations).toEqual([]);
+});
+
+test("#32: where the clipboard is refused, the dialog says how to copy by hand", async ({
+  page,
+}) => {
+  await stubClipboard(page, false);
+  await page.goto("/services/");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  const dialog = await fillInquiry(page);
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  await dialog.getByRole("button", { name: "Copy my message" }).click();
+  await expect(dialog.locator(".form-status")).toHaveText(
+    /Select your message above and copy it/,
+  );
+});
+
+/** WCAG relative-luminance contrast between two computed `rgb()` colours. */
+const contrast = (a: string, b: string) => {
+  const lum = (colour: string) => {
+    const [r, g, bl] = colour
+      .match(/[\d.]+/g)!
+      .slice(0, 3)
+      .map((v) => {
+        const c = Number(v) / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+const routes = [
+  "/",
+  "/resources/",
+  "/services/",
+  "/industries/private-equity/",
+  "/industries/b2b-saas/",
+  "/about/",
+  "/blog/",
+];
+
+test("#33: every filled action reads at 4.5:1 or better, at rest and on hover", async ({
+  page,
+}) => {
+  // Seven routes, and a scroll and hover for every action on each: a sweep,
+  // not a single journey, so it gets a sweep's time.
+  test.slow();
+  // At rest an action reads on its own fill; on hover the fill that runs
+  // across it (its ::before) is the ground, read with the hover type colour.
+  const read = (el: Element, ground: "rest" | "hover") => ({
+    text: (el as HTMLElement).innerText.trim(),
+    color: getComputedStyle(el).color,
+    ground:
+      ground === "rest"
+        ? getComputedStyle(el).backgroundColor
+        : getComputedStyle(el, "::before").backgroundColor,
+  });
+  for (const route of routes) {
+    await page.goto(route);
+    const actions = page.locator(".action:not(.action--ghost)");
+    let checked = 0;
+    for (const action of await actions.all()) {
+      if (!(await action.isVisible())) continue;
+      await page.mouse.move(0, 0);
+      const states = [await action.evaluate(read, "rest" as const)];
+      await action.scrollIntoViewIfNeeded();
+      await action.hover();
+      states.push(await action.evaluate(read, "hover" as const));
+      for (const state of states)
+        expect(
+          contrast(state.color, state.ground),
+          `${route} "${state.text}": ${state.color} on ${state.ground}`,
+        ).toBeGreaterThanOrEqual(4.5);
+      checked++;
+    }
+    expect(checked, route).toBeGreaterThan(0);
+  }
+});
+
+test("#34: every opening that names Claude says what Claude is, once", async ({
+  page,
+}) => {
+  const named: string[] = [];
+  for (const route of routes) {
+    await page.goto(route);
+    const opening = page.locator(".hero-copy, .page-opening > div").first();
+    const says = `${await opening.locator("h1").innerText()} ${await opening.locator(".lead").innerText()}`;
+    const glosses = opening.getByText("Claude is Anthropic’s AI assistant.");
+    if (says.includes("Claude")) {
+      named.push(route);
+      await expect(glosses, route).toHaveCount(1);
+      await expect(glosses, route).toBeVisible();
+    } else await expect(glosses, route).toHaveCount(0);
+  }
+  // The homepage names it in its headline, the rest in their leads.
+  expect(named).toEqual([
+    "/",
+    "/industries/private-equity/",
+    "/industries/b2b-saas/",
+    "/about/",
+    "/blog/",
+  ]);
+});
+
+test("#35: one preview notice per page replaces per-card disclaimers and team notes", async ({
+  page,
+}) => {
+  for (const route of routes) {
+    await page.goto(route);
+    // The notice opens every page's content and points to the live contact form.
+    const note = page.locator("main > .preview-note");
+    await expect(note, route).toHaveCount(1);
+    expect(
+      await page
+        .locator("main")
+        .evaluate((main) => main.firstElementChild?.className),
+    ).toContain("preview-note");
+    await expect(note.getByRole("link")).toHaveAttribute(
+      "href",
+      "https://www.found42.com/contact",
+    );
+    // Verification status belongs in the launch backlog, not in visitor copy.
+    const text = await page.locator("main").innerText();
+    for (const note of [
+      /has not been tested/i,
+      /not been confirmed/i,
+      /not been supplied/i,
+      /not connected in this preview/i,
+      /Some tools require/i,
+    ])
+      expect(text, `${route}: ${note}`).not.toMatch(note);
+  }
+  // A toolkit that needs ChatGPT on a Claude site says why.
+  await page.goto("/resources/");
+  await expect(page.locator("main")).toContainText(
+    "Its practice advisors are custom GPTs, so they need a ChatGPT account.",
+  );
+});
+
+test("#37: before handing off, the dialog says what the live form will ask", async ({
+  page,
+}) => {
+  await page.goto("/about/");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toContainText(
+    "news and updates start at Yes: choose No if you only want a reply.",
+  );
+  await expect(dialog).toContainText(
+    "It also asks you to agree to Found42 communications before it sends.",
+  );
+});
+
+test("#38: the Private Equity page shows the founder's published M&A experience", async ({
+  page,
+}) => {
+  await page.goto("/industries/private-equity/");
+  const band = page.locator(".founder-band");
+  await expect(band.getByRole("heading", { level: 2 })).toHaveText(
+    "Richard Achée",
+  );
+  await expect(band).toContainText(
+    "As an M&A business sponsor, he closed two successful strategic acquisitions at Google: Cameyo and Neverware.",
+  );
+  await expect(
+    band.getByRole("link", { name: /Meet Richard Achée/ }),
+  ).toHaveAttribute("href", /\/about\/$/);
+  // It sits after what the firm would get, before how it is built.
+  const order = await page
+    .locator("main > section")
+    .evaluateAll((sections) =>
+      sections.map((s) => s.querySelector("h2")?.textContent?.trim()),
+    );
+  expect(order.indexOf("Richard Achée")).toBe(
+    order.indexOf("High context. Clear controls.") + 1,
+  );
+  // Biography only: nothing presents it as a client or an endorsement.
+  await expect(band).not.toContainText(/client|endorse/i);
+});
+
+test("#39: Services opens with what an engagement starts with, asks and gives, and names no price", async ({
+  page,
+}) => {
+  await page.goto("/services/");
+  // The first band after the opening answers the buyer's first question.
+  const first = await page
+    .locator("main > section")
+    .evaluateAll((sections) => sections[1]?.id);
+  expect(first).toBe("engagements");
+  const band = page.locator("#engagements");
+  const articles = band.locator("article");
+  await expect(articles.locator("h3")).toHaveText([
+    "Workshops",
+    "Workflows",
+    "Automations",
+  ]);
+  for (const article of await articles.all())
+    await expect(article.locator("dt")).toHaveText([
+      "Starts with",
+      "You provide",
+      "You get",
+    ]);
+  const text = await band.innerText();
+  expect(text).not.toMatch(/[$£€]|\d+\s*(weeks?|days?|months?)/i);
+  await expect(band).toContainText("Length and fees depend on the work");
+  // The resources page's pointer lands on it.
+  await page.goto("/resources/");
+  await page.getByRole("link", { name: /See how engagements work/ }).click();
+  await expect(page).toHaveURL(/\/services\/#engagements$/);
+});
+
+test("#40: the band and the dialog say what happens after an inquiry, not only what does not", async ({
+  page,
+}) => {
+  const steps = [
+    "You send an inquiry through Found42’s contact form.",
+    "Found42 replies to arrange a first conversation.",
+    "That conversation maps one workflow, its decision, source material, failure modes and review points, before any build is recommended.",
+  ];
+  await page.goto("/industries/b2b-saas/");
+  const band = page.locator("#contact");
+  await expect(band.locator(".inquiry-steps li")).toHaveText(steps);
+  await expect(band).not.toContainText("does not book an appointment");
+  await band.getByRole("button", { name: "Talk to us" }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.locator(".inquiry-steps li")).toHaveText(steps);
+  // Nothing claims a meeting has been booked.
+  expect(await dialog.innerText()).not.toMatch(/\bbook(ed|ing)?\b/i);
+});
+
+test("#41: a Discuss button says which service the inquiry is about, and the copy leads with it", async ({
+  page,
+}) => {
+  await stubClipboard(page, true);
+  await page.goto("/services/");
+  await page.getByRole("button", { name: /Discuss workflows/ }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
+  await fillInquiry(page);
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  await dialog.getByRole("button", { name: "Copy my message" }).click();
+  await expect(dialog.locator(".form-status")).toHaveText(/Copied/);
+  expect(await page.evaluate(() => (window as any).copied)).toBe(
+    "About Workflows: Diligence packs take my team three weeks.",
+  );
+  // A general trigger afterwards is not left about the last service.
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await expect(dialog.locator(".note").first()).toHaveText(
+    "Start with the bottleneck",
+  );
+});
+
+test("#41: an email without a dot in its domain is refused", async ({
+  page,
+}) => {
+  await page.goto("/resources/");
+  const form = page.locator("#library form");
+  await form.getByLabel("Work email").fill("dick.thornbury@gmail");
+  await form.getByRole("button").click();
+  await expect(form.getByLabel("Work email")).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+  await expect(form).toContainText("Enter a valid work email.");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  const dialog = await fillInquiry(page);
+  await dialog.getByLabel("Work email").fill("dick.thornbury@gmail");
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  await expect(dialog.getByLabel("Work email")).toHaveAccessibleDescription(
+    /valid work email/,
+  );
+  await dialog.getByLabel("Work email").fill("dick.thornbury@gmail.com");
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  await expect(dialog.locator(".form-status")).toContainText(
+    "Nothing was sent.",
+  );
+});
+
+test("#41: unwritten essays are not timed, and the newsletter field keeps its placeholder readable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/blog/");
+  const essays = page.locator(".essay-list article");
+  await expect(essays).toHaveCount(3);
+  await expect(essays.getByText("Coming soon")).toHaveCount(3);
+  expect(await page.locator(".essay-list").innerText()).not.toMatch(
+    /\d+\s*min/i,
+  );
+  const fits = await page.locator("#newsletter-email").evaluate((input) => {
+    const field = input as HTMLInputElement;
+    const style = getComputedStyle(field);
+    const context = document.createElement("canvas").getContext("2d")!;
+    context.font = `${style.fontSize} ${style.fontFamily}`;
+    const room =
+      field.clientWidth -
+      parseFloat(style.paddingLeft) -
+      parseFloat(style.paddingRight);
+    return context.measureText(field.placeholder).width <= room;
+  });
+  expect(fits).toBe(true);
+});
+
+test("#41: the PE opening leads with a workflow and keeps the 8h target, qualified, beside how it is built", async ({
+  page,
+}) => {
+  await page.goto("/industries/private-equity/");
+  const aside = page.locator(".page-opening .page-aside");
+  await expect(aside).toContainText("A consistent first-pass screen");
+  await expect(aside).not.toContainText("8h");
+  const target = page.locator(".industry-target");
+  await expect(target).toContainText("8h");
+  await expect(target).toContainText("Target weekly capacity returned");
+  await expect(target).toContainText(
+    "Per person, where workflow fit supports it.",
+  );
+  await expect(target).toContainText("A target, not a guaranteed result.");
+  await expect(
+    page.getByText("A target, not a guaranteed result.", { exact: true }),
+  ).toHaveCount(1);
+});
+
+test("#41: the scorecard says what its result is, not what it is not", async ({
+  page,
+}) => {
+  await page.goto("/resources/");
+  const intro = page.locator(".scorecard-intro");
+  await expect(intro).toContainText(
+    "Your result is a readiness stage, a status for each area and where to start.",
+  );
+  await expect(intro).not.toContainText("not a score");
+});

@@ -31,6 +31,12 @@ items remain incomplete and must not be represented as delivered:
    the live ScoreApp questions match the draft. See
    [Resources ADR 0001](contexts/resources/docs/adr/0001-native-scorecard.md).
 10. Decide the services section's direction; nothing new was invented there.
+11. Reconfigure the live HubSpot inquiry form (issue #37): start the news and
+    updates preference unselected, and make the further-communications
+    agreement optional so an inquiry needs only processing consent. The consent
+    wording is the business owner's decision (item 5). Once it changes, remove
+    the inquiry dialog's note describing the current defaults
+    (`src/interactions.ts`, `liveInquiry`).
 
 No credentials or paid service configuration were created during migration.
 Physical-device, screen-reader and field-performance validation remain separate

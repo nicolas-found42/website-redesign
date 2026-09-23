@@ -10,9 +10,11 @@ for the people doing the work, built around a specific role, industry and compan
 This is a noindex design preview. Local resource delivery, newsletter subscriptions,
 course enrollment and local inquiry submission are not connected. The AI
 Readiness Scorecard is answered on the page and sends nothing; the original
-ScoreApp assessment is linked for its emailed report. Forms validate
-locally and state that nothing was sent. The established Found42 contact form
-remains available as an external inquiry fallback.
+ScoreApp assessment is linked for its emailed report. Every page opens with
+one preview notice saying so, rather than each card repeating it. Forms
+validate locally and state that nothing was sent. The inquiry dialog leads with
+the established Found42 contact form; its local draft can be checked and copied
+into that form.
 
 ## Develop and validate
 
@@ -62,7 +64,9 @@ without a development SPA fallback.
 - `scripts/prerender.mjs`: generates HTML for every route after Vite builds.
 - `scripts/serve-pages.mjs`: strict local static server for production checks.
 - `tests/`: source-manifest coverage, browser journeys, assessment branches,
-  accessibility, motion, reflow, static routing and script-failure checks.
+  accessibility, motion, reflow, static routing and script-failure checks;
+  `audit-remediation.spec.ts` and `ux-review.spec.ts` guard the September 22
+  audit and September 23 UX review findings.
 
 ## GitHub Pages
 

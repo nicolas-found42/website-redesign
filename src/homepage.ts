@@ -1,5 +1,5 @@
 import { mountInteractions } from "./interactions";
-import { siteFooter, siteHeader } from "./homepage/chrome";
+import { previewNote, siteFooter, siteHeader } from "./homepage/chrome";
 import { hero } from "./homepage/hero";
 import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
@@ -20,6 +20,7 @@ import type { PageMotion } from "./motion-preference";
 export function renderHomepage() {
   return `${siteHeader()}
 <main id="main">
+${previewNote()}
 ${hero()}
 ${resourcesSection()}
 ${audiencesSection()}

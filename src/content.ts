@@ -15,7 +15,7 @@ const resourceInventory = [
     description:
       "Spot weak outputs, missing context, and false confidence before they reach the business.",
     outcome: "12 checks for safer adoption",
-    gate: "Free resource · Work email requested. Delivery is not connected in this preview.",
+    gate: "Free resource · Work email requested.",
     action: "Explore the playbook",
   },
   {
@@ -24,7 +24,7 @@ const resourceInventory = [
     description:
       "Start with reusable skills for analysis, synthesis, review, and decision support.",
     outcome: "Four working skill patterns",
-    gate: "Free resource · Work email requested. Delivery is not connected in this preview.",
+    gate: "Free resource · Work email requested.",
     action: "Explore the library",
   },
   {
@@ -33,10 +33,27 @@ const resourceInventory = [
     description:
       "Build a disciplined thinking partner that challenges assumptions and sharpens decisions.",
     outcome: "Five practical daily lessons",
-    gate: "Free 5-day mini-course · Work email requested. Enrollment is not connected in this preview.",
+    gate: "Free 5-day mini-course · Work email requested.",
     action: "Explore the mini-course",
   },
 ];
+/**
+ * What follows a consultation inquiry, told wherever one can be started. Each
+ * step restates published wording: the live form's promise to get back to the
+ * visitor, and the mapping the industry pages promise before any build. It
+ * never implies a booked meeting; that needs a verified booking flow first.
+ */
+export const inquirySteps = [
+  "You send an inquiry through Found42’s contact form.",
+  "Found42 replies to arrange a first conversation.",
+  "That conversation maps one workflow, its decision, source material, failure modes and review points, before any build is recommended.",
+] as const;
+/**
+ * Said once wherever an opening's lead names Claude. The visitors the site is
+ * for, non-technical teams and their executives, are the least likely to know
+ * the product by name.
+ */
+export const claudeGloss = "Claude is Anthropic’s AI assistant.";
 /** Provisional later meeting sequence (03:56–04:22); Executive Communications awaits a real offering. */
 export const resources = [
   resourceInventory[0],
@@ -44,6 +61,13 @@ export const resources = [
   resourceInventory[2],
   resourceInventory[1],
 ];
+/**
+ * Each service's `engagement` restates what the site already publishes about
+ * that service (its description, scope and context) as what an engagement
+ * starts with, asks of the client and leaves behind. No length, price or tier:
+ * the September 23 stand-up added none, and they await the business owner
+ * (Launch dependency 10).
+ */
 export const services = [
   {
     title: "Workshops",
@@ -57,6 +81,14 @@ export const services = [
     ],
     context:
       "Teams learn on their own work, not on demo prompts. Practice with the responsibilities, terminology and review standards of your role, your industry and your company.",
+    engagement: {
+      startsWith:
+        "The role: its responsibilities, terminology and review standards.",
+      youProvide:
+        "Your team’s real decisions and documents, to practise on instead of demo prompts.",
+      youGet:
+        "Live or on-demand practice for the role, reusable skills rather than prompt lists, and rollout guidance for managers.",
+    },
   },
   {
     title: "Workflows",
@@ -70,6 +102,13 @@ export const services = [
     ],
     context:
       "Your source material, examples and quality bar shape a system your team can use. Executives bring the operating problem; they do not need to become developers.",
+    engagement: {
+      startsWith: "Discovery around one high-value job to be done.",
+      youProvide:
+        "The operating problem, your source material, examples and quality bar. No development work.",
+      youGet:
+        "Custom Claude skills and plugins, co-designed with your team and tested with a failure-mode review.",
+    },
   },
   {
     title: "Automations",
@@ -83,6 +122,14 @@ export const services = [
     ],
     context:
       "Eight hours is a target where workflow fit supports it, not a guaranteed result. Keep judgment and human interaction with people while reducing repetitive work.",
+    engagement: {
+      startsWith:
+        "The repetitive work that should not consume expert attention, mapped before any build is recommended.",
+      youProvide:
+        "The workflow, the systems it passes between, and the people who review its results.",
+      youGet:
+        "An end-to-end workflow with human review points and system handoffs.",
+    },
   },
 ];
 export const testimonials = [
@@ -259,9 +306,16 @@ export const industries = {
     intro:
       "Claude skills for the work between the data room and the decision, designed around evidence, judgment, and review.",
     heading: "High context. Clear controls.",
-    aside: "8h",
-    asideTitle: "Target weekly capacity returned",
-    asideBody: "Per person, where workflow fit supports it.",
+    aside: "1st",
+    asideTitle: "A consistent first-pass screen",
+    asideBody:
+      "Your house view, applied the same way to every deal, with judgment left to the deal team.",
+    /** The source's 8h figure, kept with its qualification beside how the work is built. */
+    target: {
+      figure: "8h",
+      title: "Target weekly capacity returned",
+      body: "Per person, where workflow fit supports it.",
+    },
     items: [
       [
         "Deal screening",
@@ -328,6 +382,16 @@ export const biography = [
   "Richard now channels his business expertise, lifelong love of coaching and mentoring, and teacher’s mindset to help everyone learn how to use AI effectively to address their most pressing challenges.",
   "His expansive network of founders, fractional CxOs, domain experts, and strategic partners creates opportunities to bring the right skills and experience to meet each person at their point of need.",
 ];
+/**
+ * The founder biography lines an industry page quotes: the published
+ * experience closest to that reader's work. They stay biography, not a client
+ * record or an employer's endorsement (see the Credibility audit).
+ */
+export const industryFounder: Partial<
+  Record<keyof typeof industries, readonly string[]>
+> = {
+  "private-equity": [biography[1], biography[0]],
+};
 export const principles = [
   ["Start narrow", "One meaningful workflow beats twenty shallow demos."],
   [
@@ -339,7 +403,17 @@ export const principles = [
     "The people doing the work should understand, own, and improve the system.",
   ],
 ];
-export const essays = [
+/**
+ * Forthcoming essays. The Lovable source gives each a reading time; it shows
+ * only once an essay has a published `href`, so an unwritten essay is not
+ * timed. Until then each reads "Coming soon".
+ */
+export const essays: {
+  title: string;
+  description: string;
+  minutes: string;
+  href?: string;
+}[] = [
   {
     title: "Why prompt libraries fail teams",
     description:

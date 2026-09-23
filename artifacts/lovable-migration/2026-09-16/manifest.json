@@ -1231,9 +1231,9 @@
       "original": "Practical tools your team can use today. Each one helps you identify where a tailored skill or workflow will earn its keep.",
       "destination": "/",
       "component": "src/homepage/",
-      "replacement": "Start by assessing your AI readiness. Then explore the course, reusable skills and failure-mode guidance. Access and preview limits are shown at each step.",
+      "replacement": "Start by assessing your AI readiness. Then explore the course, reusable skills and failure-mode guidance. Access terms are shown at each step.",
       "status": "implemented",
-      "reason": "September 16 meeting implementation: corrected sequence, truthful assessment access, focused hierarchy or attributed workshop proof. See docs/MEETING-COVERAGE.md.",
+      "reason": "September 16 meeting implementation: corrected sequence, truthful assessment access, focused hierarchy or attributed workshop proof. See docs/MEETING-COVERAGE.md. UX review 2026-09-23 (#35): preview limits moved to the one preview notice every page carries; each step still shows its access terms.",
       "state": "initial",
       "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
       "validation": [
@@ -2678,7 +2678,7 @@
       "component": "src/pages.ts",
       "replacement": "8h",
       "status": "implemented",
-      "reason": "unchanged",
+      "reason": "unchanged; UX review 2026-09-23 (#41) moved it from the opening aside to the \"Built around your company\" band, with its qualification, so the opening leads with a workflow.",
       "state": "initial",
       "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
       "validation": [
@@ -2695,7 +2695,7 @@
       "component": "src/pages.ts",
       "replacement": "Target weekly capacity returned",
       "status": "implemented",
-      "reason": "unchanged",
+      "reason": "unchanged; UX review 2026-09-23 (#41) moved it from the opening aside to the \"Built around your company\" band, with its qualification, so the opening leads with a workflow.",
       "state": "initial",
       "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
       "validation": [
@@ -2712,7 +2712,7 @@
       "component": "src/pages.ts",
       "replacement": "Per person, where workflow fit supports it.",
       "status": "implemented",
-      "reason": "unchanged",
+      "reason": "unchanged; UX review 2026-09-23 (#41) moved it from the opening aside to the \"Built around your company\" band, with its qualification, so the opening leads with a workflow.",
       "state": "initial",
       "editorialReview": "Meaning preserved; source facts, inventories and qualification retained.",
       "validation": [
@@ -4459,11 +4459,11 @@
       "sourceUrl": "https://found42-claude-lab.lovable.app",
       "evidence": "source/index.js",
       "original": "Request a conversation",
-      "replacement": "Review inquiry",
+      "replacement": "Check my draft",
       "destination": "/",
       "component": "src/interactions.ts",
       "status": "implemented",
-      "reason": "No submission integration; action validates a local draft and clearly offers the existing live inquiry form.",
+      "reason": "No submission integration. UX review 2026-09-23 (#32): the live inquiry form is the dialog's primary action; this secondary action checks a local draft that can be copied into it.",
       "state": "contact",
       "editorialReview": "Meaning preserved",
       "validation": [
@@ -4479,8 +4479,8 @@
       "replacement": "07 min",
       "destination": "/blog/",
       "component": "src/pages.ts",
-      "status": "implemented",
-      "reason": "unchanged",
+      "status": "withheld",
+      "reason": "UX review 2026-09-23 (#41): the essay is unwritten, so its source reading time is withheld until it has a published href (src/content.ts, essays). Each essay reads \"Coming soon\" meanwhile.",
       "state": "initial",
       "editorialReview": "Meaning preserved",
       "validation": [
@@ -4496,8 +4496,8 @@
       "replacement": "05 min",
       "destination": "/blog/",
       "component": "src/pages.ts",
-      "status": "implemented",
-      "reason": "unchanged",
+      "status": "withheld",
+      "reason": "UX review 2026-09-23 (#41): the essay is unwritten, so its source reading time is withheld until it has a published href (src/content.ts, essays). Each essay reads \"Coming soon\" meanwhile.",
       "state": "initial",
       "editorialReview": "Meaning preserved",
       "validation": [
@@ -4513,8 +4513,8 @@
       "replacement": "09 min",
       "destination": "/blog/",
       "component": "src/pages.ts",
-      "status": "implemented",
-      "reason": "unchanged",
+      "status": "withheld",
+      "reason": "UX review 2026-09-23 (#41): the essay is unwritten, so its source reading time is withheld until it has a published href (src/content.ts, essays). Each essay reads \"Coming soon\" meanwhile.",
       "state": "initial",
       "editorialReview": "Meaning preserved",
       "validation": [
@@ -4732,7 +4732,7 @@
     },
     {
       "text": "Request received. We’ll review your context and follow up with a useful first point of view.",
-      "replacement": "Your details are ready to review. Nothing was sent. Continue using the live inquiry form above to contact Found42.",
+      "replacement": "Your draft is complete. Nothing was sent. Copy your message, then paste it into the live form.",
       "reason": "Public handler only sets local state; false submission must not be reproduced."
     }
   ],
@@ -4784,7 +4784,8 @@
     "discoveredPages": 7,
     "implementedPages": 7,
     "visibleSourceItems": 215,
-    "implementedVisibleItems": 215,
+    "implementedVisibleItems": 212,
+    "withheldVisibleItems": 3,
     "unavailableContentCollections": 6,
     "interactionFamilies": 7,
     "fullyWorkingFamilies": 2,

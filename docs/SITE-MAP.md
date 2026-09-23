@@ -7,8 +7,8 @@ and receive a trailing slash for static directory-index hosting.
 | --- | --- | --- |
 | `/` | `/` | Direct opening, free resources (the playbook entry with its review figure), three-audience gallery with its own scenes, services with an industries strip, attributed workshop accounts |
 | `/resources` | `/resources/` | AI Readiness Scorecard answered on the page (original ScoreApp linked), separate workflow preview, failure-mode review figure, resource access and course dialog |
-| `/services` | `/services/` | Audience gallery, Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
-| `/industries/private-equity` | `/industries/private-equity/` | Deal screening, diligence, portfolio operations and firm-specific criteria |
+| `/services` | `/services/` | What an engagement looks like (`#engagements`), audience gallery, Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
+| `/industries/private-equity` | `/industries/private-equity/` | Deal screening, diligence, portfolio operations and firm-specific criteria; founder band; the qualified 8h target |
 | `/industries/b2b-saas` | `/industries/b2b-saas/` | Customer success, feedback triage, GTM enablement and team adoption |
 | `/about` | `/about/` | Complete founder biography and operating principles |
 | `/blog` | `/blog/` | Three forthcoming essay descriptions and newsletter preview |
@@ -21,7 +21,8 @@ its panels. Service schematic identifiers
 (`training`, `automation`, `product`) remain stable internal geometry keys; the
 visible offering names are Workshops, Workflows and Automations.
 
-Talk to us opens a shared inquiry dialog. The course entry opens the Strategic Advisor
+Talk to us opens a shared inquiry dialog that leads with the live Found42 contact
+form; a service's Discuss button names that service in it. The course entry opens the Strategic Advisor
 Mini-Course dialog. The scorecard's questions and result, and the workflow
 preview's result, are in-page states; each result opens the inquiry dialog. These are
 client states, not extra page routes.

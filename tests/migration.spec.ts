@@ -104,7 +104,7 @@ test("forms validate, disclose unavailable delivery, trap focus and restore trig
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
   await page.getByRole("button", { name: /Talk to our team/ }).click();
-  await dialog.getByRole("button", { name: "Review inquiry" }).click();
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
   await expect(dialog).toContainText("Complete every field");
   await dialog.getByLabel("Your name").fill("Preview User");
   await dialog.getByLabel("Work email").fill("preview@example.com");
@@ -112,7 +112,7 @@ test("forms validate, disclose unavailable delivery, trap focus and restore trig
   await dialog
     .getByLabel("What should work better?")
     .fill("Review a repetitive workflow");
-  await dialog.getByRole("button", { name: "Review inquiry" }).click();
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
   await expect(dialog).toContainText("Nothing was sent.");
   const violations = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])

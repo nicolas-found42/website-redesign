@@ -354,3 +354,29 @@
     grid-column: 1 / -1;
   }
 }
+
+/* ── Preview notice ── */
+/**
+ * What the preview cannot do, said once at the top of every page's content
+ * rather than on every card. It scrolls away with the opening; the header and
+ * the menu keep their own geometry.
+ */
+.preview-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 20px;
+  align-items: baseline;
+  padding-block: 10px;
+  font: 400 var(--size-note) / 1.55 var(--font-note);
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+.preview-note span::before {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 10px;
+  content: "";
+  background: var(--red);
+  border-radius: 50%;
+}

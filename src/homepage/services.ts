@@ -19,8 +19,10 @@ import { sitePath } from "../paths";
  * announcing it would narrate an ordinary scroll; every sentence it can show is
  * already in the article beside it, and the drawing carries its own description.
  *
- * The foot names the industries the three are delivered for. Only a page other
- * than the services page offers the way to all of them.
+ * The foot names the industries the three are built for. It says "built for"
+ * rather than "delivered for": no client work in either industry is published
+ * to point to. Only a page other than the services page offers the way to all
+ * of them.
  */
 export function servicesSection({ allServicesLink = false } = {}) {
   const rail = schematics
@@ -38,7 +40,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
   <p class="service-label note">${service.label}</p>
   <h3 id="service-${schematic.id}-title">${service.title}</h3>
   <p class="body">${service.description}</p>
-  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact">Discuss ${service.title.toLowerCase()}&nbsp;→</button>
+  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact" data-interest="${service.title}">Discuss ${service.title.toLowerCase()}&nbsp;→</button>
  </article>`;
     })
     .join("");
@@ -64,7 +66,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
   </div>
   <div class="services-foot">
    <div class="services-industries">
-    <p class="note">Delivered for</p>
+    <p class="note">Built for</p>
     <ul>
      <li><a class="link" href="${sitePath("industries/private-equity/")}">Private Equity</a></li>
      <li><a class="link" href="${sitePath("industries/b2b-saas/")}">B2B SaaS</a></li>${allServicesLink ? `\n     <li><a class="link" href="${sitePath("services/")}">See all services</a></li>` : ""}

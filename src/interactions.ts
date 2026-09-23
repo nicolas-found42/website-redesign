@@ -1,5 +1,6 @@
 import { questions, results, scorecard } from "./content";
-import { emailForm } from "./pages";
+import { inquiryNext } from "./homepage/inquiry";
+import { emailForm, emailPattern } from "./pages";
 import { sitePath } from "./paths";
 /** Source scoring preserved: four 1–3 answers, thresholds 6 and 9. */
 export const readinessResult = (answers: number[]) =>
@@ -52,6 +53,15 @@ export function scorecardResult(answers: readonly boolean[]) {
   const barriers = scorecard.barriers.filter((_, index) => answers[at + index]);
   return { stage, areas, next, barriers };
 }
+
+/**
+ * Found42's own inquiry form. The preview cannot send an inquiry, so every
+ * way to talk to the team ends here. The dialog says, before the visitor
+ * leaves, what that form asks of them (its news default and its required
+ * communications agreement, observed September 23). Remove the note once the
+ * HubSpot form changes; see Launch dependency 11.
+ */
+const liveInquiry = "https://www.found42.com/contact";
 
 /** Makes a visitor's own words safe to show as text inside markup. */
 const escapeText = (text: string) =>
@@ -166,7 +176,7 @@ export function mountInteractions(root: HTMLElement) {
     field(
       "email",
       "Work email",
-      'type="email" autocomplete="email" maxlength="255"',
+      `type="email" pattern="${emailPattern}" autocomplete="email" maxlength="255"`,
     ) +
     field(
       "company",
@@ -200,14 +210,21 @@ export function mountInteractions(root: HTMLElement) {
       .forEach((input) => (values[input.name] = input.value));
     drafts.set(type, values);
   };
+  /**
+   * Opens a dialog. A trigger that names a service (`data-interest`) carries
+   * it into the inquiry: the dialog says which service it is about, and the
+   * copied message leads with it.
+   */
   function openDialog(type: string, from: HTMLElement) {
     trigger = from;
+    const interest = from.dataset.interest ?? "";
     dialog.dataset.type = type;
+    dialog.dataset.interest = interest;
     dialog.innerHTML =
       `<button class="dialog-close" aria-label="Close dialog" data-close>Close ×</button>` +
       (type === "course"
         ? `<p class="note">Free 5-day mini-course</p><h2 id="dialog-title">Build your Strategic Advisor</h2><p>Five practical lessons to turn Claude into a rigorous thinking partner, not another chat window.</p><ul class="scope-list"><li>A reusable advisor skill</li><li>A quality-control checklist</li><li>A safe rollout pattern</li></ul>${emailForm("course-dialog", "Start the course")}<p class="note--plain">One short, practical lesson each day for five days. Unsubscribe anytime.</p><p class="note--plain">This describes the intended course. Enrollment and email delivery are not yet available.</p>`
-        : `<p class="note">Start with the bottleneck</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><p class="note--plain">All fields required. This preview cannot send inquiries. Use the existing Found42 contact form to make a request; entries below stay in this page only.</p><a class="link" href="https://www.found42.com/contact">Open the live inquiry form&nbsp;→</a><form data-contact-form novalidate>${fields}<p class="form-status" role="status"></p><button class="action" type="submit">Review inquiry&nbsp;→</button></form>`);
+        : `<p class="note">${interest ? `About ${interest}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a><p class="note--plain">This preview cannot send inquiries. They go through Found42’s contact form, where news and updates start at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${inquiryNext()}<form data-contact-form novalidate aria-labelledby="draft-title"><h3 id="draft-title">Or draft it here first</h3><p class="note--plain">All fields required. Your draft stays on this page, ready to copy into the live form.</p>${fields}<p class="form-status" role="status"></p><div class="draft-next" hidden><button class="link" type="button" data-copy-draft>Copy my message</button><a class="link" href="${liveInquiry}">Go to the live form&nbsp;→</a></div><button class="action action--ghost" type="submit">Check my draft&nbsp;→</button></form>`);
     enableForms();
     const draft = drafts.get(type) ?? {};
     dialog
@@ -307,10 +324,38 @@ export function mountInteractions(root: HTMLElement) {
             drafts.set("contact", { ...draft, challenge: openAnswer });
         }
         openDialog(target.dataset.dialog, target);
-      } else if (target.hasAttribute("data-close")) close();
+      } else if (target.hasAttribute("data-copy-draft")) copyDraft();
+      else if (target.hasAttribute("data-close")) close();
     },
     { signal },
   );
+  /**
+   * Copies what the visitor wrote about their work, the part worth keeping,
+   * led by the service they asked about, so it survives the move to the live
+   * form. Where the clipboard is refused the status says how to copy it by hand.
+   */
+  const copyDraft = () => {
+    const status = dialog.querySelector<HTMLElement>(".form-status");
+    const written =
+      dialog
+        .querySelector<HTMLTextAreaElement>('[name="challenge"]')
+        ?.value.trim() ?? "";
+    const interest = dialog.dataset.interest;
+    const message = interest ? `About ${interest}: ${written}` : written;
+    const say = (text: string) => {
+      if (status) status.textContent = text;
+    };
+    const byHand = () =>
+      say(
+        "Copying is not available here. Select your message above and copy it.",
+      );
+    const copied = navigator.clipboard?.writeText(message);
+    if (!copied) return byHand();
+    copied.then(
+      () => say("Copied. Paste it into the Message box on the live form."),
+      byHand,
+    );
+  };
   type Field = HTMLInputElement | HTMLTextAreaElement;
   /** Checks one field and shows, or clears, its own message. */
   const checkField = (form: HTMLFormElement, input: Field) => {
@@ -329,7 +374,7 @@ export function mountInteractions(root: HTMLElement) {
   const invalidSummary = (form: HTMLFormElement, invalid: number) =>
     form.hasAttribute("data-email-form")
       ? "Enter a valid work email."
-      : `Complete every field before reviewing: ${invalid === 1 ? "1 field needs" : `${invalid} fields need`} attention.`;
+      : `Complete every field to check your draft: ${invalid === 1 ? "1 field needs" : `${invalid} fields need`} attention.`;
   root.addEventListener(
     "submit",
     (event) => {
@@ -356,9 +401,14 @@ export function mountInteractions(root: HTMLElement) {
         form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
         return;
       }
-      status.textContent = form.hasAttribute("data-email-form")
-        ? "Delivery is not connected in this preview. Nothing was sent, and you have not been subscribed."
-        : "Your details are ready to review. Nothing was sent. Continue using the live inquiry form above to contact Found42.";
+      if (form.hasAttribute("data-email-form")) {
+        status.textContent =
+          "Delivery is not connected in this preview. Nothing was sent, and you have not been subscribed.";
+        return;
+      }
+      status.textContent =
+        "Your draft is complete. Nothing was sent. Copy your message, then paste it into the live form.";
+      form.querySelector<HTMLElement>(".draft-next")!.hidden = false;
     },
     { signal },
   );

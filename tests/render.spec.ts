@@ -153,7 +153,9 @@ test("the industries strip offers all services everywhere but the services page"
   const home = readable(page);
   const servicesPage = readable(renderPage("services"));
   for (const text of [home, servicesPage]) {
-    expect(text).toContain("Delivered for Private Equity B2B SaaS");
+    expect(text).toContain("Built for Private Equity B2B SaaS");
+    // #36: the strip names industries; it does not imply completed client work.
+    expect(text).not.toContain("Delivered for");
   }
   expect(home).toContain("See all services");
   expect(servicesPage).not.toContain("See all services");

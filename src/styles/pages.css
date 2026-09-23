@@ -13,6 +13,13 @@
   margin-block: 30px;
   max-width: 48ch;
 }
+.page-opening .lead:has(+ .gloss) {
+  margin-bottom: 12px;
+}
+.page-opening .gloss {
+  margin-bottom: 30px;
+  color: var(--muted);
+}
 .page-aside {
   border-left: 1px solid var(--red);
   padding-left: 28px;
@@ -634,4 +641,86 @@ button:disabled {
   .content-split {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/*
+ * The inquiry dialog leads with the live form; the draft below it is optional,
+ * so it opens under its own rule and its check is a secondary action.
+ */
+.site-dialog form h3 {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font: 500 var(--size-body) / 1.3 var(--font-display);
+}
+.site-dialog form > .note--plain {
+  margin-block: 0;
+}
+.draft-next:not([hidden]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+}
+
+/* An industry page's founder band keeps the portrait to a supporting size. */
+.founder-band .portrait {
+  max-width: 380px;
+}
+
+/* What an engagement asks and gives: three services, the same three rows. */
+.engagements > h2 {
+  max-width: 18ch;
+  margin-bottom: 48px;
+}
+.engagement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+.engagement-grid article {
+  padding-top: 24px;
+  border-top: 1px solid var(--line-strong);
+}
+.engagement-grid h3 {
+  margin: 18px 0 20px;
+}
+.engagement-grid dl {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+}
+.engagement-grid dt {
+  color: var(--muted);
+}
+.engagement-grid dd {
+  margin: 6px 0 0;
+}
+.engagement-terms {
+  max-width: 52ch;
+  margin-top: 48px;
+}
+@media (max-width: 960px) {
+  .engagement-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* In a narrow aside the email and its action stack, so the field keeps its width. */
+.page-aside .form-line {
+  display: grid;
+}
+
+/* A qualified target set beside how the work is built, in the opening aside's voice. */
+.industry-target {
+  display: grid;
+  gap: 12px;
+  margin-block: 36px;
+  padding-left: 28px;
+  border-left: 1px solid var(--red);
+}
+.content-split .industry-target p {
+  margin-block: 0;
+}
+.industry-target .page-number {
+  font-size: clamp(3rem, 5vw, 5rem);
 }

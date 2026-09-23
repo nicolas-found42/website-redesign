@@ -128,7 +128,7 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
     ),
   ).toBe(true);
   await expect(
-    page.getByText("Enrollment is not connected in this preview.", {
+    page.getByText("Free 5-day mini-course · Work email requested.", {
       exact: false,
     }),
   ).toBeVisible();
