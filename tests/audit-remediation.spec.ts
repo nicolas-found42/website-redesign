@@ -56,6 +56,16 @@ test("F01: a wheel over the open mobile menu scrolls the menu, not the page", as
   await expect(
     nav.getByRole("button", { name: /Talk to us/ }),
   ).toBeInViewport();
+  // The toggle sits above the panel, not inside it: a wheel there must not
+  // move the page behind the menu either.
+  const toggle = await page.locator(".menu-toggle").boundingBox();
+  await page.mouse.move(
+    toggle!.x + toggle!.width / 2,
+    toggle!.y + toggle!.height / 2,
+  );
+  await page.mouse.wheel(0, 400);
+  await page.waitForTimeout(600);
+  expect(await page.evaluate(() => scrollY)).toBe(0);
 });
 
 test("F02, F06: an inquiry survives closing the dialog, and the backdrop closes it", async ({
@@ -110,10 +120,15 @@ test("F03, F17: each invalid inquiry field says what is wrong, and a clean resul
   const status = dialog.locator(".form-status");
   await expect(status).toHaveText(/Complete every field.*2 fields need/);
 
+  // Correcting a field clears its error as it is fixed, before resubmitting.
   await email.fill("preview@example.com");
+  await expect(email).toHaveAttribute("aria-invalid", "false");
+  await expect(email).toHaveAccessibleDescription("");
+  await expect(status).toHaveText(/1 field needs attention/);
   await dialog
     .getByLabel("What should work better?")
     .fill("Weekly reporting takes a full day");
+  await expect(status).toBeHidden();
   await dialog.getByRole("button", { name: "Review inquiry" }).click();
   await expect(status).toContainText("Nothing was sent.");
   await expect(email).toHaveAccessibleDescription("");
@@ -255,6 +270,8 @@ test("F08: executive scene annotations are not covered by the drawing", async ({
           .map((match) => Number(match[1]))
           .filter((y) => y > 300),
       );
+      if (!Number.isFinite(rule))
+        throw new Error("No horizontal planner rule found in the scene");
       return {
         problemRight: text("Your operating problem").right - field.left,
         pillLeft: pill.left - field.left,

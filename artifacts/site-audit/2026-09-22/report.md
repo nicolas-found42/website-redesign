@@ -116,6 +116,13 @@ recorded rather than changed are listed under **Open decisions** below.
 
 - `.form-status[data-state="done"]` renders in ink. Errors stay red. Tested (`after/F17-dialog-done-state-1280.png`).
 
+## Review follow-up (CodeRabbit, PR #29)
+
+- **F01, extended:** the open menu's toggle sits above the panel, not inside it. A wheel over it still scrolled the page behind the menu (`scrollY` 399 in all three engines). It is now also let go, and the menu wheel test covers it.
+- **F03, extended:** after a failed submission, a field is re-checked as it is corrected. Its message and `aria-invalid` clear, and the summary count updates only when the count changes. Tested.
+- **Evidence script:** only the missing route's own expected 404 is excluded from console errors. All three engines now report 0 problems at 390px across all eight routes.
+- **F08 test:** fails if no planner rule is found, instead of comparing against `Infinity`.
+
 ## Hypotheses investigated and rejected
 
 - **Mobile menu trapped by the lifted header's `backdrop-filter`:** already handled by `.site-header:has(#navigation.is-open)`. Verified full-viewport in three engines.

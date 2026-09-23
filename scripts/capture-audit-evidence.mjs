@@ -48,8 +48,17 @@ try {
       const errors = [];
       const failed = [];
       page.on("pageerror", (error) => errors.push(error.message));
+      // The missing route is meant to answer 404; its document's own console
+      // entry is expected. Every other console error, including a failed
+      // script or asset on that page, is still reported.
       page.on("console", (message) => {
-        if (message.type() === "error") errors.push(message.text());
+        if (message.type() !== "error") return;
+        const source = message.location().url ?? "";
+        const expected =
+          name === "missing" &&
+          /status of 404/.test(message.text()) &&
+          new URL(source, base).pathname.endsWith("/no-such-page/");
+        if (!expected) errors.push(message.text());
       });
       page.on("requestfailed", (request) =>
         failed.push(`${request.url()} ${request.failure()?.errorText}`),

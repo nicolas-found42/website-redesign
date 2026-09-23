@@ -2,186 +2,186 @@
 Running 183 tests using 5 workers
 
 [1/183] [chromium] › tests/assets.spec.ts:3:1 › homepage renders using local assets without contacting an external content host
-[2/183] [chromium] › tests/audiences.spec.ts:51:1 › a visitor can discover and choose all three audiences, and everything agrees
+[2/183] [chromium] › tests/audit-remediation.spec.ts:16:1 › F01: a wheel over the inquiry dialog scrolls the dialog, not the page behind it
 [3/183] [chromium] › tests/accessibility.spec.ts:4:1 › mobile menu supports keyboard navigation and returns focus to the chosen section
-[4/183] [chromium] › tests/audit-remediation.spec.ts:16:1 › F01: a wheel over the inquiry dialog scrolls the dialog, not the page behind it
+[4/183] [chromium] › tests/audiences.spec.ts:51:1 › a visitor can discover and choose all three audiences, and everything agrees
 [5/183] [unit] › tests/render.spec.ts:6:1 › every source resource has its description and truthful access terms
 [6/183] [unit] › tests/render.spec.ts:14:1 › source offerings and attributed workshop proof are preserved
 [7/183] [unit] › tests/render.spec.ts:27:1 › all 81 assessment combinations preserve public source thresholds
 [8/183] [chromium] › tests/content-coverage.spec.ts:7:1 › every manifest item targets a known page
 [9/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: home
-[10/183] [chromium] › tests/homepage.spec.ts:2:1 › three audiences can find the right pathway and all source resources
-[11/183] [chromium] › tests/audiences.spec.ts:79:1 › the arrows and the arrow keys move the choice, and focus stays where it was
+[10/183] [chromium] › tests/audiences.spec.ts:79:1 › the arrows and the arrow keys move the choice, and focus stays where it was
+[11/183] [chromium] › tests/homepage.spec.ts:2:1 › three audiences can find the right pathway and all source resources
 [12/183] [chromium] › tests/audit-remediation.spec.ts:40:1 › F01: a wheel over the open mobile menu scrolls the menu, not the page
 [13/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: resources
-[14/183] [chromium] › tests/homepage.spec.ts:40:1 › published workshop quotes remain attributed and inquiries never claim delivery
-[15/183] [chromium] › tests/audiences.spec.ts:122:1 › the three audience drawings are three different drawings, not one relabelled
-[16/183] [chromium] › tests/audit-remediation.spec.ts:61:1 › F02, F06: an inquiry survives closing the dialog, and the backdrop closes it
-[17/183] [chromium] › tests/audiences.spec.ts:157:1 › a reduced-motion visitor gets a complete still scene on every choice
-[18/183] [chromium] › tests/accessibility.spec.ts:34:1 › reduced-motion visitors can operate the drawing without animated movement
-[19/183] [chromium] › tests/meeting.spec.ts:3:1 › meeting journey reads in order and separates audiences from delivery
-[20/183] [chromium] › tests/audit-remediation.spec.ts:89:1 › F03, F17: each invalid inquiry field says what is wrong, and a clean result is not shown as an error
-[21/183] [chromium] › tests/audiences.spec.ts:181:1 › pausing while a scene is being told leaves it complete, not mid-draw
-[22/183] [chromium] › tests/meeting.spec.ts:40:1 › scorecard loads on request and keeps a direct fallback during delay and failure
-[23/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: services
-[24/183] [chromium] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 390px
+[14/183] [chromium] › tests/audiences.spec.ts:122:1 › the three audience drawings are three different drawings, not one relabelled
+[15/183] [chromium] › tests/homepage.spec.ts:40:1 › published workshop quotes remain attributed and inquiries never claim delivery
+[16/183] [chromium] › tests/audiences.spec.ts:157:1 › a reduced-motion visitor gets a complete still scene on every choice
+[17/183] [chromium] › tests/accessibility.spec.ts:34:1 › reduced-motion visitors can operate the drawing without animated movement
+[18/183] [chromium] › tests/meeting.spec.ts:3:1 › meeting journey reads in order and separates audiences from delivery
+[19/183] [chromium] › tests/audiences.spec.ts:181:1 › pausing while a scene is being told leaves it complete, not mid-draw
+[20/183] [chromium] › tests/meeting.spec.ts:40:1 › scorecard loads on request and keeps a direct fallback during delay and failure
+[21/183] [chromium] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 390px
+[22/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: services
+[23/183] [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390
+[24/183] [chromium] › tests/audit-remediation.spec.ts:71:1 › F02, F06: an inquiry survives closing the dialog, and the backdrop closes it
 [25/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-private-equity
-[26/183] [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390
-[27/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-b2b-saas
+[26/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-b2b-saas
+[27/183] [chromium] › tests/audit-remediation.spec.ts:99:1 › F03, F17: each invalid inquiry field says what is wrong, and a clean result is not shown as an error
 [28/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: about
-[29/183] [chromium] › tests/audit-remediation.spec.ts:133:1 › F04: the industries dropdown closes on a press elsewhere and when focus moves on
-[30/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: blog
-[31/183] [chromium] › tests/audit-remediation.spec.ts:157:1 › F04: in the narrow menu the industries list stays open while the visitor moves around it
-[32/183] [chromium] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths
-[33/183] [chromium] › tests/audit-remediation.spec.ts:173:1 › F05: the open menu shows how to close it
-[34/183] [chromium] › tests/audiences.spec.ts:206:1 › a visitor on a phone gets the portrait scenes and can choose by touch
-[35/183] [chromium] › tests/audit-remediation.spec.ts:187:1 › F07: a control reached by tabbing backwards is not left under the sticky header
-[36/183] [chromium] › tests/audiences.spec.ts:238:1 › the failure-mode figure explains the playbook without inventing its checks
-[37/183] [chromium] › tests/audit-remediation.spec.ts:222:1 › F08: executive scene annotations are not covered by the drawing
-[38/183] [chromium] › tests/audiences.spec.ts:259:1 › public copy no longer says “no fluff” on any route or in the course dialog
-[39/183] [chromium] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally
-[40/183] [chromium] › tests/audit-remediation.spec.ts:281:1 › F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule
-[41/183] [chromium] › tests/system.spec.ts:50:1 › an executive can reach three distinct service drawings with the keyboard
-[42/183] [chromium] › tests/audit-remediation.spec.ts:301:1 › F15: page openings do not skip a heading level
-[43/183] [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768
+[29/183] [chromium] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: blog
+[30/183] [chromium] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths
+[31/183] [chromium] › tests/audit-remediation.spec.ts:148:1 › F04: the industries dropdown closes on a press elsewhere and when focus moves on
+[32/183] [chromium] › tests/audiences.spec.ts:206:1 › a visitor on a phone gets the portrait scenes and can choose by touch
+[33/183] [chromium] › tests/audit-remediation.spec.ts:172:1 › F04: in the narrow menu the industries list stays open while the visitor moves around it
+[34/183] [chromium] › tests/audiences.spec.ts:238:1 › the failure-mode figure explains the playbook without inventing its checks
+[35/183] [chromium] › tests/audit-remediation.spec.ts:188:1 › F05: the open menu shows how to close it
+[36/183] [chromium] › tests/audiences.spec.ts:259:1 › public copy no longer says “no fluff” on any route or in the course dialog
+[37/183] [chromium] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally
+[38/183] [chromium] › tests/audit-remediation.spec.ts:202:1 › F07: a control reached by tabbing backwards is not left under the sticky header
+[39/183] [chromium] › tests/system.spec.ts:50:1 › an executive can reach three distinct service drawings with the keyboard
+[40/183] [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768
+[41/183] [chromium] › tests/audit-remediation.spec.ts:237:1 › F08: executive scene annotations are not covered by the drawing
+[42/183] [firefox] › tests/accessibility.spec.ts:4:1 › mobile menu supports keyboard navigation and returns focus to the chosen section
+[43/183] [chromium] › tests/audit-remediation.spec.ts:298:1 › F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule
 [44/183] [chromium] › tests/system.spec.ts:84:1 › every service stays readable on the page whichever drawing is shown
 [45/183] [chromium] › tests/system.spec.ts:95:1 › a completed choice rests in the same still composition as a fresh page
-[46/183] [firefox] › tests/accessibility.spec.ts:4:1 › mobile menu supports keyboard navigation and returns focus to the chosen section
+[46/183] [chromium] › tests/audit-remediation.spec.ts:318:1 › F15: page openings do not skip a heading level
 [47/183] [firefox] › tests/assets.spec.ts:3:1 › homepage renders using local assets without contacting an external content host
 [48/183] [chromium] › tests/system.spec.ts:120:1 › switching to reduced motion during rapid choices leaves a complete drawing
 [49/183] [chromium] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440
 [50/183] [chromium] › tests/system.spec.ts:153:1 › the opening drawing is complete and labelled without any interaction
-[51/183] [firefox] › tests/audiences.spec.ts:51:1 › a visitor can discover and choose all three audiences, and everything agrees
-[52/183] [firefox] › tests/accessibility.spec.ts:34:1 › reduced-motion visitors can operate the drawing without animated movement
+[51/183] [firefox] › tests/accessibility.spec.ts:34:1 › reduced-motion visitors can operate the drawing without animated movement
+[52/183] [firefox] › tests/audiences.spec.ts:51:1 › a visitor can discover and choose all three audiences, and everything agrees
 [53/183] [chromium] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text
-[54/183] [firefox] › tests/audiences.spec.ts:79:1 › the arrows and the arrow keys move the choice, and focus stays where it was
-[55/183] [firefox] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 390px
-[56/183] [chromium] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior
+[54/183] [firefox] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 390px
+[55/183] [chromium] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior
+[56/183] [firefox] › tests/audiences.spec.ts:79:1 › the arrows and the arrow keys move the choice, and focus stays where it was
 [57/183] [chromium] › tests/system.spec.ts:179:1 › a visitor on a phone gets each service's own drawing and can jump between them
 [58/183] [chromium] › tests/system.spec.ts:226:1 › a visitor can stop the page's motion and start it again
 [59/183] [firefox] › tests/audiences.spec.ts:122:1 › the three audience drawings are three different drawings, not one relabelled
 [60/183] [chromium] › tests/migration.spec.ts:89:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger
 [61/183] [firefox] › tests/audiences.spec.ts:157:1 › a reduced-motion visitor gets a complete still scene on every choice
-[62/183] [chromium] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 768px
-[63/183] [chromium] › tests/system.spec.ts:259:1 › a slow font does not hold the opening headline back
-[64/183] [chromium] › tests/migration.spec.ts:123:1 › all email gates validate without sending requests or claiming a subscription
-[65/183] [firefox] › tests/audiences.spec.ts:181:1 › pausing while a scene is being told leaves it complete, not mid-draw
+[62/183] [chromium] › tests/migration.spec.ts:123:1 › all email gates validate without sending requests or claiming a subscription
+[63/183] [firefox] › tests/audiences.spec.ts:181:1 › pausing while a scene is being told leaves it complete, not mid-draw
+[64/183] [chromium] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 768px
+[65/183] [chromium] › tests/system.spec.ts:259:1 › a slow font does not hold the opening headline back
 [66/183] [chromium] › tests/migration.spec.ts:166:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus
-[67/183] [chromium] › tests/system.spec.ts:292:1 › pausing during a transition leaves the drawing settled, not mid-draw
-[68/183] [firefox] › tests/audit-remediation.spec.ts:16:1 › F01: a wheel over the inquiry dialog scrolls the dialog, not the page behind it
+[67/183] [firefox] › tests/audit-remediation.spec.ts:16:1 › F01: a wheel over the inquiry dialog scrolls the dialog, not the page behind it
+[68/183] [chromium] › tests/system.spec.ts:292:1 › pausing during a transition leaves the drawing settled, not mid-draw
 [69/183] [firefox] › tests/audiences.spec.ts:206:1 › a visitor on a phone gets the portrait scenes and can choose by touch
 [70/183] [firefox] › tests/audiences.spec.ts:238:1 › the failure-mode figure explains the playbook without inventing its checks
-[71/183] [chromium] › tests/system.spec.ts:345:1 › the service drawings are three different drawings, not one repeated
-[72/183] [chromium] › tests/system.spec.ts:380:1 › the drawing's CSS geometry resolves the same in every engine
-[73/183] [firefox] › tests/audiences.spec.ts:259:1 › public copy no longer says “no fluff” on any route or in the course dialog
-[74/183] [firefox] › tests/content-coverage.spec.ts:7:1 › every manifest item targets a known page
-[75/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: home
-[76/183] [firefox] › tests/audit-remediation.spec.ts:40:1 › F01: a wheel over the open mobile menu scrolls the menu, not the page
+[71/183] [firefox] › tests/audiences.spec.ts:259:1 › public copy no longer says “no fluff” on any route or in the course dialog
+[72/183] [firefox] › tests/audit-remediation.spec.ts:40:1 › F01: a wheel over the open mobile menu scrolls the menu, not the page
+[73/183] [chromium] › tests/system.spec.ts:345:1 › the service drawings are three different drawings, not one repeated
+[74/183] [chromium] › tests/system.spec.ts:380:1 › the drawing's CSS geometry resolves the same in every engine
+[75/183] [firefox] › tests/content-coverage.spec.ts:7:1 › every manifest item targets a known page
+[76/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: home
 [77/183] [firefox] › tests/homepage.spec.ts:2:1 › three audiences can find the right pathway and all source resources
-[78/183] [firefox] › tests/audit-remediation.spec.ts:61:1 › F02, F06: an inquiry survives closing the dialog, and the backdrop closes it
-[79/183] [firefox] › tests/audit-remediation.spec.ts:89:1 › F03, F17: each invalid inquiry field says what is wrong, and a clean result is not shown as an error
-[80/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: resources
-[81/183] [firefox] › tests/homepage.spec.ts:40:1 › published workshop quotes remain attributed and inquiries never claim delivery
-[82/183] [firefox] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 768px
-[83/183] [firefox] › tests/audit-remediation.spec.ts:133:1 › F04: the industries dropdown closes on a press elsewhere and when focus moves on
-[84/183] [firefox] › tests/meeting.spec.ts:3:1 › meeting journey reads in order and separates audiences from delivery
-[85/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: services
-[86/183] [firefox] › tests/audit-remediation.spec.ts:157:1 › F04: in the narrow menu the industries list stays open while the visitor moves around it
-[87/183] [firefox] › tests/meeting.spec.ts:40:1 › scorecard loads on request and keeps a direct fallback during delay and failure
+[78/183] [firefox] › tests/audit-remediation.spec.ts:71:1 › F02, F06: an inquiry survives closing the dialog, and the backdrop closes it
+[79/183] [firefox] › tests/homepage.spec.ts:40:1 › published workshop quotes remain attributed and inquiries never claim delivery
+[80/183] [firefox] › tests/audit-remediation.spec.ts:99:1 › F03, F17: each invalid inquiry field says what is wrong, and a clean result is not shown as an error
+[81/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: resources
+[82/183] [firefox] › tests/meeting.spec.ts:3:1 › meeting journey reads in order and separates audiences from delivery
+[83/183] [firefox] › tests/meeting.spec.ts:40:1 › scorecard loads on request and keeps a direct fallback during delay and failure
+[84/183] [firefox] › tests/audit-remediation.spec.ts:148:1 › F04: the industries dropdown closes on a press elsewhere and when focus moves on
+[85/183] [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390
+[86/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: services
+[87/183] [firefox] › tests/audit-remediation.spec.ts:172:1 › F04: in the narrow menu the industries list stays open while the visitor moves around it
 [88/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-private-equity
 [89/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-b2b-saas
-[90/183] [firefox] › tests/audit-remediation.spec.ts:173:1 › F05: the open menu shows how to close it
-[91/183] [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390
-[92/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: about
-[93/183] [firefox] › tests/audit-remediation.spec.ts:187:1 › F07: a control reached by tabbing backwards is not left under the sticky header
-[94/183] [chromium] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 1440px
-[95/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: blog
-[96/183] [firefox] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths
-[97/183] [firefox] › tests/audit-remediation.spec.ts:222:1 › F08: executive scene annotations are not covered by the drawing
-[98/183] [firefox] › tests/audit-remediation.spec.ts:281:1 › F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule
+[90/183] [firefox] › tests/audit-remediation.spec.ts:188:1 › F05: the open menu shows how to close it
+[91/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: about
+[92/183] [firefox] › tests/audit-remediation.spec.ts:202:1 › F07: a control reached by tabbing backwards is not left under the sticky header
+[93/183] [firefox] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: blog
+[94/183] [firefox] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths
+[95/183] [firefox] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 768px
+[96/183] [firefox] › tests/audit-remediation.spec.ts:237:1 › F08: executive scene annotations are not covered by the drawing
+[97/183] [chromium] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 1440px
+[98/183] [firefox] › tests/audit-remediation.spec.ts:298:1 › F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule
 [99/183] [firefox] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally
-[100/183] [firefox] › tests/audit-remediation.spec.ts:301:1 › F15: page openings do not skip a heading level
-[101/183] [firefox] › tests/system.spec.ts:50:1 › an executive can reach three distinct service drawings with the keyboard
-[102/183] [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768
+[100/183] [firefox] › tests/audit-remediation.spec.ts:318:1 › F15: page openings do not skip a heading level
+[101/183] [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768
+[102/183] [firefox] › tests/system.spec.ts:50:1 › an executive can reach three distinct service drawings with the keyboard
 [103/183] [firefox] › tests/system.spec.ts:84:1 › every service stays readable on the page whichever drawing is shown
-[104/183] [firefox] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 1440px
-[105/183] [firefox] › tests/system.spec.ts:95:1 › a completed choice rests in the same still composition as a fresh page
-[106/183] [webkit] › tests/accessibility.spec.ts:4:1 › mobile menu supports keyboard navigation and returns focus to the chosen section
-[107/183] [firefox] › tests/system.spec.ts:120:1 › switching to reduced motion during rapid choices leaves a complete drawing
-[108/183] [chromium] › tests/accessibility.spec.ts:115:1 › enlarged text keeps mobile resource disclosures and controls within the viewport
-[109/183] [firefox] › tests/system.spec.ts:153:1 › the opening drawing is complete and labelled without any interaction
-[110/183] [webkit] › tests/accessibility.spec.ts:34:1 › reduced-motion visitors can operate the drawing without animated movement
-[111/183] [chromium] › tests/accessibility.spec.ts:140:1 › no document overflow at the narrow widths, at default and doubled text
-[112/183] [webkit] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 390px
-[113/183] [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440
-[114/183] [firefox] › tests/system.spec.ts:179:1 › a visitor on a phone gets each service's own drawing and can jump between them
-[115/183] [firefox] › tests/system.spec.ts:226:1 › a visitor can stop the page's motion and start it again
-[116/183] [firefox] › tests/system.spec.ts:259:1 › a slow font does not hold the opening headline back
-[117/183] [firefox] › tests/accessibility.spec.ts:115:1 › enlarged text keeps mobile resource disclosures and controls within the viewport
-[118/183] [firefox] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text
-[119/183] [webkit] › tests/assets.spec.ts:3:1 › homepage renders using local assets without contacting an external content host
-[120/183] [firefox] › tests/system.spec.ts:292:1 › pausing during a transition leaves the drawing settled, not mid-draw
-[121/183] [firefox] › tests/accessibility.spec.ts:140:1 › no document overflow at the narrow widths, at default and doubled text
-[122/183] [webkit] › tests/audiences.spec.ts:51:1 › a visitor can discover and choose all three audiences, and everything agrees
-[123/183] [webkit] › tests/audiences.spec.ts:79:1 › the arrows and the arrow keys move the choice, and focus stays where it was
-[124/183] [webkit] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 768px
-[125/183] [webkit] › tests/audiences.spec.ts:122:1 › the three audience drawings are three different drawings, not one relabelled
-[126/183] [firefox] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior
-[127/183] [firefox] › tests/system.spec.ts:345:1 › the service drawings are three different drawings, not one repeated
-[128/183] [webkit] › tests/audiences.spec.ts:157:1 › a reduced-motion visitor gets a complete still scene on every choice
-[129/183] [firefox] › tests/system.spec.ts:380:1 › the drawing's CSS geometry resolves the same in every engine
-[130/183] [webkit] › tests/audiences.spec.ts:181:1 › pausing while a scene is being told leaves it complete, not mid-draw
-[131/183] [firefox] › tests/migration.spec.ts:89:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger
-[132/183] [webkit] › tests/audit-remediation.spec.ts:16:1 › F01: a wheel over the inquiry dialog scrolls the dialog, not the page behind it
-[133/183] [webkit] › tests/audit-remediation.spec.ts:40:1 › F01: a wheel over the open mobile menu scrolls the menu, not the page
-[134/183] [webkit] › tests/audit-remediation.spec.ts:61:1 › F02, F06: an inquiry survives closing the dialog, and the backdrop closes it
-[135/183] [firefox] › tests/migration.spec.ts:123:1 › all email gates validate without sending requests or claiming a subscription
-[136/183] [webkit] › tests/audiences.spec.ts:206:1 › a visitor on a phone gets the portrait scenes and can choose by touch
-[137/183] [webkit] › tests/audit-remediation.spec.ts:89:1 › F03, F17: each invalid inquiry field says what is wrong, and a clean result is not shown as an error
-[138/183] [webkit] › tests/audiences.spec.ts:238:1 › the failure-mode figure explains the playbook without inventing its checks
-[139/183] [webkit] › tests/audiences.spec.ts:259:1 › public copy no longer says “no fluff” on any route or in the course dialog
-[140/183] [webkit] › tests/audit-remediation.spec.ts:133:1 › F04: the industries dropdown closes on a press elsewhere and when focus moves on
-[141/183] [webkit] › tests/audit-remediation.spec.ts:157:1 › F04: in the narrow menu the industries list stays open while the visitor moves around it
-[142/183] [webkit] › tests/homepage.spec.ts:2:1 › three audiences can find the right pathway and all source resources
-[143/183] [webkit] › tests/audit-remediation.spec.ts:173:1 › F05: the open menu shows how to close it
-[144/183] [webkit] › tests/content-coverage.spec.ts:7:1 › every manifest item targets a known page
-[145/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: home
-[146/183] [firefox] › tests/migration.spec.ts:166:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus
-[147/183] [webkit] › tests/audit-remediation.spec.ts:187:1 › F07: a control reached by tabbing backwards is not left under the sticky header
-[148/183] [webkit] › tests/homepage.spec.ts:40:1 › published workshop quotes remain attributed and inquiries never claim delivery
-[149/183] [webkit] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 1440px
-[150/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: resources
-[151/183] [webkit] › tests/meeting.spec.ts:3:1 › meeting journey reads in order and separates audiences from delivery
-[152/183] [webkit] › tests/audit-remediation.spec.ts:222:1 › F08: executive scene annotations are not covered by the drawing
-[153/183] [webkit] › tests/meeting.spec.ts:40:1 › scorecard loads on request and keeps a direct fallback during delay and failure
-[154/183] [webkit] › tests/audit-remediation.spec.ts:281:1 › F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule
-[155/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: services
-[156/183] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390
-[157/183] [webkit] › tests/audit-remediation.spec.ts:301:1 › F15: page openings do not skip a heading level
-[158/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-private-equity
-[159/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-b2b-saas
-[160/183] [webkit] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths
-[161/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: about
-[162/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: blog
+[104/183] [firefox] › tests/system.spec.ts:95:1 › a completed choice rests in the same still composition as a fresh page
+[105/183] [webkit] › tests/accessibility.spec.ts:4:1 › mobile menu supports keyboard navigation and returns focus to the chosen section
+[106/183] [firefox] › tests/system.spec.ts:120:1 › switching to reduced motion during rapid choices leaves a complete drawing
+[107/183] [firefox] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440
+[108/183] [firefox] › tests/system.spec.ts:153:1 › the opening drawing is complete and labelled without any interaction
+[109/183] [webkit] › tests/accessibility.spec.ts:34:1 › reduced-motion visitors can operate the drawing without animated movement
+[110/183] [webkit] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 390px
+[111/183] [firefox] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 1440px
+[112/183] [firefox] › tests/system.spec.ts:179:1 › a visitor on a phone gets each service's own drawing and can jump between them
+[113/183] [chromium] › tests/accessibility.spec.ts:115:1 › enlarged text keeps mobile resource disclosures and controls within the viewport
+[114/183] [firefox] › tests/system.spec.ts:226:1 › a visitor can stop the page's motion and start it again
+[115/183] [firefox] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text
+[116/183] [chromium] › tests/accessibility.spec.ts:140:1 › no document overflow at the narrow widths, at default and doubled text
+[117/183] [firefox] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior
+[118/183] [firefox] › tests/system.spec.ts:259:1 › a slow font does not hold the opening headline back
+[119/183] [firefox] › tests/system.spec.ts:292:1 › pausing during a transition leaves the drawing settled, not mid-draw
+[120/183] [firefox] › tests/migration.spec.ts:89:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger
+[121/183] [firefox] › tests/migration.spec.ts:123:1 › all email gates validate without sending requests or claiming a subscription
+[122/183] [firefox] › tests/system.spec.ts:345:1 › the service drawings are three different drawings, not one repeated
+[123/183] [webkit] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 768px
+[124/183] [firefox] › tests/system.spec.ts:380:1 › the drawing's CSS geometry resolves the same in every engine
+[125/183] [webkit] › tests/assets.spec.ts:3:1 › homepage renders using local assets without contacting an external content host
+[126/183] [webkit] › tests/audiences.spec.ts:51:1 › a visitor can discover and choose all three audiences, and everything agrees
+[127/183] [webkit] › tests/audit-remediation.spec.ts:16:1 › F01: a wheel over the inquiry dialog scrolls the dialog, not the page behind it
+[128/183] [firefox] › tests/migration.spec.ts:166:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus
+[129/183] [webkit] › tests/audiences.spec.ts:79:1 › the arrows and the arrow keys move the choice, and focus stays where it was
+[130/183] [webkit] › tests/audit-remediation.spec.ts:40:1 › F01: a wheel over the open mobile menu scrolls the menu, not the page
+[131/183] [webkit] › tests/audiences.spec.ts:122:1 › the three audience drawings are three different drawings, not one relabelled
+[132/183] [webkit] › tests/audiences.spec.ts:157:1 › a reduced-motion visitor gets a complete still scene on every choice
+[133/183] [firefox] › tests/accessibility.spec.ts:115:1 › enlarged text keeps mobile resource disclosures and controls within the viewport
+[134/183] [webkit] › tests/audiences.spec.ts:181:1 › pausing while a scene is being told leaves it complete, not mid-draw
+[135/183] [webkit] › tests/audit-remediation.spec.ts:71:1 › F02, F06: an inquiry survives closing the dialog, and the backdrop closes it
+[136/183] [webkit] › tests/content-coverage.spec.ts:7:1 › every manifest item targets a known page
+[137/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: home
+[138/183] [webkit] › tests/audit-remediation.spec.ts:99:1 › F03, F17: each invalid inquiry field says what is wrong, and a clean result is not shown as an error
+[139/183] [firefox] › tests/accessibility.spec.ts:140:1 › no document overflow at the narrow widths, at default and doubled text
+[140/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: resources
+[141/183] [webkit] › tests/audit-remediation.spec.ts:148:1 › F04: the industries dropdown closes on a press elsewhere and when focus moves on
+[142/183] [webkit] › tests/audit-remediation.spec.ts:172:1 › F04: in the narrow menu the industries list stays open while the visitor moves around it
+[143/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: services
+[144/183] [webkit] › tests/audit-remediation.spec.ts:188:1 › F05: the open menu shows how to close it
+[145/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-private-equity
+[146/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: industries-b2b-saas
+[147/183] [webkit] › tests/audit-remediation.spec.ts:202:1 › F07: a control reached by tabbing backwards is not left under the sticky header
+[148/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: about
+[149/183] [webkit] › tests/audiences.spec.ts:206:1 › a visitor on a phone gets the portrait scenes and can choose by touch
+[150/183] [webkit] › tests/accessibility.spec.ts:99:3 › accessible content and layout at 1440px
+[151/183] [webkit] › tests/audit-remediation.spec.ts:237:1 › F08: executive scene annotations are not covered by the drawing
+[152/183] [webkit] › tests/content-coverage.spec.ts:15:3 › source-derived content coverage: blog
+[153/183] [webkit] › tests/audiences.spec.ts:238:1 › the failure-mode figure explains the playbook without inventing its checks
+[154/183] [webkit] › tests/homepage.spec.ts:2:1 › three audiences can find the right pathway and all source resources
+[155/183] [webkit] › tests/audiences.spec.ts:259:1 › public copy no longer says “no fluff” on any route or in the course dialog
+[156/183] [webkit] › tests/audit-remediation.spec.ts:298:1 › F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule
+[157/183] [webkit] › tests/homepage.spec.ts:40:1 › published workshop quotes remain attributed and inquiries never claim delivery
+[158/183] [webkit] › tests/audit-remediation.spec.ts:318:1 › F15: page openings do not skip a heading level
+[159/183] [webkit] › tests/meeting.spec.ts:3:1 › meeting journey reads in order and separates audiences from delivery
+[160/183] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 390
+[161/183] [webkit] › tests/meeting.spec.ts:40:1 › scorecard loads on request and keeps a direct fallback during delay and failure
+[162/183] [webkit] › tests/pages-production.spec.ts:7:1 › static GitHub Pages routes survive direct entry, refresh, links and missing paths
 [163/183] [webkit] › tests/system.spec.ts:50:1 › an executive can reach three distinct service drawings with the keyboard
 [164/183] [webkit] › tests/system.spec.ts:84:1 › every service stays readable on the page whichever drawing is shown
 [165/183] [webkit] › tests/system.spec.ts:95:1 › a completed choice rests in the same still composition as a fresh page
-[166/183] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768
-[167/183] [webkit] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally
-[168/183] [webkit] › tests/accessibility.spec.ts:115:1 › enlarged text keeps mobile resource disclosures and controls within the viewport
-[169/183] [webkit] › tests/system.spec.ts:120:1 › switching to reduced motion during rapid choices leaves a complete drawing
-[170/183] [webkit] › tests/accessibility.spec.ts:140:1 › no document overflow at the narrow widths, at default and doubled text
-[171/183] [webkit] › tests/system.spec.ts:153:1 › the opening drawing is complete and labelled without any interaction
-[172/183] [webkit] › tests/system.spec.ts:179:1 › a visitor on a phone gets each service's own drawing and can jump between them
-[173/183] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440
+[166/183] [webkit] › tests/pages-production.spec.ts:64:1 › prerendered content survives script failure and forms cannot submit accidentally
+[167/183] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 768
+[168/183] [webkit] › tests/system.spec.ts:120:1 › switching to reduced motion during rapid choices leaves a complete drawing
+[169/183] [webkit] › tests/system.spec.ts:153:1 › the opening drawing is complete and labelled without any interaction
+[170/183] [webkit] › tests/accessibility.spec.ts:115:1 › enlarged text keeps mobile resource disclosures and controls within the viewport
+[171/183] [webkit] › tests/accessibility.spec.ts:140:1 › no document overflow at the narrow widths, at default and doubled text
+[172/183] [webkit] › tests/migration.spec.ts:12:3 › all supporting pages accessible and reflow at 1440
+[173/183] [webkit] › tests/system.spec.ts:179:1 › a visitor on a phone gets each service's own drawing and can jump between them
 [174/183] [webkit] › tests/system.spec.ts:226:1 › a visitor can stop the page's motion and start it again
-[175/183] [webkit] › tests/system.spec.ts:259:1 › a slow font does not hold the opening headline back
-[176/183] [webkit] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text
-[177/183] [webkit] › tests/system.spec.ts:292:1 › pausing during a transition leaves the drawing settled, not mid-draw
-[178/183] [webkit] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior
-[179/183] [webkit] › tests/system.spec.ts:345:1 › the service drawings are three different drawings, not one repeated
-[180/183] [webkit] › tests/migration.spec.ts:89:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger
-[181/183] [webkit] › tests/system.spec.ts:380:1 › the drawing's CSS geometry resolves the same in every engine
-[182/183] [webkit] › tests/migration.spec.ts:123:1 › all email gates validate without sending requests or claiming a subscription
+[175/183] [webkit] › tests/migration.spec.ts:32:1 › all pages reflow at 360px with doubled text
+[176/183] [webkit] › tests/system.spec.ts:259:1 › a slow font does not hold the opening headline back
+[177/183] [webkit] › tests/migration.spec.ts:66:1 › assessment branches, Back and Retake preserve source behavior
+[178/183] [webkit] › tests/system.spec.ts:292:1 › pausing during a transition leaves the drawing settled, not mid-draw
+[179/183] [webkit] › tests/migration.spec.ts:89:1 › forms validate, disclose unavailable delivery, trap focus and restore trigger
+[180/183] [webkit] › tests/migration.spec.ts:123:1 › all email gates validate without sending requests or claiming a subscription
+[181/183] [webkit] › tests/system.spec.ts:345:1 › the service drawings are three different drawings, not one repeated
+[182/183] [webkit] › tests/system.spec.ts:380:1 › the drawing's CSS geometry resolves the same in every engine
 [183/183] [webkit] › tests/migration.spec.ts:166:1 › mobile menu stays readable over ink, exposes industries, and traps keyboard focus
-  183 passed (51.5s)
+  183 passed (46.9s)

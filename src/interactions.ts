@@ -208,40 +208,66 @@ export function mountInteractions(root: HTMLElement) {
     },
     { signal },
   );
+  type Field = HTMLInputElement | HTMLTextAreaElement;
+  /** Checks one field and shows, or clears, its own message. */
+  const checkField = (form: HTMLFormElement, input: Field) => {
+    const value = input.value.trim();
+    const min = input.minLength > 0 ? input.minLength : 1;
+    const ok =
+      input.checkValidity() &&
+      value.length >= min &&
+      (input.maxLength < 0 || value.length <= input.maxLength);
+    input.setAttribute("aria-invalid", String(!ok));
+    const message = form.querySelector(`#${input.id}-error.field-error`);
+    if (message)
+      message.textContent = ok ? "" : (fieldMessages[input.name] ?? "");
+    return ok;
+  };
+  const invalidSummary = (form: HTMLFormElement, invalid: number) =>
+    form.hasAttribute("data-email-form")
+      ? "Enter a valid work email."
+      : `Complete every field before reviewing: ${invalid === 1 ? "1 field needs" : `${invalid} fields need`} attention.`;
   root.addEventListener(
     "submit",
     (event) => {
       const form = event.target as HTMLFormElement;
       if (!form.matches("[data-email-form],[data-contact-form]")) return;
       event.preventDefault();
-      let invalid = 0;
-      for (const input of form.querySelectorAll<
-        HTMLInputElement | HTMLTextAreaElement
-      >("input,textarea")) {
-        const value = input.value.trim();
-        const min = input.minLength > 0 ? input.minLength : 1;
-        const ok =
-          input.checkValidity() &&
-          value.length >= min &&
-          (input.maxLength < 0 || value.length <= input.maxLength);
-        input.setAttribute("aria-invalid", String(!ok));
-        const message = form.querySelector(`#${input.id}-error.field-error`);
-        if (message)
-          message.textContent = ok ? "" : (fieldMessages[input.name] ?? "");
-        if (!ok) invalid++;
-      }
+      form.dataset.checked = "";
+      const invalid = [
+        ...form.querySelectorAll<Field>("input,textarea"),
+      ].filter((input) => !checkField(form, input)).length;
       const status = form.querySelector<HTMLElement>(".form-status")!;
       status.dataset.state = invalid ? "error" : "done";
       if (invalid) {
-        status.textContent = form.hasAttribute("data-email-form")
-          ? "Enter a valid work email."
-          : `Complete every field before reviewing: ${invalid === 1 ? "1 field needs" : `${invalid} fields need`} attention.`;
+        status.textContent = invalidSummary(form, invalid);
         form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
         return;
       }
       status.textContent = form.hasAttribute("data-email-form")
         ? "Delivery is not connected in this preview. Nothing was sent, and you have not been subscribed."
         : "Your details are ready to review. Nothing was sent. Continue using the live inquiry form above to contact Found42.";
+    },
+    { signal },
+  );
+  /**
+   * Once a form has been checked, a field is re-checked as it is corrected, so
+   * a fixed field stops showing and announcing its error. The summary follows
+   * the count, and only changes when the count does, so the live region is not
+   * read out on every keystroke.
+   */
+  root.addEventListener(
+    "input",
+    (event) => {
+      const input = event.target as Field;
+      const form = input.form;
+      if (!form?.matches("[data-checked]")) return;
+      const status = form.querySelector<HTMLElement>(".form-status")!;
+      if (status.dataset.state === "done") return;
+      checkField(form, input);
+      const invalid = form.querySelectorAll('[aria-invalid="true"]').length;
+      const summary = invalid ? invalidSummary(form, invalid) : "";
+      if (status.textContent !== summary) status.textContent = summary;
     },
     { signal },
   );
