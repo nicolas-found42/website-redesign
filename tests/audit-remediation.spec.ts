@@ -213,6 +213,17 @@ test("F07: a control reached by tabbing backwards is not left under the sticky h
       : "Shift+Tab";
   for (let step = 0; step < 30; step++) {
     await page.keyboard.press(back);
+    // Firefox scrolls a focused text field's caret into view a frame or two
+    // after focus lands. Pressed faster than that — no visitor is — the late
+    // scroll lands after focus has moved on and drags the page back to the
+    // field, leaving the next control off-screen. Two frames is a keypress at
+    // human speed.
+    await page.evaluate(
+      () =>
+        new Promise((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve)),
+        ),
+    );
     // Some engines bring the focused control into view a frame later; the
     // assertion is about where it comes to rest.
     await page.waitForFunction(() => {
