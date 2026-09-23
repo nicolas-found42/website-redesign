@@ -37,6 +37,12 @@ const resourceInventory = [
     action: "Explore the mini-course",
   },
 ];
+/**
+ * Said once wherever an opening's lead names Claude. The visitors the site is
+ * for, non-technical teams and their executives, are the least likely to know
+ * the product by name.
+ */
+export const claudeGloss = "Claude is Anthropic’s AI assistant.";
 /** Provisional later meeting sequence (03:56–04:22); Executive Communications awaits a real offering. */
 export const resources = [
   resourceInventory[0],

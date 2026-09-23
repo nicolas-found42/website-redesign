@@ -59,6 +59,14 @@
   max-width: 40ch;
   margin-bottom: clamp(24px, 2.6vw, 38px);
 }
+/* What Claude is sits under the lead as its footnote, before the action. */
+.hero-lead:has(+ .hero-gloss) {
+  margin-bottom: 12px;
+}
+.hero-gloss {
+  margin-bottom: clamp(24px, 2.6vw, 38px);
+  color: var(--muted);
+}
 .hero-lead strong {
   font-weight: 600;
   color: var(--ink);

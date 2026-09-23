@@ -151,3 +151,28 @@ test("#33: every filled action reads at 4.5:1 or better, at rest and on hover", 
     expect(checked, route).toBeGreaterThan(0);
   }
 });
+
+test("#34: every opening that names Claude says what Claude is, once", async ({
+  page,
+}) => {
+  const named: string[] = [];
+  for (const route of routes) {
+    await page.goto(route);
+    const opening = page.locator(".hero-copy, .page-opening > div").first();
+    const says = `${await opening.locator("h1").innerText()} ${await opening.locator(".lead").innerText()}`;
+    const glosses = opening.getByText("Claude is Anthropic’s AI assistant.");
+    if (says.includes("Claude")) {
+      named.push(route);
+      await expect(glosses, route).toHaveCount(1);
+      await expect(glosses, route).toBeVisible();
+    } else await expect(glosses, route).toHaveCount(0);
+  }
+  // The homepage names it in its headline, the rest in their leads.
+  expect(named).toEqual([
+    "/",
+    "/industries/private-equity/",
+    "/industries/b2b-saas/",
+    "/about/",
+    "/blog/",
+  ]);
+});

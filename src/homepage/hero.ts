@@ -1,3 +1,4 @@
+import { claudeGloss } from "../content";
 import { arrow, icon } from "../icons";
 
 /**
@@ -20,6 +21,7 @@ export function hero() {
    <p class="index"><span class="rule"></span><span class="note">Practical AI. Human ambition.</span></p>
    <h1 id="hero-title" class="display" data-reveal-lines><span class="sentence">Hands-on Claude skills</span> <span class="sentence">and training for</span> <span class="sentence"><span class="signal">your business.</span></span></h1>
    <p class="lead hero-lead" data-reveal>Usable AI systems for executives. Practical training for the people who do the work. Both built around your role, your industry and your company, so less attention goes to repetitive work and more to judgment.</p>
+   <p class="note--plain hero-gloss" data-reveal>${claudeGloss}</p>
    <div class="hero-actions" data-reveal>
     <a class="action" href="#resources">Explore free resources ${arrow}</a>
    </div>

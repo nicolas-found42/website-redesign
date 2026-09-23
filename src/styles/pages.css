@@ -13,6 +13,13 @@
   margin-block: 30px;
   max-width: 48ch;
 }
+.page-opening .lead:has(+ .gloss) {
+  margin-bottom: 12px;
+}
+.page-opening .gloss {
+  margin-bottom: 30px;
+  color: var(--muted);
+}
 .page-aside {
   border-left: 1px solid var(--red);
   padding-left: 28px;

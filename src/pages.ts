@@ -4,6 +4,7 @@ import {
   biography,
   principles,
   essays,
+  claudeGloss,
 } from "./content";
 import { siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
@@ -54,8 +55,11 @@ const index = (label: string) =>
   `<p class="index"><b>F42</b><span class="rule"></span><span class="note">${label}</span></p>`;
 export const emailForm = (id: string, button: string) =>
   `<form class="email-form" data-email-form novalidate><label for="${id}-email">Work email <span class="note--plain">(required)</span></label><div class="form-line"><input id="${id}-email" name="email" type="email" disabled data-await-script autocomplete="email" maxlength="255" required aria-describedby="${id}-availability ${id}-error" placeholder="you@company.com"><button class="action" type="submit" disabled data-await-script>${button}&nbsp;→</button></div><p id="${id}-availability" class="note--plain">Preview only. Delivery is not connected; your email will not be sent or stored.</p><p id="${id}-error" class="form-status" role="status"></p><noscript>JavaScript is needed to preview validation. Delivery is not connected.</noscript></form>`;
+/** An opening's lead, followed by what Claude is whenever the lead names it. */
+const lead = (body: string) =>
+  `<p class="lead">${body}</p>${body.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
 const opening = (label: string, title: string, body: string, aside: string) =>
-  `<section class="page-opening wrap"><div>${index(label)}<h1 class="display" data-reveal-lines>${title}</h1><p class="lead">${body}</p><button class="action" data-dialog="contact">Talk to our team&nbsp;→</button></div><aside class="page-aside">${aside}</aside></section><div class="wrap hero-rail page-rail"><span class="note">Your role · Your industry · Your company</span><button class="motion-toggle note" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button></div>`;
+  `<section class="page-opening wrap"><div>${index(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<button class="action" data-dialog="contact">Talk to our team&nbsp;→</button></div><aside class="page-aside">${aside}</aside></section><div class="wrap hero-rail page-rail"><span class="note">Your role · Your industry · Your company</span><button class="motion-toggle note" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button></div>`;
 function resourcesPage() {
   return (
     opening(
