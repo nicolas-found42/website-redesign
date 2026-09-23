@@ -87,12 +87,13 @@ real Safari, screen readers.
 ## Stand-up transcript follow-up
 
 Baseline at main c00cc1c: `npm test` — 183 passed. Current validation:
-`npm run typecheck` passed; `npm run build` passed; `npm test` — **209
-passed (1.2m)** across Chromium, Firefox and WebKit. New:
-`tests/standup-gaps.spec.ts` (seven checks per engine: a phone article's
+`npm run typecheck` passed; `npm run build` passed; `npm test` — **212
+passed (1.6m)** across Chromium, Firefox and WebKit. New:
+`tests/standup-gaps.spec.ts` (eight checks per engine: a phone article's
 drawing arriving from the service before it and settling as its own; every
 phone drawing its own composition throughout under reduced motion; the rail
-under the header with a jump landing below it; the homepage playbook figure;
+under the header with a jump landing below it, at 390px and at 320px with
+doubled text, where the rail wraps; the homepage playbook figure;
 the scorecard's forward/back, kept open answer, escaped echo, focus, axe on the
 result, inquiry prefill, retake and no external requests; the header lifted
 after an anchor load or an early jump; every scorecard state at 320px with
@@ -114,5 +115,6 @@ Browser captures: `node scripts/capture-standup-gaps-evidence.mjs` against the
 strict static server. Evidence in `artifacts/standup-gaps/2026-09-23/`: the
 homepage playbook entry, the builders panel, the industries strip and two
 scorecard states at 1440, 768, 390 and 320; two phone frames of the Workflows
-drawing approaching and arrived; `report.json` (no overflow, no page errors).
+drawing approaching and arrived with motion on; `report.json` (no overflow,
+no page errors, including the motion-on phone page).
 Not run: physical devices, real Safari, screen readers.

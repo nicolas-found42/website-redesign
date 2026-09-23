@@ -26,10 +26,13 @@ Consequences and rejected alternatives worth knowing:
   own still drawing, as before.
 - **The arrival happens once.** Scrolling back up does not replay it; the
   sticky wide-screen drawing is the one that follows reading in both
-  directions.
+  directions. A drawing first seen already in view, on a page opened at its
+  anchor or after a pause, still arrives rather than simply appearing.
 - **The rail rides only with height to spare** (`min-height: 560px`), under a
   header height measured as `--header-height`, because the header wraps with
-  the text size. A jump from the rail lands the article's start below the rail.
+  the text size. A jump from the rail lands the article's start below the rail,
+  whose own height is measured as `--services-rail` for the same reason: at a
+  large text size its choices wrap onto more than one row.
 - Rejected: a pinned drawing above the text. A portrait composition is about
   440px tall at 390px wide, and the landscape one scaled to fit drops its
   annotations under the readable minimum, which ADR 0002 rules out.

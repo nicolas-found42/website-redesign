@@ -93,6 +93,17 @@ export function mountServices(
 
   articles[0]?.classList.add("is-current");
 
+  /**
+   * A jump lands an article's start below the rail, whose height depends on
+   * whether its choices fit one line at the visitor's text size.
+   */
+  const aside = section.querySelector<HTMLElement>(".services-aside");
+  const measureRail = new ResizeObserver(() => {
+    if (aside)
+      section.style.setProperty("--services-rail", `${aside.offsetHeight}px`);
+  });
+  if (aside) measureRail.observe(aside);
+
   /* ── Narrow: each article's own drawing, brought on by the one before it ── */
   const figures = articles.map((article) =>
     article.querySelector<HTMLElement>(".service-figure"),
@@ -128,6 +139,9 @@ export function mountServices(
         if (!entry.isIntersecting || motionPreference.matches) {
           rest(index);
         } else if (entry.intersectionRatio >= ARRIVAL) {
+          // First seen already in view — opened at an anchor, or back from a
+          // pause — it still arrives rather than simply appearing.
+          if (figureDrawing.active === index) figureDrawing.settle(index - 1);
           arrived.add(index);
           figureDrawing.select(index);
         } else if (figureDrawing.active === index) {
@@ -149,6 +163,7 @@ export function mountServices(
 
   return () => {
     reader.disconnect();
+    measureRail.disconnect();
     arrival.disconnect();
     motionPreference.removeEventListener("change", onPreference);
     choices.forEach((choice, index) =>

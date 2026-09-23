@@ -73,38 +73,52 @@ test("paused or reduced, every phone drawing is its own composition throughout",
   await context.close();
 });
 
-test("on a phone the rail rides under the header and a jump lands below it", async ({
-  browser,
-}) => {
-  const context = await browser.newContext({ viewport: phone, hasTouch: true });
-  const page = await context.newPage();
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/#services");
-  const automations = page.getByRole("button", {
-    name: "Automations",
-    exact: true,
-  });
-  await automations.tap();
-  await expect(automations).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator('[data-service-article="2"]')).toHaveClass(
-    /is-current/,
-  );
-  const [header, rail, article] = await page.evaluate(() =>
-    [".site-header", ".services-rail", "#service-product"].map((selector) => {
-      const box = document.querySelector(selector)!.getBoundingClientRect();
-      return { top: box.top, bottom: box.bottom };
-    }),
-  );
-  expect(rail.top).toBeGreaterThanOrEqual(header.bottom - 1);
-  expect(rail.top).toBeLessThan(header.bottom + 24);
-  expect(article.top).toBeGreaterThanOrEqual(rail.bottom - 1);
-  expect(
+for (const [width, text] of [
+  [390, "100%"],
+  [320, "200%"],
+] as const)
+  test(`on a phone the rail rides under the header and a jump lands below it (${width}px, ${text} text)`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: { width, height: 844 },
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/#services");
+    // At a large text size the choices wrap onto more than one row.
     await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
-  await context.close();
-});
+      (size) => (document.documentElement.style.fontSize = size),
+      text,
+    );
+    const automations = page.getByRole("button", {
+      name: "Automations",
+      exact: true,
+    });
+    await automations.tap();
+    await expect(automations).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator('[data-service-article="2"]')).toHaveClass(
+      /is-current/,
+    );
+    const [header, rail, article] = await page.evaluate(() =>
+      [".site-header", ".services-aside", "#service-product"].map(
+        (selector) => {
+          const box = document.querySelector(selector)!.getBoundingClientRect();
+          return { top: box.top, bottom: box.bottom };
+        },
+      ),
+    );
+    expect(rail.top).toBeGreaterThanOrEqual(header.bottom - 1);
+    expect(rail.top).toBeLessThan(header.bottom + 2);
+    expect(article.top).toBeGreaterThanOrEqual(rail.bottom - 1);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await context.close();
+  });
 
 test("the homepage's playbook entry draws the review it describes", async ({
   page,

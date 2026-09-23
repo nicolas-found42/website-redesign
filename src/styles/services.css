@@ -239,9 +239,12 @@
     flex: 1 1 auto;
     justify-content: center;
   }
-  /* Stacked, an article is taller than the screen: its start clears the rail. */
+  /* Stacked, an article is taller than the screen: its start clears the rail,
+     measured because the rail wraps at a large text size. */
   .service {
-    scroll-margin-top: calc(var(--header-height, 72px) + 84px);
+    scroll-margin-top: calc(
+      var(--header-height, 72px) + var(--services-rail, 72px) + 12px
+    );
   }
 }
 

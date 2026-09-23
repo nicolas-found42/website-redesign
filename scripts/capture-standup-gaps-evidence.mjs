@@ -75,6 +75,8 @@ try {
   // Motion on, at phone width: the rail under the header, and the second
   // article's drawing as it comes on screen and after it has arrived.
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const phoneErrors = [];
+  page.on("pageerror", (error) => phoneErrors.push(error.message));
   await page.goto(base);
   await page.evaluate(() => document.fonts.ready);
   const place = (share) =>
@@ -106,6 +108,10 @@ try {
     interaction: "phone: the Workflows drawing arrives from Workshops",
     approaching,
     arrived,
+    overflow: await page.evaluate(
+      () => document.documentElement.scrollWidth > innerWidth,
+    ),
+    errors: phoneErrors,
   });
   await page.close();
 
