@@ -90,3 +90,64 @@ test("#32: where the clipboard is refused, the dialog says how to copy by hand",
     /Select your message above and copy it/,
   );
 });
+
+/** WCAG relative-luminance contrast between two computed `rgb()` colours. */
+const contrast = (a: string, b: string) => {
+  const lum = (colour: string) => {
+    const [r, g, bl] = colour
+      .match(/[\d.]+/g)!
+      .slice(0, 3)
+      .map((v) => {
+        const c = Number(v) / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+const routes = [
+  "/",
+  "/resources/",
+  "/services/",
+  "/industries/private-equity/",
+  "/industries/b2b-saas/",
+  "/about/",
+  "/blog/",
+];
+
+test("#33: every filled action reads at 4.5:1 or better, at rest and on hover", async ({
+  page,
+}) => {
+  // At rest an action reads on its own fill; on hover the fill that runs
+  // across it (its ::before) is the ground, read with the hover type colour.
+  const read = (el: Element, ground: "rest" | "hover") => ({
+    text: (el as HTMLElement).innerText.trim(),
+    color: getComputedStyle(el).color,
+    ground:
+      ground === "rest"
+        ? getComputedStyle(el).backgroundColor
+        : getComputedStyle(el, "::before").backgroundColor,
+  });
+  for (const route of routes) {
+    await page.goto(route);
+    const actions = page.locator(".action:not(.action--ghost)");
+    let checked = 0;
+    for (const action of await actions.all()) {
+      if (!(await action.isVisible())) continue;
+      await page.mouse.move(0, 0);
+      const states = [await action.evaluate(read, "rest" as const)];
+      await action.scrollIntoViewIfNeeded();
+      await action.hover();
+      states.push(await action.evaluate(read, "hover" as const));
+      for (const state of states)
+        expect(
+          contrast(state.color, state.ground),
+          `${route} "${state.text}": ${state.color} on ${state.ground}`,
+        ).toBeGreaterThanOrEqual(4.5);
+      checked++;
+    }
+    expect(checked, route).toBeGreaterThan(0);
+  }
+});

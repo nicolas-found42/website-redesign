@@ -326,6 +326,14 @@ h3,
   color: var(--paper);
   border-color: transparent;
 }
+/*
+ * An ink band re-points `--red` to the light signal red, which white type
+ * cannot sit on. The action keeps that red, at rest and on hover, and takes
+ * ink type instead.
+ */
+.on-ink .action:not(.action--ghost) {
+  color: var(--ink-deep);
+}
 
 /* A text link is a rule a signal travels. */
 .link {
