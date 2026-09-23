@@ -50,6 +50,13 @@ export const resources = [
   resourceInventory[2],
   resourceInventory[1],
 ];
+/**
+ * Each service's `engagement` restates what the site already publishes about
+ * that service (its description, scope and context) as what an engagement
+ * starts with, asks of the client and leaves behind. No length, price or tier:
+ * the September 23 stand-up added none, and they await the business owner
+ * (Launch dependency 10).
+ */
 export const services = [
   {
     title: "Workshops",
@@ -63,6 +70,14 @@ export const services = [
     ],
     context:
       "Teams learn on their own work, not on demo prompts. Practice with the responsibilities, terminology and review standards of your role, your industry and your company.",
+    engagement: {
+      startsWith:
+        "The role: its responsibilities, terminology and review standards.",
+      youProvide:
+        "Your team’s real decisions and documents, to practise on instead of demo prompts.",
+      youGet:
+        "Live or on-demand practice for the role, reusable skills rather than prompt lists, and rollout guidance for managers.",
+    },
   },
   {
     title: "Workflows",
@@ -76,6 +91,13 @@ export const services = [
     ],
     context:
       "Your source material, examples and quality bar shape a system your team can use. Executives bring the operating problem; they do not need to become developers.",
+    engagement: {
+      startsWith: "Discovery around one high-value job to be done.",
+      youProvide:
+        "The operating problem, your source material, examples and quality bar. No development work.",
+      youGet:
+        "Custom Claude skills and plugins, co-designed with your team and tested with a failure-mode review.",
+    },
   },
   {
     title: "Automations",
@@ -89,6 +111,14 @@ export const services = [
     ],
     context:
       "Eight hours is a target where workflow fit supports it, not a guaranteed result. Keep judgment and human interaction with people while reducing repetitive work.",
+    engagement: {
+      startsWith:
+        "The repetitive work that should not consume expert attention, mapped before any build is recommended.",
+      youProvide:
+        "The workflow, the systems it passes between, and the people who review its results.",
+      youGet:
+        "An end-to-end workflow with human review points and system handoffs.",
+    },
   },
 ];
 export const testimonials = [

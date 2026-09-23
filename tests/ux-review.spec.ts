@@ -252,3 +252,34 @@ test("#38: the Private Equity page shows the founder's published M&A experience"
   // Biography only: nothing presents it as a client or an endorsement.
   await expect(band).not.toContainText(/client|endorse/i);
 });
+
+test("#39: Services opens with what an engagement starts with, asks and gives, and names no price", async ({
+  page,
+}) => {
+  await page.goto("/services/");
+  // The first band after the opening answers the buyer's first question.
+  const first = await page
+    .locator("main > section")
+    .evaluateAll((sections) => sections[1]?.id);
+  expect(first).toBe("engagements");
+  const band = page.locator("#engagements");
+  const articles = band.locator("article");
+  await expect(articles.locator("h3")).toHaveText([
+    "Workshops",
+    "Workflows",
+    "Automations",
+  ]);
+  for (const article of await articles.all())
+    await expect(article.locator("dt")).toHaveText([
+      "Starts with",
+      "You provide",
+      "You get",
+    ]);
+  const text = await band.innerText();
+  expect(text).not.toMatch(/[$£€]|\d+\s*(weeks?|days?|months?)/i);
+  await expect(band).toContainText("Length and fees depend on the work");
+  // The resources page's pointer lands on it.
+  await page.goto("/resources/");
+  await page.getByRole("link", { name: /See how engagements work/ }).click();
+  await expect(page).toHaveURL(/\/services\/#engagements$/);
+});

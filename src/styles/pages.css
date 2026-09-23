@@ -665,3 +665,42 @@ button:disabled {
 .founder-band .portrait {
   max-width: 380px;
 }
+
+/* What an engagement asks and gives: three services, the same three rows. */
+.engagements > h2 {
+  max-width: 18ch;
+  margin-bottom: 48px;
+}
+.engagement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+.engagement-grid article {
+  padding-top: 24px;
+  border-top: 1px solid var(--line-strong);
+}
+.engagement-grid h3 {
+  margin: 18px 0 20px;
+}
+.engagement-grid dl {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+}
+.engagement-grid dt {
+  color: var(--muted);
+}
+.engagement-grid dd {
+  margin: 6px 0 0;
+}
+.engagement-terms {
+  max-width: 52ch;
+  margin-top: 48px;
+}
+@media (max-width: 960px) {
+  .engagement-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

@@ -6,6 +6,7 @@ import {
   essays,
   claudeGloss,
   industryFounder,
+  services,
 } from "./content";
 import { previewNote, siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
@@ -77,9 +78,22 @@ function resourcesPage() {
           `<section id="${r.id}" class="resource-detail ${i === 1 ? "on-ink" : ""}" ${i === 1 ? 'data-ground="ink"' : ""}><div class="wrap content-split"><div>${index(`0${i + 2} / Free resource`)}<h2 class="display">${r.title}</h2><p>${r.description}</p>${r.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Fig. — three failure modes the playbook is built to catch, and the human review a result passes before it reaches the business. The complete 12-check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact">Want this tailored? Talk to us&nbsp;→</button></div><div class="resource-access"><h3>Get ${r.outcome.toLowerCase()}</h3><p class="note--plain">${r.gate}</p>${r.id === "playbook" ? '<p>Twelve checks for spotting weak outputs, missing context and false confidence, so a person questions a result before relying on it.</p><a class="link" href="https://www.found42.com/ai-failure-modes-playbook">Request the published AI Failure Modes Playbook&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, your LinkedIn profile and a human check.</p>' : ""}${r.id === "course" ? '<button class="action" data-dialog="course">Explore the mini-course&nbsp;→</button>' : emailForm(r.id, "Preview the request")}</div></div></section>`,
       )
       .join("") +
-    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="https://www.found42.com/toolkit">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the forthcoming Strategic Advisor course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/")}">See how engagements work&nbsp;→</a></section>` +
+    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="https://www.found42.com/toolkit">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the forthcoming Strategic Advisor course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#engagements")}">See how engagements work&nbsp;→</a></section>` +
     inquirySection()
   );
+}
+/**
+ * What an engagement asks and gives, before a visitor is asked to make an
+ * inquiry: the question a buyer has first and the service descriptions below
+ * leave open.
+ */
+function engagementsBand() {
+  const rows = [
+    ["Starts with", "startsWith"],
+    ["You provide", "youProvide"],
+    ["You get", "youGet"],
+  ] as const;
+  return `<section id="engagements" class="wrap band engagements" aria-labelledby="engagements-title">${index("What an engagement looks like")}<h2 id="engagements-title" class="display">What working with us looks like.</h2><div class="engagement-grid">${services.map((service, i) => `<article><p class="note">0${i + 1}</p><h3>${service.title}</h3><dl>${rows.map(([term, key]) => `<div><dt class="note">${term}</dt><dd>${service.engagement[key]}</dd></div>`).join("")}</dl></article>`).join("")}</div><p class="lead engagement-terms">Length and fees depend on the work, so they are not published here. Ask about both in your first conversation.</p></section>`;
 }
 function servicesPage() {
   return (
@@ -89,6 +103,7 @@ function servicesPage() {
       "We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem, not the technology.",
       "<p>“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”</p>",
     ) +
+    engagementsBand() +
     audiencesSection() +
     servicesSection() +
     `<section class="wrap band"><p class="note">Three pillars · From learning to leverage.</p><div class="boundary-grid"><article>${index("Clear boundary")}<h2 class="display">Free shows the pattern.</h2><p>Our resources help you test the method and improve individual practice.</p><a class="link" href="${sitePath("resources/")}">Explore free resources&nbsp;→</a></article><article>${index("Bespoke changes the system.")}<h2 class="display">Paid builds the advantage.</h2><p>Custom engagements encode your context, quality bar, controls, and workflows.</p><p>Discovery starts with the job to be done. Co-design uses your examples and review standards. Testing and failure-mode review identify where people must stay in control.</p></article></div></section>` +
