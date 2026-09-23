@@ -120,6 +120,9 @@ const routes = [
 test("#33: every filled action reads at 4.5:1 or better, at rest and on hover", async ({
   page,
 }) => {
+  // Seven routes, and a scroll and hover for every action on each: a sweep,
+  // not a single journey, so it gets a sweep's time.
+  test.slow();
   // At rest an action reads on its own fill; on hover the fill that runs
   // across it (its ::before) is the ground, read with the hover type colour.
   const read = (el: Element, ground: "rest" | "hover") => ({
