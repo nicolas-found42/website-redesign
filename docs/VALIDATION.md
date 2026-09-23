@@ -83,3 +83,36 @@ no overflow or page errors. Findings register, coverage matrix, before/after
 evidence and logs: [artifacts/site-audit/2026-09-22](../artifacts/site-audit/2026-09-22/report.md).
 Re-capture with `scripts/capture-audit-evidence.mjs`. Not run: physical devices,
 real Safari, screen readers.
+
+## Stand-up transcript follow-up
+
+Baseline at main c00cc1c: `npm test` — 183 passed. Current validation:
+`npm run typecheck` passed; `npm run build` passed; `npm test` — **209
+passed (1.2m)** across Chromium, Firefox and WebKit. New:
+`tests/standup-gaps.spec.ts` (seven checks per engine: a phone article's
+drawing arriving from the service before it and settling as its own; every
+phone drawing its own composition throughout under reduced motion; the rail
+under the header with a jump landing below it; the homepage playbook figure;
+the scorecard's forward/back, kept open answer, escaped echo, focus, axe on the
+result, inquiry prefill, retake and no external requests; the header lifted
+after an anchor load or an early jump; every scorecard state at 320px with
+doubled text and fonts blocked) and five unit checks in `tests/render.spec.ts`
+(the Plan B questions and five areas; all 4,096 answer sets against the stage
+thresholds, statuses, ordering and barrier advice, with no numbers in any
+result; every adopted or equivalent line of the Lovable delta on the rendered
+homepage; the industries strip; the homepage review figure). The ScoreApp
+embed test in `tests/meeting.spec.ts` now checks the on-page scorecard and that
+nothing reaches the provider.
+
+A Firefox reflow failure at 360px with doubled text (6 in 20 runs) was the new
+scorecard rail's two labels refusing to share a line before the page fonts
+arrived; the rail now wraps, and the reflow test passed 20 of 20 afterwards.
+`F07` in `tests/audit-remediation.spec.ts` also fails intermittently in Firefox
+on `main` (2 in 15 runs) and on this branch; it is recorded as a separate task.
+
+Browser captures: `node scripts/capture-standup-gaps-evidence.mjs` against the
+strict static server. Evidence in `artifacts/standup-gaps/2026-09-23/`: the
+homepage playbook entry, the builders panel, the industries strip and two
+scorecard states at 1440, 768, 390 and 320; two phone frames of the Workflows
+drawing approaching and arrived; `report.json` (no overflow, no page errors).
+Not run: physical devices, real Safari, screen readers.

@@ -1,6 +1,7 @@
 import { services } from "../content";
 import { arrow } from "../icons";
 import { schematicFigure, schematics } from "../schematic";
+import { sitePath } from "../paths";
 
 /**
  * How Found42 helps: three ways in, drawn.
@@ -17,8 +18,11 @@ import { schematicFigure, schematics } from "../schematic";
  * The caption under the drawing is not a live region. Reading changes it, so
  * announcing it would narrate an ordinary scroll; every sentence it can show is
  * already in the article beside it, and the drawing carries its own description.
+ *
+ * The foot names the industries the three are delivered for. Only a page other
+ * than the services page offers the way to all of them.
  */
-export function servicesSection() {
+export function servicesSection({ allServicesLink = false } = {}) {
   const rail = schematics
     .map(
       (schematic, index) =>
@@ -46,7 +50,7 @@ export function servicesSection() {
     <p class="index"><b>02</b><span class="rule"></span><span class="note">How we help</span></p>
     <h2 id="services-title" class="display" data-reveal-lines>From possibility to practical work.</h2>
    </div>
-   <p class="lead" data-reveal>Built around your role, your industry, and your company—not a generic AI curriculum. We train teams, build custom skills, and automate repeatable work.</p>
+   <p class="lead" data-reveal>Three ways to deliver the same outcome. Built around your role, your industry, and your company—not a generic AI curriculum. We train teams, build custom skills, and automate repeatable work.</p>
   </div>
   <div class="services-stage">
    <div class="services-aside">
@@ -59,6 +63,13 @@ export function servicesSection() {
    <div class="services-list">${articles}</div>
   </div>
   <div class="services-foot">
+   <div class="services-industries">
+    <p class="note">Delivered for</p>
+    <ul>
+     <li><a class="link" href="${sitePath("industries/private-equity/")}">Private Equity</a></li>
+     <li><a class="link" href="${sitePath("industries/b2b-saas/")}">B2B SaaS</a></li>${allServicesLink ? `\n     <li><a class="link" href="${sitePath("services/")}">See all services</a></li>` : ""}
+    </ul>
+   </div>
    <button class="link" data-dialog="contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</button>
   </div>
  </div>

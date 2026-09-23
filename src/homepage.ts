@@ -23,7 +23,7 @@ export function renderHomepage() {
 ${hero()}
 ${resourcesSection()}
 ${audiencesSection()}
-${servicesSection()}
+${servicesSection({ allServicesLink: true })}
 ${credibilitySection()}
 </main>
 ${siteFooter()}`;
@@ -158,18 +158,44 @@ export function mountPage(
     document.body.style.removeProperty("overflow");
   });
 
-  /* ── The header takes its paper once the opening spread is behind it ── */
+  /**
+   * The header takes its paper once the opening spread is behind it. Read on
+   * scroll rather than observed: a page that opens at an anchor, or jumps there
+   * before its first frame, takes the opening from below the viewport to above
+   * it without it ever intersecting, and an observer would never report it.
+   */
   const header = root.querySelector<HTMLElement>(".site-header")!;
-  const sentinel = root.querySelector<HTMLElement>(
-    ".page-opening, .hero-rail",
-  )!;
-  const lift = new IntersectionObserver(
-    ([entry]) =>
-      header.classList.toggle("is-lifted", entry.boundingClientRect.top < 0),
-    { threshold: 0 },
+  const sentinel = root.querySelector<HTMLElement>(".page-opening, .hero-rail");
+  const readLift = () => {
+    if (sentinel)
+      header.classList.toggle(
+        "is-lifted",
+        sentinel.getBoundingClientRect().top < 0,
+      );
+  };
+  addEventListener("scroll", readLift, { passive: true });
+  addEventListener("resize", readLift);
+  readLift();
+  disposers.push(() => {
+    removeEventListener("scroll", readLift);
+    removeEventListener("resize", readLift);
+  });
+
+  /**
+   * Anything that rides under the header needs its height, which wraps with
+   * the text size rather than following a breakpoint.
+   */
+  const measureHeader = new ResizeObserver(() =>
+    document.documentElement.style.setProperty(
+      "--header-height",
+      `${header.offsetHeight}px`,
+    ),
   );
-  if (sentinel) lift.observe(sentinel);
-  disposers.push(() => lift.disconnect());
+  measureHeader.observe(header);
+  disposers.push(() => {
+    measureHeader.disconnect();
+    document.documentElement.style.removeProperty("--header-height");
+  });
 
   /**
    * The header takes the ground of whichever band is behind it. Measured on

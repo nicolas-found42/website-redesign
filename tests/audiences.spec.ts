@@ -84,7 +84,7 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   const previous = page.getByRole("button", { name: "Previous audience" });
   await next.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    /Start with the work\s*you know best\./,
+    /Automate the repetitive,\s*keep the craft\./,
   );
   // Focus is not moved into the panel by the choice. WebKit does not focus a
   // clicked button at all, so what is asserted is where focus did not go.
@@ -96,11 +96,11 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   await next.click();
   await next.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    /Adopt a system\.\s*Keep your attention\./,
+    /Install a system,\s*not a tool rollout\./,
   );
   await previous.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    /Build for the people\s*beside you\./,
+    /Build for your team,\s*no engineering background\./,
   );
 
   const first = page.getByRole("button", { name: names[0] });

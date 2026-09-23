@@ -294,3 +294,27 @@
     min-height: 0;
   }
 }
+
+/* ── The playbook entry and its review figure ── */
+.resource--figure {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  gap: clamp(20px, 3vw, 48px);
+  align-items: center;
+}
+.resource-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.resource-figure {
+  margin-top: 0;
+}
+@media (max-width: 700px) {
+  .resource--figure {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .resource-figure .system {
+    max-width: 320px;
+  }
+}

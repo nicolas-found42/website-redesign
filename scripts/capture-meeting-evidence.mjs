@@ -1,4 +1,10 @@
-/** Public browser evidence; no live forms are submitted. Not part of dist. */
+/**
+ * Public browser evidence; no live forms are submitted. Not part of dist.
+ *
+ * Historical: this records the September 16 site, whose resources page loaded
+ * ScoreApp in an iframe on request. The scorecard is now answered on the page,
+ * so run this against a checkout of 04beea4 to reproduce that evidence.
+ */
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 const base =

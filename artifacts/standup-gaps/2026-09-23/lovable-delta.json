@@ -1,0 +1,249 @@
+{
+ "captured": "2026-09-23",
+ "source": "https://found42-claude-lab.lovable.app/",
+ "method": "Rendered main text of all seven Lovable routes compared line by line with every original string and source capture in artifacts/lovable-migration/2026-09-16. Only the homepage had new lines; the other six routes were unchanged.",
+ "authority": "Stand-up of 2026-09-18: Nicolas brings Adejoke's content into this site; earlier decisions (qualified eight-hour target, systems for executives, one opening action, free resources first) stand.",
+ "items": [
+  {
+   "original": "Save eight hours a week, per person. We install role based skills so your people spend their time on judgment, not repetition.",
+   "disposition": "not adopted",
+   "destination": "/",
+   "replacement": null,
+   "note": "Unqualified saving. The site keeps eight hours as a qualified target (September 16); the opening lead already says the same about judgment and repetition."
+  },
+  {
+   "original": "WHO WE WORK WITH",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Whom we help"
+  },
+  {
+   "original": "Three audiences, one method.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Three audiences. One method."
+  },
+  {
+   "original": "The work changes by role. The approach does not: find the work worth changing, build a skill around it, and keep a person in charge of the outcome.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "The work changes by role. The method does not: start with the work you own, build a system around it, and keep a person in charge of the result."
+  },
+  {
+   "original": "C-level executives",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "C-level executives"
+  },
+  {
+   "original": "Install a system, not a tool rollout.",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Install a system, not a tool rollout."
+  },
+  {
+   "original": "Role based training and role based skills that automate the most important work, so leaders spend the bulk of their time applying judgment and expertise as the human in the loop.",
+   "disposition": "not adopted",
+   "destination": "/",
+   "replacement": null,
+   "note": "Executives are offered usable systems rather than training (September 16 direction); the existing executive body is kept."
+  },
+  {
+   "original": "Role based skills for the executive agenda",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Role-based skills for the executive agenda"
+  },
+  {
+   "original": "A standard your teams can be held to",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "A standard your teams can be held to"
+  },
+  {
+   "original": "Judgment stays with your people",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Judgment stays with your people"
+  },
+  {
+   "original": "Individual contributors",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Individual contributors"
+  },
+  {
+   "original": "Automate the repetitive, keep the craft.",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Automate the repetitive, keep the craft."
+  },
+  {
+   "original": "The same role based approach applied to daily work. We remove the repetitive steps that consume the week and leave more time for the work that needs a person.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop."
+  },
+  {
+   "original": "Skills built around your actual role",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Skills built around your actual role"
+  },
+  {
+   "original": "Less repetitive work each week",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Less repetitive work each week"
+  },
+  {
+   "original": "Target: eight hours saved per person",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Target: 8 hours saved weekly, per person",
+   "note": "Written as the site's existing qualified target."
+  },
+  {
+   "original": "Build for your team without an engineering background.",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Build for your team, no engineering background.",
+   "note": "Shortened so the builders panel is not two lines taller than the other two, which would move the page when the gallery changes."
+  },
+  {
+   "original": "For non engineers who want to build AI automations for their team, applying product engineering principles to testing, troubleshooting, and anticipating failure modes.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "You do not need to be an engineer to build AI automations for colleagues and teams."
+  },
+  {
+   "original": "Design and test automations",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Design and test automations"
+  },
+  {
+   "original": "Troubleshoot with a method",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Troubleshoot with a method"
+  },
+  {
+   "original": "Anticipate failure modes early",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Anticipate failure modes early"
+  },
+  {
+   "original": "Workshops, workflows, automations.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "From possibility to practical work.",
+   "note": "The three names head the choice rail and the articles."
+  },
+  {
+   "original": "Three ways to deliver the same outcome, applied to the industries we know best, including private equity and B2B SaaS.",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Three ways to deliver the same outcome.",
+   "note": "The industries are named in the Delivered for strip beneath the articles."
+  },
+  {
+   "original": "Role based enablement using your team's real decisions, documents, and operating rhythms.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Live or on-demand enablement using your team’s real decisions, documents, and operating rhythms."
+  },
+  {
+   "original": "Custom Claude skills designed around one high value job, then tested against its failure modes.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Custom Claude skills and plugins designed around one high-value job to be done.",
+   "note": "Testing against failure modes is the article's listed “Testing & failure-mode review”."
+  },
+  {
+   "original": "End to end workflows for repetitive work, with review points where judgment still matters.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Bespoke end-to-end workflows for repetitive work that should not consume expert attention.",
+   "note": "Review points are the article's listed “Human review points”."
+  },
+  {
+   "original": "DELIVERED FOR",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Delivered for"
+  },
+  {
+   "original": "See all services",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "See all services",
+   "note": "Homepage only; the services page does not link to itself."
+  },
+  {
+   "original": "Your context, with human direction.",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Fig. 01 — your context, with human direction"
+  },
+  {
+   "original": "Work enters the system, skills do the heavy lifting, and a person sets the direction and checks the result before it reaches the business. That loop is the whole method.",
+   "disposition": "not adopted",
+   "destination": "/",
+   "replacement": null,
+   "note": "The opening drawing already shows this loop; a separate How we think band would repeat the opening on the same page."
+  },
+  {
+   "original": "FIG. 01 / YOUR CONTEXT, WITH HUMAN DIRECTION",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Fig. 01 — your context, with human direction"
+  },
+  {
+   "original": "HUMAN IN THE LOOP",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Human direction",
+   "note": "Drawing label; the working-system drawings name the human node Human direction."
+  },
+  {
+   "original": "Your work task",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Your work task"
+  },
+  {
+   "original": "Useful skills",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Useful skills",
+   "note": "Replaces the Workshops drawing's remaining “Useful prompts” label (September 11: skills, not prompts)."
+  },
+  {
+   "original": "HUMAN DIRECTION",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Human direction"
+  },
+  {
+   "original": "Put into practice",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Put into practice"
+  },
+  {
+   "original": "03 AUTOMATIONS",
+   "disposition": "equivalent",
+   "destination": "/",
+   "replacement": "Automations"
+  },
+  {
+   "original": "Teams learn on their own work, not on demo prompts.",
+   "disposition": "adopted",
+   "destination": "/",
+   "replacement": "Teams learn on their own work, not on demo prompts.",
+   "note": "Opens the Workshops article's context."
+  }
+ ]
+}

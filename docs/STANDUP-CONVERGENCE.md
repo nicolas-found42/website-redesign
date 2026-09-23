@@ -7,10 +7,13 @@ and interactions. It is distinct from the earlier September 16 record in
 [MEETING-COVERAGE.md](MEETING-COVERAGE.md), which remains the history of the
 free-resource progression, the three-audience content and the scorecard path.
 
-The meeting's calendar date is not established; its timestamps are elapsed
-meeting time. No transcript was supplied or copied into this repository. The
-requirement IDs below are the brief's: M1–M6 confirmed, E1–E2 requested with
-unresolved scope, D1 preserved.
+The meeting was on Friday, September 18; its timestamps are elapsed meeting
+time. This work was done from a
+brief: no transcript was supplied at the time. The full transcript arrived on
+September 23 and is not copied into this repository; what it added is recorded
+under [Transcript follow-up](#transcript-follow-up). The requirement IDs below
+are the brief's: M1–M6 confirmed, E1–E2 requested with unresolved scope, D1
+preserved.
 
 ## Starting point
 
@@ -41,7 +44,7 @@ a separate, labelled four-question prototype.
 | M5 Remove "no fluff" | Implemented | `src/interactions.ts`; manifest item `course-7` | Public copy now: "One short, practical lesson each day for five days. Unsubscribe anytime." Manifest keeps the original string as provenance. `tests/audiences.spec.ts` scans every route and the course dialog; `dist` grep is clean |
 | M6 Praised messaging kept | Preserved | `src/content.ts` | "More signal per deal." remains the Private Equity opening; the eight-hour figure remains a qualified target on the home services band and PE aside. `tests/render.spec.ts` |
 | E1 Failure-mode visual | Implemented within the supported material | `src/pages.ts` (resources `#playbook`), `src/audiences.ts` `reviewScene` | A drawn review gate: a draft result, the three named failure modes from the source description, human review, then the business. The advertised 12 checks are not enumerated; the published request link and access disclosures are unchanged. `tests/audiences.spec.ts`; `artifacts/standup-convergence/playbook-*.png` |
-| E2 Native scorecard | Blocked; provider path preserved | `src/pages.ts`, `src/interactions.ts` unchanged | See "Scorecard dependency" below. `tests/meeting.spec.ts` blocked-provider fallback still passes |
+| E2 Native scorecard | Blocked here; implemented in the follow-up (G3) | `src/pages.ts`, `src/interactions.ts` unchanged | See "Scorecard dependency" below. `tests/meeting.spec.ts` blocked-provider fallback still passes |
 | D1 Services section | Preserved | `src/homepage/services.ts`, `src/pages.ts` | No new packages, prices or tiers. The services page now carries the same audience gallery in place of the static grid |
 
 ## Decisions the meeting left open
@@ -155,3 +158,56 @@ depends on exporting her animation code.
 
 Raw meeting material, private captures and temporary provider debugging files
 are not committed. The published output is `dist` only.
+
+## Transcript follow-up
+
+On September 23 the full transcript (1h38m) was read against `main` at
+`c00cc1c`, the deployed preview and Adejoke's live Lovable site. Four things
+the meeting asked for were not on the site. Branch `feat/standup-gaps`.
+
+| ID | Transcript | Before | Now | Evidence |
+| --- | --- | --- | --- | --- |
+| G1 Services motion on a phone | 48:00–48:21: Richard likes the drawing and its transition "if you get it … responsive"; Nicolas: "the mobile version needs to be better". The brief applied M4 to the new audience gallery only. | Below 960px the sticky drawing was hidden and each article had a still drawing. | Each article's drawing is live. The second and third come on screen as the service before them and change into their own once 55% of the drawing is in view, the same transition the wide screen shows. The rail rides under the header while the articles pass, reports the article being read and jumps to one. Still, off screen, paused and under reduced motion, every drawing is its own composition. | `src/homepage/services-behaviour.ts`, `src/system.ts` (`orientation`, `drawIn`), `src/styles/services.css`; [ADR 0004](adr/0004-narrow-services-sequence.md); `tests/standup-gaps.spec.ts`; `phone-services-*.png` |
+| G2 Failure-mode visual in the homepage's free resources | 51:45–51:49, asked while looking at the homepage's free resources. | The figure existed on `/resources/#playbook` only. | The homepage's playbook entry carries the same review figure, told when it comes into view. | `src/homepage/resources.ts`, `src/styles/resources.css`; `home-playbook-*.png` |
+| G3 Scorecard without the third-party tool | 51:49: "bake in the scorecard … where we don't actually have to use the third party scorecard tool". | ScoreApp in an on-request iframe, with a direct link. | Answered on the page: twelve yes-or-no questions and one open question; a stage, a status per area and up to three places to start, plus advice for each barrier answered yes. Nothing is sent or stored. The open answer can start the inquiry dialog's "What should work better?". ScoreApp stays one link away for its emailed PDF report; the iframe is gone. | `src/content.ts` (`scorecard`), `src/interactions.ts`, `src/pages.ts`, `src/styles/pages.css`; [Resources ADR 0001](contexts/resources/docs/adr/0001-native-scorecard.md); `tests/render.spec.ts` (all 4,096 answer sets), `tests/standup-gaps.spec.ts`, `tests/meeting.spec.ts`; `scorecard-*.png` |
+| G4 Adejoke's content | 1:04:35, 1:30:22: Nicolas will add her content to this site rather than her adding the animations to hers. | Her homepage had 38 lines not in the September 16 capture. | 17 adopted, 18 already present in equivalent words, 3 not adopted with reasons. Adopted: the three audience headlines and three points each, "Three ways to deliver the same outcome.", a Delivered for strip (Private Equity, B2B SaaS, and See all services on the homepage), "Teams learn on their own work, not on demo prompts." and "Useful skills" for the Workshops drawing's remaining "Useful prompts". Her other six routes were unchanged. | [lovable-delta.json](../artifacts/standup-gaps/2026-09-23/lovable-delta.json); `src/audiences.ts`, `src/homepage/audiences.ts`, `src/homepage/services.ts`, `src/schematic.ts`, `src/content.ts`; `tests/render.spec.ts` |
+| H1 Header over a page opened below its opening | Found while checking G1. | The header only took its ground once the opening had been seen to leave the viewport. A page opened at an anchor, or jumped past the opening before its first frame, kept a transparent header over the content, which the new rail made obvious. Present on the deployed `main`. | Read on scroll and resize, like the header's ground. | `src/homepage.ts`; `tests/standup-gaps.spec.ts` |
+
+### Scorecard source and what still needs the owner
+
+The questions are the Plan B assessment in Found42's "Scorecard Questions"
+draft (Adejoke, June 25–26), which the June 26 stand-up adopted: assessment
+and intake as separate forms, with one open question in the assessment. They
+are grouped under the five areas the ScoreApp landing advertises (current AI
+use, data practices, workflow efficiency, AI integration readiness, automation
+goals). The two "decided against trying an AI tool because…" questions
+describe what held a business back, so they add advice and never move the
+stage. The same June 26 discussion asked that nobody be given a zero score, so
+the result is a stage and next steps, with no numbers.
+
+Written for this change, awaiting Found42 review (Adejoke's June 26 action,
+"Define Scorecard Outcomes", was deprioritized): the four stages and their
+thresholds (0–3, 4–6, 7–8 and 9–10 area answers of yes), the three area
+statuses, each area's advice and each barrier's advice. The live ScoreApp
+questions sit behind its lead gate and were not seen, so they may differ from
+the draft.
+
+### Decisions the follow-up left open
+
+- **Arrival, not a pinned drawing.** A portrait drawing is 620×760, about 440px
+  tall on a phone, so a pinned drawing beside the text does not fit; a
+  landscape one scaled down drops annotations under the readable minimum
+  ([ADR 0002](adr/0002-working-system-drawing.md)). The transition moves into
+  each article's own drawing instead.
+- **The rail rides only when there is height for it** (`min-height: 560px`),
+  gives up its index numbers and some tracking to stay on one line to 320px,
+  and wraps at a large text size rather than clip a name.
+- **G4 did not reverse earlier decisions**: the eight-hour figure stays a
+  qualified target, executives get systems rather than training, the opening
+  keeps one action, free resources still come first, and the homepage still
+  ends on workshop accounts rather than a second inquiry band.
+- **The builders headline** is shortened from her "Build for your team without
+  an engineering background." to "Build for your team, no engineering
+  background." Unshortened it ran to four lines and made that panel taller
+  than the other two, which moved the page when the gallery changed.
+- **Services (D1)** remains Richard's call; only the industries strip was added.

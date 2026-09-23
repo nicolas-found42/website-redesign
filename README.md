@@ -8,8 +8,9 @@ training for your business — usable systems for executives, practical training
 for the people doing the work, built around a specific role, industry and company.
 
 This is a noindex design preview. Local resource delivery, newsletter subscriptions,
-course enrollment and local inquiry submission are not connected. The original
-ScoreApp assessment is available through an on-demand embed and direct link. Forms validate
+course enrollment and local inquiry submission are not connected. The AI
+Readiness Scorecard is answered on the page and sends nothing; the original
+ScoreApp assessment is linked for its emailed report. Forms validate
 locally and state that nothing was sent. The established Found42 contact form
 remains available as an external inquiry fallback.
 

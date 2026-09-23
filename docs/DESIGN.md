@@ -61,7 +61,8 @@ lines at a slightly smaller display size, so the lead and the one action still
 sit inside the opening viewport.
 
 The resources band reads down one column: the featured scorecard has a dark
-cover, followed by the course, skills library and playbook. Each entry explains
+cover, followed by the course, skills library and playbook, whose entry carries
+the failure-mode review figure. Each entry explains
 its purpose, next action and access limits. Free resources precede the separate
 audience and delivery sections. The hero has one primary action.
 
@@ -84,7 +85,10 @@ places, the labels change their words at the midpoint of their own travel, and
 the new routes draw in. The choice rail reports that state and lets anyone jump
 straight to a service. Scrolling is never intercepted — the pane is `sticky`, so
 the page scrolls natively throughout. On a narrow screen the sticky split is
-abandoned and each article carries its own still portrait drawing.
+abandoned and each article carries its own live portrait drawing: the second
+and third come on screen as the service before them and change into their own
+as they come into view, and the rail rides under the header to report and jump.
+See [ADR 0004](adr/0004-narrow-services-sequence.md).
 
 All three services are on the page in full at every width. Nothing is behind an
 interaction, and the article being read is marked by a rule filling red rather
@@ -109,7 +113,7 @@ taller, because an annotation cannot shrink below the readable minimum at
 install, not a button. See [ADR 0003](adr/0003-audience-scenes.md).
 
 The same scene engine draws the **failure-mode review figure** on the
-resources page: a draft result, the three failure modes the playbook is
+resources page and in the homepage's playbook entry: a draft result, the three failure modes the playbook is
 described as catching, human review, then the business — one vertical
 composition at every width, and no invented checks.
 

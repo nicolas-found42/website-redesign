@@ -181,10 +181,31 @@
 
 .services-foot {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 24px 48px;
+  align-items: center;
+  justify-content: space-between;
   padding-top: clamp(40px, 5vw, 80px);
   margin-top: clamp(32px, 4vw, 64px);
   border-top: 1px solid var(--line-ink);
+}
+
+.services-industries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  align-items: center;
+}
+.services-industries .note {
+  color: var(--muted-ink);
+}
+.services-industries ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 /* ── Narrow: no sticky pane; every article carries its own drawing ── */
@@ -218,6 +239,44 @@
     flex: 1 1 auto;
     justify-content: center;
   }
+  /* Stacked, an article is taller than the screen: its start clears the rail. */
+  .service {
+    scroll-margin-top: calc(var(--header-height, 72px) + 84px);
+  }
+}
+
+/**
+ * Narrow, with room to spare: the rail rides under the header while the
+ * articles pass, so it keeps reporting which service is being read and keeps
+ * offering the jump. It gives up its index numbers and some tracking to stay
+ * on one line down to 320px; at a large text size it wraps rather than clip a
+ * name, and a short landscape screen keeps it in the flow instead.
+ */
+@media (max-width: 960px) and (min-height: 560px) {
+  .services-aside {
+    position: sticky;
+    top: var(--header-height, 72px);
+    z-index: 2;
+    background: var(--paper);
+  }
+  .services-sticky {
+    padding-block: 12px;
+  }
+  .services-rail {
+    gap: 6px;
+    margin-bottom: 0;
+  }
+  .services-rail .choice {
+    padding-inline: 4px;
+    font-size: clamp(0.75rem, 3.6vw, 0.875rem);
+    letter-spacing: 0;
+  }
+  .services-rail .choice-index {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
   /* Stacked, the leading edge is the top of the article rather than its side. */
   .service {
     gap: 14px;

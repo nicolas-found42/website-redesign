@@ -334,10 +334,10 @@ export const schematics: readonly Schematic[] = [
     choice: "Workshops",
     detail: "Give people the skills to apply AI to their own work.",
     description:
-      "Training illustration: a work task and useful prompts pass through human direction and human review, go into practice, and return as the next task.",
+      "Training illustration: a work task and useful skills pass through human direction and human review, go into practice, and return as the next task.",
     nodes: cast(
       "Your work task",
-      "Useful prompts",
+      "Useful skills",
       "Human review",
       "Put into practice",
     ),

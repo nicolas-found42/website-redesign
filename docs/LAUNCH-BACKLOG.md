@@ -23,12 +23,13 @@ items remain incomplete and must not be represented as delivered:
    status before inserting it after Strategic Advisor. Confirm the relationship
    between the published AI Failure Modes Playbook and prototype 12-check edition.
 8. Review ScoreApp’s older claims and consent wording; perform an authorized
-   end-to-end assessment/report-delivery check. The website preserves provider
-   behavior and does not create a substitute scoring system.
-9. To bake the scorecard into the site, supply the genuine question set,
-   option wording, scoring and result bands, report expectation and consent
-   text; the provider page exposes only its lead gate. Precise list in
-   [STANDUP-CONVERGENCE.md](STANDUP-CONVERGENCE.md).
+   end-to-end assessment/report-delivery check, and decide whether the linked
+   original stays once the on-page scorecard is approved.
+9. Review the on-page scorecard's result wording: its questions are Found42's
+   Plan B draft, but the stages, thresholds, area statuses and advice were
+   written for the follow-up and await Found42's scorecard outcomes. Confirm
+   the live ScoreApp questions match the draft. See
+   [Resources ADR 0001](contexts/resources/docs/adr/0001-native-scorecard.md).
 10. Decide the services section's direction; nothing new was invented there.
 
 No credentials or paid service configuration were created during migration.

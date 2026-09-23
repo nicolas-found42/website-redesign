@@ -1,5 +1,6 @@
-import { questions, results } from "./content";
+import { questions, results, scorecard } from "./content";
 import { emailForm } from "./pages";
+import { sitePath } from "./paths";
 /** Source scoring preserved: four 1–3 answers, thresholds 6 and 9. */
 export const readinessResult = (answers: number[]) =>
   results[
@@ -9,6 +10,52 @@ export const readinessResult = (answers: number[]) =>
         ? 1
         : 0
   ];
+/** Every yes-or-no question in the order asked: the areas, then what held the business back. */
+export const scorecardQuestions = [
+  ...scorecard.areas.flatMap((area) =>
+    area.questions.map((text) => ({ text, group: area.name })),
+  ),
+  ...scorecard.barriers.map((barrier) => ({
+    text: barrier.question,
+    group: "What has held you back",
+  })),
+];
+
+export type AreaStatus = "In place" | "Partly in place" | "Next to build";
+
+/**
+ * Reads a completed scorecard. `answers` holds true for yes, in the order of
+ * `scorecardQuestions`. The stage follows the area answers only; the areas not
+ * yet in place, weakest first, become at most three places to start, and a
+ * yes to either barrier question adds the advice that answers it.
+ */
+export function scorecardResult(answers: readonly boolean[]) {
+  let at = 0;
+  const areas = scorecard.areas.map((area) => {
+    const yes = answers
+      .slice(at, at + area.questions.length)
+      .filter(Boolean).length;
+    at += area.questions.length;
+    const share = yes / area.questions.length;
+    const status: AreaStatus =
+      share === 1 ? "In place" : yes > 0 ? "Partly in place" : "Next to build";
+    return { area, yes, share, status };
+  });
+  const total = areas.reduce((sum, area) => sum + area.yes, 0);
+  const stage = scorecard.stages.reduce((found, stage) =>
+    total >= stage.from ? stage : found,
+  );
+  const next = areas
+    .filter((area) => area.share < 1)
+    .sort((a, b) => a.share - b.share)
+    .slice(0, 3);
+  const barriers = scorecard.barriers.filter((_, index) => answers[at + index]);
+  return { stage, areas, next, barriers };
+}
+
+const escapeText = (text: string) =>
+  text.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
+
 export function mountInteractions(root: HTMLElement) {
   const controller = new AbortController();
   const { signal } = controller;
@@ -20,34 +67,54 @@ export function mountInteractions(root: HTMLElement) {
       .forEach((el) => {
         el.disabled = false;
       });
-  let scorecardTimer: ReturnType<typeof setTimeout> | undefined;
-  const loadScorecard = (button: HTMLButtonElement) => {
-    const frameHost = root.querySelector<HTMLElement>("[data-scorecard-frame]");
-    const status = root.querySelector<HTMLElement>("[data-scorecard-status]");
-    if (!frameHost || !status) return;
-    button.disabled = true;
-    status.textContent =
-      "Loading ScoreApp. You can also use the direct link above.";
-    const frame = document.createElement("iframe");
-    frame.title = "Found42 AI Readiness Scorecard on ScoreApp";
-    frame.className = "scorecard-frame";
-    frame.src = "https://found42.scoreapp.com/";
-    frame.addEventListener(
-      "load",
-      () => {
-        clearTimeout(scorecardTimer);
-        status.textContent =
-          "If the assessment is blank or unavailable, open it directly on ScoreApp using the link above.";
-      },
-      { signal, once: true },
-    );
-    scorecardTimer = setTimeout(() => {
-      status.textContent =
-        "ScoreApp is taking longer than expected. Open the scorecard directly using the link above.";
-    }, 12000);
-    frameHost.append(frame);
-    frame.focus();
-  };
+  /* ── The AI Readiness Scorecard: yes-or-no questions, one open, a result ── */
+  const scoreHost = root.querySelector<HTMLElement>("#scorecard-app");
+  const asked = scorecardQuestions.length;
+  let scoreStep = 0;
+  let scoreAnswers: boolean[] = [];
+  let openAnswer = "";
+  const scoreRail = (label: string) =>
+    `<div class="assessment-rail note">AI Readiness Scorecard <span>${label}</span></div>`;
+  const scoreBack =
+    '<button class="link" type="button" data-scorecard-back>← Back</button>';
+  function scorecardQuestion() {
+    const question = scorecardQuestions[scoreStep];
+    return `${scoreRail(`Question ${scoreStep + 1} of ${asked}`)}<div class="assessment-body"><p class="note scorecard-group">${question.group}</p><h3 tabindex="-1">${question.text}</h3><div class="answer-options answer-options--pair"><button class="answer" data-scorecard-answer="yes">Yes<span aria-hidden="true">→</span></button><button class="answer" data-scorecard-answer="no">No<span aria-hidden="true">→</span></button></div>${scoreStep > 0 ? scoreBack : ""}</div>`;
+  }
+  function scorecardOpen() {
+    return `${scoreRail("Last question")}<form class="assessment-body scorecard-open" data-scorecard-open><h3 tabindex="-1" id="scorecard-open-title">${scorecard.open}</h3><p class="note--plain" id="scorecard-open-hint">Optional. What you write stays in this browser.</p><textarea id="scorecard-open" name="open" rows="3" maxlength="500" aria-labelledby="scorecard-open-title" aria-describedby="scorecard-open-hint"></textarea><div class="form-actions"><button class="action" type="submit">See my result&nbsp;→</button>${scoreBack}</div></form>`;
+  }
+  function scorecardSummary() {
+    const { stage, areas, next, barriers } = scorecardResult(scoreAnswers);
+    const link = (target?: { label: string; href: string }) =>
+      target
+        ? ` <a class="link" href="${sitePath(target.href)}">${target.label}&nbsp;→</a>`
+        : "";
+    const steps = [
+      ...next.map(
+        ({ area }) =>
+          `<li><b>${area.name}.</b> ${area.advice}${link("link" in area ? area.link : undefined)}</li>`,
+      ),
+      ...barriers.map(
+        (barrier) =>
+          `<li>${barrier.advice}${link("link" in barrier ? barrier.link : undefined)}</li>`,
+      ),
+    ];
+    return `${scoreRail("Your result")}<div class="assessment-body scorecard-result"><p class="note">Your readiness stage</p><h3 tabindex="-1">${stage.title}</h3><p>${stage.body}</p><ul class="scorecard-areas" aria-label="Readiness by area">${areas.map(({ area, status }) => `<li data-status="${status === "In place" ? "done" : status === "Partly in place" ? "partial" : "next"}"><span>${area.name}</span><span class="note--plain">${status}</span></li>`).join("")}</ul>${steps.length ? `<h4>Where to start</h4><ol class="scorecard-next">${steps.join("")}</ol>` : ""}${openAnswer ? `<p class="scorecard-echo"><span class="note">You would like to automate</span> “${escapeText(openAnswer)}”</p>` : ""}<div class="form-actions"><button class="action" data-dialog="contact" data-scorecard-prefill>Plan the next step&nbsp;→</button><button class="link" data-scorecard-retake>Retake</button></div><p class="note--plain">A starting point for a conversation, not an audit or a certification. Nothing you answered was sent or stored.</p></div>`;
+  }
+  function renderScorecard(focus = false) {
+    if (!scoreHost) return;
+    scoreHost.innerHTML =
+      scoreStep < asked
+        ? scorecardQuestion()
+        : scoreStep === asked
+          ? scorecardOpen()
+          : scorecardSummary();
+    const field = scoreHost.querySelector<HTMLTextAreaElement>("textarea");
+    if (field) field.value = openAnswer;
+    if (focus) scoreHost.querySelector("h3")?.focus({ preventScroll: true });
+  }
+  renderScorecard();
   let step = 0;
   let answers: number[] = [];
   const host = root.querySelector<HTMLElement>("#assessment");
@@ -189,8 +256,23 @@ export function mountInteractions(root: HTMLElement) {
         "button",
       );
       if (!target) return;
-      if (target.hasAttribute("data-load-scorecard")) {
-        loadScorecard(target as HTMLButtonElement);
+      if (target.hasAttribute("data-scorecard-answer")) {
+        scoreAnswers = [
+          ...scoreAnswers.slice(0, scoreStep),
+          target.dataset.scorecardAnswer === "yes",
+        ];
+        scoreStep++;
+        renderScorecard(true);
+      } else if (target.hasAttribute("data-scorecard-back")) {
+        const field = scoreHost?.querySelector<HTMLTextAreaElement>("textarea");
+        if (field) openAnswer = field.value.trim();
+        scoreStep--;
+        renderScorecard(true);
+      } else if (target.hasAttribute("data-scorecard-retake")) {
+        scoreStep = 0;
+        scoreAnswers = [];
+        openAnswer = "";
+        renderScorecard(true);
       } else if (target.hasAttribute("data-answer")) {
         answers = [...answers.slice(0, step), Number(target.dataset.answer)];
         step++;
@@ -203,6 +285,13 @@ export function mountInteractions(root: HTMLElement) {
         answers = [];
         renderAssessment(true);
       } else if (target.dataset.dialog) {
+        // What the scorecard's visitor wants automated starts their inquiry,
+        // unless they have already written one.
+        if (target.hasAttribute("data-scorecard-prefill") && openAnswer) {
+          const draft = drafts.get("contact") ?? {};
+          if (!draft.challenge?.trim())
+            drafts.set("contact", { ...draft, challenge: openAnswer });
+        }
         openDialog(target.dataset.dialog, target);
       } else if (target.hasAttribute("data-close")) close();
     },
@@ -231,6 +320,15 @@ export function mountInteractions(root: HTMLElement) {
     "submit",
     (event) => {
       const form = event.target as HTMLFormElement;
+      if (form.matches("[data-scorecard-open]")) {
+        event.preventDefault();
+        openAnswer =
+          form.querySelector<HTMLTextAreaElement>("textarea")?.value.trim() ??
+          "";
+        scoreStep++;
+        renderScorecard(true);
+        return;
+      }
       if (!form.matches("[data-email-form],[data-contact-form]")) return;
       event.preventDefault();
       form.dataset.checked = "";
@@ -273,7 +371,6 @@ export function mountInteractions(root: HTMLElement) {
   );
   enableForms();
   return () => {
-    clearTimeout(scorecardTimer);
     controller.abort();
     dialog.remove();
     document.body.classList.remove("dialog-open");
