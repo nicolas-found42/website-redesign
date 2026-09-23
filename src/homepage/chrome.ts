@@ -12,6 +12,13 @@ const industries = [
 ] as const;
 const logo = () =>
   `<a class="brand" href="${sitePath()}" aria-label="Found42 home"><img src="${sitePath("assets/found42-logo.png")}" alt="Found42" width="1024" height="1024"></a>`;
+/**
+ * The one notice of what the preview cannot do, at the top of every page's
+ * content, so individual resources and forms need not each repeat it.
+ */
+export function previewNote() {
+  return `<p class="preview-note wrap"><span>Design preview: nothing you type here is sent, and requested resources are not delivered yet.</span> <a class="link" href="https://www.found42.com/contact">Contact Found42 on the live site&nbsp;→</a></p>`;
+}
 export function siteHeader() {
   return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header wrap">${logo()}<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation"><span class="menu-toggle-label">Menu</span>${icon("menu")}${icon("close")}</button><nav id="navigation" aria-label="Main navigation">${nav
     .slice(0, 2)

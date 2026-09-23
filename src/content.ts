@@ -15,7 +15,7 @@ const resourceInventory = [
     description:
       "Spot weak outputs, missing context, and false confidence before they reach the business.",
     outcome: "12 checks for safer adoption",
-    gate: "Free resource · Work email requested. Delivery is not connected in this preview.",
+    gate: "Free resource · Work email requested.",
     action: "Explore the playbook",
   },
   {
@@ -24,7 +24,7 @@ const resourceInventory = [
     description:
       "Start with reusable skills for analysis, synthesis, review, and decision support.",
     outcome: "Four working skill patterns",
-    gate: "Free resource · Work email requested. Delivery is not connected in this preview.",
+    gate: "Free resource · Work email requested.",
     action: "Explore the library",
   },
   {
@@ -33,7 +33,7 @@ const resourceInventory = [
     description:
       "Build a disciplined thinking partner that challenges assumptions and sharpens decisions.",
     outcome: "Five practical daily lessons",
-    gate: "Free 5-day mini-course · Work email requested. Enrollment is not connected in this preview.",
+    gate: "Free 5-day mini-course · Work email requested.",
     action: "Explore the mini-course",
   },
 ];

@@ -176,3 +176,38 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
     "/blog/",
   ]);
 });
+
+test("#35: one preview notice per page replaces per-card disclaimers and team notes", async ({
+  page,
+}) => {
+  for (const route of routes) {
+    await page.goto(route);
+    // The notice opens every page's content and points to the live contact form.
+    const note = page.locator("main > .preview-note");
+    await expect(note, route).toHaveCount(1);
+    expect(
+      await page
+        .locator("main")
+        .evaluate((main) => main.firstElementChild?.className),
+    ).toContain("preview-note");
+    await expect(note.getByRole("link")).toHaveAttribute(
+      "href",
+      "https://www.found42.com/contact",
+    );
+    // Verification status belongs in the launch backlog, not in visitor copy.
+    const text = await page.locator("main").innerText();
+    for (const note of [
+      /has not been tested/i,
+      /not been confirmed/i,
+      /not been supplied/i,
+      /not connected in this preview/i,
+      /Some tools require/i,
+    ])
+      expect(text, `${route}: ${note}`).not.toMatch(note);
+  }
+  // A toolkit that needs ChatGPT on a Claude site says why.
+  await page.goto("/resources/");
+  await expect(page.locator("main")).toContainText(
+    "Its practice advisors are custom GPTs, so they need a ChatGPT account.",
+  );
+});
