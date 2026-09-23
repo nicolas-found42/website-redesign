@@ -53,9 +53,15 @@ export function scorecardResult(answers: readonly boolean[]) {
   return { stage, areas, next, barriers };
 }
 
+/** Makes a visitor's own words safe to show as text inside markup. */
 const escapeText = (text: string) =>
   text.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
 
+/**
+ * Wires every in-page interaction the rendered pages carry: the scorecard,
+ * the workflow preview, the shared dialogs and the no-send forms. Returns a
+ * disposer that removes the dialog and every listener it added.
+ */
 export function mountInteractions(root: HTMLElement) {
   const controller = new AbortController();
   const { signal } = controller;
@@ -73,17 +79,21 @@ export function mountInteractions(root: HTMLElement) {
   let scoreStep = 0;
   let scoreAnswers: boolean[] = [];
   let openAnswer = "";
+  /** The strip above every scorecard step: its name, and where the visitor is. */
   const scoreRail = (label: string) =>
     `<div class="assessment-rail note">AI Readiness Scorecard <span>${label}</span></div>`;
   const scoreBack =
     '<button class="link" type="button" data-scorecard-back>← Back</button>';
+  /** The current yes-or-no question, under the area it belongs to. */
   function scorecardQuestion() {
     const question = scorecardQuestions[scoreStep];
     return `${scoreRail(`Question ${scoreStep + 1} of ${asked}`)}<div class="assessment-body"><p class="note scorecard-group">${question.group}</p><h3 tabindex="-1">${question.text}</h3><div class="answer-options answer-options--pair"><button class="answer" data-scorecard-answer="yes">Yes<span aria-hidden="true">→</span></button><button class="answer" data-scorecard-answer="no">No<span aria-hidden="true">→</span></button></div>${scoreStep > 0 ? scoreBack : ""}</div>`;
   }
+  /** The optional open question that closes the scorecard. */
   function scorecardOpen() {
     return `${scoreRail("Last question")}<form class="assessment-body scorecard-open" data-scorecard-open><h3 tabindex="-1" id="scorecard-open-title">${scorecard.open}</h3><p class="note--plain" id="scorecard-open-hint">Optional. What you write stays in this browser.</p><textarea id="scorecard-open" name="open" rows="3" maxlength="500" aria-labelledby="scorecard-open-title" aria-describedby="scorecard-open-hint"></textarea><div class="form-actions"><button class="action" type="submit">See my result&nbsp;→</button>${scoreBack}</div></form>`;
   }
+  /** The result: a stage, each area's status, and where to start. */
   function scorecardSummary() {
     const { stage, areas, next, barriers } = scorecardResult(scoreAnswers);
     const link = (target?: { label: string; href: string }) =>
@@ -102,6 +112,10 @@ export function mountInteractions(root: HTMLElement) {
     ];
     return `${scoreRail("Your result")}<div class="assessment-body scorecard-result"><p class="note">Your readiness stage</p><h3 tabindex="-1">${stage.title}</h3><p>${stage.body}</p><ul class="scorecard-areas" aria-label="Readiness by area">${areas.map(({ area, status }) => `<li data-status="${status === "In place" ? "done" : status === "Partly in place" ? "partial" : "next"}"><span>${area.name}</span><span class="note--plain">${status}</span></li>`).join("")}</ul>${steps.length ? `<h4>Where to start</h4><ol class="scorecard-next">${steps.join("")}</ol>` : ""}${openAnswer ? `<p class="scorecard-echo"><span class="note">You would like to automate</span> “${escapeText(openAnswer)}”</p>` : ""}<div class="form-actions"><button class="action" data-dialog="contact" data-scorecard-prefill>Plan the next step&nbsp;→</button><button class="link" data-scorecard-retake>Retake</button></div><p class="note--plain">A starting point for a conversation, not an audit or a certification. Nothing you answered was sent or stored.</p></div>`;
   }
+  /**
+   * Shows the current step. Focus moves to its heading only when the visitor
+   * moved, so a screen reader announces the new step and nothing else.
+   */
   function renderScorecard(focus = false) {
     if (!scoreHost) return;
     scoreHost.innerHTML =

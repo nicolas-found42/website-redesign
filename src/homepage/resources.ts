@@ -10,10 +10,15 @@ import { sitePath } from "../paths";
  */
 const reviewFigure = `<figure class="review-figure resource-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Fig. — the three failure modes the playbook is built to catch, and the human review a result passes before it reaches the business.</figcaption></figure>`;
 
+/**
+ * Free resources: the featured scorecard, then the course, the library and
+ * the playbook, each saying what it offers and what access it asks for.
+ */
 export function resourcesSection() {
   const [first, ...rest] = resources;
   const link = (r: typeof first) =>
     `<a class="link" href="${sitePath("resources/#" + r.id)}">${r.action} <span class="signal-dot"></span>${arrow}</a>`;
+  /** One supporting resource; the playbook's also carries its figure. */
   const entry = (r: typeof first, i: number) => {
     const copy = `<p class="note resource-category">0${i + 2} / ${r.outcome}</p><h3>${r.title}</h3><p class="body">${r.description}</p><div class="access"><p class="note--plain">${r.gate}</p></div>${link(r)}`;
     return r.id === "playbook"

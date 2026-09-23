@@ -40,6 +40,11 @@ export function mountHomepage(
   return mountPage(root, renderHomepage(), options);
 }
 
+/**
+ * Renders any page's markup into `root` and wires what every page shares —
+ * navigation, the header, dialogs and forms, motion — plus whichever drawings
+ * the markup contains. Returns a disposer for all of it.
+ */
 export function mountPage(
   root: HTMLElement,
   markup: string,
@@ -166,6 +171,7 @@ export function mountPage(
    */
   const header = root.querySelector<HTMLElement>(".site-header")!;
   const sentinel = root.querySelector<HTMLElement>(".page-opening, .hero-rail");
+  /** Lifts the header exactly while the opening is above the viewport. */
   const readLift = () => {
     if (sentinel)
       header.classList.toggle(

@@ -45,6 +45,11 @@ export function mountServices(
 
   let current = 0;
 
+  /**
+   * Makes `index` the service being read: the drawing, caption, rail and rule
+   * follow it. With `scroll`, the visitor asked for it, so it is brought into
+   * view too.
+   */
   function show(index: number, options: { scroll?: boolean } = {}) {
     if (index !== current) {
       current = index;

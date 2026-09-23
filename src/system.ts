@@ -54,6 +54,11 @@ const SIGNAL_SPEED = 190;
 const orientationOf = (matches: boolean): Orientation =>
   matches ? "portrait" : "landscape";
 
+/**
+ * Mounts a live drawing in `host`, replacing whatever still markup was there
+ * with the same composition, and returns its controls: `select` to change
+ * composition, `settle` to rest on one at once, and `dispose`.
+ */
 export function mountSystem(host: HTMLElement, options: SystemOptions) {
   const {
     motionPreference,
@@ -417,6 +422,7 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
       runLoop();
     }
   };
+  /** Recomposes for the new shape, unless the drawing was given a fixed one. */
   const onOrientation = () => {
     if (options.orientation) return;
     const next = orientationOf(portrait.matches);
