@@ -6,7 +6,7 @@ const resourceInventory = [
     description:
       "Assess your current AI use, data practices and workflow readiness before deciding where to focus.",
     outcome: "A 5-minute operational baseline",
-    gate: "Free assessment on ScoreApp. Personal and business details required.",
+    gate: "Free · 12 yes-or-no questions · No email required. Answers stay in your browser.",
     action: "Take the scorecard",
   },
   {
@@ -56,7 +56,7 @@ export const services = [
       "Manager rollout guidance",
     ],
     context:
-      "Practice with the responsibilities, terminology and review standards of your role, your industry and your company.",
+      "Teams learn on their own work, not on demo prompts. Practice with the responsibilities, terminology and review standards of your role, your industry and your company.",
   },
   {
     title: "Workflows",
@@ -134,6 +134,124 @@ export const results = [
     body: "You have the repetition, quality bar, and review capacity needed for a useful Claude skill.",
   },
 ];
+/**
+ * The AI Readiness Scorecard, answered on the page.
+ *
+ * Questions: the Plan B assessment in Found42's "Scorecard Questions" draft
+ * (June 25–26, 2026), the separate-assessment structure the June 26 stand-up
+ * adopted, grouped under the five areas the ScoreApp landing advertises. The
+ * two cost and fit questions describe what has held a business back, so they
+ * shape the advice rather than the stage. The stages, area statuses and advice
+ * are editorial drafts awaiting Found42's own scorecard outcomes; following the
+ * June 26 discussion, the result is a stage and next steps, never a score.
+ * Link destinations are site paths, resolved by `sitePath()` where they render.
+ */
+export const scorecard = {
+  areas: [
+    {
+      id: "tools",
+      name: "Current AI use",
+      questions: [
+        "Do you currently use any AI tools to automate repetitive tasks in your business?",
+        "Have you tried using an AI tool in your business and kept using it past the first week?",
+      ],
+      advice:
+        "Pick one repetitive task and use an AI tool on it for two weeks, so the team judges from real experience.",
+      link: {
+        label: "Explore the Skills Starter Library",
+        href: "resources/#library",
+      },
+    },
+    {
+      id: "data",
+      name: "Data practices",
+      questions: [
+        "Is your data stored in a centralized location accessible to your team?",
+        "Do you have policies on what data can be shared with AI tools?",
+      ],
+      advice:
+        "Decide where the source material for that task lives, and what may be shared with AI tools, before building on it.",
+    },
+    {
+      id: "workflow",
+      name: "Workflow efficiency",
+      questions: [
+        "Are your business processes already digitized and standardized?",
+        "Have you identified any specific tasks that could benefit from automation?",
+      ],
+      advice:
+        "Write one process down step by step. A standard your team already follows is what a skill can repeat.",
+    },
+    {
+      id: "team",
+      name: "AI integration readiness",
+      questions: [
+        "Do you have clear policies on which AI tools can be used at work?",
+        "Is your team trained to utilize AI tools for process improvement?",
+        "If you rolled out one new automation tomorrow, would your team actually use it without you pushing them to?",
+      ],
+      advice:
+        "Agree which AI tools are approved, and give the people who will use them practice on their own work.",
+      link: {
+        label: "See how workshops work",
+        href: "services/#service-training",
+      },
+    },
+    {
+      id: "goals",
+      name: "Automation goals",
+      questions: [
+        "Do you have a process for deciding which tasks are worth automating?",
+      ],
+      advice:
+        "Choose the work worth changing with a simple test: it repeats, a good result is clear, and a person can check it quickly.",
+    },
+  ],
+  barriers: [
+    {
+      id: "cost",
+      question:
+        "Have you ever decided against trying an AI tool because of the cost?",
+      advice:
+        "Cost has stopped you before, so start with the free resources and one narrow workflow before committing to a larger build.",
+    },
+    {
+      id: "fit",
+      question:
+        "Have you ever decided against trying an AI tool because you weren’t sure it would work for your business?",
+      advice:
+        "Not being sure it would work is a reason to test one workflow with a person reviewing every result before relying on it.",
+      link: {
+        label: "See the Failure Mode Playbook",
+        href: "resources/#playbook",
+      },
+    },
+  ],
+  open: "What would you like to automate instantly?",
+  /** Chosen by how many of the ten area questions are answered yes. */
+  stages: [
+    {
+      from: 0,
+      title: "Early days",
+      body: "Most of the foundations are still ahead, which is where many businesses begin. Start with one repetitive task and the basics that make it safe to try.",
+    },
+    {
+      from: 4,
+      title: "Foundations forming",
+      body: "Some foundations are in place. Closing the gaps below first will make a first workflow easier to build and to trust.",
+    },
+    {
+      from: 7,
+      title: "Ready for a first workflow",
+      body: "Most foundations are in place. Choose one repeated, reviewable task and build a skill around it, with a person checking the result.",
+    },
+    {
+      from: 9,
+      title: "Ready to scale",
+      body: "The foundations are in place. The next gains come from connecting workflows and keeping review points where judgment matters.",
+    },
+  ],
+} as const;
 export const industries = {
   "private-equity": {
     name: "Private Equity",

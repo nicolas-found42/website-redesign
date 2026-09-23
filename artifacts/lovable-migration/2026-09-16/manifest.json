@@ -4831,5 +4831,5 @@
       "decision": "Explain executive adoption and domain-specific team training, role/industry/company customization, human review and judgment. No new packages, prices, verified results or customers claimed."
     }
   ],
-  "meetingUpdate": "2026-09-16: original source strings retained; editorial replacements updated against the meeting brief and live original-site sources. Stand-up follow-up (see docs/STANDUP-CONVERGENCE.md): opening headline replacement, “no fluff” removal, audience gallery replacing the static pathways grid."
+  "meetingUpdate": "2026-09-16: original source strings retained; editorial replacements updated against the meeting brief and live original-site sources. Stand-up follow-up (see docs/STANDUP-CONVERGENCE.md): opening headline replacement, “no fluff” removal, audience gallery replacing the static pathways grid. Transcript follow-up (2026-09-23, docs/STANDUP-CONVERGENCE.md#transcript-follow-up): later Lovable homepage lines and their dispositions are recorded separately in artifacts/standup-gaps/2026-09-23/lovable-delta.json; this record's originals and replacements are unchanged."
 }

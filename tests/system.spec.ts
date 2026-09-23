@@ -186,7 +186,7 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
   const page = await context.newPage();
   await page.goto("http://127.0.0.1:4173/#services");
 
-  // The narrow layout gives every article its own still drawing rather than one
+  // The narrow layout gives every article its own drawing rather than one
   // sticky pane, so all three are on the page at once.
   for (const name of [
     /Training illustration:/,
@@ -196,7 +196,7 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
     await expect(page.getByRole("img", { name })).toHaveCount(1);
   }
   await expect(
-    page.locator("#service-training").getByText("Useful prompts", {
+    page.locator("#service-training").getByText("Useful skills", {
       exact: true,
     }),
   ).toBeVisible();

@@ -37,25 +37,29 @@ test("meeting journey reads in order and separates audiences from delivery", asy
   ).toHaveCount(0);
 });
 
-test("scorecard loads on request and keeps a direct fallback during delay and failure", async ({
+test("the scorecard is answered on the page, and the original stays one link away", async ({
   page,
 }) => {
-  await page.route("https://found42.scoreapp.com/**", (route) => route.abort());
+  // Nothing reaches the provider unless the visitor follows the link.
+  const provider: string[] = [];
+  await page.route("https://found42.scoreapp.com/**", (route) => {
+    provider.push(route.request().url());
+    return route.abort();
+  });
   await page.goto("/resources/");
   await expect(page.locator("iframe")).toHaveCount(0);
-  const link = page.getByRole("link", {
-    name: "Open the scorecard on ScoreApp",
-  });
-  await expect(link).toHaveAttribute("href", "https://found42.scoreapp.com/");
-  await page.getByRole("button", { name: "Load the scorecard here" }).click();
-  await expect(page.locator("iframe")).toHaveAttribute(
-    "title",
-    "Found42 AI Readiness Scorecard on ScoreApp",
-  );
-  await expect(link).toBeVisible();
-  await expect(page.locator("[data-scorecard-status]")).toContainText(
-    /direct|unavailable|longer/,
-  );
+  const app = page.getByRole("group", { name: "AI Readiness Scorecard" });
+  await expect(app).toContainText("Question 1 of 12");
+  await expect(
+    page.getByRole("link", {
+      name: "Take the original assessment on ScoreApp",
+    }),
+  ).toHaveAttribute("href", "https://found42.scoreapp.com/");
+  for (let step = 0; step < 12; step++)
+    await app.getByRole("button", { name: "Yes", exact: true }).click();
+  await app.getByRole("button", { name: /See my result/ }).click();
+  await expect(app.locator("h3")).toHaveText("Ready to scale");
+  expect(provider).toEqual([]);
   await expect(page.locator(".workflow-preview")).toContainText(
     "separate from the AI Readiness Scorecard",
   );

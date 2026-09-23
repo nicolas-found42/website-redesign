@@ -156,12 +156,14 @@
   border: 1px solid var(--line-strong);
   background: var(--paper);
 }
+/* The two labels share a line while they fit and stack when the text is large. */
 .assessment-rail {
   padding: 20px 24px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
-  gap: 12px;
+  gap: 6px 12px;
 }
 .assessment-body {
   padding: clamp(20px, 3vw, 40px);
@@ -505,13 +507,124 @@ button:disabled {
 .workflow-preview .assessment {
   max-width: 760px;
 }
-.scorecard-frame {
-  width: 100%;
-  height: min(780px, 85svh);
-  min-height: 480px;
-  border: 1px solid var(--line-strong);
-  margin-top: 32px;
-  background: white;
+/* ── The AI Readiness Scorecard ── */
+/* Beside the introduction on a wide screen; right after it when stacked, so
+   the questions come before the alternative. */
+.scorecard-split {
+  grid-template-areas:
+    "intro app"
+    "original app";
+  grid-template-rows: auto 1fr;
+}
+.scorecard-intro {
+  grid-area: intro;
+}
+.scorecard-split > .scorecard {
+  grid-area: app;
+}
+.scorecard-split > .scorecard-original {
+  grid-area: original;
+  align-self: start;
+}
+@media (max-width: 860px) {
+  .scorecard-split {
+    grid-template-areas:
+      "intro"
+      "app"
+      "original";
+    grid-template-rows: none;
+  }
+}
+.scorecard-original {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.scorecard-original p {
+  margin-block: 0;
+}
+.answer-options--pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.scorecard-group {
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+.scorecard-open {
+  display: grid;
+  gap: 12px;
+}
+.scorecard-open h3 {
+  margin-bottom: 0;
+}
+.scorecard-result > p {
+  max-width: 60ch;
+  margin-block: 0 16px;
+}
+.scorecard-result h4 {
+  margin-block: 28px 12px;
+}
+/* A status is read, not only seen: each row says it in words. */
+.scorecard-areas {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  margin-block: 24px 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.scorecard-areas li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-block: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.scorecard-areas li > .note--plain {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.scorecard-areas li > .note--plain::before {
+  width: 8px;
+  height: 8px;
+  content: "";
+  border: 1.5px solid var(--red);
+  border-radius: 50%;
+}
+.scorecard-areas [data-status="partial"] > .note--plain::before {
+  background: linear-gradient(90deg, var(--red) 50%, transparent 50%);
+}
+.scorecard-areas [data-status="done"] > .note--plain::before {
+  background: var(--red);
+}
+.scorecard-next {
+  display: grid;
+  gap: 14px;
+  padding-left: 22px;
+  margin: 0;
+}
+/* A link closes its step on a line of its own rather than stretching one. */
+.scorecard-next .link {
+  display: flex;
+  width: fit-content;
+  margin-top: 8px;
+}
+.scorecard-echo {
+  display: grid;
+  gap: 6px;
+  padding-left: 16px;
+  margin-top: 24px;
+  border-left: 2px solid var(--red);
+}
+@media (max-width: 420px) {
+  .answer-options--pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 /* Keep labels intact and long access disclosures readable on tablets. */
 .index > b {

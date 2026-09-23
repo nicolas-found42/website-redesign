@@ -5,8 +5,8 @@ and receive a trailing slash for static directory-index hosting.
 
 | Source path | Destination under `/website-redesign/` | Purpose and next steps |
 | --- | --- | --- |
-| `/` | `/` | Direct opening, free resources, three-audience gallery with its own scenes, services, attributed workshop accounts |
-| `/resources` | `/resources/` | Original ScoreApp embed/fallback, separate workflow preview, failure-mode review figure, resource access and course dialog |
+| `/` | `/` | Direct opening, free resources (the playbook entry with its review figure), three-audience gallery with its own scenes, services with an industries strip, attributed workshop accounts |
+| `/resources` | `/resources/` | AI Readiness Scorecard answered on the page (original ScoreApp linked), separate workflow preview, failure-mode review figure, resource access and course dialog |
 | `/services` | `/services/` | Audience gallery, Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
 | `/industries/private-equity` | `/industries/private-equity/` | Deal screening, diligence, portfolio operations and firm-specific criteria |
 | `/industries/b2b-saas` | `/industries/b2b-saas/` | Customer success, feedback triage, GTM enablement and team adoption |
@@ -22,7 +22,8 @@ its panels. Service schematic identifiers
 visible offering names are Workshops, Workflows and Automations.
 
 Talk to us opens a shared inquiry dialog. The course entry opens the Strategic Advisor
-Mini-Course dialog. The assessment result opens the inquiry dialog. These are
+Mini-Course dialog. The scorecard's questions and result, and the workflow
+preview's result, are in-page states; each result opens the inquiry dialog. These are
 client states, not extra page routes.
 
 The source has no article-body routes, legal routes, downloadable-file links,

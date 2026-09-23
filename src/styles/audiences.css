@@ -111,13 +111,17 @@
   color: var(--red);
 }
 .audience-copy h3 {
-  max-width: 16ch;
+  max-width: 22ch;
   font-size: clamp(1.6rem, 1rem + 1.9vw, 2.7rem);
   line-height: 1.06;
 }
 .audience-copy .body {
   max-width: 44ch;
   color: var(--muted);
+}
+.audience-points {
+  margin: 0;
+  color: var(--ink);
 }
 .audience-copy .link {
   align-self: flex-start;
@@ -331,8 +335,11 @@
   .audience-copy .body {
     order: 4;
   }
-  .audience-copy .link {
+  .audience-points {
     order: 5;
+  }
+  .audience-copy .link {
+    order: 6;
     justify-self: start;
   }
   .audience-figure .system {

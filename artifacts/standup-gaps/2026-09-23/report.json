@@ -1,0 +1,49 @@
+[
+  {
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "stage": "Foundations forming",
+    "errors": []
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "stage": "Foundations forming",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "stage": "Foundations forming",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "height": 700,
+    "overflow": false,
+    "stage": "Foundations forming",
+    "errors": []
+  },
+  {
+    "interaction": "phone: the Workflows drawing arrives from Workshops",
+    "approaching": [
+      "Your work task",
+      "Useful skills",
+      "Human direction",
+      "Human review",
+      "Put into practice"
+    ],
+    "arrived": [
+      "Sales",
+      "Operations",
+      "Human direction",
+      "Finance",
+      "Shared workflow"
+    ],
+    "overflow": false,
+    "errors": []
+  }
+]

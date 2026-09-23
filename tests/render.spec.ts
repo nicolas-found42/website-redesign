@@ -1,7 +1,13 @@
 import { test, expect } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import { renderHomepage } from "../src/homepage";
-import { resources, services, testimonials } from "../src/content";
-import { readinessResult } from "../src/interactions";
+import { renderPage } from "../src/pages";
+import { resources, scorecard, services, testimonials } from "../src/content";
+import {
+  readinessResult,
+  scorecardQuestions,
+  scorecardResult,
+} from "../src/interactions";
 const page = renderHomepage();
 test("every source resource has its description and truthful access terms", () => {
   for (const item of resources) {
@@ -38,4 +44,126 @@ test("all 81 assessment combinations preserve public source thresholds", () => {
                 : "Clarify before building",
           );
         }
+});
+
+/* ── Stand-up follow-up: the scorecard, the converged copy, the review figure ── */
+
+const readable = (markup: string) =>
+  markup
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ");
+
+test("the scorecard asks the Plan B assessment in the five advertised areas", () => {
+  // Found42's "Scorecard Questions" draft, Plan B, in the order the areas take them.
+  expect(scorecardQuestions.map((question) => question.text)).toEqual([
+    "Do you currently use any AI tools to automate repetitive tasks in your business?",
+    "Have you tried using an AI tool in your business and kept using it past the first week?",
+    "Is your data stored in a centralized location accessible to your team?",
+    "Do you have policies on what data can be shared with AI tools?",
+    "Are your business processes already digitized and standardized?",
+    "Have you identified any specific tasks that could benefit from automation?",
+    "Do you have clear policies on which AI tools can be used at work?",
+    "Is your team trained to utilize AI tools for process improvement?",
+    "If you rolled out one new automation tomorrow, would your team actually use it without you pushing them to?",
+    "Do you have a process for deciding which tasks are worth automating?",
+    "Have you ever decided against trying an AI tool because of the cost?",
+    "Have you ever decided against trying an AI tool because you weren’t sure it would work for your business?",
+  ]);
+  expect(scorecard.areas.map((area) => area.name)).toEqual([
+    "Current AI use",
+    "Data practices",
+    "Workflow efficiency",
+    "AI integration readiness",
+    "Automation goals",
+  ]);
+  expect(scorecard.open).toBe("What would you like to automate instantly?");
+});
+
+test("every one of the 4,096 answer sets gets a stage and places to start, never a score", () => {
+  const sizes = scorecard.areas.map((area) => area.questions.length);
+  const stageFor = (yes: number) =>
+    yes >= 9
+      ? "Ready to scale"
+      : yes >= 7
+        ? "Ready for a first workflow"
+        : yes >= 4
+          ? "Foundations forming"
+          : "Early days";
+  for (let mask = 0; mask < 1 << 12; mask++) {
+    const answers = Array.from({ length: 12 }, (_, i) =>
+      Boolean(mask & (1 << i)),
+    );
+    const result = scorecardResult(answers);
+    const areaYes = answers.slice(0, 10).filter(Boolean).length;
+    expect(result.stage.title).toBe(stageFor(areaYes));
+    let at = 0;
+    result.areas.forEach((area, index) => {
+      const yes = answers.slice(at, at + sizes[index]).filter(Boolean).length;
+      at += sizes[index];
+      expect(area.status).toBe(
+        yes === sizes[index]
+          ? "In place"
+          : yes > 0
+            ? "Partly in place"
+            : "Next to build",
+      );
+    });
+    expect(result.next.length).toBeLessThanOrEqual(3);
+    expect(result.next.every((area) => area.status !== "In place")).toBe(true);
+    const shares = result.next.map((area) => area.share);
+    expect(shares).toEqual([...shares].sort((a, b) => a - b));
+    expect(result.barriers.map((barrier) => barrier.id)).toEqual(
+      [answers[10] && "cost", answers[11] && "fit"].filter(Boolean),
+    );
+    expect(
+      readable(
+        [
+          result.stage.title,
+          result.stage.body,
+          ...result.next.map(({ area }) => area.advice),
+          ...result.barriers.map((barrier) => barrier.advice),
+        ].join(" "),
+      ),
+    ).not.toMatch(/\d/);
+  }
+});
+
+test("Adejoke's new homepage lines are adopted where the delta record says", () => {
+  const delta = JSON.parse(
+    readFileSync(
+      "artifacts/standup-gaps/2026-09-23/lovable-delta.json",
+      "utf8",
+    ),
+  );
+  const home = readable(page);
+  for (const item of delta.items) {
+    if (item.disposition === "not adopted") {
+      expect(item.note, item.original).toBeTruthy();
+      continue;
+    }
+    expect(home, `${item.disposition}: ${item.original}`).toContain(
+      item.replacement,
+    );
+  }
+  expect(home).not.toContain("Useful prompts");
+});
+
+test("the industries strip offers all services everywhere but the services page", () => {
+  const home = readable(page);
+  const servicesPage = readable(renderPage("services"));
+  for (const text of [home, servicesPage]) {
+    expect(text).toContain("Delivered for Private Equity B2B SaaS");
+  }
+  expect(home).toContain("See all services");
+  expect(servicesPage).not.toContain("See all services");
+});
+
+test("the homepage's playbook entry carries the failure-mode review figure", () => {
+  const band = page.slice(
+    page.indexOf('id="resources"'),
+    page.indexOf('id="audiences"'),
+  );
+  expect(band).toContain('data-scene="review"');
+  expect(band).toContain("Failure-mode review illustration");
 });

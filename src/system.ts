@@ -31,6 +31,18 @@ export type SystemOptions = {
   initial?: number;
   /** Signals and pointer depth belong to the flagship drawing, not the small ones. */
   live?: boolean;
+  /**
+   * A drawing composed for one shape keeps it at every width. The services
+   * articles carry portrait drawings for as long as their layout is narrow,
+   * which is wider than the viewport query that turns other drawings portrait.
+   */
+  orientation?: Orientation;
+  /**
+   * Whether the routes draw themselves in on first view. A drawing that is
+   * brought on screen by a transition from another composition skips it: the
+   * transition is its entrance.
+   */
+  drawIn?: boolean;
 };
 
 type Signal = { route: number; phase: number };
@@ -42,17 +54,28 @@ const SIGNAL_SPEED = 190;
 const orientationOf = (matches: boolean): Orientation =>
   matches ? "portrait" : "landscape";
 
+/**
+ * Mounts a live drawing in `host`, replacing whatever still markup was there
+ * with the same composition, and returns its controls: `select` to change
+ * composition, `settle` to rest on one at once, and `dispose`.
+ */
 export function mountSystem(host: HTMLElement, options: SystemOptions) {
-  const { motionPreference, compositions, initial = 0, live = true } = options;
+  const {
+    motionPreference,
+    compositions,
+    initial = 0,
+    live = true,
+    drawIn = true,
+  } = options;
   const portrait = matchMedia(PORTRAIT);
 
   let active = initial;
-  let orientation = orientationOf(portrait.matches);
+  let orientation = options.orientation ?? orientationOf(portrait.matches);
   let tweens: AnimationPlaybackControls[] = [];
   let frame = 0;
   let started = 0;
   let visible = false;
-  let revealed = false;
+  let revealed = !drawIn;
   let pointer = { x: 0, y: 0 };
   let eased = { x: 0, y: 0 };
   const timers = new Set<number>();
@@ -399,7 +422,9 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
       runLoop();
     }
   };
+  /** Recomposes for the new shape, unless the drawing was given a fixed one. */
   const onOrientation = () => {
+    if (options.orientation) return;
     const next = orientationOf(portrait.matches);
     if (next === orientation) return;
     orientation = next;

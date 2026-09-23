@@ -25,8 +25,11 @@ The source's eight-hour service target and qualified PE target remain visible.
 
 ## Access and proof boundaries
 
-- AI Readiness Scorecard: original external ScoreApp assessment, loaded on request
-  with a direct fallback. Personal/business details required. The separate local
+- AI Readiness Scorecard: answered on the page since the stand-up follow-up.
+  Questions from Found42's Plan B draft; stages and advice are drafts awaiting
+  Found42 review ([Resources ADR 0001](contexts/resources/docs/adr/0001-native-scorecard.md)).
+  No details required; nothing sent. The original ScoreApp assessment (details
+  required, PDF report) is linked, no longer embedded. The separate local
   workflow preview retains prototype scoring (1–3, >=9 strong / >=6 promising).
 - Failure Mode Playbook: 12 checks advertised; email gate preserved. No file or
   delivery integration supplied.

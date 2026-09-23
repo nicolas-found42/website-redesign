@@ -23,7 +23,7 @@ export function renderHomepage() {
 ${hero()}
 ${resourcesSection()}
 ${audiencesSection()}
-${servicesSection()}
+${servicesSection({ allServicesLink: true })}
 ${credibilitySection()}
 </main>
 ${siteFooter()}`;
@@ -40,6 +40,11 @@ export function mountHomepage(
   return mountPage(root, renderHomepage(), options);
 }
 
+/**
+ * Renders any page's markup into `root` and wires what every page shares —
+ * navigation, the header, dialogs and forms, motion — plus whichever drawings
+ * the markup contains. Returns a disposer for all of it.
+ */
 export function mountPage(
   root: HTMLElement,
   markup: string,
@@ -158,18 +163,45 @@ export function mountPage(
     document.body.style.removeProperty("overflow");
   });
 
-  /* ── The header takes its paper once the opening spread is behind it ── */
+  /**
+   * The header takes its paper once the opening spread is behind it. Read on
+   * scroll rather than observed: a page that opens at an anchor, or jumps there
+   * before its first frame, takes the opening from below the viewport to above
+   * it without it ever intersecting, and an observer would never report it.
+   */
   const header = root.querySelector<HTMLElement>(".site-header")!;
-  const sentinel = root.querySelector<HTMLElement>(
-    ".page-opening, .hero-rail",
-  )!;
-  const lift = new IntersectionObserver(
-    ([entry]) =>
-      header.classList.toggle("is-lifted", entry.boundingClientRect.top < 0),
-    { threshold: 0 },
+  const sentinel = root.querySelector<HTMLElement>(".page-opening, .hero-rail");
+  /** Lifts the header exactly while the opening is above the viewport. */
+  const readLift = () => {
+    if (sentinel)
+      header.classList.toggle(
+        "is-lifted",
+        sentinel.getBoundingClientRect().top < 0,
+      );
+  };
+  addEventListener("scroll", readLift, { passive: true });
+  addEventListener("resize", readLift);
+  readLift();
+  disposers.push(() => {
+    removeEventListener("scroll", readLift);
+    removeEventListener("resize", readLift);
+  });
+
+  /**
+   * Anything that rides under the header needs its height, which wraps with
+   * the text size rather than following a breakpoint.
+   */
+  const measureHeader = new ResizeObserver(() =>
+    document.documentElement.style.setProperty(
+      "--header-height",
+      `${header.offsetHeight}px`,
+    ),
   );
-  if (sentinel) lift.observe(sentinel);
-  disposers.push(() => lift.disconnect());
+  measureHeader.observe(header);
+  disposers.push(() => {
+    measureHeader.disconnect();
+    document.documentElement.style.removeProperty("--header-height");
+  });
 
   /**
    * The header takes the ground of whichever band is behind it. Measured on

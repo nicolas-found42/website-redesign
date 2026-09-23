@@ -86,6 +86,8 @@ export type Audience = {
   readonly kicker: string;
   readonly title: string;
   readonly body: string;
+  /** Three short things this audience gets, from the converged reference. */
+  readonly points: readonly [string, string, string];
   readonly caption: string;
   readonly link: { readonly label: string; readonly href: string };
   readonly scene: Scene;
@@ -644,8 +646,13 @@ export const audiences: readonly Audience[] = [
     choice: "C-level executives",
     proposition: "Install a system. Use it.",
     kicker: "For C-level executives",
-    title: "Adopt a system.<br>Keep your attention.",
+    title: "Install a system,<br>not a tool rollout.",
     body: "Bring the business problem. Workflows and automations give you a practical system to use, without making tool setup or development your job.",
+    points: [
+      "Role-based skills for the executive agenda",
+      "A standard your teams can be held to",
+      "Judgment stays with your people",
+    ],
     caption:
       "Fig. 02a — a conceptual install, then a system in daily use. Illustrative; not a product or a live installation.",
     link: {
@@ -665,8 +672,13 @@ export const audiences: readonly Audience[] = [
     choice: "Individual contributors",
     proposition: "Skills specific to your role.",
     kicker: "For individual contributors",
-    title: "Start with the work<br>you know best.",
+    title: "Automate the repetitive,<br>keep the craft.",
     body: "Training is built around your role, industry and company: your recurring decisions, documents, terminology and review standards. Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop.",
+    points: [
+      "Skills built around your actual role",
+      "Less repetitive work each week",
+      "Target: 8 hours saved weekly, per person",
+    ],
     caption:
       "Fig. 02b — one method, a different skill for each role. The roles and skills shown are examples from our industry pages.",
     link: {
@@ -686,8 +698,13 @@ export const audiences: readonly Audience[] = [
     choice: "AI builders",
     proposition: "Build workflows your team uses.",
     kicker: "For AI builders",
-    title: "Build for the people<br>beside you.",
+    title: "Build for your team,<br>no engineering background.",
     body: "You do not need to be an engineer to build AI automations for colleagues and teams. Learn product-engineering principles: testing, troubleshooting and anticipating failure modes, with people reviewing the work.",
+    points: [
+      "Design and test automations",
+      "Troubleshoot with a method",
+      "Anticipate failure modes early",
+    ],
     caption:
       "Fig. 02c — from a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step.",
     link: {
