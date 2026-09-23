@@ -55,7 +55,10 @@ export function scorecardResult(answers: readonly boolean[]) {
 
 /**
  * Found42's own inquiry form. The preview cannot send an inquiry, so every
- * way to talk to the team ends here.
+ * way to talk to the team ends here. The dialog says, before the visitor
+ * leaves, what that form asks of them (its news default and its required
+ * communications agreement, observed September 23). Remove the note once the
+ * HubSpot form changes; see Launch dependency 11.
  */
 const liveInquiry = "https://www.found42.com/contact";
 
@@ -213,7 +216,7 @@ export function mountInteractions(root: HTMLElement) {
       `<button class="dialog-close" aria-label="Close dialog" data-close>Close ×</button>` +
       (type === "course"
         ? `<p class="note">Free 5-day mini-course</p><h2 id="dialog-title">Build your Strategic Advisor</h2><p>Five practical lessons to turn Claude into a rigorous thinking partner, not another chat window.</p><ul class="scope-list"><li>A reusable advisor skill</li><li>A quality-control checklist</li><li>A safe rollout pattern</li></ul>${emailForm("course-dialog", "Start the course")}<p class="note--plain">One short, practical lesson each day for five days. Unsubscribe anytime.</p><p class="note--plain">This describes the intended course. Enrollment and email delivery are not yet available.</p>`
-        : `<p class="note">Start with the bottleneck</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a><p class="note--plain">This preview cannot send inquiries. They go through Found42’s contact form.</p><form data-contact-form novalidate aria-labelledby="draft-title"><h3 id="draft-title">Or draft it here first</h3><p class="note--plain">All fields required. Your draft stays on this page, ready to copy into the live form.</p>${fields}<p class="form-status" role="status"></p><div class="draft-next" hidden><button class="link" type="button" data-copy-draft>Copy my message</button><a class="link" href="${liveInquiry}">Go to the live form&nbsp;→</a></div><button class="action action--ghost" type="submit">Check my draft&nbsp;→</button></form>`);
+        : `<p class="note">Start with the bottleneck</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a><p class="note--plain">This preview cannot send inquiries. They go through Found42’s contact form, where news and updates start at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p><form data-contact-form novalidate aria-labelledby="draft-title"><h3 id="draft-title">Or draft it here first</h3><p class="note--plain">All fields required. Your draft stays on this page, ready to copy into the live form.</p>${fields}<p class="form-status" role="status"></p><div class="draft-next" hidden><button class="link" type="button" data-copy-draft>Copy my message</button><a class="link" href="${liveInquiry}">Go to the live form&nbsp;→</a></div><button class="action action--ghost" type="submit">Check my draft&nbsp;→</button></form>`);
     enableForms();
     const draft = drafts.get(type) ?? {};
     dialog

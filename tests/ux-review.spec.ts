@@ -211,3 +211,17 @@ test("#35: one preview notice per page replaces per-card disclaimers and team no
     "Its practice advisors are custom GPTs, so they need a ChatGPT account.",
   );
 });
+
+test("#37: before handing off, the dialog says what the live form will ask", async ({
+  page,
+}) => {
+  await page.goto("/about/");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toContainText(
+    "news and updates start at Yes: choose No if you only want a reply.",
+  );
+  await expect(dialog).toContainText(
+    "It also asks you to agree to Found42 communications before it sends.",
+  );
+});
