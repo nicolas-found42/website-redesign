@@ -239,6 +239,14 @@
     font-size: var(--size-note) !important;
     letter-spacing: 0.06em;
   }
+  /* The toggle shows the icon for what it will do next. */
+  .menu-toggle .icon:last-child,
+  .menu-toggle[aria-expanded="true"] .icon:nth-last-child(2) {
+    display: none;
+  }
+  .menu-toggle[aria-expanded="true"] .icon:last-child {
+    display: block;
+  }
   /* The close control sits where the toggle is, so the eye does not travel. */
   .menu-toggle[aria-expanded="true"] {
     position: relative;
@@ -272,7 +280,7 @@
 .site-header.is-over-red .brand img {
   filter: invert(1) hue-rotate(180deg);
 }
-.footer-mark p {
+.footer-mark p:not(.note--plain) {
   max-width: 24ch;
   margin-top: 20px;
   font-family: var(--font-display);
@@ -280,6 +288,12 @@
   line-height: 1.25;
   color: #faf9f6;
   letter-spacing: var(--track-h3);
+}
+/* The supporting line keeps the annotation voice beneath the tagline. */
+.footer-mark .note--plain {
+  max-width: 40ch;
+  margin-top: 14px;
+  color: var(--muted-ink);
 }
 .footer-group h2 {
   margin: 0 0 18px;

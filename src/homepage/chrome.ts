@@ -13,7 +13,7 @@ const industries = [
 const logo = () =>
   `<a class="brand" href="${sitePath()}" aria-label="Found42 home"><img src="${sitePath("assets/found42-logo.png")}" alt="Found42" width="1024" height="1024"></a>`;
 export function siteHeader() {
-  return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header wrap">${logo()}<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation">Menu ${icon("menu")}</button><nav id="navigation" aria-label="Main navigation">${nav
+  return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header wrap">${logo()}<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation"><span class="menu-toggle-label">Menu</span>${icon("menu")}${icon("close")}</button><nav id="navigation" aria-label="Main navigation">${nav
     .slice(0, 2)
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(

@@ -53,7 +53,10 @@ export type SceneLabel = {
   readonly text: string;
   readonly kind: "source" | "human" | "result" | "caption" | "control" | "card";
   readonly beat: number;
-  /** Wrap inside this width, in field units: the label of a card or control. */
+  /**
+   * Wrap inside this width, in field units: the label of a card or control, or
+   * an annotation that would otherwise run into the next element along.
+   */
   readonly width?: number;
 };
 
@@ -152,7 +155,7 @@ const executiveLandscape: SceneLayout = {
   routes: [
     trunk(
       [
-        [120, 150],
+        [70, 150],
         [300, 150],
       ],
       1,
@@ -183,19 +186,19 @@ const executiveLandscape: SceneLayout = {
     back(
       [
         [260, 560],
-        [120, 560],
-        [120, 150],
+        [70, 560],
+        [70, 150],
       ],
       5,
     ),
   ],
   markers: [
-    marker([120, 150], "source", 0),
+    marker([70, 150], "source", 0),
     marker([740, 150], "result", 2),
     marker([260, 398], "human", 5),
   ],
   labels: [
-    label([120, 150], "under", "Your operating problem", "source", 0),
+    label([70, 150], "under", "Your operating problem", "source", 0, 220),
     label([430, 150], "center", "Install a system", "control", 1, 260),
     label([740, 150], "start", "A system you use", "result", 2),
     label([292, 250], "under", "Daily planner · illustrative", "caption", 3),
@@ -235,12 +238,12 @@ const executivePortrait: SceneLayout = {
     ),
     branch(
       [
-        [72, 384],
-        [548, 384],
+        [72, 430],
+        [548, 430],
       ],
       3,
     ),
-    ...rows(72, 548, [444, 504, 564, 624], 4),
+    ...rows(72, 548, [490, 550, 610, 670], 4),
     back(
       [
         [40, 700],
@@ -260,7 +263,7 @@ const executivePortrait: SceneLayout = {
     label([190, 60], "right", "Your operating problem", "source", 0),
     label([190, 178], "center", "Install a system", "control", 1, 340),
     label([190, 250], "right", "A system you use", "result", 2),
-    label([72, 314], "under", "Daily planner · illustrative", "caption", 3),
+    label([72, 306], "under", "Daily planner · illustrative", "caption", 3),
     label([40, 700], "under", "Human direction", "human", 5),
   ],
 };

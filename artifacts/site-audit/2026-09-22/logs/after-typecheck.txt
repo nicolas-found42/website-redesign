@@ -1,0 +1,4 @@
+
+> found42-website-preview@0.1.0 typecheck
+> tsc --noEmit
+

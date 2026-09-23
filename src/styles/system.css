@@ -114,9 +114,18 @@
  * entrance moves. Keeping those on two elements means an animation can never
  * overwrite the transform that positions an annotation.
  */
+/**
+ * A route that passes behind an annotation must not strike through it. A halo
+ * in the band's own ground keeps every letter whole while the line stays
+ * visible either side of the word.
+ */
 .system-label-text {
   display: block;
   font-style: normal;
+  text-shadow:
+    0 0 2px var(--paper),
+    0 0 3px var(--paper),
+    0 0 5px var(--paper);
 }
 /**
  * Side annotations sit *above* their node rather than level with it. Level with
@@ -129,6 +138,7 @@
   transform: translateY(-100%);
 }
 .system-label--under {
+  max-width: min(44cqw, 26ch, calc(var(--w, 100) * 1%));
   padding-top: 9px;
   padding-left: 19px;
 }

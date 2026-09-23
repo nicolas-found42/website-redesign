@@ -52,6 +52,15 @@
   display: grid;
   gap: 22px;
 }
+/* A closing band reads as one short argument: heading, then its paragraphs. */
+.closing-band > h2 {
+  max-width: 16ch;
+  margin-bottom: 28px;
+}
+.closing-band > p {
+  max-width: 62ch;
+  margin-block: 0 20px;
+}
 .resource-access .action {
   justify-self: start;
 }
@@ -75,11 +84,10 @@
 .boundary-grid p {
   margin-block: 24px;
 }
+/* The section head above already draws the rule the grid starts from. */
 .industry-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-top: 1px solid var(--line);
-  margin-top: 64px;
 }
 .industry-grid article {
   padding: 36px 30px 44px 0;
@@ -236,8 +244,26 @@ summary:focus-visible {
   color: var(--red);
   font-size: 1rem;
 }
+/* An outcome that is not an error reads in ink, so it is not mistaken for one. */
+.form-status[data-state="done"] {
+  color: var(--ink);
+}
 .form-status:empty {
   display: none;
+}
+.field {
+  display: grid;
+  gap: 10px;
+}
+.field-error {
+  color: var(--red);
+  font-size: var(--size-small);
+}
+.field-error:empty {
+  display: none;
+}
+.site-dialog .field-error {
+  margin: 0;
 }
 .site-dialog {
   color: var(--ink);
@@ -347,6 +373,8 @@ summary:focus-visible {
   .industry-menu summary {
     font-size: 1.6rem;
     font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: var(--track-h3);
   }
   #navigation .industry-menu a {
     font-size: 1.2rem;
@@ -412,9 +440,6 @@ summary:focus-visible {
     width: 100%;
     gap: 12px;
   }
-  .footer-mark .note--plain {
-    max-width: 40ch;
-  }
   .industry-grid article {
     padding-right: 0;
   }
@@ -433,9 +458,6 @@ summary:focus-visible {
 .site-header.is-over-red .industry-menu summary::after,
 .site-header.is-over-red #navigation [aria-current="page"] {
   color: #ffaca5;
-}
-[id] {
-  scroll-margin-top: 100px;
 }
 /* A mobile menu always has paper ground, even when opened above an ink band. */
 /* A filter establishes a containing block for fixed descendants. Remove the
@@ -494,9 +516,6 @@ button:disabled {
 /* Keep labels intact and long access disclosures readable on tablets. */
 .index > b {
   flex-shrink: 0;
-}
-.scorecard-frame {
-  scroll-margin-top: 100px;
 }
 @media (max-width: 860px) {
   .content-split {
