@@ -8,7 +8,7 @@ import {
   industryFounder,
   services,
 } from "./content";
-import { previewNote, siteHeader, siteFooter } from "./homepage/chrome";
+import { siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
 import { servicesSection } from "./homepage/services";
 import { audiencesSection } from "./homepage/audiences";
@@ -20,7 +20,7 @@ export const pageMeta: Record<string, { title: string; description: string }> =
     "": {
       title: "Found42 — Hands-on Claude skills and training for business",
       description:
-        "Hands-on Claude skills and training for your business: usable AI systems for executives, role-specific training for individual contributors and AI builders.",
+      "Found42 helps non-technical teams use AI in the work they already own: role-specific training, tailored skills and workflows, and automation of repeatable work.",
     },
     resources: {
       title: "Free Claude Resources | Found42",
@@ -54,15 +54,7 @@ export const pageMeta: Record<string, { title: string; description: string }> =
     },
   };
 const index = (label: string) =>
-  `<p class="index"><b>F42</b><span class="rule"></span><span class="note">${label}</span></p>`;
-/**
- * A work email needs a dot in its domain. The browser's own email check
- * accepts `name@gmail`, a typo that would lose the visitor's request once
- * forms are connected. Written without backslashes so it survives templating.
- */
-export const emailPattern = "[^@]+@[^@]+[.][^@]+";
-export const emailForm = (id: string, button: string) =>
-  `<form class="email-form" data-email-form novalidate><label for="${id}-email">Work email <span class="note--plain">(required)</span></label><div class="form-line"><input id="${id}-email" name="email" type="email" pattern="${emailPattern}" disabled data-await-script autocomplete="email" maxlength="255" required aria-describedby="${id}-availability ${id}-error" placeholder="you@company.com"><button class="action" type="submit" disabled data-await-script>${button}&nbsp;→</button></div><p id="${id}-availability" class="note--plain">Preview: your email is not sent or stored.</p><p id="${id}-error" class="form-status" role="status"></p><noscript>JavaScript is needed to preview validation. Delivery is not connected.</noscript></form>`;
+  `<p class="note section-label">${label}</p>`;
 /** An opening's lead, followed by what Claude is whenever the lead names it. */
 const lead = (body: string) =>
   `<p class="lead">${body}</p>${body.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
@@ -74,17 +66,22 @@ function resourcesPage() {
       "Free resources",
       "Start with the work.",
       "Four practical tools to help your team choose better use cases, build stronger skills, and catch weak outputs.",
-      '<p class="page-number">04</p><h2 class="heading-h3">Free working resources</h2><p>No abstract AI curriculum.</p>',
+      '<p class="note page-aside-label">No abstract AI curriculum.</p>',
     ) +
-    `<section id="scorecard" class="wrap band"><div class="content-split scorecard-split"><div class="scorecard-intro">${index("01 / AI Readiness Scorecard")}<h2 class="display">Know where you stand.</h2><p>Twelve yes-or-no questions about your current AI use, data practices, workflows, team readiness and automation goals, then one open question. It takes about five minutes.</p><p>Your result is a readiness stage, a status for each area and where to start.</p><p class="note--plain">No email required. Your answers stay in this browser and are not sent or stored.</p></div><div id="scorecard-app" class="assessment scorecard" role="group" aria-label="AI Readiness Scorecard"><noscript><p class="assessment-body">The scorecard needs JavaScript. The original assessment on ScoreApp is linked on this page.</p></noscript></div><div class="scorecard-original"><p class="note--plain">Prefer an emailed PDF report? The original assessment on ScoreApp asks for your first and last name, email, company and country before the questions. Its privacy and communications terms apply.</p><a class="link" href="https://found42.scoreapp.com/">Take the original assessment on ScoreApp&nbsp;→</a></div></div><details class="workflow-preview"><summary>Try the four-question workflow preview · No email required</summary><p>From the redesign prototype: test one workflow against repetition, output clarity, review safety and frequency. It is separate from the AI Readiness Scorecard above, which looks at the business rather than one workflow.</p><div id="assessment" class="assessment" aria-label="Workflow discussion preview"></div></details></section>` +
+    `<section id="scorecard" class="wrap band"><div class="content-split scorecard-split"><div class="scorecard-intro"><p class="note section-label">AI Readiness Scorecard</p><h2 class="display">AI Readiness Scorecard</h2><p>${resources[0].description}</p><p>Twelve yes-or-no questions about your current AI use, data practices, workflows, team readiness and automation goals, then one open question. It takes about five minutes.</p><p>Your result is a readiness stage, a status for each area and where to start.</p><p class="note--plain">No email required. Your answers stay in this browser and are not sent or stored.</p></div><div id="scorecard-app" class="assessment scorecard" role="group" aria-label="AI Readiness Scorecard"><noscript><p class="assessment-body">The scorecard needs JavaScript. The original assessment on ScoreApp is linked on this page.</p></noscript></div><div class="scorecard-original"><p class="note--plain">Prefer an emailed PDF report? The original assessment on ScoreApp asks for your first and last name, email, company and country before the questions. Its privacy and communications terms apply.</p><a class="link" href="https://found42.scoreapp.com/">Take the original assessment on ScoreApp&nbsp;→</a></div></div><details class="workflow-preview"><summary>Try the four-question workflow preview · No email required</summary><p>From the redesign prototype: test one workflow against repetition, output clarity, review safety and frequency. It is separate from the AI Readiness Scorecard above, which looks at the business rather than one workflow.</p><div id="assessment" class="assessment" aria-label="Workflow discussion preview"></div></details></section>` +
     resources
-      .slice(1)
-      .map(
-        (r, i) =>
-          `<section id="${r.id}" class="resource-detail ${i === 1 ? "on-ink" : ""}" ${i === 1 ? 'data-ground="ink"' : ""}><div class="wrap content-split"><div>${index(`0${i + 2} / Free resource`)}<h2 class="display">${r.title}</h2><p>${r.description}</p>${r.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Fig. — three failure modes the playbook is built to catch, and the human review a result passes before it reaches the business. The complete 12-check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact">Want this tailored? Talk to us&nbsp;→</button></div><div class="resource-access"><h3>Get ${r.outcome.toLowerCase()}</h3><p class="note--plain">${r.gate}</p>${r.id === "playbook" ? '<p>Twelve checks for spotting weak outputs, missing context and false confidence, so a person questions a result before relying on it.</p><a class="link" href="https://www.found42.com/ai-failure-modes-playbook">Request the published AI Failure Modes Playbook&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, your LinkedIn profile and a human check.</p>' : ""}${r.id === "course" ? '<button class="action" data-dialog="course">Explore the mini-course&nbsp;→</button>' : emailForm(r.id, "Preview the request")}</div></div></section>`,
-      )
+      .filter((resource) => resource.id !== "scorecard")
+      .map((resource) => {
+        const access =
+          resource.status === "unavailable"
+            ? `<div class="resource-unavailable"><p>${resource.gate}</p>${"href" in resource ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>` : `<button class="link" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</button>`}</div>`
+            : resource.id === "playbook"
+              ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, LinkedIn profile and a human check.</p>`
+              : `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`;
+        return `<section id="${resource.id}" class="resource-detail ${resource.id === "library" ? "on-ink" : ""}" ${resource.id === "library" ? 'data-ground="ink"' : ""}><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</button></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
+      })
       .join("") +
-    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="https://www.found42.com/toolkit">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the forthcoming Strategic Advisor course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#engagements")}">See how engagements work&nbsp;→</a></section>` +
+    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="https://www.found42.com/toolkit">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the unavailable Strategic Advisor mini-course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#engagements")}">See how engagements work&nbsp;→</a></section>` +
     inquirySection()
   );
 }
@@ -162,8 +159,7 @@ function blogPage() {
       "Operator notes",
       'Useful thinking,<br><span class="signal">plainly written.</span>',
       "Field notes on training teams, designing Claude skills, and deciding what should, and should not, be automated.",
-      '<h2 class="heading-h3">New essays are coming.</h2><p>Get the first issue when it’s ready.</p>' +
-        emailForm("newsletter", "Join the list"),
+      '<p class="note">New essays are coming.</p><p>No newsletter subscription is available yet.</p>',
     ) +
     `<section class="wrap band essay-list" aria-label="Forthcoming essays">${essays.map((e, i) => `<article><p class="note">Essay 0${i + 1}${e.href ? ` <span>${e.minutes} min</span>` : ""}</p><div><h2>${e.title}</h2><p>${e.description}</p></div><p class="note">Coming soon</p></article>`).join("")}<p class="lead">The focus: useful practice shaped around a specific role, industry and company.</p><a class="link" href="${sitePath("resources/#scorecard")}">Try the readiness check now&nbsp;→</a></section>`
   );
@@ -188,9 +184,7 @@ export function renderPage(route: string) {
                     "This destination is not part of the Found42 preview.",
                     `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
                   );
-  return (
-    siteHeader() +
-    `<main id="main">${previewNote()}${content}</main>` +
-    siteFooter()
-  );
+  return siteHeader() +
+    `<main id="main">${content}</main>` +
+    siteFooter();
 }

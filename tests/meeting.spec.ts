@@ -11,27 +11,28 @@ test("meeting journey reads in order and separates audiences from delivery", asy
   expect(bands[1]).toBe("resources");
   expect(bands[2]).toBe("audiences");
   expect(bands[3]).toBe("services");
-  await expect(page.locator(".hero-actions .action")).toHaveCount(1);
+  await expect(page.locator(".hero-actions .action")).toHaveCount(2);
   await expect(page.locator(".audience-panel")).toHaveCount(3);
   await expect(page.locator("#audiences")).toContainText(
     "You do not need to be an engineer",
   );
-  const names = [
-    "AI Readiness Scorecard",
-    "Strategic Advisor Mini-Course",
-    "Skills Starter Library",
-    "Failure Mode Playbook",
-  ];
   expect(await page.locator("#resources h3").allTextContents()).toEqual([
-    ...names,
-    "Start with value. Build what proves useful.",
+    "AI Readiness Scorecard",
+    "C-Level AI Toolkit",
   ]);
   await page.goto("/resources/");
   expect(
     await page
       .locator("main section[id]")
       .evaluateAll((nodes) => nodes.map((n) => n.id)),
-  ).toEqual(["scorecard", "course", "library", "playbook", "contact"]);
+  ).toEqual([
+    "scorecard",
+    "toolkit",
+    "playbook",
+    "library",
+    "course",
+    "contact",
+  ]);
   await expect(
     page.getByText("Executive Communications", { exact: false }),
   ).toHaveCount(0);

@@ -70,8 +70,16 @@ test("prerendered content survives script failure and forms cannot submit accide
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Start with the work.",
   );
-  await expect(page.locator("#playbook input")).toBeDisabled();
-  await expect(page.locator('#playbook button[type="submit"]')).toBeDisabled();
+  // No active local email form remains: the playbook, verified lesson and
+  // toolkit each open their published destination, while unavailable items
+  // stay honest and the consultation uses the live contact route.
+  await expect(
+    page.getByRole("link", { name: /Request the published AI Failure Modes/ }),
+  ).toHaveAttribute(
+    "href",
+    "https://www.found42.com/ai-failure-modes-playbook",
+  );
+  await expect(page.locator("#library form")).toHaveCount(0);
   await page.goto(base + "/");
   // Without a script the gallery is three panels read one after another.
   await expect(page.locator(".audience-panel")).toHaveCount(3);

@@ -1,11 +1,12 @@
 import { claudeGloss } from "../content";
 import { arrow, icon } from "../icons";
+import { sitePath } from "../paths";
 
 /**
  * The opening spread. The headline says what Found42 does in plain words —
- * hands-on Claude skills and training for a business — and the lead says whom
- * it is for and how: usable systems for executives, practical training for the
- * people doing the work, both built around a role, an industry and a company.
+ * training teams, building useful skills and automating repeatable work. The
+ * two actions give self-serve and consultation visitors equal, clear routes,
+ * and the attributed workshop account sits beside the opening claim.
  * The headline and the working-system drawing are one composition rather than
  * two columns: the drawing fills the field and the type sits over its open
  * left side, lifted clear by a warm paper wash.
@@ -18,18 +19,21 @@ export function hero() {
  <div class="hero-art" data-system-host></div>
  <div class="wrap hero-inner">
   <div class="hero-copy">
-   <p class="index"><span class="rule"></span><span class="note">Practical AI. Human ambition.</span></p>
-   <h1 id="hero-title" class="display" data-reveal-lines><span class="sentence">Hands-on Claude skills</span> <span class="sentence">and training for</span> <span class="sentence"><span class="signal">your business.</span></span></h1>
-   <p class="lead hero-lead" data-reveal>Usable AI systems for executives. Practical training for the people who do the work. Both built around your role, your industry and your company, so less attention goes to repetitive work and more to judgment.</p>
+   <h1 id="hero-title" class="display" data-reveal-lines><span class="sentence">Train teams.</span> <span class="sentence">Build useful skills.</span> <span class="sentence"><span class="signal">Automate the work.</span></span></h1>
+   <p class="lead hero-lead" data-reveal>Found42 helps non-technical teams use AI in the work they already own. We train people in their roles, build tailored skills and workflows, and automate repeatable work while judgment stays with your team.</p>
    <p class="note--plain hero-gloss" data-reveal>${claudeGloss}</p>
    <div class="hero-actions" data-reveal>
-    <a class="action" href="#resources">Explore free resources ${arrow}</a>
+    <a class="action" href="${sitePath("resources/")}">Explore free resources ${arrow}</a>
+    <button class="action" type="button" data-dialog="contact">Talk to our team ${arrow}</button>
    </div>
   </div>
+  <figure class="hero-proof" aria-labelledby="hero-proof-title">
+   <p class="note" id="hero-proof-title">What a participant said</p>
+   <blockquote><p>“What stood out in the C-Level AI workshop was how practical it was.”</p></blockquote>
+   <figcaption>Paul Keely · Co-founder / Managing Director, Palladium Security LLC</figcaption>
+  </figure>
  </div>
  <div class="wrap hero-rail">
-  <span class="note">Workshops <i>·</i> Workflows <i>·</i> Automations</span>
-  <span class="note hero-caption">Fig. 01 — your context, with human direction</span>
   <button class="motion-toggle note" type="button" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button>
   <a class="hero-cue note" href="#resources">Find your starting point ${icon("down")}</a>
  </div>

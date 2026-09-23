@@ -5,9 +5,9 @@
  * red for what is human or live, monospaced annotations — but each one is its
  * own picture rather than the transit map with new words on it:
  *
- * - **Executives** install a system and then use it: an operating problem, a
- *   conceptual install step, and a daily planner that runs with human
- *   direction. The planner is illustrative; nothing here is a product.
+ * - **Executives** apply a tailored skill to an operating problem and receive an
+ *   illustrative decision brief, with executive direction still deciding how it
+ *   is used. The operating view is hypothetical, not a client artifact.
  * - **Contributors** get a skill for the role they already have: four roles in
  *   one company, each with its own skill, all ending with the human in the loop.
  * - **Builders** climb from a work problem to a workflow the team uses: three
@@ -21,6 +21,7 @@
  * composition is always the resting state.
  */
 import { cornerRadius, roundedPolyline, type Point } from "./schematic";
+import { destinationRegister } from "./content";
 import { sitePath } from "./paths";
 
 export type SceneAnchor =
@@ -201,10 +202,10 @@ const executiveLandscape: SceneLayout = {
   ],
   labels: [
     label([70, 150], "under", "Your operating problem", "source", 0, 220),
-    label([430, 150], "center", "Install a system", "control", 1, 260),
-    label([740, 150], "start", "A system you use", "result", 2),
-    label([292, 250], "under", "Daily planner · illustrative", "caption", 3),
-    label([260, 398], "end", "Human direction", "human", 5),
+    label([430, 150], "center", "Tailored executive skill", "control", 1, 260),
+    label([740, 150], "start", "A decision brief you use", "result", 2),
+    label([292, 250], "under", "Illustrative executive operating view", "caption", 3),
+    label([260, 398], "end", "Executive direction", "human", 5),
   ],
 };
 
@@ -263,10 +264,10 @@ const executivePortrait: SceneLayout = {
   ],
   labels: [
     label([190, 60], "right", "Your operating problem", "source", 0),
-    label([190, 178], "center", "Install a system", "control", 1, 340),
-    label([190, 250], "right", "A system you use", "result", 2),
-    label([72, 306], "under", "Daily planner · illustrative", "caption", 3),
-    label([40, 700], "under", "Human direction", "human", 5),
+    label([190, 178], "center", "Tailored executive skill", "control", 1, 340),
+    label([190, 250], "right", "A decision brief you use", "result", 2),
+    label([72, 306], "above", "Illustrative executive operating view", "caption", 3),
+    label([40, 700], "under", "Executive direction", "human", 5),
   ],
 };
 
@@ -644,25 +645,25 @@ export const audiences: readonly Audience[] = [
   {
     id: "executives",
     choice: "C-level executives",
-    proposition: "Install a system. Use it.",
+    proposition: "Use AI in your decisions and operations.",
     kicker: "For C-level executives",
-    title: "Install a system,<br>not a tool rollout.",
-    body: "Bring the business problem. Workflows and automations give you a practical system to use, without making tool setup or development your job.",
+    title: "Use AI for your decisions,<br>teams and operations.",
+    body: "Bring the operating problem behind a team, decision or business result. Found42 helps you shape a useful AI skill or workflow for that work, while your people remain responsible for the decision and its quality.",
     points: [
       "Role-based skills for the executive agenda",
       "A standard your teams can be held to",
       "Judgment stays with your people",
     ],
     caption:
-      "Fig. 02a — a conceptual install, then a system in daily use. Illustrative; not a product or a live installation.",
+      "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result.",
     link: {
-      label: "Explore usable systems",
-      href: sitePath("services/#service-automation"),
+      label: "Explore the Four-Hour AI Executive",
+      href: destinationRegister.executiveCourse,
     },
     scene: {
       id: "executives",
       description:
-        "Executive illustration: an operating problem passes through a conceptual install step into a daily planner, which then runs with human direction.",
+        "Executive illustration: an operating problem enters a tailored skill and produces an illustrative decision brief, with human direction deciding how it is used.",
       landscape: executiveLandscape,
       portrait: executivePortrait,
     },
@@ -677,10 +678,10 @@ export const audiences: readonly Audience[] = [
     points: [
       "Skills built around your actual role",
       "Less repetitive work each week",
-      "Target: 8 hours saved weekly, per person",
+      "Human judgment stays with you",
     ],
     caption:
-      "Fig. 02b — one method, a different skill for each role. The roles and skills shown are examples from our industry pages.",
+      "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality.",
     link: {
       label: "Explore tailored training",
       href: sitePath("services/#service-training"),
@@ -703,13 +704,13 @@ export const audiences: readonly Audience[] = [
     points: [
       "Design and test automations",
       "Troubleshoot with a method",
-      "Anticipate failure modes early",
+      "Keep people reviewing the work",
     ],
     caption:
-      "Fig. 02c — from a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step.",
+      "From a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step.",
     link: {
-      label: "Explore how we help builders",
-      href: sitePath("services/#services"),
+      label: "Talk to us about AI builder support",
+      href: destinationRegister.liveInquiry,
     },
     scene: {
       id: "builders",

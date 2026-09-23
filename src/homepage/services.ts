@@ -45,14 +45,14 @@ export function servicesSection({ allServicesLink = false } = {}) {
     })
     .join("");
 
-  return `<section id="services" class="services on-ink band" data-ground="ink" aria-labelledby="services-title">
+  return `<section id="services" class="services band" data-ground="ink" aria-labelledby="services-title">
  <div class="wrap">
   <div class="services-head">
    <div>
-    <p class="index"><b>02</b><span class="rule"></span><span class="note">How we help</span></p>
-    <h2 id="services-title" class="display" data-reveal-lines>From possibility to practical work.</h2>
+    <p class="note section-label">Services</p>
+    <h2 id="services-title" class="display" data-reveal-lines>How we deliver our services</h2>
    </div>
-   <p class="lead" data-reveal>Three ways to deliver the same outcome. Built around your role, your industry, and your company—not a generic AI curriculum. We train teams, build custom skills, and automate repeatable work.</p>
+   <p class="lead" data-reveal>Three ways Found42 helps: live training, tailored workflows and repeatable automations. Each engagement starts with the work, explains where you participate, and leaves your team with something usable.</p>
   </div>
   <div class="services-stage">
    <div class="services-aside">

@@ -84,6 +84,22 @@ evidence and logs: [artifacts/site-audit/2026-09-22](../artifacts/site-audit/202
 Re-capture with `scripts/capture-audit-evidence.mjs`. Not run: physical devices,
 real Safari, screen readers.
 
+## September 23 homepage journeys
+
+Issue #43 replaces prototype-era journey copy and local no-send forms with clear
+homepage paths, published resource destinations, interim service routes, and
+honest unavailable states. The inquiry dialog now hands off directly to Found42's
+live contact form; the scorecard's open answer remains local and is shown only as
+context to copy. The ordinary interface adopts the approachable business-site
+visual voice while the routed drawings keep their alternatives and motion states.
+
+Validation: `npm run typecheck` passed; `npm run build` passed; `npm test` —
+**257 passed (1.8m)** across unit, Chromium, Firefox and WebKit. This includes
+320px doubled-text reflow, three-engine drawing geometry, resource destination
+coverage, unavailable-state copy, and no local submission forms. A local passing
+suite still does not verify delivery by Found42's external contact form or any
+resource request route.
+
 ## Stand-up transcript follow-up
 
 Baseline at main c00cc1c: `npm test` — 183 passed. Current validation:

@@ -9,7 +9,7 @@
   color: #fff;
   background: var(--red);
   isolation: isolate;
-  overflow: hidden;
+  overflow: clip;
 }
 .contact::before {
   position: absolute;
@@ -29,6 +29,8 @@
   right: 0;
   left: 0;
   z-index: 0;
+  width: 100%;
+  max-width: 100%;
   height: clamp(160px, 40%, 380px);
   pointer-events: none;
   translate: 0 -50%;
@@ -46,14 +48,8 @@
   gap: clamp(36px, 5vw, 96px);
   align-items: start;
 }
-.contact .index {
-  color: rgb(255 255 255 / 76%);
-}
-.contact .index b {
-  color: #fff;
-}
-.contact .index .rule {
-  background: rgb(255 255 255 / 45%);
+.contact .section-label {
+  color: rgb(255 255 255 / 82%);
 }
 .contact h2 {
   max-width: 17ch;

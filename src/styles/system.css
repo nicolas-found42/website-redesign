@@ -101,12 +101,12 @@
   display: block;
   width: max-content;
   max-width: min(44cqw, 26ch);
-  font-family: var(--font-note);
+  font-family: var(--font-text);
   font-size: clamp(0.75rem, 0.52rem + 0.62cqw, 0.875rem);
   font-weight: 500;
   line-height: 1.3;
   color: var(--muted);
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   text-wrap: pretty;
 }
 /**
@@ -162,8 +162,8 @@
 .system-label--human {
   font-weight: 700;
   color: var(--ink);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: none;
+  letter-spacing: 0;
 }
 .system-label--result {
   font-weight: 700;
@@ -202,6 +202,35 @@
     font-size: 0.75rem;
     max-width: 14ch;
   }
+}
+
+/*
+ * An annotation must never enlarge the document. A centred label is centered
+ * on its node, so it can need room to both sides; a right-start label can only
+ * use what remains to the right. Clamp those boxes to the drawing and let their
+ * words wrap instead of spilling past the page at enlarged text sizes.
+ */
+.system-label--start,
+.system-label--under,
+.system-label--end,
+.system-label--above,
+.system-label--below,
+.system-label--right,
+.system-label--center,
+.system-label--caption,
+.scene-field .system-label--human {
+  overflow-wrap: anywhere;
+}
+.system-label--start,
+.system-label--under,
+.system-label--right {
+  max-width: min(44cqw, 26ch, calc(100cqw - var(--x, 0) * 1% - 24px));
+}
+.system-label--end,
+.system-label--above,
+.system-label--below,
+.system-label--center {
+  max-width: min(44cqw, 26ch, calc(100cqw - 24px));
 }
 
 /* ── The still service drawings ── */

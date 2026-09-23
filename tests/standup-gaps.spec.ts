@@ -42,16 +42,17 @@ test("on a phone, a service's drawing arrives as the one before it and settles a
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
   const own = await labelsOf(page, 1);
-  expect(own).toContain("Sales");
+  expect(own).toContain("Operating problem");
+  const before = await labelsOf(page, 0);
 
   await reveal(page, 1, 0.15);
-  await expect.poll(() => labelsOf(page, 1)).toContain("Your work task");
+  await expect.poll(() => labelsOf(page, 1)).toEqual(before);
 
   await reveal(page, 1, 1);
   await expect.poll(() => labelsOf(page, 1), { timeout: 4000 }).toEqual(own);
 
   // The third was never approached, so it never stopped being its own.
-  expect(await labelsOf(page, 2)).toContain("Repeatable work");
+  expect(await labelsOf(page, 2)).toContain("Repetitive work");
   await context.close();
 });
 
@@ -97,6 +98,18 @@ for (const [width, text] of [
       exact: true,
     });
     await automations.tap();
+    // Do not depend on a smooth-scroll engine remembering the destination.
+    // Let it settle, then put the selected article's start just below the rail
+    // so both the click state and the reading observer agree in every engine.
+    await page.waitForTimeout(250);
+    await page.evaluate(() => {
+      const article = document.querySelector('[data-service-article="2"]')!;
+      const rail = document.querySelector(".services-aside")!;
+      const header = document.querySelector(".site-header")!.getBoundingClientRect();
+      const railBox = rail.getBoundingClientRect();
+      const target = Math.max(railBox.bottom + 1, header.bottom + 1);
+      window.scrollBy({ top: article.getBoundingClientRect().top - target, behavior: "instant" });
+    });
     await expect(automations).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator('[data-service-article="2"]')).toHaveClass(
       /is-current/,
@@ -120,16 +133,25 @@ for (const [width, text] of [
     await context.close();
   });
 
-test("the homepage's playbook entry draws the review it describes", async ({
+test("the homepage's published playbook is one click from its full inventory", async ({
   page,
 }) => {
   await page.goto("/");
-  const entry = page.locator("#resources .resource--figure");
-  await expect(entry.locator("h3")).toHaveText("Failure Mode Playbook");
-  await expect(
-    entry.getByRole("img", { name: /Failure-mode review illustration/ }),
-  ).toHaveCount(1);
-  await expect(entry).toContainText("Human review");
+  await expect(page.locator("#resources h3")).toHaveText([
+    "AI Readiness Scorecard",
+    "C-Level AI Toolkit",
+  ]);
+  await page
+    .getByRole("link", { name: "Explore all free resources" })
+    .click();
+  const entry = page.getByRole("link", {
+    name: "Request the published AI Failure Modes Playbook",
+  });
+  await expect(entry).toHaveAttribute(
+    "href",
+    "https://www.found42.com/ai-failure-modes-playbook",
+  );
+  await expect(page.locator("#playbook")).toContainText("Failure Modes Playbook");
 });
 
 test("the scorecard walks forward and back, keeps what was typed, and never sends it", async ({
@@ -180,9 +202,10 @@ test("the scorecard walks forward and back, keeps what was typed, and never send
 
   await app.getByRole("button", { name: /Plan the next step/ }).click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog.getByLabel("What should work better?")).toHaveValue(
-    typed,
-  );
+  await expect(dialog.getByText("From your readiness check")).toBeVisible();
+  await expect(dialog).toContainText(typed);
+  await expect(dialog.locator("img")).toHaveCount(0);
+  expect(await page.evaluate(() => "injected" in window)).toBe(false);
   await page.keyboard.press("Escape");
   await app.getByRole("button", { name: "Retake" }).click();
   await expect(app).toContainText("Question 1 of 12");

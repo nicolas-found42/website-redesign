@@ -68,24 +68,13 @@ test("F01: a wheel over the open mobile menu scrolls the menu, not the page", as
   expect(await page.evaluate(() => scrollY)).toBe(0);
 });
 
-test("F02, F06: an inquiry survives closing the dialog, and the backdrop closes it", async ({
+test("F02, F06: the inquiry backdrop and focus dismissal still work", async ({
   page,
 }) => {
   await page.goto("/resources/");
   const trigger = page.getByRole("button", { name: /Talk to our team/ });
   await trigger.click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("Your name").fill("Preview User");
-  await dialog
-    .getByLabel("What should work better?")
-    .fill("Weekly reporting takes a full day");
-  await page.keyboard.press("Escape");
-  await expect(dialog).toBeHidden();
-  await trigger.click();
-  await expect(dialog.getByLabel("Your name")).toHaveValue("Preview User");
-  await expect(dialog.getByLabel("What should work better?")).toHaveValue(
-    "Weekly reporting takes a full day",
-  );
   // A click inside the dialog's own box never dismisses it…
   const bounds = await dialog.boundingBox();
   await page.mouse.click(bounds!.x + 8, bounds!.y + 8);
@@ -96,48 +85,17 @@ test("F02, F06: an inquiry survives closing the dialog, and the backdrop closes 
   await expect(trigger).toBeFocused();
 });
 
-test("F03, F17: each invalid inquiry field says what is wrong, and a clean result is not shown as an error", async ({
+test("F03, F17: the live inquiry handoff is accessible and honest", async ({
   page,
 }) => {
   await page.goto("/resources/");
   await page.getByRole("button", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("Your name").fill("Preview User");
-  await dialog.getByLabel("Work email").fill("not-an-email");
-  await dialog.getByLabel("Company").fill("Preview");
-  await dialog.getByLabel("What should work better?").fill("Short");
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-
-  const email = dialog.getByLabel("Work email");
-  await expect(email).toBeFocused();
-  await expect(email).toHaveAttribute("aria-invalid", "true");
-  await expect(email).toHaveAccessibleDescription(/valid work email/);
+  await expect(dialog).toContainText("consultation inquiry, not reserving a meeting");
+  await expect(dialog.locator("form")).toHaveCount(0);
   await expect(
-    dialog.getByLabel("What should work better?"),
-  ).toHaveAccessibleDescription(/at least 10 characters/);
-  // A field that is fine carries no message.
-  await expect(dialog.getByLabel("Your name")).toHaveAccessibleDescription("");
-  const status = dialog.locator(".form-status");
-  await expect(status).toHaveText(/Complete every field.*2 fields need/);
-
-  // Correcting a field clears its error as it is fixed, before resubmitting.
-  await email.fill("preview@example.com");
-  await expect(email).toHaveAttribute("aria-invalid", "false");
-  await expect(email).toHaveAccessibleDescription("");
-  await expect(status).toHaveText(/1 field needs attention/);
-  await dialog
-    .getByLabel("What should work better?")
-    .fill("Weekly reporting takes a full day");
-  await expect(status).toBeHidden();
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  await expect(status).toContainText("Nothing was sent.");
-  await expect(email).toHaveAccessibleDescription("");
-  const [statusColour, errorRed] = await status.evaluate((el) => [
-    getComputedStyle(el).color,
-    getComputedStyle(document.documentElement).getPropertyValue("--red"),
-  ]);
-  expect(statusColour).not.toBe("rgb(183, 6, 17)");
-  expect(errorRed.trim()).toBe("#b70611");
+    dialog.getByRole("link", { name: "Open the live inquiry form" }),
+  ).toHaveClass(/\baction\b/);
   const result = await new AxeBuilder({ page })
     .include("dialog")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
@@ -266,9 +224,9 @@ test("F08: executive scene annotations are not covered by the drawing", async ({
           .querySelector(".system-label-text")!
           .getBoundingClientRect();
       const pill = [...panel.querySelectorAll(".system-label")]
-        .find((el) => el.textContent?.includes("Install a system"))!
+        .find((el) => el.textContent?.includes("Tailored executive skill"))!
         .getBoundingClientRect();
-      // The planner's first rule: the topmost horizontal route inside the panel.
+      // The operating view's first rule: the topmost horizontal route inside the panel.
       const scale = field.height / svg.viewBox.baseVal.height;
       const rule = Math.min(
         ...[...svg.querySelectorAll(".route")]
@@ -282,11 +240,11 @@ test("F08: executive scene annotations are not covered by the drawing", async ({
           .filter((y) => y > 300),
       );
       if (!Number.isFinite(rule))
-        throw new Error("No horizontal planner rule found in the scene");
+        throw new Error("No horizontal operating-view rule found in the scene");
       return {
         problemRight: text("Your operating problem").right - field.left,
         pillLeft: pill.left - field.left,
-        captionBottom: text("Daily planner").bottom - field.top,
+        captionBottom: text("Illustrative executive operating view").bottom - field.top,
         ruleTop: rule * scale,
       };
     });

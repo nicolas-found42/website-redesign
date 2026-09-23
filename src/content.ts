@@ -1,42 +1,77 @@
-/** Lovable content baseline, captured 2026-09-16. Full provenance is in artifacts/lovable-migration. */
+import { sitePath } from "./paths";
+
+/** Every active learning or resource destination the site is allowed to publish. */
+export const destinationRegister = {
+  executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
+  strategicAdvisorLesson: "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
+  toolkit: "https://www.found42.com/toolkit",
+  failureModePlaybook: "https://www.found42.com/ai-failure-modes-playbook",
+  liveInquiry: "https://www.found42.com/contact",
+} as const;
+
+/**
+ * The public free-resource inventory. Availability and destination are owned
+ * together so a homepage preview and the complete resource page cannot drift
+ * into promising something different. Unfulfilled source offerings stay in the
+ * register as unavailable rather than presenting an email form that sends nowhere.
+ */
 const resourceInventory = [
   {
     id: "scorecard",
     title: "AI Readiness Scorecard",
     description:
       "Assess your current AI use, data practices and workflow readiness before deciding where to focus.",
-    outcome: "A 5-minute operational baseline",
+    outcome: "A readiness stage and practical next steps",
     gate: "Free · 12 yes-or-no questions · No email required. Answers stay in your browser.",
     action: "Take the scorecard",
+    status: "available",
+  },
+  {
+    id: "toolkit",
+    title: "C-Level AI Toolkit",
+    description:
+      "Explore workshop video, slides, fictional practice cases and custom GPT links built for executive AI practice.",
+    outcome: "Public workshop materials and practice exercises",
+    gate: "Public page · Some custom GPT links require a ChatGPT account.",
+    action: "Explore the toolkit",
+    status: "available",
+    href: destinationRegister.toolkit,
   },
   {
     id: "playbook",
-    title: "Failure Mode Playbook",
+    title: "AI Failure Modes Playbook",
     description:
       "Spot weak outputs, missing context, and false confidence before they reach the business.",
-    outcome: "12 checks for safer adoption",
-    gate: "Free resource · Work email requested.",
-    action: "Explore the playbook",
+    outcome: "A request for the published playbook",
+    gate: "Free resource · The published request form asks for your work email and LinkedIn profile.",
+    action: "Request the published AI Failure Modes Playbook",
+    status: "available",
+    href: destinationRegister.failureModePlaybook,
   },
   {
     id: "library",
     title: "Skills Starter Library",
     description:
-      "Start with reusable skills for analysis, synthesis, review, and decision support.",
-    outcome: "Four working skill patterns",
-    gate: "Free resource · Work email requested.",
-    action: "Explore the library",
+      "Role-specific working skills for analysis, synthesis, review and decision support.",
+    outcome: "No starter files are available yet",
+    gate: "Unavailable · The published library and delivery route are still being prepared.",
+    action: "Ask us about the library",
+    status: "unavailable",
   },
   {
     id: "course",
     title: "Strategic Advisor Mini-Course",
     description:
-      "Build a disciplined thinking partner that challenges assumptions and sharpens decisions.",
-    outcome: "Five practical daily lessons",
-    gate: "Free 5-day mini-course · Work email requested.",
-    action: "Explore the mini-course",
+      "A planned five-day mini-course for turning Claude into a disciplined thinking partner.",
+    outcome: "The five-day mini-course is not available",
+    gate: "Unavailable · A verified public lesson exists, but it is not this five-day course.",
+    action: "Read the verified lesson",
+    status: "unavailable",
+    href: destinationRegister.strategicAdvisorLesson,
   },
-];
+] as const;
+
+export type PublicResource = (typeof resourceInventory)[number];
 /**
  * What follows a consultation inquiry, told wherever one can be started. Each
  * step restates published wording: the live form's promise to get back to the
@@ -54,13 +89,8 @@ export const inquirySteps = [
  * the product by name.
  */
 export const claudeGloss = "Claude is Anthropic’s AI assistant.";
-/** Provisional later meeting sequence (03:56–04:22); Executive Communications awaits a real offering. */
-export const resources = [
-  resourceInventory[0],
-  resourceInventory[3],
-  resourceInventory[2],
-  resourceInventory[1],
-];
+/** The complete, honest resource inventory used by the Free Resources page. */
+export const resources = resourceInventory;
 /**
  * Each service's `engagement` restates what the site already publishes about
  * that service (its description, scope and context) as what an engagement
@@ -75,9 +105,9 @@ export const services = [
     description:
       "Live or on-demand enablement using your team’s real decisions, documents, and operating rhythms.",
     details: [
-      "Role-specific practice",
-      "Reusable skills, not prompt lists",
-      "Manager rollout guidance",
+      "Live guided practice on real work",
+      "Reusable skills and review points",
+      "An applicable takeaway for the team",
     ],
     context:
       "Teams learn on their own work, not on demo prompts. Practice with the responsibilities, terminology and review standards of your role, your industry and your company.",
@@ -96,9 +126,9 @@ export const services = [
     description:
       "Custom Claude skills and plugins designed around one high-value job to be done.",
     details: [
-      "Discovery",
-      "Co-design skills & plugins",
-      "Testing & failure-mode review",
+      "Your brief and operating problem",
+      "Tailored design, build and testing",
+      "A workflow the team can deploy",
     ],
     context:
       "Your source material, examples and quality bar shape a system your team can use. Executives bring the operating problem; they do not need to become developers.",
@@ -116,12 +146,12 @@ export const services = [
     description:
       "Bespoke end-to-end workflows for repetitive work that should not consume expert attention.",
     details: [
-      "Human review points",
-      "System handoffs",
-      "Target: 8 hours saved weekly",
+      "Repetitive work and system handoffs",
+      "Human direction and review points",
+      "A usable output the team can rely on",
     ],
     context:
-      "Eight hours is a target where workflow fit supports it, not a guaranteed result. Keep judgment and human interaction with people while reducing repetitive work.",
+      "Map the repetitive process, keep people in control at the handoffs that need judgment, and give the team an output they can use. The scope and expected time depend on the workflow.",
     engagement: {
       startsWith:
         "The repetitive work that should not consume expert attention, mapped before any build is recommended.",

@@ -11,11 +11,14 @@ import {
 const page = renderHomepage();
 test("every source resource has its description and truthful access terms", () => {
   for (const item of resources) {
-    expect(page).toContain(item.title);
-    expect(page).toContain(item.description);
-    expect(page).toContain(item.gate);
-    expect(page).toContain(`resources/#${item.id}`);
+    const resourcesPage = renderPage("resources");
+    expect(resourcesPage).toContain(item.title);
+    if (item.id !== "scorecard") expect(resourcesPage).toContain(item.description);
+    if (item.id !== "scorecard") expect(resourcesPage).toContain(item.gate);
   }
+  expect(page).toContain("AI Readiness Scorecard");
+  expect(page).toContain("C-Level AI Toolkit");
+  expect(page).not.toContain("Strategic Advisor Mini-Course");
 });
 test("source offerings and attributed workshop proof are preserved", () => {
   for (const item of services) {
@@ -27,8 +30,8 @@ test("source offerings and attributed workshop proof are preserved", () => {
     expect(page).toContain(item.quote);
     expect(page).toContain(item.label);
   }
-  expect(page).not.toContain("Save eight hours a week, per person.");
-  expect(page).toContain("not a guaranteed result");
+  expect(page).not.toMatch(/8 hours saved weekly|eight hours is a target/i);
+  expect(page).not.toContain("measurable results");
 });
 test("all 81 assessment combinations preserve public source thresholds", () => {
   for (let a = 1; a <= 3; a++)
@@ -129,7 +132,7 @@ test("every one of the 4,096 answer sets gets a stage and places to start, never
   }
 });
 
-test("Adejoke's new homepage lines are adopted where the delta record says", () => {
+test("the September 23 content delta is handled honestly rather than preserved verbatim", () => {
   const delta = JSON.parse(
     readFileSync(
       "artifacts/standup-gaps/2026-09-23/lovable-delta.json",
@@ -137,15 +140,15 @@ test("Adejoke's new homepage lines are adopted where the delta record says", () 
     ),
   );
   const home = readable(page);
-  for (const item of delta.items) {
-    if (item.disposition === "not adopted") {
-      expect(item.note, item.original).toBeTruthy();
-      continue;
-    }
-    expect(home, `${item.disposition}: ${item.original}`).toContain(
-      item.replacement,
-    );
-  }
+  expect(home).not.toContain("Three audiences. One method.");
+  expect(home).not.toContain("The work changes by role. The method does not:");
+  expect(home).not.toContain("Target: 8 hours saved weekly, per person");
+  expect(home).toContain("Who Found42 helps");
+  expect(home).toContain("Use AI for your decisions");
+  expect(home).toContain("Train teams. Build useful skills. Automate the work.");
+  // Every non-adopted source line records why it is not carried forward.
+  for (const item of delta.items)
+    if (item.disposition === "not adopted") expect(item.note).toBeTruthy();
   expect(home).not.toContain("Useful prompts");
 });
 
@@ -161,11 +164,25 @@ test("the industries strip offers all services everywhere but the services page"
   expect(servicesPage).not.toContain("See all services");
 });
 
-test("the homepage's playbook entry carries the failure-mode review figure", () => {
-  const band = page.slice(
-    page.indexOf('id="resources"'),
-    page.indexOf('id="audiences"'),
-  );
-  expect(band).toContain('data-scene="review"');
-  expect(band).toContain("Failure-mode review illustration");
+test("every active resource and verified lesson has its published destination", () => {
+  const resourcesPage = renderPage("resources");
+  for (const [label, destination] of [
+    [
+      "Request the published AI Failure Modes Playbook",
+      "https://www.found42.com/ai-failure-modes-playbook",
+    ],
+    [
+      "Read the verified lesson",
+      "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
+    ],
+    ["Explore the toolkit", "https://www.found42.com/toolkit"],
+  ] as const) {
+    expect(resourcesPage).toContain(`>${label}&nbsp;→</a>`);
+    expect(resourcesPage).toContain(`href="${destination}"`);
+  }
+  expect(resourcesPage).toContain("The five-day mini-course is not available");
+  expect(resourcesPage).toContain("No starter files are available yet");
+  expect(resourcesPage).not.toContain("data-email-form");
+  expect(renderPage("blog")).not.toContain("data-email-form");
+  expect(resourcesPage).not.toContain("data-dialog=\"course\"");
 });

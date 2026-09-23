@@ -52,7 +52,7 @@ test("an executive can reach three distinct service drawings with the keyboard",
 }) => {
   await page.goto("/#services");
   await expect(
-    page.getByRole("img", { name: /Training illustration:/ }).first(),
+    page.getByRole("img", { name: /Workshop illustration:/ }).first(),
   ).toBeVisible();
 
   const automation = page.getByRole("button", {
@@ -63,8 +63,12 @@ test("an executive can reach three distinct service drawings with the keyboard",
   await automation.press("Enter");
   await expect(automation).toHaveAttribute("aria-pressed", "true");
   await expect(
-    page.getByText("Connect tasks into workflows your team can use.").first(),
+    page
+      .locator(".services-art .system-label")
+      .filter({ hasText: "Customer brief" })
+      .first(),
   ).toBeVisible();
+  await expect(page.getByText("Customer brief", { exact: true }).first()).toBeVisible();
 
   const product = page.getByRole("button", {
     name: "Automations",
@@ -76,9 +80,11 @@ test("an executive can reach three distinct service drawings with the keyboard",
   await expect(product).toBeFocused();
   await expect(
     page
-      .getByText("Reduce repetitive work, with human review at each handoff.")
+      .locator(".services-art .system-label")
+      .filter({ hasText: "Repetitive work" })
       .first(),
   ).toBeVisible();
+  await expect(page.getByText("Repetitive work", { exact: true }).first()).toBeVisible();
 });
 
 test("every service stays readable on the page whichever drawing is shown", async ({
@@ -189,24 +195,24 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
   // The narrow layout gives every article its own drawing rather than one
   // sticky pane, so all three are on the page at once.
   for (const name of [
-    /Training illustration:/,
+    /Workshop illustration:/,
     /Workflow illustration:/,
     /Automation illustration:/,
   ]) {
     await expect(page.getByRole("img", { name })).toHaveCount(1);
   }
   await expect(
-    page.locator("#service-training").getByText("Useful skills", {
+    page.locator("#service-training").getByText("Guided practice", {
       exact: true,
     }),
   ).toBeVisible();
   await expect(
-    page.locator("#service-automation").getByText("Operations", {
+    page.locator("#service-automation").getByText("Operating problem", {
       exact: true,
     }),
   ).toBeVisible();
   await expect(
-    page.locator("#service-product").getByText("Repeatable work", {
+    page.locator("#service-product").getByText("Repetitive work", {
       exact: true,
     }),
   ).toBeVisible();
@@ -285,7 +291,7 @@ test("a slow font does not hold the opening headline back", async ({
     )
     .toBe(true);
   await expect(headline).toHaveText(
-    "Hands-on Claude skills and training for your business.",
+    "Train teams. Build useful skills. Automate the work.",
   );
 });
 

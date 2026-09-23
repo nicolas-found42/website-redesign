@@ -149,8 +149,10 @@ const cast = (
   { id: "n4", label: n4, kind: "result" },
 ];
 
-/* ── Training: the work comes back round, better each time ── */
-
+/**
+ * Training: real work moves through live guided practice and review, then
+ * returns as something the team can use.
+ */
 const trainingLandscape: Layout = {
   width: 1000,
   height: 620,
@@ -207,8 +209,10 @@ const trainingPortrait: Layout = {
   ],
 };
 
-/* ── Automation: three functions join one shared spine ── */
-
+/**
+ * Workflow: the customer's operating problem passes through tailored design,
+ * review and build into a workflow the team deploys.
+ */
 const automationLandscape: Layout = {
   width: 1000,
   height: 620,
@@ -272,8 +276,10 @@ const automationPortrait: Layout = {
   ],
 };
 
-/* ── Product value: expertise combines, then reaches a customer ── */
-
+/**
+ * Automation: a repetitive process crosses system handoffs, with human review
+ * where judgment matters, and ends in an output the team can use.
+ */
 const productLandscape: Layout = {
   width: 1000,
   height: 620,
@@ -332,14 +338,14 @@ export const schematics: readonly Schematic[] = [
   {
     id: "training",
     choice: "Workshops",
-    detail: "Give people the skills to apply AI to their own work.",
+    detail: "Real work → live practice → review → a takeaway the team applies.",
     description:
-      "Training illustration: a work task and useful skills pass through human direction and human review, go into practice, and return as the next task.",
+      "Workshop illustration: a team brings real work into live guided practice, reviews the result together, and leaves with a reusable skill and an applicable takeaway.",
     nodes: cast(
-      "Your work task",
-      "Useful skills",
-      "Human review",
-      "Put into practice",
+      "Team's real work",
+      "Guided practice",
+      "Group review",
+      "Apply afterwards",
     ),
     landscape: trainingLandscape,
     portrait: trainingPortrait,
@@ -347,24 +353,29 @@ export const schematics: readonly Schematic[] = [
   {
     id: "automation",
     choice: "Workflows",
-    detail: "Connect tasks into workflows your team can use.",
+    detail: "Operating problem → tailored design → testing and review → team deployment.",
     description:
-      "Workflow illustration: sales, operations and finance converge through human direction into one shared workflow.",
-    nodes: cast("Sales", "Operations", "Finance", "Shared workflow"),
+      "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and a workflow the team deploys and uses.",
+    nodes: cast(
+      "Customer brief",
+      "Operating problem",
+      "Test and review",
+      "Team uses it",
+    ),
     landscape: automationLandscape,
     portrait: automationPortrait,
   },
   {
     id: "product",
     choice: "Automations",
-    detail: "Reduce repetitive work, with human review at each handoff.",
+    detail: "Repetitive process → system handoffs → human review → usable output.",
     description:
-      "Automation illustration: your expertise, company context and human review combine through human direction into repeatable work.",
+      "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
     nodes: cast(
-      "Your expertise",
-      "Company context",
+      "Repetitive work",
+      "System handoffs",
       "Human review",
-      "Repeatable work",
+      "Usable output",
     ),
     landscape: productLandscape,
     portrait: productPortrait,

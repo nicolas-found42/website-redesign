@@ -63,32 +63,20 @@ button:focus-visible,
   outline-offset: 5px;
 }
 
-/* ── Surface: printed grid and paper grain ── */
+/* ── Surface: calm paper ── */
 /**
- * The page sits on a drawing surface. Two fixed, non-interactive layers give it
- * material: a 96px printed grid and a fine grain. Both are painted once and
- * never animate, so they cost nothing after the first frame.
+ * The page reads as an ordinary business website. A quiet warm surface and
+ * spacing carry the structure; the routed illustrations remain available
+ * where they explain a journey without becoming the page's visual language.
  */
-body::before,
-body::after {
-  position: fixed;
-  z-index: 0;
-  pointer-events: none;
-  content: "";
-  inset: 0;
-}
-body::before {
-  background-image:
-    linear-gradient(to right, rgb(32 32 31 / 4.5%) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(32 32 31 / 4.5%) 1px, transparent 1px);
-  background-position: calc(50% + 0.5px) 0;
-  background-size: 96px 96px;
-  mask-image: linear-gradient(to bottom, #000 0, #000 78vh, transparent 128vh);
-}
-body::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)' opacity='0.42'/%3E%3C/svg%3E");
-  opacity: 0.3;
-  mix-blend-mode: multiply;
+body {
+  background:
+    radial-gradient(
+      100rem 50rem at 70% -12rem,
+      rgb(255 255 255 / 82%),
+      transparent 68%
+    ),
+    var(--paper);
 }
 #app {
   position: relative;
@@ -159,7 +147,7 @@ html {
   left: 12px;
   z-index: 100;
   padding: 14px 20px;
-  font-family: var(--font-note);
+  font-family: var(--font-text);
   font-size: var(--size-note);
   color: #fff;
   background: var(--ink-deep);
@@ -170,50 +158,32 @@ html {
   transform: translateY(0);
 }
 
-/* ── The annotation voice ── */
+/* ── Supporting labels ── */
 /**
- * Every label, index, gate and caption on the page speaks in the drawing's
- * annotation voice: monospaced, tracked out, upper case where it is a label.
+ * Section labels and small access notes use a compact sans-serif face. The
+ * main reading voice is also sans-serif; monospaced type remains only in the
+ * drawing annotations, where it clarifies machine-drawn elements.
  */
 .note {
-  font-family: var(--font-note);
+  font-family: var(--font-text);
   font-size: var(--size-note);
-  font-weight: 500;
-  letter-spacing: var(--track-note);
-  text-transform: uppercase;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 .note--plain {
-  font-family: var(--font-note);
+  font-family: var(--font-text);
   font-size: var(--size-note);
   font-weight: 400;
   line-height: 1.55;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   text-transform: none;
 }
 
-/* A section index: its number, a rule, and the label the rule carries. */
-.index {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  margin: 0 0 clamp(24px, 2vw, 40px);
-  color: var(--muted);
-}
-.index b {
-  font-weight: 500;
+  /* Section labels, not numbered document furniture. */
+.section-label {
+  margin-bottom: 14px;
   color: var(--red);
-  font-variant-numeric: tabular-nums;
-}
-/* Offset to the label's own first baseline, so a wrapping label keeps the
-   rule level with its first line rather than centred on the block. */
-.index .rule {
-  flex: 0 0 clamp(28px, 6vw, 96px);
-  height: 1px;
-  margin-top: 0.62em;
-  background: var(--line-strong);
-}
-.index .note {
-  flex: 0 1 auto;
 }
 
 /* ── Type roles ── */
@@ -281,14 +251,13 @@ h3,
   align-items: center;
   justify-content: space-between;
   min-height: 60px;
-  padding: 18px 24px;
+  padding: 16px 20px;
   overflow: hidden;
-  font-family: var(--font-note);
+  font-family: var(--font-text);
   font-size: var(--size-note);
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   background: var(--red);
   isolation: isolate;
   transition: background var(--t-micro) var(--ease-out);
@@ -343,11 +312,10 @@ h3,
   align-items: center;
   min-height: 46px;
   padding-block: 11px;
-  font-family: var(--font-note);
+  font-family: var(--font-text);
   font-size: var(--size-note);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 .link::after {
   position: absolute;

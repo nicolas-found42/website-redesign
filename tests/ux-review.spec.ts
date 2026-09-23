@@ -7,88 +7,33 @@ import AxeBuilder from "@axe-core/playwright";
  * experience instead of the friction the review found.
  */
 
-/** Replaces the clipboard so every engine reports what a copy would carry. */
-const stubClipboard = (page: Page, accept: boolean) =>
-  page.addInitScript((accept) => {
-    Object.defineProperty(navigator, "clipboard", {
-      configurable: true,
-      value: {
-        writeText: (text: string) => {
-          (window as unknown as { copied: string }).copied = text;
-          return accept
-            ? Promise.resolve()
-            : Promise.reject(new Error("denied"));
-        },
-      },
-    });
-  }, accept);
-
-const fillInquiry = async (page: Page) => {
-  const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("Your name").fill("Richard Thornbury");
-  await dialog.getByLabel("Work email").fill("richard@ashgrove.example");
-  await dialog.getByLabel("Company").fill("Ashgrove Capital");
-  await dialog
-    .getByLabel("What should work better?")
-    .fill("Diligence packs take my team three weeks.");
-  return dialog;
-};
-
-test("#32: the inquiry dialog leads with the live form, and a checked draft can be copied into it", async ({
+test("#32: the inquiry dialog leads to the live form and carries service context", async ({
   page,
 }) => {
-  await stubClipboard(page, true);
-  await page.goto("/industries/private-equity/");
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await page.goto("/services/");
+  await page.getByRole("button", { name: /Discuss workflows/ }).click();
   const dialog = page.getByRole("dialog");
-  // The way that actually reaches Found42 is the primary action, ahead of the draft.
   const live = dialog.getByRole("link", { name: "Open the live inquiry form" });
   await expect(live).toHaveClass(/\baction\b/);
-  await expect(live).toHaveAttribute("href", "https://www.found42.com/contact");
-  const order = await dialog.evaluate((el) => {
-    const link = el.querySelector("a.action")!;
-    const form = el.querySelector("form")!;
-    return (
-      link.compareDocumentPosition(form) & Node.DOCUMENT_POSITION_FOLLOWING
-    );
-  });
-  expect(order).toBeTruthy();
-  // The draft's own action says what it does; nothing promises a review.
-  await expect(dialog.getByRole("button", { name: /Review/ })).toHaveCount(0);
-  const copy = dialog.getByRole("button", { name: "Copy my message" });
-  await expect(copy).toBeHidden();
-
-  await fillInquiry(page);
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  const status = dialog.locator(".form-status");
-  await expect(status).toContainText("Nothing was sent");
-  await copy.click();
-  await expect(status).toHaveText(/Copied/);
-  expect(await page.evaluate(() => (window as any).copied)).toBe(
-    "Diligence packs take my team three weeks.",
+  await expect(live).toHaveAttribute(
+    "href",
+    "https://www.found42.com/contact?interest=Workflows",
   );
+  await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
+  await expect(dialog.locator("form")).toHaveCount(0);
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
   await expect(
-    dialog.getByRole("link", { name: "Go to the live form" }),
+    dialog.getByRole("link", { name: "Open the live inquiry form" }),
   ).toHaveAttribute("href", "https://www.found42.com/contact");
+  await expect(dialog.locator(".note").first()).toHaveText(
+    "Start with the bottleneck",
+  );
   const result = await new AxeBuilder({ page })
     .include("dialog")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
     .analyze();
   expect(result.violations).toEqual([]);
-});
-
-test("#32: where the clipboard is refused, the dialog says how to copy by hand", async ({
-  page,
-}) => {
-  await stubClipboard(page, false);
-  await page.goto("/services/");
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
-  const dialog = await fillInquiry(page);
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  await dialog.getByRole("button", { name: "Copy my message" }).click();
-  await expect(dialog.locator(".form-status")).toHaveText(
-    /Select your message above and copy it/,
-  );
 });
 
 /** WCAG relative-luminance contrast between two computed `rgb()` colours. */
@@ -158,19 +103,26 @@ test("#33: every filled action reads at 4.5:1 or better, at rest and on hover", 
 test("#34: every opening that names Claude says what Claude is, once", async ({
   page,
 }) => {
-  const named: string[] = [];
   for (const route of routes) {
     await page.goto(route);
     const opening = page.locator(".hero-copy, .page-opening > div").first();
     const says = `${await opening.locator("h1").innerText()} ${await opening.locator(".lead").innerText()}`;
+    const allOpeningText = await opening.innerText();
     const glosses = opening.getByText("Claude is Anthropic’s AI assistant.");
-    if (says.includes("Claude")) {
-      named.push(route);
+    if (allOpeningText.includes("Claude")) {
       await expect(glosses, route).toHaveCount(1);
       await expect(glosses, route).toBeVisible();
     } else await expect(glosses, route).toHaveCount(0);
   }
-  // The homepage names it in its headline, the rest in their leads.
+  // The homepage names Claude in its supporting copy, not the H1; the other
+  // named routes keep the one-gloss rule.
+  const named: string[] = [];
+  for (const route of routes) {
+    await page.goto(route);
+    const opening = page.locator(".hero-copy, .page-opening > div").first();
+    const says = await opening.innerText();
+    if (says.includes("Claude")) named.push(route);
+  }
   expect(named).toEqual([
     "/",
     "/industries/private-equity/",
@@ -180,33 +132,24 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
   ]);
 });
 
-test("#35: one preview notice per page replaces per-card disclaimers and team notes", async ({
+test("#35: release-ready journeys no longer carry a global preview notice", async ({
   page,
 }) => {
   for (const route of routes) {
     await page.goto(route);
-    // The notice opens every page's content and points to the live contact form.
-    const note = page.locator("main > .preview-note");
-    await expect(note, route).toHaveCount(1);
-    expect(
-      await page
-        .locator("main")
-        .evaluate((main) => main.firstElementChild?.className),
-    ).toContain("preview-note");
-    await expect(note.getByRole("link")).toHaveAttribute(
-      "href",
-      "https://www.found42.com/contact",
-    );
-    // Verification status belongs in the launch backlog, not in visitor copy.
+    // #43 replaces the page-wide no-send disclaimer with truthful action-level
+    // copy. The launch gate (noindex and production routing) remains unchanged.
+    await expect(page.locator("main > .preview-note"), route).toHaveCount(0);
     const text = await page.locator("main").innerText();
-    for (const note of [
-      /has not been tested/i,
-      /not been confirmed/i,
-      /not been supplied/i,
+    for (const notice of [
+      /Design preview/i,
+      /Design prototype/i,
       /not connected in this preview/i,
-      /Some tools require/i,
+      /Nothing was sent/i,
+      /nothing you type here is sent/i,
+      /requested resources are not delivered/i,
     ])
-      expect(text, `${route}: ${note}`).not.toMatch(note);
+      expect(text, `${route}: ${notice}`).not.toMatch(notice);
   }
   // A toolkit that needs ChatGPT on a Claude site says why.
   await page.goto("/resources/");
@@ -222,7 +165,7 @@ test("#37: before handing off, the dialog says what the live form will ask", asy
   await page.getByRole("button", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText(
-    "news and updates start at Yes: choose No if you only want a reply.",
+    "starts news and updates at Yes: choose No if you only want a reply.",
   );
   await expect(dialog).toContainText(
     "It also asks you to agree to Found42 communications before it sends.",
@@ -306,56 +249,37 @@ test("#40: the band and the dialog say what happens after an inquiry, not only w
   expect(await dialog.innerText()).not.toMatch(/\bbook(ed|ing)?\b/i);
 });
 
-test("#41: a Discuss button says which service the inquiry is about, and the copy leads with it", async ({
+test("#41: a Discuss button names the service in the live handoff", async ({
   page,
 }) => {
-  await stubClipboard(page, true);
   await page.goto("/services/");
   await page.getByRole("button", { name: /Discuss workflows/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
-  await fillInquiry(page);
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  await dialog.getByRole("button", { name: "Copy my message" }).click();
-  await expect(dialog.locator(".form-status")).toHaveText(/Copied/);
-  expect(await page.evaluate(() => (window as any).copied)).toBe(
-    "About Workflows: Diligence packs take my team three weeks.",
-  );
-  // A general trigger afterwards is not left about the last service.
-  await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
-  await expect(dialog.locator(".note").first()).toHaveText(
-    "Start with the bottleneck",
+  await expect(
+    dialog.getByRole("link", { name: "Open the live inquiry form" }),
+  ).toHaveAttribute(
+    "href",
+    "https://www.found42.com/contact?interest=Workflows",
   );
 });
 
-test("#41: an email without a dot in its domain is refused", async ({
+test("#41: unavailable resource forms and local inquiry forms are absent", async ({
   page,
 }) => {
   await page.goto("/resources/");
-  const form = page.locator("#library form");
-  await form.getByLabel("Work email").fill("dick.thornbury@gmail");
-  await form.getByRole("button").click();
-  await expect(form.getByLabel("Work email")).toHaveAttribute(
-    "aria-invalid",
-    "true",
-  );
-  await expect(form).toContainText("Enter a valid work email.");
+  await expect(page.locator("#library form")).toHaveCount(0);
+  await expect(page.locator("#course form")).toHaveCount(0);
+  await expect(page.locator("form[data-contact-form]")).toHaveCount(0);
   await page.getByRole("button", { name: /Talk to our team/ }).click();
-  const dialog = await fillInquiry(page);
-  await dialog.getByLabel("Work email").fill("dick.thornbury@gmail");
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  await expect(dialog.getByLabel("Work email")).toHaveAccessibleDescription(
-    /valid work email/,
-  );
-  await dialog.getByLabel("Work email").fill("dick.thornbury@gmail.com");
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  await expect(dialog.locator(".form-status")).toContainText(
-    "Nothing was sent.",
-  );
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.locator("form")).toHaveCount(0);
+  await expect(
+    dialog.getByRole("link", { name: "Open the live inquiry form" }),
+  ).toHaveAttribute("href", "https://www.found42.com/contact");
 });
 
-test("#41: unwritten essays are not timed, and the newsletter field keeps its placeholder readable", async ({
+test("#41: unwritten essays are not timed, and unavailable newsletter copy is honest", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
@@ -366,18 +290,10 @@ test("#41: unwritten essays are not timed, and the newsletter field keeps its pl
   expect(await page.locator(".essay-list").innerText()).not.toMatch(
     /\d+\s*min/i,
   );
-  const fits = await page.locator("#newsletter-email").evaluate((input) => {
-    const field = input as HTMLInputElement;
-    const style = getComputedStyle(field);
-    const context = document.createElement("canvas").getContext("2d")!;
-    context.font = `${style.fontSize} ${style.fontFamily}`;
-    const room =
-      field.clientWidth -
-      parseFloat(style.paddingLeft) -
-      parseFloat(style.paddingRight);
-    return context.measureText(field.placeholder).width <= room;
-  });
-  expect(fits).toBe(true);
+  await expect(page.locator("main")).toContainText(
+    "No newsletter subscription is available yet.",
+  );
+  await expect(page.locator("[data-email-form]")).toHaveCount(0);
 });
 
 test("#41: the PE opening leads with a workflow and keeps the 8h target, qualified, beside how it is built", async ({

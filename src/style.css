@@ -9,9 +9,11 @@
 @import "./styles/tokens.css";
 @import "./styles/base.css";
 @import "./styles/chrome.css";
+/* Audience-specific scene anchors refine the shared label clamp. */
 @import "./styles/system.css";
 @import "./styles/hero.css";
 @import "./styles/resources.css";
+/* Loaded after the shared clamp so this scene's wider labels stay inside it. */
 @import "./styles/audiences.css";
 @import "./styles/services.css";
 @import "./styles/credibility.css";

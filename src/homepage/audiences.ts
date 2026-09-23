@@ -44,10 +44,10 @@ export function audiencesSection() {
   return `<section id="audiences" class="band wrap audiences" aria-labelledby="audiences-title">
  <div class="section-head">
   <div>
-   <p class="index"><b>F42</b><span class="rule"></span><span class="note">Whom we help</span></p>
-   <h2 id="audiences-title" class="display" data-reveal-lines><span class="sentence">Three audiences.</span> <span class="sentence"><span class="signal">One method.</span></span></h2>
+   <p class="note section-label">Whom we help</p>
+   <h2 id="audiences-title" class="display" data-reveal-lines>Who Found42 helps</h2>
   </div>
-  <p class="lead" data-reveal>The work changes by role. The method does not: start with the work you own, build a system around it, and keep a person in charge of the result.</p>
+  <p class="lead" data-reveal>Choose the work that sounds like yours. Found42 can train an executive, help an individual contributor apply a role-specific skill, or support an AI builder with the testing and review around a workflow.</p>
  </div>
  <div class="audience-stage">
   <div class="audience-rail" role="group" aria-label="Choose an audience">${rail}</div>
