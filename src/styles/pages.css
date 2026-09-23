@@ -704,3 +704,23 @@ button:disabled {
     gap: 32px;
   }
 }
+
+/* In a narrow aside the email and its action stack, so the field keeps its width. */
+.page-aside .form-line {
+  display: grid;
+}
+
+/* A qualified target set beside how the work is built, in the opening aside's voice. */
+.industry-target {
+  display: grid;
+  gap: 12px;
+  margin-block: 36px;
+  padding-left: 28px;
+  border-left: 1px solid var(--red);
+}
+.content-split .industry-target p {
+  margin-block: 0;
+}
+.industry-target .page-number {
+  font-size: clamp(3rem, 5vw, 5rem);
+}

@@ -306,9 +306,16 @@ export const industries = {
     intro:
       "Claude skills for the work between the data room and the decision, designed around evidence, judgment, and review.",
     heading: "High context. Clear controls.",
-    aside: "8h",
-    asideTitle: "Target weekly capacity returned",
-    asideBody: "Per person, where workflow fit supports it.",
+    aside: "1st",
+    asideTitle: "A consistent first-pass screen",
+    asideBody:
+      "Your house view, applied the same way to every deal, with judgment left to the deal team.",
+    /** The source's 8h figure, kept with its qualification beside how the work is built. */
+    target: {
+      figure: "8h",
+      title: "Target weekly capacity returned",
+      body: "Per person, where workflow fit supports it.",
+    },
     items: [
       [
         "Deal screening",
@@ -396,7 +403,17 @@ export const principles = [
     "The people doing the work should understand, own, and improve the system.",
   ],
 ];
-export const essays = [
+/**
+ * Forthcoming essays. The Lovable source gives each a reading time; it shows
+ * only once an essay has a published `href`, so an unwritten essay is not
+ * timed. Until then each reads "Coming soon".
+ */
+export const essays: {
+  title: string;
+  description: string;
+  minutes: string;
+  href?: string;
+}[] = [
   {
     title: "Why prompt libraries fail teams",
     description:

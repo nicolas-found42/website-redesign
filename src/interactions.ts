@@ -1,6 +1,6 @@
 import { questions, results, scorecard } from "./content";
 import { inquiryNext } from "./homepage/inquiry";
-import { emailForm } from "./pages";
+import { emailForm, emailPattern } from "./pages";
 import { sitePath } from "./paths";
 /** Source scoring preserved: four 1–3 answers, thresholds 6 and 9. */
 export const readinessResult = (answers: number[]) =>
@@ -176,7 +176,7 @@ export function mountInteractions(root: HTMLElement) {
     field(
       "email",
       "Work email",
-      'type="email" autocomplete="email" maxlength="255"',
+      `type="email" pattern="${emailPattern}" autocomplete="email" maxlength="255"`,
     ) +
     field(
       "company",
@@ -210,14 +210,21 @@ export function mountInteractions(root: HTMLElement) {
       .forEach((input) => (values[input.name] = input.value));
     drafts.set(type, values);
   };
+  /**
+   * Opens a dialog. A trigger that names a service (`data-interest`) carries
+   * it into the inquiry: the dialog says which service it is about, and the
+   * copied message leads with it.
+   */
   function openDialog(type: string, from: HTMLElement) {
     trigger = from;
+    const interest = from.dataset.interest ?? "";
     dialog.dataset.type = type;
+    dialog.dataset.interest = interest;
     dialog.innerHTML =
       `<button class="dialog-close" aria-label="Close dialog" data-close>Close ×</button>` +
       (type === "course"
         ? `<p class="note">Free 5-day mini-course</p><h2 id="dialog-title">Build your Strategic Advisor</h2><p>Five practical lessons to turn Claude into a rigorous thinking partner, not another chat window.</p><ul class="scope-list"><li>A reusable advisor skill</li><li>A quality-control checklist</li><li>A safe rollout pattern</li></ul>${emailForm("course-dialog", "Start the course")}<p class="note--plain">One short, practical lesson each day for five days. Unsubscribe anytime.</p><p class="note--plain">This describes the intended course. Enrollment and email delivery are not yet available.</p>`
-        : `<p class="note">Start with the bottleneck</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a><p class="note--plain">This preview cannot send inquiries. They go through Found42’s contact form, where news and updates start at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${inquiryNext()}<form data-contact-form novalidate aria-labelledby="draft-title"><h3 id="draft-title">Or draft it here first</h3><p class="note--plain">All fields required. Your draft stays on this page, ready to copy into the live form.</p>${fields}<p class="form-status" role="status"></p><div class="draft-next" hidden><button class="link" type="button" data-copy-draft>Copy my message</button><a class="link" href="${liveInquiry}">Go to the live form&nbsp;→</a></div><button class="action action--ghost" type="submit">Check my draft&nbsp;→</button></form>`);
+        : `<p class="note">${interest ? `About ${interest}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a><p class="note--plain">This preview cannot send inquiries. They go through Found42’s contact form, where news and updates start at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${inquiryNext()}<form data-contact-form novalidate aria-labelledby="draft-title"><h3 id="draft-title">Or draft it here first</h3><p class="note--plain">All fields required. Your draft stays on this page, ready to copy into the live form.</p>${fields}<p class="form-status" role="status"></p><div class="draft-next" hidden><button class="link" type="button" data-copy-draft>Copy my message</button><a class="link" href="${liveInquiry}">Go to the live form&nbsp;→</a></div><button class="action action--ghost" type="submit">Check my draft&nbsp;→</button></form>`);
     enableForms();
     const draft = drafts.get(type) ?? {};
     dialog
@@ -324,15 +331,18 @@ export function mountInteractions(root: HTMLElement) {
   );
   /**
    * Copies what the visitor wrote about their work, the part worth keeping,
-   * so it survives the move to the live form. Where the clipboard is refused
+   * led by the service they asked about, so it survives the move to the live
+   * form. Where the clipboard is refused
    * the status says how to copy it by hand.
    */
   const copyDraft = () => {
     const status = dialog.querySelector<HTMLElement>(".form-status");
-    const message =
+    const written =
       dialog
         .querySelector<HTMLTextAreaElement>('[name="challenge"]')
         ?.value.trim() ?? "";
+    const interest = dialog.dataset.interest;
+    const message = interest ? `About ${interest}: ${written}` : written;
     const say = (text: string) => {
       if (status) status.textContent = text;
     };

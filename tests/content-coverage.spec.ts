@@ -56,6 +56,14 @@ for (const record of manifest.pages)
         Object.keys(states),
         `${item.id}: state "${item.state}" was never captured`,
       ).toContain(item.state);
+      // Withheld on purpose: it carries its reason, and the page does not show it.
+      if (item.status === "withheld") {
+        expect(item.reason, item.id).toBeTruthy();
+        expect(states[item.state], `${item.id}: ${item.reason}`).not.toContain(
+          norm(item.replacement),
+        );
+        continue;
+      }
       expect(states[item.state], `${item.id}: ${item.reason}`).toContain(
         norm(item.replacement),
       );

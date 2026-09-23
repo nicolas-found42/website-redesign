@@ -40,7 +40,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
   <p class="service-label note">${service.label}</p>
   <h3 id="service-${schematic.id}-title">${service.title}</h3>
   <p class="body">${service.description}</p>
-  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact">Discuss ${service.title.toLowerCase()}&nbsp;→</button>
+  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact" data-interest="${service.title}">Discuss ${service.title.toLowerCase()}&nbsp;→</button>
  </article>`;
     })
     .join("");

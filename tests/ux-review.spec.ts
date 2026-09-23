@@ -302,3 +302,107 @@ test("#40: the band and the dialog say what happens after an inquiry, not only w
   // Nothing claims a meeting has been booked.
   expect(await dialog.innerText()).not.toMatch(/\bbook(ed|ing)?\b/i);
 });
+
+test("#41: a Discuss button says which service the inquiry is about, and the copy leads with it", async ({
+  page,
+}) => {
+  await stubClipboard(page, true);
+  await page.goto("/services/");
+  await page.getByRole("button", { name: /Discuss workflows/ }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
+  await fillInquiry(page);
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  await dialog.getByRole("button", { name: "Copy my message" }).click();
+  await expect(dialog.locator(".form-status")).toHaveText(/Copied/);
+  expect(await page.evaluate(() => (window as any).copied)).toBe(
+    "About Workflows: Diligence packs take my team three weeks.",
+  );
+  // A general trigger afterwards is not left about the last service.
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await expect(dialog.locator(".note").first()).toHaveText(
+    "Start with the bottleneck",
+  );
+});
+
+test("#41: an email without a dot in its domain is refused", async ({
+  page,
+}) => {
+  await page.goto("/resources/");
+  const form = page.locator("#library form");
+  await form.getByLabel("Work email").fill("dick.thornbury@gmail");
+  await form.getByRole("button").click();
+  await expect(form.getByLabel("Work email")).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+  await expect(form).toContainText("Enter a valid work email.");
+  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  const dialog = await fillInquiry(page);
+  await dialog.getByLabel("Work email").fill("dick.thornbury@gmail");
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  await expect(dialog.getByLabel("Work email")).toHaveAccessibleDescription(
+    /valid work email/,
+  );
+  await dialog.getByLabel("Work email").fill("dick.thornbury@gmail.com");
+  await dialog.getByRole("button", { name: "Check my draft" }).click();
+  await expect(dialog.locator(".form-status")).toContainText(
+    "Nothing was sent.",
+  );
+});
+
+test("#41: unwritten essays are not timed, and the newsletter field keeps its placeholder readable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/blog/");
+  const essays = page.locator(".essay-list article");
+  await expect(essays).toHaveCount(3);
+  await expect(essays.getByText("Coming soon")).toHaveCount(3);
+  expect(await page.locator(".essay-list").innerText()).not.toMatch(
+    /\d+\s*min/i,
+  );
+  const fits = await page.locator("#newsletter-email").evaluate((input) => {
+    const field = input as HTMLInputElement;
+    const style = getComputedStyle(field);
+    const context = document.createElement("canvas").getContext("2d")!;
+    context.font = `${style.fontSize} ${style.fontFamily}`;
+    const room =
+      field.clientWidth -
+      parseFloat(style.paddingLeft) -
+      parseFloat(style.paddingRight);
+    return context.measureText(field.placeholder).width <= room;
+  });
+  expect(fits).toBe(true);
+});
+
+test("#41: the PE opening leads with a workflow and keeps the 8h target, qualified, beside how it is built", async ({
+  page,
+}) => {
+  await page.goto("/industries/private-equity/");
+  const aside = page.locator(".page-opening .page-aside");
+  await expect(aside).toContainText("A consistent first-pass screen");
+  await expect(aside).not.toContainText("8h");
+  const target = page.locator(".industry-target");
+  await expect(target).toContainText("8h");
+  await expect(target).toContainText("Target weekly capacity returned");
+  await expect(target).toContainText(
+    "Per person, where workflow fit supports it.",
+  );
+  await expect(target).toContainText("A target, not a guaranteed result.");
+  await expect(
+    page.getByText("A target, not a guaranteed result.", { exact: true }),
+  ).toHaveCount(1);
+});
+
+test("#41: the scorecard says what its result is, not what it is not", async ({
+  page,
+}) => {
+  await page.goto("/resources/");
+  const intro = page.locator(".scorecard-intro");
+  await expect(intro).toContainText(
+    "Your result is a readiness stage, a status for each area and where to start.",
+  );
+  await expect(intro).not.toContainText("not a score");
+});
