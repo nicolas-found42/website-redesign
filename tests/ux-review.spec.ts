@@ -283,3 +283,22 @@ test("#39: Services opens with what an engagement starts with, asks and gives, a
   await page.getByRole("link", { name: /See how engagements work/ }).click();
   await expect(page).toHaveURL(/\/services\/#engagements$/);
 });
+
+test("#40: the band and the dialog say what happens after an inquiry, not only what does not", async ({
+  page,
+}) => {
+  const steps = [
+    "You send an inquiry through Found42’s contact form.",
+    "Found42 replies to arrange a first conversation.",
+    "That conversation maps one workflow, its decision, source material, failure modes and review points, before any build is recommended.",
+  ];
+  await page.goto("/industries/b2b-saas/");
+  const band = page.locator("#contact");
+  await expect(band.locator(".inquiry-steps li")).toHaveText(steps);
+  await expect(band).not.toContainText("does not book an appointment");
+  await band.getByRole("button", { name: "Talk to us" }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.locator(".inquiry-steps li")).toHaveText(steps);
+  // Nothing claims a meeting has been booked.
+  expect(await dialog.innerText()).not.toMatch(/\bbook(ed|ing)?\b/i);
+});

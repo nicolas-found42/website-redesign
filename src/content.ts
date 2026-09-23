@@ -38,6 +38,17 @@ const resourceInventory = [
   },
 ];
 /**
+ * What follows a consultation inquiry, told wherever one can be started. Each
+ * step restates published wording: the live form's promise to get back to the
+ * visitor, and the mapping the industry pages promise before any build. It
+ * never implies a booked meeting; that needs a verified booking flow first.
+ */
+export const inquirySteps = [
+  "You send an inquiry through Found42’s contact form.",
+  "Found42 replies to arrange a first conversation.",
+  "That conversation maps one workflow, its decision, source material, failure modes and review points, before any build is recommended.",
+] as const;
+/**
  * Said once wherever an opening's lead names Claude. The visitors the site is
  * for, non-technical teams and their executives, are the least likely to know
  * the product by name.

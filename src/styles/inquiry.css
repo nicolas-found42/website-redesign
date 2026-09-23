@@ -116,6 +116,20 @@
   max-width: 50ch;
   color: rgb(255 255 255 / 82%);
 }
+/* What follows an inquiry: three short steps, on the band and in the dialog. */
+.inquiry-steps {
+  display: grid;
+  gap: 8px;
+  max-width: 52ch;
+  margin: 10px 0 0;
+  padding-left: 1.4em;
+}
+.contact .inquiry-next {
+  color: rgb(255 255 255 / 88%);
+}
+.site-dialog .inquiry-next {
+  margin-top: 8px;
+}
 
 @media (max-width: 860px) {
   .contact-grid {
