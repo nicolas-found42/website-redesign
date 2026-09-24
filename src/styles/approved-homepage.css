@@ -430,13 +430,30 @@
 }
 .approved-homepage .ah-briefing-picture {
   position: relative;
-  min-height: 370px;
-  padding: 22px 28px 60px;
+  padding: 22px 28px;
   background: #eeeae2;
   color: var(--ah-ink);
 }
+.approved-homepage .ah-source-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.approved-homepage .ah-source-grid > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--ah-line);
+  background: #fff;
+  font-size: 0.7rem;
+}
+.approved-homepage .ah-source-grid span {
+  color: #5f5d58;
+}
 .approved-homepage .ah-paper {
   max-width: 75%;
+  margin-top: 18px;
   padding: 28px;
   background: white;
   box-shadow: 0 14px 35px #16161625;
@@ -452,27 +469,19 @@
   margin-block: 16px;
   font-size: 1.35rem;
 }
-.approved-homepage .ah-paper p,
 .approved-homepage .ah-slack p {
   font-size: 0.83rem;
 }
-.approved-homepage .ah-paper-lines {
+.approved-homepage .ah-paper ul {
   display: grid;
-  gap: 8px;
-  margin-top: 20px;
-}
-.approved-homepage .ah-paper-lines span {
-  height: 6px;
-  background: #eeeae2;
-}
-.approved-homepage .ah-paper-lines span:last-child {
-  width: 65%;
+  gap: 5px;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.78rem;
 }
 .approved-homepage .ah-slack {
-  position: absolute;
-  right: 16px;
-  bottom: 12px;
   width: 63%;
+  margin: -28px 0 0 auto;
   padding: 17px;
   border: 1px solid var(--ah-line);
   background: white;
@@ -766,7 +775,6 @@
     padding-block: 54px;
   }
   .approved-homepage .ah-briefing-picture {
-    min-height: 370px;
     padding: 12px;
   }
   .approved-homepage .ah-paper {

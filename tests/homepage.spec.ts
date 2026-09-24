@@ -33,33 +33,14 @@ test("approved homepage preserves section order, proof, portraits and resource c
     "[Client logo]",
   );
   await expect(page.locator(".ah-quote")).toHaveCount(5);
-  const quoteChecks = [
-    [
-      "Robb Henshaw",
-      "C-Level AI is a completely unique approach that cuts through the AI hype.",
-    ],
-    [
-      "Paul Keely",
-      "Richard brings the balance of a trusted advisor and a hands-on coach.",
-    ],
-    [
-      "Carmen Paredes Ramirez",
-      "The pacing was just right, and everything was explained clearly and easy to understand.",
-    ],
-    [
-      "Andrew Miller",
-      "It’s already changing how I approach client conversations.",
-    ],
-    [
-      "Neville Louison",
-      "a fully functional landing page live in under three hours!",
-    ],
+  const expectedQuotes = [
+    "“C-Level AI is a completely unique approach that cuts through the AI hype. It starts with the C-Level AI training workshop, providing your execs with practical AI skills and immediate value. Following it up with the Scorecard gives you a clear understanding of your current state. You head into the discovery session with great ideas of what could be possible that is grounded in reality.”",
+    "“What stood out in the C-Level AI workshop was how practical it was. The exercises turned AI from concept to execution, with role-play coaching and tailored prompts that improved my client outreach instantly. Richard brings the balance of a trusted advisor and a hands-on coach.”",
+    "“This course was amazing and incredibly useful! The sessions were engaging and interactive, which made learning enjoyable. I especially appreciated having access to the materials on demand after the live session. It was perfect for catching up on anything I missed during the live sessions. The pacing was just right, and everything was explained clearly and easy to understand.”",
+    "“Richard’s C-Level AI workshop went beyond theory. It helped me turn ChatGPT into a trusted advisor and a sounding board in less than 1 hour. The role-play coaching and personalized AI tools delivered quick, actionable tweaks I could implement immediately. It’s already changing how I approach client conversations.”",
+    "“Working with Richard in the Strategy Pivot Workshop unlocked a clear, actionable path forward for my business pivot. With his expert guidance through ChatGPT, Gemini, and Gamma, I not only refined my positioning and GTM playbook, but also had a fully functional landing page live in under three hours!”",
   ];
-  for (const [name, text] of quoteChecks) {
-    const card = page.locator(".ah-quote").filter({ hasText: name });
-    await expect(card).toContainText(text);
-    await expect(card.locator("img")).toHaveAttribute("alt", name);
-  }
+  await expect(page.locator(".ah-quote blockquote")).toHaveText(expectedQuotes);
   for (const image of await page.locator(".ah-quote img").all()) {
     await image.scrollIntoViewIfNeeded();
     await expect
@@ -103,7 +84,7 @@ test("service selector and inquiry preserve the selected offering", async ({
     await expect(panel.getByRole("heading", { name })).toBeVisible();
     await expect(panel).toContainText(serviceDescriptions[index]);
     await panel
-      .getByRole("button", { name: `Talk to us about ${name.toLowerCase()} →` })
+      .getByRole("link", { name: `Talk to us about ${name.toLowerCase()} →` })
       .click();
     await expect(page.getByRole("dialog")).toContainText(name);
     await expect(
@@ -148,9 +129,16 @@ test("audience, resource, and testimonial journeys remain available", async ({
       .locator(".ah-resource-grid")
       .getByRole("link", { name: "Explore the toolkit →" }),
   ).toHaveAttribute("href", "https://www.found42.com/toolkit");
-  for (let index = 1; index <= 5; index++) {
+  for (const [index, name] of [
+    "Robb Henshaw",
+    "Paul Keely",
+    "Carmen Paredes Ramirez",
+    "Andrew Miller",
+    "Neville Louison",
+  ].entries()) {
+    await expect(page.locator(".ah-quote").first()).toContainText(name);
     await expect(page.locator("[data-testimonial-count]")).toHaveText(
-      `${index} / 5`,
+      `${index + 1} / 5`,
     );
     await page.getByRole("button", { name: "Next testimonial" }).click();
   }
@@ -172,6 +160,19 @@ test("no script and reduced motion retain content", async ({ browser }) => {
   await expect(page.locator(".ah-service-panel")).toHaveCount(3);
   await expect(page.locator(".ah-service-panel").nth(2)).toBeVisible();
   await expect(page.locator(".ah-quote")).toHaveCount(5);
+  await expect(page.locator(".ah-hero a[data-dialog]")).toHaveAttribute(
+    "href",
+    "https://www.found42.com/contact",
+  );
+  await expect(page.locator(".ah-service-panel a[data-dialog]")).toHaveCount(3);
+  await expect(page.locator(".ah-closing a[data-dialog]")).toHaveAttribute(
+    "href",
+    "https://www.found42.com/contact",
+  );
+  await expect(page.locator("#navigation a.nav-contact")).toHaveAttribute(
+    "href",
+    "https://www.found42.com/contact",
+  );
   await context.close();
 });
 
@@ -241,7 +242,7 @@ test("footer and inquiry actions have live destinations", async ({ page }) => {
   );
   await page
     .locator(".ah-closing")
-    .getByRole("button", { name: /Talk to us/ })
+    .getByRole("link", { name: /Talk to us/ })
     .click();
   await expect(
     page
@@ -273,4 +274,39 @@ test("touch and reduced-motion controls expose every service and testimonial", a
   await page.getByRole("button", { name: "Next testimonial" }).tap();
   await expect(page.locator("[data-testimonial-count]")).toHaveText("2 / 5");
   await context.close();
+});
+
+test("audience and resource links reach their named pages", async ({
+  page,
+}) => {
+  for (const [label, anchor, title] of [
+    ["For executives →", "track-c-level-ai", "C-Level AI"],
+    [
+      "For individual contributors →",
+      "track-role-based",
+      "Customized Role-Based Training",
+    ],
+    ["For AI builders →", "track-ai-builders", "AI Builders"],
+  ]) {
+    await page.goto("/");
+    await page.getByRole("link", { name: label }).click();
+    await expect(page).toHaveURL(new RegExp(`/services/#${anchor}$`));
+    await expect(page.locator(`#${anchor} h3`)).toHaveText(title);
+  }
+  await page.goto("/");
+  await page
+    .locator(".ah-resource-grid")
+    .getByRole("link", { name: "Take the scorecard →" })
+    .click();
+  await expect(page).toHaveURL(/\/resources\/#scorecard$/);
+  await expect(
+    page.getByRole("group", { name: "AI Readiness Scorecard" }),
+  ).toContainText("Question 1 of 12");
+  await page.goto("/");
+  await page
+    .locator(".site-footer")
+    .getByRole("link", { name: "About" })
+    .click();
+  await expect(page).toHaveURL(/\/about\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });

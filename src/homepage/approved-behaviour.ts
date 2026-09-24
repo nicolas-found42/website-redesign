@@ -51,11 +51,10 @@ export function mountApprovedHomepage(root: HTMLElement) {
   let current = 0;
   const show = (index: number) => {
     current = (index + cards.length) % cards.length;
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    track.scrollTo({
-      left: cards[current].offsetLeft - cards[0].offsetLeft,
-      behavior: reduce ? "instant" : "smooth",
-    });
+    // Rotate the existing figures so each step brings a new author to the
+    // leading card, including the fourth and fifth desktop positions.
+    track.replaceChildren(...cards.slice(current), ...cards.slice(0, current));
+    track.scrollLeft = 0;
     count.textContent = `${current + 1} / ${cards.length}`;
   };
   const onCarousel = (event: Event) => {

@@ -29,7 +29,7 @@ test("#46: a visitor can email or call Found42 without the form", async ({
   await page.setViewportSize(phone);
   await page.goto("/");
   await page
-    .getByRole("button", { name: /Talk to us/ })
+    .getByRole("link", { name: /Talk to us/ })
     .first()
     .click();
   const dialog = page.getByRole("dialog");
