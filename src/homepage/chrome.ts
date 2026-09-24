@@ -26,12 +26,24 @@ export function siteHeader() {
       "",
     )}<button class="nav-contact" data-dialog="contact">Talk to us ${arrow}</button></nav></header>`;
 }
-export function siteFooter() {
+export function siteFooter(approvedHomepage = false) {
   const group = (
     title: string,
     links: readonly (readonly [string, string])[],
   ) =>
     `<div class="footer-group"><h2>${title}</h2><ul>${links.map(([t, p]) => `<li><a href="${p}">${t}</a></li>`).join("")}</ul></div>`;
+  if (approvedHomepage)
+    return `<footer class="site-footer on-ink" data-ground="ink"><div class="wrap"><div class="footer-grid"><div class="footer-mark">${logo()}<p>Practical AI. Built around the work.</p></div>${group(
+      "Explore",
+      nav.map(([t, p]) => [t, sitePath(p)] as const),
+    )}${group(
+      "Industries",
+      industries.map(([t, p]) => [t, sitePath(p)] as const),
+    )}${group("Contact", [
+      ["Contact Found42", destinationRegister.liveInquiry],
+      [directContact.email, `mailto:${directContact.email}`],
+      [directContact.phone, `tel:${directContact.tel}`],
+    ])}</div><div class="footer-base"><span>Diagrams and examples on this site are illustrative, not client results. Claude is Anthropic's AI assistant.</span><span>© ${new Date().getFullYear()} Found42 LLC · <a href="https://www.found42.com/privacy-policy">Privacy</a> · <a href="https://www.found42.com/terms-of-use">Terms</a></span></div></div></footer>`;
   return `<footer class="site-footer on-ink" data-ground="ink"><div class="wrap"><div class="footer-grid"><div class="footer-mark">${logo()}<p>Practical AI. Built around the work.</p><p class="note--plain">Practical Claude skills, workflows and automations shaped around real business work.</p></div>${group(
     "Explore",
     nav.map(([t, p]) => [t, sitePath(p)] as const),

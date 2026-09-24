@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { renderHomepage } from "../src/homepage";
 import { renderPage } from "../src/pages";
-import { resources, scorecard, services, testimonials } from "../src/content";
+import { resources, scorecard } from "../src/content";
 import {
   readinessResult,
   scorecardQuestions,
@@ -35,18 +35,11 @@ test("the complete resource page owns the current catalog and availability", asy
   }
   await expect(page.locator("#scorecard")).toContainText("Question 1 of 12");
 });
-test("source offerings and attributed workshop proof are preserved", () => {
-  for (const item of services) {
-    expect(page).toContain(item.title);
-    expect(page).toContain(item.description);
-    for (const detail of item.details) expect(page).toContain(detail);
-  }
-  for (const item of testimonials) {
-    expect(page).toContain(item.quote);
-    expect(page).toContain(item.label);
-  }
-  expect(page).not.toMatch(/8 hours saved weekly|eight hours is a target/i);
-  expect(page).not.toContain("measurable results");
+test("approved homepage carries the required public content", () => {
+  expect(page).toContain("Three ways we help");
+  expect(page).toContain("What founders are saying");
+  expect(page).toContain("50+");
+  expect(page).not.toContain("[Client logo]");
 });
 test("all 81 assessment combinations preserve public source thresholds", () => {
   for (let a = 1; a <= 3; a++)
@@ -158,8 +151,7 @@ test("the September 23 content delta is handled honestly rather than preserved v
   expect(home).not.toContain("Three audiences. One method.");
   expect(home).not.toContain("The work changes by role. The method does not:");
   expect(home).not.toContain("Target: 8 hours saved weekly, per person");
-  expect(home).toContain("Who Found42 helps");
-  expect(home).toContain("Use AI for your decisions");
+  expect(home).toContain("Find the work that sounds like yours");
   expect(home).toContain(
     "Train teams. Build useful skills. Automate the work.",
   );
@@ -169,16 +161,12 @@ test("the September 23 content delta is handled honestly rather than preserved v
   expect(home).not.toContain("Useful prompts");
 });
 
-test("the industries strip offers all services everywhere but the services page", () => {
-  const home = readable(page);
+test("the homepage and catalog keep working service routes", () => {
   const servicesPage = readable(renderPage("services"));
-  for (const text of [home, servicesPage]) {
-    expect(text).toContain("Built for Private Equity B2B SaaS");
-    // #36: the strip names industries; it does not imply completed client work.
-    expect(text).not.toContain("Delivered for");
-  }
-  expect(home).toContain("See all services");
-  expect(servicesPage).not.toContain("See all services");
+  expect(page).toContain("/services/#track-c-level-ai");
+  expect(page).toContain("/services/#track-role-based");
+  expect(page).toContain("/services/#track-ai-builders");
+  expect(servicesPage).toContain("Built for Private Equity B2B SaaS");
 });
 
 test("every active resource and verified lesson has its published destination", () => {

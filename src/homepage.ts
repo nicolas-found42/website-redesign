@@ -1,11 +1,7 @@
 import { mountInteractions } from "./interactions";
 import { siteHeader, siteFooter } from "./homepage/chrome";
-import { hero } from "./homepage/hero";
-import { resourcesSection } from "./homepage/resources";
-import { servicesSection } from "./homepage/services";
-import { audiencesSection } from "./homepage/audiences";
-import { credibilitySection } from "./homepage/credibility";
-import { inquirySection } from "./homepage/inquiry";
+import { approvedHomepage } from "./homepage/approved";
+import { mountApprovedHomepage } from "./homepage/approved-behaviour";
 import { mountSystem } from "./system";
 import { masterSchematic } from "./schematic";
 import { mountServices } from "./homepage/services-behaviour";
@@ -21,14 +17,9 @@ import type { PageMotion } from "./motion-preference";
 export function renderHomepage() {
   return `${siteHeader()}
 <main id="main">
-${hero()}
-${resourcesSection()}
-${audiencesSection()}
-${servicesSection({ allServicesLink: true })}
-${credibilitySection()}
-${inquirySection()}
+${approvedHomepage()}
 </main>
-${siteFooter()}`;
+${siteFooter(true)}`;
 }
 
 /**
@@ -172,7 +163,9 @@ export function mountPage(
    * it without it ever intersecting, and an observer would never report it.
    */
   const header = root.querySelector<HTMLElement>(".site-header")!;
-  const sentinel = root.querySelector<HTMLElement>(".page-opening, .hero-rail");
+  const sentinel = root.querySelector<HTMLElement>(
+    ".page-opening, .hero-rail, .ah-hero",
+  );
   /** Lifts the header exactly while the opening is above the viewport. */
   const readLift = () => {
     if (sentinel)
@@ -272,6 +265,9 @@ export function mountPage(
   /* ── The audience gallery and any scene drawn on its own ── */
   if (root.querySelector("[data-scene-host]"))
     disposers.push(mountAudiences(root, { motionPreference }));
+
+  if (root.querySelector(".approved-homepage"))
+    disposers.push(mountApprovedHomepage(root));
 
   /* ── Page-wide entrances and scroll feel ── */
   disposers.push(mountReveals(root, { motionPreference }));

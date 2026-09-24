@@ -79,13 +79,15 @@ test("rewording a heading records its exact words, new words and place", async (
   const form = await pick(page, heading);
 
   await expect(form.getByRole("heading", { level: 2 })).toHaveText(
-    "Heading “Who Found42 helps”",
+    "Heading “Find the work that sounds like yours”",
   );
   await expect(form.getByRole("radio", { name: /Wording/ })).toBeChecked();
-  await expect(form.locator("[data-current]")).toHaveText("Who Found42 helps");
-  // The words keep the lines the reader sees; the heading breaks after "Found42".
+  await expect(form.locator("[data-current]")).toHaveText(
+    "Find the work that sounds like yours",
+  );
+  // The review form captures the approved heading as displayed.
   await expect(form.getByLabel("Change it to")).toHaveValue(
-    "Who Found42\nhelps",
+    "Find the work that sounds like yours",
   );
   await form.getByLabel("Change it to").fill("Who we work with");
   await answer(form);
@@ -103,13 +105,13 @@ test("rewording a heading records its exact words, new words and place", async (
     priority: "must",
     change: {
       kind: "wording",
-      current: "Who Found42\nhelps",
+      current: "Find the work that sounds like yours",
       proposed: "Who we work with",
     },
     target: {
       page: "/",
       pageName: "Home",
-      section: "Who Found42 helps",
+      section: "Find the work that sounds like yours",
       element: "Heading",
     },
   });
@@ -171,7 +173,7 @@ test("layout feedback names the section it should move next to", async ({
   await form.locator('select[name="layoutPosition"]').selectOption("below");
   await form
     .getByLabel("Section", { exact: true })
-    .selectOption({ label: "Who Found42 helps" });
+    .selectOption({ label: "Find the work that sounds like yours" });
   await answer(form, { why: "People should recognise themselves first." });
   await form.getByRole("button", { name: "Save feedback" }).click();
   await expect(panel(page)).toHaveCount(0);
@@ -181,7 +183,10 @@ test("layout feedback names the section it should move next to", async ({
     kind: "layout",
     action: "move",
     position: "below",
-    relativeTo: { name: "Who Found42 helps", selector: "#audiences" },
+    relativeTo: {
+      name: "Find the work that sounds like yours",
+      selector: "#audiences",
+    },
   });
 });
 
