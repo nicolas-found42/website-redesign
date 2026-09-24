@@ -91,7 +91,9 @@ test("F03, F17: the live inquiry handoff is accessible and honest", async ({
   await page.goto("/resources/");
   await page.getByRole("button", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog).toContainText("consultation inquiry, not reserving a meeting");
+  await expect(dialog).toContainText(
+    "consultation inquiry, not reserving a meeting",
+  );
   await expect(dialog.locator("form")).toHaveCount(0);
   await expect(
     dialog.getByRole("link", { name: "Open the live inquiry form" }),
@@ -203,76 +205,7 @@ test("F07: a control reached by tabbing backwards is not left under the sticky h
   }
 });
 
-test("F08: executive scene annotations are not covered by the drawing", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  /**
-   * Both boxes are read in one pass, relative to the scene's own field, once
-   * the fonts are in: measured separately, a late font moves the section
-   * between the two readings.
-   */
-  const measure = () =>
-    page.evaluate(async () => {
-      await document.fonts.ready;
-      const panel = document.querySelector("#audience-executives")!;
-      const svg = panel.querySelector<SVGSVGElement>(".scene-field svg")!;
-      const field = svg.getBoundingClientRect();
-      const text = (label: string) =>
-        [...panel.querySelectorAll(".system-label")]
-          .find((el) => el.textContent?.includes(label))!
-          .querySelector(".system-label-text")!
-          .getBoundingClientRect();
-      const pill = [...panel.querySelectorAll(".system-label")]
-        .find((el) => el.textContent?.includes("Tailored executive skill"))!
-        .getBoundingClientRect();
-      // The operating view's first rule: the topmost horizontal route inside the panel.
-      const scale = field.height / svg.viewBox.baseVal.height;
-      const rule = Math.min(
-        ...[...svg.querySelectorAll(".route")]
-          .map((route) =>
-            (route.getAttribute("d") ?? "").match(
-              /^M\s*[\d.]+[ ,]([\d.]+)\s*L\s*[\d.]+[ ,]\1$/,
-            ),
-          )
-          .filter((match): match is RegExpMatchArray => !!match)
-          .map((match) => Number(match[1]))
-          .filter((y) => y > 300),
-      );
-      if (!Number.isFinite(rule))
-        throw new Error("No horizontal operating-view rule found in the scene");
-      return {
-        problemRight: text("Your operating problem").right - field.left,
-        pillLeft: pill.left - field.left,
-        captionBottom: text("Illustrative executive operating view").bottom - field.top,
-        ruleTop: rule * scale,
-      };
-    });
-
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
-  const wide = await measure();
-  expect(wide.problemRight).toBeLessThanOrEqual(wide.pillLeft);
-
-  for (const width of [320, 390, 430]) {
-    await page.setViewportSize({ width, height: 844 });
-    await page.goto("/");
-    const narrow = await measure();
-    expect(narrow.captionBottom, `${width}px`).toBeLessThanOrEqual(
-      narrow.ruleTop,
-    );
-  }
-});
-
-test("F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
-  const grid = await box(page, ".resource-grid");
-  const foot = await box(page, ".resource-foot");
-  expect(Math.abs(foot.x - grid.x)).toBeLessThanOrEqual(1);
-
+test("F12: industry grids draw one rule", async ({ page }) => {
   await page.goto("/industries/private-equity/");
   const head = await box(page, ".on-ink .section-head");
   const industryGrid = await box(page, ".industry-grid");

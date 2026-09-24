@@ -236,9 +236,11 @@ export function mountInteractions(root: HTMLElement) {
     "click",
     (event) => {
       const target = (event.target as HTMLElement).closest<HTMLElement>(
-        "button",
+        "button, a[data-dialog]",
       );
       if (!target) return;
+      if (target instanceof HTMLAnchorElement && target.dataset.dialog)
+        event.preventDefault();
       if (target.hasAttribute("data-scorecard-answer")) {
         scoreAnswers = [
           ...scoreAnswers.slice(0, scoreStep),

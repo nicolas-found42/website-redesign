@@ -24,25 +24,41 @@ export function siteHeader() {
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(
       "",
-    )}<button class="nav-contact" data-dialog="contact">Talk to us ${arrow}</button></nav></header>`;
+    )}<button class="nav-contact" data-dialog="contact">Talk to us ${arrow}</button><noscript><style>#navigation button.nav-contact{display:none}</style><a class="nav-contact" href="${destinationRegister.liveInquiry}">Talk to us ${arrow}</a></noscript></nav></header>`;
 }
-export function siteFooter() {
+export function siteFooter(approvedHomepage = false) {
   const group = (
     title: string,
     links: readonly (readonly [string, string])[],
   ) =>
     `<div class="footer-group"><h2>${title}</h2><ul>${links.map(([t, p]) => `<li><a href="${p}">${t}</a></li>`).join("")}</ul></div>`;
-  return `<footer class="site-footer on-ink" data-ground="ink"><div class="wrap"><div class="footer-grid"><div class="footer-mark">${logo()}<p>Practical AI. Built around the work.</p><p class="note--plain">Practical Claude skills, workflows and automations shaped around real business work.</p></div>${group(
+  const contactLinks = approvedHomepage
+    ? ([
+        ["Contact Found42", destinationRegister.liveInquiry],
+        [directContact.email, `mailto:${directContact.email}`],
+        [directContact.phone, `tel:${directContact.tel}`],
+      ] as const)
+    : ([
+        ["Contact Found42", destinationRegister.liveInquiry],
+        [`Email ${directContact.email}`, `mailto:${directContact.email}`],
+        [`Call ${directContact.phone}`, `tel:${directContact.tel}`],
+        ["Privacy Policy", "https://www.found42.com/privacy-policy"],
+        ["Terms of Use", "https://www.found42.com/terms-of-use"],
+      ] as const);
+  const founderNote = approvedHomepage
+    ? ""
+    : '<p class="note--plain">Practical Claude skills, workflows and automations shaped around real business work.</p>';
+  const legal = approvedHomepage
+    ? ` · <a href="https://www.found42.com/privacy-policy">Privacy</a> · <a href="https://www.found42.com/terms-of-use">Terms</a>`
+    : "";
+  const disclaimer = approvedHomepage
+    ? "<span>Diagrams and examples on this site are illustrative, not client results. Claude is Anthropic's AI assistant.</span>"
+    : "";
+  return `<footer class="site-footer on-ink" data-ground="ink"><div class="wrap"><div class="footer-grid"><div class="footer-mark">${logo()}<p>Practical AI. Built around the work.</p>${founderNote}</div>${group(
     "Explore",
     nav.map(([t, p]) => [t, sitePath(p)] as const),
   )}${group(
     "Industries",
     industries.map(([t, p]) => [t, sitePath(p)] as const),
-  )}${group("Contact & legal", [
-    ["Contact Found42", destinationRegister.liveInquiry],
-    [`Email ${directContact.email}`, `mailto:${directContact.email}`],
-    [`Call ${directContact.phone}`, `tel:${directContact.tel}`],
-    ["Privacy Policy", "https://www.found42.com/privacy-policy"],
-    ["Terms of Use", "https://www.found42.com/terms-of-use"],
-  ])}</div><div class="footer-base"><span>© ${new Date().getFullYear()} Found42 LLC</span></div></div></footer>`;
+  )}${group(approvedHomepage ? "Contact" : "Contact & legal", contactLinks)}</div><div class="footer-base">${disclaimer}<span>© ${new Date().getFullYear()} Found42 LLC${legal}</span></div></div></footer>`;
 }
