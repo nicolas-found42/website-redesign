@@ -1,4 +1,4 @@
-import { audiences, sceneById } from "../audiences";
+import { sceneById } from "../audiences";
 import { mountScene, type SceneDrawing } from "../scene";
 import type { MotionPreference } from "../motion-preference";
 
@@ -40,7 +40,7 @@ export function mountAudiences(
   ];
   const nav = stage.querySelector<HTMLElement>(".audience-nav");
   const count = stage.querySelector<HTMLElement>("[data-audience-count]");
-  const total = audiences.length;
+  const total = panels.length;
 
   let current = -1;
 
@@ -54,7 +54,7 @@ export function mountAudiences(
     panels.forEach((panel, i) => {
       panel.hidden = i !== next;
     });
-    if (count) count.textContent = `0${next + 1}`;
+    if (count) count.textContent = String(next + 1);
     if (!options.play) return;
     const host = panels[next].querySelector<HTMLElement>("[data-scene-host]");
     // Told again on every choice: the sequence is the point of the picture.

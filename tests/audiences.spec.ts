@@ -17,9 +17,9 @@ const kickers = [
   "For AI builders",
 ];
 const links = [
-  ["Explore usable systems", /services\/#service-automation$/],
+  ["Interim preview: Explore the Four-Hour AI Executive", /^https:\/\/maven\.com\//],
   ["Explore tailored training", /services\/#service-training$/],
-  ["Explore how we help builders", /services\/#services$/],
+  ["Ask about AI builder support", null],
 ] as const;
 const drawings = [
   /Executive illustration:/,
@@ -63,9 +63,9 @@ test("a visitor can discover and choose all three audiences, and everything agre
     await expect(panel).toHaveCount(1);
     await expect(panel.locator(".audience-kicker")).toHaveText(kickers[index]);
     await expect(panel.getByRole("img")).toHaveAccessibleName(drawings[index]);
-    await expect(
-      panel.getByRole("link", { name: links[index][0] }),
-    ).toHaveAttribute("href", links[index][1]);
+    const cta = panel.locator(":is(a, button)", { hasText: links[index][0] });
+    if (links[index][1])
+      await expect(cta).toHaveAttribute("href", links[index][1]);
     await expect(rail.getByRole("button", { name })).toHaveAttribute(
       "aria-pressed",
       "true",
@@ -96,7 +96,7 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   await next.click();
   await next.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    /Install a system,\s*not a tool rollout\./,
+    /Use AI for your decisions,\s*teams and operations\./,
   );
   await previous.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
@@ -148,7 +148,7 @@ test("the three audience drawings are three different drawings, not one relabell
       (label) => label.textContent,
     ),
   );
-  expect(cast).toContain("Install a system");
+  expect(cast).toContain("Tailored executive skill");
   expect(cast).toContain("Deal team");
   expect(cast).toContain("Troubleshoot");
   expect(cast).not.toContain("Useful prompts");
@@ -235,7 +235,7 @@ test("a visitor on a phone gets the portrait scenes and can choose by touch", as
   await context.close();
 });
 
-test("the failure-mode figure explains the playbook without inventing its checks", async ({
+test("the playbook page explains the verified request route", async ({
   page,
 }) => {
   await page.goto("/resources/#playbook");
@@ -247,16 +247,14 @@ test("the failure-mode figure explains the playbook without inventing its checks
     await expect(figure.getByText(check, { exact: true })).toBeVisible();
   await expect(figure).toContainText("not reproduced here");
   await expect(
-    page.getByRole("link", {
-      name: /Request the published AI Failure Modes Playbook/,
-    }),
+    page.getByRole("link", { name: /Request the published AI Failure Modes/ }),
   ).toHaveAttribute(
     "href",
     "https://www.found42.com/ai-failure-modes-playbook",
   );
 });
 
-test("public copy no longer says “no fluff” on any route or in the course dialog", async ({
+test("public copy no longer says “no fluff” on any route", async ({
   page,
 }) => {
   for (const route of [
@@ -269,12 +267,6 @@ test("public copy no longer says “no fluff” on any route or in the course di
     "blog/",
   ]) {
     await page.goto(`/${route}`);
-    if (route === "resources/") {
-      await page.locator('[data-dialog="course"]').click();
-      await expect(page.getByRole("dialog")).toContainText(
-        "One short, practical lesson each day for five days.",
-      );
-    }
     const text = await page.evaluate(() => document.documentElement.outerHTML);
     expect(text, route).not.toMatch(/no[\s-]*fluff/i);
   }

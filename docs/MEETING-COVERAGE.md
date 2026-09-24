@@ -1,5 +1,8 @@
 # September 16 meeting implementation and handoff
 
+This is a historical meeting record. Issue #43 superseded its hero, form,
+availability and eight-hour-claim descriptions; see [current design](DESIGN.md).
+
 This is the September 16 record. The later stand-up (direct opening, audience
 scenes, failure-mode figure, "no fluff" removal) is recorded separately in
 [STANDUP-CONVERGENCE.md](STANDUP-CONVERGENCE.md).

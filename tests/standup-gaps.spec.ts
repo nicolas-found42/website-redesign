@@ -42,16 +42,17 @@ test("on a phone, a service's drawing arrives as the one before it and settles a
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
   const own = await labelsOf(page, 1);
-  expect(own).toContain("Sales");
+  expect(own).toContain("Brief / operating problem");
+  const before = await labelsOf(page, 0);
 
   await reveal(page, 1, 0.15);
-  await expect.poll(() => labelsOf(page, 1)).toContain("Your work task");
+  await expect.poll(() => labelsOf(page, 1)).toEqual(before);
 
   await reveal(page, 1, 1);
   await expect.poll(() => labelsOf(page, 1), { timeout: 4000 }).toEqual(own);
 
   // The third was never approached, so it never stopped being its own.
-  expect(await labelsOf(page, 2)).toContain("Repeatable work");
+  expect(await labelsOf(page, 2)).toContain("Repetitive work");
   await context.close();
 });
 
@@ -92,11 +93,31 @@ for (const [width, text] of [
       (size) => (document.documentElement.style.fontSize = size),
       text,
     );
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      document
+        .querySelector("#services")!
+        .scrollIntoView({ behavior: "instant" });
+    });
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
     const automations = page.getByRole("button", {
       name: "Automations",
       exact: true,
     });
     await automations.tap();
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const article = document.querySelector("#service-product")!;
+          const rail = document.querySelector(".services-aside")!;
+          const top = article.getBoundingClientRect().top;
+          return (
+            top >= rail.getBoundingClientRect().bottom - 1 &&
+            top < innerHeight - 20
+          );
+        }),
+      )
+      .toBe(true);
     await expect(automations).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator('[data-service-article="2"]')).toHaveClass(
       /is-current/,
@@ -120,16 +141,94 @@ for (const [width, text] of [
     await context.close();
   });
 
-test("the homepage's playbook entry draws the review it describes", async ({
+for (const height of [500, 600])
+  test(`a short-phone choice survives scroll settlement and yields to reading (${height}px)`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: { width: 320, height },
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/#services");
+    await expect(page.locator(".services-art .system-field")).toHaveCount(1);
+    await page.evaluate(
+      () => (document.documentElement.style.fontSize = "200%"),
+    );
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      document
+        .querySelector("#services")!
+        .scrollIntoView({ behavior: "instant" });
+    });
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const section = document.querySelector<HTMLElement>("#services")!;
+          const rail = section.querySelector<HTMLElement>(".services-aside")!;
+          const measured = Number.parseFloat(
+            section.style.getPropertyValue("--services-rail"),
+          );
+          return Math.abs(measured - rail.offsetHeight);
+        }),
+      )
+      .toBeLessThan(1);
+    const automations = page.getByRole("button", {
+      name: "Automations",
+      exact: true,
+    });
+    await automations.tap();
+    await expect(automations).toHaveAttribute("aria-pressed", "true");
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const box = document
+            .querySelector('[data-service-article="2"]')!
+            .getBoundingClientRect();
+          return box.top < innerHeight - 20 && box.bottom > 20;
+        }),
+      )
+      .toBe(true);
+    // A short viewport can still show the previous article at its midpoint.
+    // A completed rail jump remains the reader's explicit choice at rest.
+    await expect(page.locator('[data-service-article="2"]')).toHaveClass(
+      /is-current/,
+    );
+    await page.evaluate(() => window.dispatchEvent(new Event("scrollend")));
+    await expect(automations).toHaveAttribute("aria-pressed", "true");
+    await page.evaluate(() => window.dispatchEvent(new Event("wheel")));
+    await page.evaluate(() =>
+      document
+        .querySelector('[data-service-article="1"]')!
+        .scrollIntoView({ block: "center", behavior: "instant" }),
+    );
+    await expect(
+      page.getByRole("button", { name: "Workflows", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await context.close();
+  });
+
+test("the homepage's published playbook is one click from its full inventory", async ({
   page,
 }) => {
   await page.goto("/");
-  const entry = page.locator("#resources .resource--figure");
-  await expect(entry.locator("h3")).toHaveText("Failure Mode Playbook");
-  await expect(
-    entry.getByRole("img", { name: /Failure-mode review illustration/ }),
-  ).toHaveCount(1);
-  await expect(entry).toContainText("Human review");
+  await expect(page.locator("#resources h3")).toHaveText([
+    "AI Readiness Scorecard",
+    "C-Level AI Toolkit",
+  ]);
+  await page.getByRole("link", { name: "Explore all free resources" }).click();
+  const entry = page.getByRole("link", {
+    name: "Request the published AI Failure Modes Playbook",
+  });
+  await expect(entry).toHaveAttribute(
+    "href",
+    "https://www.found42.com/ai-failure-modes-playbook",
+  );
+  await expect(page.locator("#playbook")).toContainText(
+    "Failure Modes Playbook",
+  );
 });
 
 test("the scorecard walks forward and back, keeps what was typed, and never sends it", async ({
@@ -180,9 +279,10 @@ test("the scorecard walks forward and back, keeps what was typed, and never send
 
   await app.getByRole("button", { name: /Plan the next step/ }).click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog.getByLabel("What should work better?")).toHaveValue(
-    typed,
-  );
+  await expect(dialog.getByText("From your readiness check")).toBeVisible();
+  await expect(dialog).toContainText(typed);
+  await expect(dialog.locator("img")).toHaveCount(0);
+  expect(await page.evaluate(() => "injected" in window)).toBe(false);
   await page.keyboard.press("Escape");
   await app.getByRole("button", { name: "Retake" }).click();
   await expect(app).toContainText("Question 1 of 12");

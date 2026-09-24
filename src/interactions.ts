@@ -1,6 +1,12 @@
-import { questions, results, scorecard } from "./content";
+import {
+  destinationRegister,
+  inquiryInterests,
+  questions,
+  results,
+  scorecard,
+  type InquiryContext,
+} from "./content";
 import { inquiryNext } from "./homepage/inquiry";
-import { emailForm, emailPattern } from "./pages";
 import { sitePath } from "./paths";
 /** Source scoring preserved: four 1–3 answers, thresholds 6 and 9. */
 export const readinessResult = (answers: number[]) =>
@@ -54,14 +60,14 @@ export function scorecardResult(answers: readonly boolean[]) {
   return { stage, areas, next, barriers };
 }
 
-/**
- * Found42's own inquiry form. The preview cannot send an inquiry, so every
- * way to talk to the team ends here. The dialog says, before the visitor
- * leaves, what that form asks of them (its news default and its required
- * communications agreement, observed September 23). Remove the note once the
- * HubSpot form changes; see Launch dependency 11.
- */
-const liveInquiry = "https://www.found42.com/contact";
+/** The live inquiry route; see `src/content.ts` for the destination register. */
+const liveInquiry = destinationRegister.liveInquiry;
+
+/** The live form's own interest labels, kept separate from published service names. */
+const inquiryContext = (context: InquiryContext) => {
+  const entry = inquiryInterests[context];
+  return `Choose ${entry.form} in the live form. Add “${entry.carry}” to your message so Found42 knows what to discuss.`;
+};
 
 /** Makes a visitor's own words safe to show as text inside markup. */
 const escapeText = (text: string) =>
@@ -69,20 +75,12 @@ const escapeText = (text: string) =>
 
 /**
  * Wires every in-page interaction the rendered pages carry: the scorecard,
- * the workflow preview, the shared dialogs and the no-send forms. Returns a
- * disposer that removes the dialog and every listener it added.
+ * the workflow preview and the shared inquiry handoff. Returns a disposer that
+ * removes the dialog and every listener it added.
  */
 export function mountInteractions(root: HTMLElement) {
   const controller = new AbortController();
   const { signal } = controller;
-  const enableForms = () =>
-    root
-      .querySelectorAll<HTMLInputElement | HTMLButtonElement>(
-        "[data-await-script]",
-      )
-      .forEach((el) => {
-        el.disabled = false;
-      });
   /* ── The AI Readiness Scorecard: yes-or-no questions, one open, a result ── */
   const scoreHost = root.querySelector<HTMLElement>("#scorecard-app");
   const asked = scorecardQuestions.length;
@@ -157,88 +155,39 @@ export function mountInteractions(root: HTMLElement) {
   root.append(dialog);
   let trigger: HTMLElement | null = null;
   const close = () => dialog.close();
-  /** Each field carries its own message, read with the field when it is focused. */
-  const field = (name: string, label: string, attributes: string) => {
-    const id = `contact-${name}`;
-    const shared = `id="${id}" name="${name}" aria-describedby="${id}-error" required ${attributes}`;
-    const control =
-      name === "challenge"
-        ? `<textarea ${shared}></textarea>`
-        : `<input ${shared}>`;
-    return `<div class="field"><label for="${id}">${label}</label>${control}<p class="field-error" id="${id}-error"></p></div>`;
-  };
-  const fields =
-    field(
-      "name",
-      "Your name",
-      'autocomplete="name" minlength="2" maxlength="100"',
-    ) +
-    field(
-      "email",
-      "Work email",
-      `type="email" pattern="${emailPattern}" autocomplete="email" maxlength="255"`,
-    ) +
-    field(
-      "company",
-      "Company",
-      'autocomplete="organization" minlength="2" maxlength="120"',
-    ) +
-    field(
-      "challenge",
-      "What should work better?",
-      'minlength="10" maxlength="1000" rows="4"',
-    );
-  const fieldMessages: Record<string, string> = {
-    name: "Enter your name, at least 2 characters.",
-    email: "Enter a valid work email, like name@company.com.",
-    company: "Enter your company, at least 2 characters.",
-    challenge: "Describe the work in at least 10 characters.",
-  };
   /**
-   * What a visitor typed survives closing the dialog, so an Escape or a stray
-   * close does not cost them their inquiry. Kept in memory for this page only.
-   */
-  const drafts = new Map<string, Record<string, string>>();
-  const saveDraft = () => {
-    const type = dialog.dataset.type;
-    if (!type) return;
-    const values: Record<string, string> = {};
-    dialog
-      .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-        "input, textarea",
-      )
-      .forEach((input) => (values[input.name] = input.value));
-    drafts.set(type, values);
-  };
-  /**
-   * Opens a dialog. A trigger that names a service (`data-interest`) carries
-   * it into the inquiry: the dialog says which service it is about, and the
-   * copied message leads with it.
+   * Opens the inquiry handoff. `data-service` keeps the published name visible
+   * in the dialog; `data-interest` is reserved for the live form's domain
+   * vocabulary, and `data-contact` maps that service to concrete instructions
+   * for the visitor carrying context to the live form.
    */
   function openDialog(type: string, from: HTMLElement) {
     trigger = from;
+    const service = from.dataset.service ?? "";
     const interest = from.dataset.interest ?? "";
+    const contact = from.dataset.contact as InquiryContext | undefined;
+    const context = contact && contact in inquiryInterests
+      ? inquiryContext(contact)
+      : undefined;
     dialog.dataset.type = type;
     dialog.dataset.interest = interest;
+    const carriedAnswer = escapeText(dialog.dataset.scorecardAnswer?.trim() ?? "");
+    const carried = carriedAnswer
+      ? `<div class="inquiry-draft"><p class="note">From your readiness check</p><p>${carriedAnswer}</p></div>`
+      : "";
+    const carriedContext = context
+      ? `<p class="note--plain inquiry-context">${context}</p>`
+      : "";
     dialog.innerHTML =
       `<button class="dialog-close" aria-label="Close dialog" data-close>Close ×</button>` +
-      (type === "course"
-        ? `<p class="note">Free 5-day mini-course</p><h2 id="dialog-title">Build your Strategic Advisor</h2><p>Five practical lessons to turn Claude into a rigorous thinking partner, not another chat window.</p><ul class="scope-list"><li>A reusable advisor skill</li><li>A quality-control checklist</li><li>A safe rollout pattern</li></ul>${emailForm("course-dialog", "Start the course")}<p class="note--plain">One short, practical lesson each day for five days. Unsubscribe anytime.</p><p class="note--plain">This describes the intended course. Enrollment and email delivery are not yet available.</p>`
-        : `<p class="note">${interest ? `About ${interest}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a><p class="note--plain">This preview cannot send inquiries. They go through Found42’s contact form, where news and updates start at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${inquiryNext()}<form data-contact-form novalidate aria-labelledby="draft-title"><h3 id="draft-title">Or draft it here first</h3><p class="note--plain">All fields required. Your draft stays on this page, ready to copy into the live form.</p>${fields}<p class="form-status" role="status"></p><div class="draft-next" hidden><button class="link" type="button" data-copy-draft>Copy my message</button><a class="link" href="${liveInquiry}">Go to the live form&nbsp;→</a></div><button class="action action--ghost" type="submit">Check my draft&nbsp;→</button></form>`);
-    enableForms();
-    const draft = drafts.get(type) ?? {};
-    dialog
-      .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-        "input, textarea",
-      )
-      .forEach((input) => (input.value = draft[input.name] ?? ""));
+      `<p class="note">${service ? `About ${service}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>You’re sending a consultation inquiry, not reserving a meeting. Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a>${carriedContext}<p class="note--plain">The live form currently starts news and updates at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${carried}${inquiryNext()}`;
+    delete dialog.dataset.scorecardAnswer;
     dialog.showModal();
     document.body.classList.add("dialog-open");
   }
   dialog.addEventListener(
     "close",
     () => {
-      saveDraft();
       document.body.classList.remove("dialog-open");
       trigger?.focus();
     },
@@ -316,124 +265,28 @@ export function mountInteractions(root: HTMLElement) {
         answers = [];
         renderAssessment(true);
       } else if (target.dataset.dialog) {
-        // What the scorecard's visitor wants automated starts their inquiry,
-        // unless they have already written one.
-        if (target.hasAttribute("data-scorecard-prefill") && openAnswer) {
-          const draft = drafts.get("contact") ?? {};
-          if (!draft.challenge?.trim())
-            drafts.set("contact", { ...draft, challenge: openAnswer });
-        }
+        // The scorecard's open answer is local-only, so it is offered as text
+        // the visitor can carry to the live form rather than prefilled here.
+        if (target.hasAttribute("data-scorecard-prefill") && openAnswer)
+          dialog.dataset.scorecardAnswer = openAnswer;
         openDialog(target.dataset.dialog, target);
-      } else if (target.hasAttribute("data-copy-draft")) copyDraft();
-      else if (target.hasAttribute("data-close")) close();
+      } else if (target.hasAttribute("data-close")) close();
     },
     { signal },
   );
-  /**
-   * Copies what the visitor wrote about their work, the part worth keeping,
-   * led by the service they asked about, so it survives the move to the live
-   * form. Where the clipboard is refused the status says how to copy it by hand.
-   */
-  const copyDraft = () => {
-    const status = dialog.querySelector<HTMLElement>(".form-status");
-    const written =
-      dialog
-        .querySelector<HTMLTextAreaElement>('[name="challenge"]')
-        ?.value.trim() ?? "";
-    const interest = dialog.dataset.interest;
-    const message = interest ? `About ${interest}: ${written}` : written;
-    const say = (text: string) => {
-      if (status) status.textContent = text;
-    };
-    const byHand = () =>
-      say(
-        "Copying is not available here. Select your message above and copy it.",
-      );
-    const copied = navigator.clipboard?.writeText(message);
-    if (!copied) return byHand();
-    copied.then(
-      () => say("Copied. Paste it into the Message box on the live form."),
-      byHand,
-    );
-  };
-  type Field = HTMLInputElement | HTMLTextAreaElement;
-  /** Checks one field and shows, or clears, its own message. */
-  const checkField = (form: HTMLFormElement, input: Field) => {
-    const value = input.value.trim();
-    const min = input.minLength > 0 ? input.minLength : 1;
-    const ok =
-      input.checkValidity() &&
-      value.length >= min &&
-      (input.maxLength < 0 || value.length <= input.maxLength);
-    input.setAttribute("aria-invalid", String(!ok));
-    const message = form.querySelector(`#${input.id}-error.field-error`);
-    if (message)
-      message.textContent = ok ? "" : (fieldMessages[input.name] ?? "");
-    return ok;
-  };
-  const invalidSummary = (form: HTMLFormElement, invalid: number) =>
-    form.hasAttribute("data-email-form")
-      ? "Enter a valid work email."
-      : `Complete every field to check your draft: ${invalid === 1 ? "1 field needs" : `${invalid} fields need`} attention.`;
   root.addEventListener(
     "submit",
     (event) => {
       const form = event.target as HTMLFormElement;
-      if (form.matches("[data-scorecard-open]")) {
-        event.preventDefault();
-        openAnswer =
-          form.querySelector<HTMLTextAreaElement>("textarea")?.value.trim() ??
-          "";
-        scoreStep++;
-        renderScorecard(true);
-        return;
-      }
-      if (!form.matches("[data-email-form],[data-contact-form]")) return;
+      if (!form.matches("[data-scorecard-open]")) return;
       event.preventDefault();
-      form.dataset.checked = "";
-      const invalid = [
-        ...form.querySelectorAll<Field>("input,textarea"),
-      ].filter((input) => !checkField(form, input)).length;
-      const status = form.querySelector<HTMLElement>(".form-status")!;
-      status.dataset.state = invalid ? "error" : "done";
-      if (invalid) {
-        status.textContent = invalidSummary(form, invalid);
-        form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
-        return;
-      }
-      if (form.hasAttribute("data-email-form")) {
-        status.textContent =
-          "Delivery is not connected in this preview. Nothing was sent, and you have not been subscribed.";
-        return;
-      }
-      status.textContent =
-        "Your draft is complete. Nothing was sent. Copy your message, then paste it into the live form.";
-      form.querySelector<HTMLElement>(".draft-next")!.hidden = false;
+      openAnswer =
+        form.querySelector<HTMLTextAreaElement>("textarea")?.value.trim() ?? "";
+      scoreStep++;
+      renderScorecard(true);
     },
     { signal },
   );
-  /**
-   * Once a form has been checked, a field is re-checked as it is corrected, so
-   * a fixed field stops showing and announcing its error. The summary follows
-   * the count, and only changes when the count does, so the live region is not
-   * read out on every keystroke.
-   */
-  root.addEventListener(
-    "input",
-    (event) => {
-      const input = event.target as Field;
-      const form = input.form;
-      if (!form?.matches("[data-checked]")) return;
-      const status = form.querySelector<HTMLElement>(".form-status")!;
-      if (status.dataset.state === "done") return;
-      checkField(form, input);
-      const invalid = form.querySelectorAll('[aria-invalid="true"]').length;
-      const summary = invalid ? invalidSummary(form, invalid) : "";
-      if (status.textContent !== summary) status.textContent = summary;
-    },
-    { signal },
-  );
-  enableForms();
   return () => {
     controller.abort();
     dialog.remove();

@@ -1,184 +1,31 @@
 # Design decisions
 
-The multi-page preview extends a direction called **Working Drawings**. It replaces
-the ribbon motif and the flat band rhythm that preceded it; the earlier light
-editorial selection, the black/red identity, the original logo and Richard
-Achée's portrait are carried forward. Screenshots of the previous iteration are
-kept under `preview/expressive/` and `preview/` as historical record.
+The seven-page preview uses a calm business-site voice around the **Working Drawings** system. [ADR 0005](adr/0005-approachable-visual-voice.md) governs the current presentation; [ADRs 0002–0004](adr/0002-working-system-drawing.md) retain the drawing, scene and narrow-layout behavior. Earlier expressive and technical treatments remain in `preview/expressive/`, `preview/` and Git history as historical design evidence.
 
-## Art direction: the working system, drawn
+## Visual language
 
-Found42's argument is that a business already has the expertise, and the work is
-connecting it into something people actually use. The page makes that argument
-with one graphic idea used at three scales rather than with decoration.
+Space Grotesk carries display headings and Manrope carries the main reading and interface text. JetBrains Mono remains for small machine-like labels inside diagrams. The former printed grid, paper grain, section numbers and repeated figure captions have been removed from visitor-facing pages. Paper, ink and restrained red surfaces establish hierarchy through spacing, tone and a few purposeful dividers. Red identifies human direction and moving signals in the drawings, then marks selected controls and important actions elsewhere.
 
-A **composition** is a transit-map drawing of one way a business works: labelled
-nodes joined by routes that only ever run horizontally, vertically or at 45°,
-with rounded corners. Five node identities recur in every composition — four
-labelled steps and the human anchor that sits in the middle of the work — so
-switching between compositions rearranges the same cast rather than replacing
-one picture with another.
+The working-system schematic still uses five recurring node identities and routed lines. It is a visual explanation of work moving through people, Found42's contribution, review and a usable result. The homepage opens with a master composition; Workshops, Workflows and Automations each have a distinct service composition. Landscape and portrait layouts are separately authored so labels remain readable on narrow screens. The diagrams describe a possible customer journey, not a product interface, a deployed customer system or a measured outcome. [ADR 0002](adr/0002-working-system-drawing.md) records the drawing architecture.
 
-The drawing is an ink technical plan. **Red is signal**: it marks the human
-direction node and the dots running the routes, and nothing else inside the
-drawing. That discipline is what keeps red meaningful when it reappears on a
-button, a section index or an access note. Nothing depicts a product interface,
-a customer system or a measured result.
+## Homepage journeys
 
-Four compositions exist. The **master** drawing opens the page: people,
-workflows and what the business knows, connected through human direction into
-practical AI at work. The original **training**, **automation** and **product value** geometry now
-supports Workshops, Workflows and Automations, respectively, with source-aligned
-labels and descriptions. Each keeps the geometry its own argument needs — a loop that
-returns, three functions converging on one spine, and inputs combining then
-reaching a customer more than one way.
+The opening headline is “Train teams. Build useful skills. Automate the work.” Its supporting copy explains Claude and keeps judgment with the customer's team. **Explore free resources** opens the full Resources page; **Talk to our team** opens the inquiry dialog and its live-form handoff. A published, attributed workshop quote sits beside the opening claim.
 
-Every composition is drawn twice. The landscape layout is the wide editorial
-one; the portrait layout is a _separate composition_ for narrow screens, not the
-wide drawing scaled down — different node placement, different routes, labels
-anchored where they will not cross a route at that shape.
+**Start Here** previews the native AI Readiness Scorecard and the public C-Level AI Toolkit. The full Resources page owns the five-item inventory and its access and availability details. The scorecard runs in the browser and gives a readiness stage and next steps; its external ScoreApp report is a separate, gated experience. The Toolkit opens its public page. The published playbook opens its existing request route. The Skills Starter Library and five-day Strategic Advisor Mini-Course remain visibly unavailable; the verified Maven lesson is identified separately from that course. No local resource form claims to send or fulfill a request.
 
-## Composition and type
+**Who Found42 helps** presents three audience scenes and contextual actions. Executives see a hypothetical operating view and an interim C-Level AI route pending owner approval. Individual contributors receive a recommendation tied to the current catalog. AI builders receive an inquiry route for support, with the unavailable course state visible beside it. The selected panel, rail and accessible scene description agree; without script, every panel and still scene remains readable. The executive example is illustrative, not a client artifact. [ADR 0003](adr/0003-audience-scenes.md) records the scene behavior.
 
-The page sits on a drawing surface: a 96px printed grid and a fine grain, both
-painted once and never animated. Full-bleed ink and red bands interrupt the
-paper so the rhythm is not five variations of the same pale sheet.
+**How we deliver our services** keeps Workshops, Workflows and Automations fully readable. Each article explains the customer's starting material, Found42's work, participation or review, and the result. Its **Discuss…** action names the published service in the dialog. The live contact form uses its own Training/Automation interest vocabulary, so the handoff also gives visitors the service name to carry into that form. An inquiry requests a conversation; it is not a booked meeting. The Services page adds a comparison of what each engagement starts with, asks from the customer and gives back, without inventing a fixed fee or term.
 
-Space Grotesk carries display type with tracking that tightens as the type grows
-(−0.04em at the opening, −0.02em at subheads, normal in body copy). Manrope
-carries body copy. **JetBrains Mono** is new: every label, section index, access
-note, gate, caption and call to action speaks in the drawing's annotation voice,
-which is what ties the schematic's own labels to the rest of the page. All three
-are declared face by face in `styles/fonts.css`, so the build publishes three
-Latin weight-axis files rather than every subset the packages ship.
+## Motion and interaction
 
-Two-sentence headlines set one sentence to a line, declared in the markup. Both
-automatic modes were wrong here: `pretty` leaves a one-word line, and `balance`
-grouped the opening headline differently while it was split for its entrance
-than after it. The opening headline now says what Found42 does in plain words
-("Hands-on Claude skills and training for your business.") on three declared
-lines at a slightly smaller display size, so the lead and the one action still
-sit inside the opening viewport.
+On wide screens the service drawing stays beside articles as they scroll, following the article crossing the viewport's middle band. The choice rail jumps directly to an article; the latest choice remains authoritative while its jump settles. On narrow screens each article has its own portrait drawing and the rail remains available above the sequence. All article copy is present independently of the drawing. [ADR 0004](adr/0004-narrow-services-sequence.md) records the responsive interaction.
 
-The resources band reads down one column: the featured scorecard has a dark
-cover, followed by the course, skills library and playbook, whose entry carries
-the failure-mode review figure. Each entry explains
-its purpose, next action and access limits. Free resources precede the separate
-audience and delivery sections. The hero has one primary action.
+Drawings arrive in stages, then rest as complete compositions. The pause control and the operating system's reduced-motion setting settle transitions, stop travelling signals and pointer depth, and end smooth scrolling. A preference change during a service jump lands on the chosen article and leaves a complete drawing. No content depends on an animation finishing. The scene gallery supports pointer, arrow-button and keyboard choices while preserving focus.
 
-## Motion
+## Pages, handoffs and release
 
-Entrances share one easing family and one rule: content is never hidden by
-anything that might not finish. Every starting state lives behind
-`html[data-motion="on"]`, which only the reveal module sets, and every path out
-of that module ends with the finished state applied.
+The September 16 migration established the seven routes; [the content sources](CONTENT-SOURCES.md) and [site map](SITE-MAP.md) record their provenance and structure. The September 23 revision changes copy, journeys and presentation across those routes while preserving base-aware static navigation, direct entry and no-script content. Public resources, learning offerings, services and inquiries remain separate concepts in the [context map](../CONTEXT-MAP.md).
 
-The **opening drawing** draws itself in — routes first, then markers, then
-annotations — and then runs continuously: red dots travel every carrying route
-at a constant pace, and on a fine pointer three layers lean by different amounts
-so the drawing has depth without leaving its coordinates.
-
-The **flagship** is `02 / How we help`. On a wide screen one drawing holds still
-beside three articles that scroll past it and reconfigures to whichever article
-is being read: the outgoing routes retract, the nodes travel to their new
-places, the labels change their words at the midpoint of their own travel, and
-the new routes draw in. The choice rail reports that state and lets anyone jump
-straight to a service. Scrolling is never intercepted — the pane is `sticky`, so
-the page scrolls natively throughout. On a narrow screen the sticky split is
-abandoned and each article carries its own live portrait drawing: the second
-and third come on screen as the service before them and change into their own
-as they come into view, and the rail rides under the header to report and jump.
-See [ADR 0004](adr/0004-narrow-services-sequence.md).
-
-All three services are on the page in full at every width. Nothing is behind an
-interaction, and the article being read is marked by a rule filling red rather
-than by fading the other two, which would drop live body copy under the contrast
-minimum for anyone reading ahead.
-
-### The audience scenes
-
-`Whom we help` is a gallery of three **scenes**, one per audience, drawn in the
-same hand as the schematic but each its own picture. Executives see an
-operating problem pass through a drawn "Install a system" control into an
-illustrative daily planner that then runs with human direction on its edge.
-Contributors see four roles under one company outline, each joined to its own
-skill, all ending at the human in the loop. Builders see a learner climb three
-reviewed steps — test, troubleshoot, anticipate failures — to a workflow in
-use. A scene is told in beats when chosen; its carrying routes then run
-signals for as long as it is on screen. The rail above the panel names all
-three audiences and their propositions at once; arrows and arrow keys move the
-choice. Portrait compositions are authored separately and are sparser and
-taller, because an annotation cannot shrink below the readable minimum at
-320px. The drawn control is paper-toned and never red: it is a picture of an
-install, not a button. See [ADR 0003](adr/0003-audience-scenes.md).
-
-The same scene engine draws the **failure-mode review figure** on the
-resources page and in the homepage's playbook entry: a draft result, the three failure modes the playbook is
-described as catching, human review, then the business — one vertical
-composition at every width, and no invented checks.
-
-Smaller recurrences of the same signal motif: a dot travels the rule under a
-text link, a fill sweeps a button, a rule draws under a navigation item.
-
-### Stopping it
-
-The travelling signals are movement presented alongside other content and they
-do not stop on their own, so the page carries a **pause control** in the opening
-rail (WCAG 2.2.2). It is a genuine page-wide switch: pausing settles every
-drawing into its still composition, stops the signal loop, ends smooth scrolling
-and disables pointer depth. The operating system's reduced-motion setting does
-the same thing, and the control hides itself when that setting is already on.
-
-Reduced motion is a designed still page, not a disabled one: the same
-compositions, the same annotations, the signals placed at rest along their
-routes rather than hidden, no smooth scrolling, no entrance states.
-
-## Libraries
-
-Vite and strict TypeScript remain the foundation. `motion` remains the single
-animation engine — GSAP is genuinely free since 3.13, but a second full engine
-would duplicate work `motion` already does. Two dependencies are new:
-
-- **Lenis** (MIT) smooths wheel scrolling without taking the scrollbar, the
-  keyboard or touch physics. It is never instantiated under reduced motion and
-  is destroyed the moment that preference arrives.
-- **SplitType** (ISC) measures line boxes for headings that are a single run of
-  text. Headings written as sentences skip it entirely.
-
-**No WebGL.** The research surveyed OGL, Three.js and `@paper-design/shaders`,
-and an animated gradient field was rejected as decoration unrelated to the
-argument the page makes. The same judgement rejected Rive and Lottie (each a
-second binary runtime for content authored elsewhere) and CountUp/text-scramble
-packages (~20 lines of `motion` each). `research/motion-libraries-2026-09-14.md`
-records the candidates, licences and reasoning; `research/art-direction-2026-09-14.md`
-records the reference study. Lucide and Motion licence notices travel with the
-built assets in `public/assets/`.
-
-The retired ribbon artwork, its generator, its two static SVGs and `svgo` were
-removed: the drawing is rendered inline from one module, and nothing referenced
-the generated files.
-
-## Multi-page extension and content
-
-The September 16 Lovable migration supersedes the previous homepage-only content
-baseline. `CONTENT-SOURCES.md` and the migration manifest record the current
-seven-page scope and every editorial replacement. Typography, colors, spacing
-tokens, grid, original assets, schematic geometry and the single motion engine
-are retained. `pages.css` extends the visual vocabulary with indexed industry
-rows, a readable biography, a resource assessment and forthcoming essay entries.
-
-Executives are directed toward usable systems; domain experts toward training
-around their actual role, industry and company. Workshops, Workflows and
-Automations replace the older offer names. The third drawing keeps its geometry
-but describes company context, human review and repeatable work rather than a
-new product promise. Internal geometry identifiers remain stable.
-
-The full founder biography remains faithful to the source. Published workshop excerpts replace sample proof with faithful attribution. Eight-hour savings remain a qualified target. Unconnected
-forms state their limits and never claim delivery. Shared chrome and native
-modal dialogs use the existing paper/ink surfaces, annotation font and focus
-rules. Normal links preserve browser navigation and history across generated
-static pages. Page-specific headers become opaque early enough to keep scrolled
-copy clear, and mobile menus retain paper contrast over dark sections.
-
-The September 16 theme choice is fixed paper/ink with controlled section contrast.
-No theme toggle is needed; reduced motion and the motion pause remain available.
+The shared dialog explains what the existing live contact form asks and what happens after an inquiry. It never reports a local submission as sent. Service names and the form's interest labels are intentionally distinct; the external HubSpot fields, consent defaults and routing remain owner decisions. Resource requests likewise remain separate from consultations. External destinations and fulfillment need owner-approved verification before release. The preview retains noindex until the separate production launch decision.

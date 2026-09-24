@@ -54,18 +54,6 @@
 .audience-choice[aria-pressed="true"]::before {
   transform: scaleX(1);
 }
-.audience-choice .choice-index {
-  font-family: var(--font-note);
-  font-size: var(--size-note);
-  font-weight: 500;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  transition: color 220ms var(--ease-out);
-  font-variant-numeric: tabular-nums;
-}
-.audience-choice[aria-pressed="true"] .choice-index {
-  color: var(--red);
-}
 .audience-choice-name {
   font-family: var(--font-display);
   font-size: var(--size-h4);
@@ -76,9 +64,6 @@
 .audience-choice-note {
   grid-column: 2;
   color: var(--muted);
-}
-.audience-choice:hover .choice-index {
-  color: var(--red);
 }
 .audience-choice:focus-visible {
   z-index: 1;
@@ -261,29 +246,29 @@
 /* ── Annotations the scenes add ── */
 /* Level with its node, to the right: only where no route runs on from it. */
 .system-label--right {
-  max-width: min(66cqw, 30ch);
+  max-width: min(44cqw, 26ch, calc(100cqw - var(--x, 0) * 1% - 24px));
   padding-left: 22px;
   transform: translateY(-50%);
 }
 .system-label--center {
-  width: calc(var(--w, 30) * 1%);
+  width: min(calc(var(--w, 30) * 1%), calc(100cqw - 24px));
   max-width: none;
   padding-inline: 4px;
   text-align: center;
   transform: translate(-50%, -50%);
 }
 .system-label--caption {
-  max-width: min(60cqw, 34ch);
+  max-width: min(44cqw, 26ch, calc(100cqw - 24px));
   color: var(--muted);
 }
 .scene-field .system-label--human {
-  max-width: min(60cqw, 26ch);
+  max-width: min(44cqw, 26ch, calc(100cqw - 24px));
 }
 .system-label--control {
-  font-weight: 700;
+  font-weight: 650;
   color: var(--ink);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: none;
+  letter-spacing: 0;
 }
 .system-label--card {
   font-weight: 500;

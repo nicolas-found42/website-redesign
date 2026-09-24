@@ -34,8 +34,8 @@ const drawing = (target: Page) =>
       }),
       describedBy: field.getAttribute("aria-label"),
       caption: document.querySelector(".services-caption")?.textContent,
-      pressed: [...document.querySelectorAll("[data-service]")].map((choice) =>
-        choice.getAttribute("aria-pressed"),
+      pressed: [...document.querySelectorAll("#services .choice")].map(
+        (choice) => choice.getAttribute("aria-pressed"),
       ),
       leaning: [
         ...document.querySelectorAll(".services-art .system-field"),
@@ -47,38 +47,34 @@ const drawing = (target: Page) =>
     };
   });
 
-test("an executive can reach three distinct service drawings with the keyboard", async ({
+test("the service diagrams make each customer stage visible", async ({
   page,
 }) => {
   await page.goto("/#services");
-  await expect(
-    page.getByRole("img", { name: /Training illustration:/ }).first(),
-  ).toBeVisible();
+  const visibleLabels = (service: string) =>
+    page.locator(`#service-${service} .system-label`).allTextContents();
 
-  const automation = page.getByRole("button", {
-    name: "Workflows",
-    exact: true,
-  });
-  await automation.focus();
-  await automation.press("Enter");
-  await expect(automation).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByText("Connect tasks into workflows your team can use.").first(),
-  ).toBeVisible();
-
-  const product = page.getByRole("button", {
-    name: "Automations",
-    exact: true,
-  });
-  await product.press("Space");
-  await expect(product).toHaveAttribute("aria-pressed", "true");
-  await expect(automation).toHaveAttribute("aria-pressed", "false");
-  await expect(product).toBeFocused();
-  await expect(
-    page
-      .getByText("Reduce repetitive work, with human review at each handoff.")
-      .first(),
-  ).toBeVisible();
+  expect(await visibleLabels("training")).toEqual([
+    "Team's real work",
+    "Live guided practice",
+    "Group review",
+    "Reusable skill",
+    "Apply afterwards",
+  ]);
+  expect(await visibleLabels("automation")).toEqual([
+    "Brief / operating problem",
+    "Tailored design and build",
+    "Team deploys and uses it",
+    "Test and review",
+    "Review in customer context",
+  ]);
+  expect(await visibleLabels("product")).toEqual([
+    "Repetitive work",
+    "System handoffs",
+    "Human direction",
+    "Human review",
+    "Usable output",
+  ]);
 });
 
 test("every service stays readable on the page whichever drawing is shown", async ({
@@ -127,11 +123,44 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
   // when the motion preference changes.
   await page.evaluate(() => {
     const choices = [
-      ...document.querySelectorAll<HTMLButtonElement>("[data-service]"),
+      ...document.querySelectorAll<HTMLButtonElement>("#services .choice"),
     ];
     [1, 2, 0, 2].forEach((index) => choices[index].click());
+    window.addEventListener(
+      "scrollend",
+      () => {
+        document.documentElement.dataset.serviceScrollSettled = "true";
+      },
+      { once: true },
+    );
+    matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
+      "change",
+      () => {
+        document.documentElement.dataset.motionChanged = "true";
+      },
+      { once: true },
+    );
   });
+  const interrupted = await page
+    .locator(".services-art .system-field")
+    .getAttribute("aria-label");
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-motion-changed",
+    "true",
+  );
+  const targetOffset = await page.evaluate(
+    () =>
+      new Promise<number>((resolve) =>
+        requestAnimationFrame(() => {
+          const box = document
+            .querySelector('[data-service-article="2"]')!
+            .getBoundingClientRect();
+          resolve(Math.abs(box.top + box.height / 2 - innerHeight / 2));
+        }),
+      ),
+  );
+  expect(targetOffset).toBeLessThan(60);
 
   const expectedPage = await context.newPage();
   await expectedPage.emulateMedia({ reducedMotion: "reduce" });
@@ -141,12 +170,36 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
     .getByRole("button", { name: "Automations", exact: true })
     .click();
 
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-service-scroll-settled",
+    "true",
+  );
+
+  // The last explicit choice remains authoritative while its scroll settles;
+  // the reading observer may pass other articles on the way there.
+  await expect
+    .poll(
+      () =>
+        page
+          .getByRole("button", { name: "Automations", exact: true })
+          .getAttribute("aria-pressed"),
+      { timeout: 8000 },
+    )
+    .toBe("true");
+  await expect(page.locator('[data-service-article="2"]')).toHaveClass(
+    /is-current/,
+  );
   await expect
     .poll(async () => drawing(page), {
       message: "an interrupted drawing should finish as the motionless one",
       timeout: 8000,
     })
     .toEqual(await drawing(expectedPage));
+  // The rapid clicks end on Automations; the drawing must settle on that
+  // customer journey even if the reading observer briefly reports another.
+  expect(interrupted).toBe(
+    "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
+  );
   await expectedPage.close();
 });
 
@@ -189,24 +242,24 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
   // The narrow layout gives every article its own drawing rather than one
   // sticky pane, so all three are on the page at once.
   for (const name of [
-    /Training illustration:/,
+    /Workshop illustration:/,
     /Workflow illustration:/,
     /Automation illustration:/,
   ]) {
     await expect(page.getByRole("img", { name })).toHaveCount(1);
   }
   await expect(
-    page.locator("#service-training").getByText("Useful skills", {
+    page.locator("#service-training").getByText("Live guided practice", {
       exact: true,
     }),
   ).toBeVisible();
   await expect(
-    page.locator("#service-automation").getByText("Operations", {
+    page.locator("#service-automation").getByText("Brief / operating problem", {
       exact: true,
     }),
   ).toBeVisible();
   await expect(
-    page.locator("#service-product").getByText("Repeatable work", {
+    page.locator("#service-product").getByText("Repetitive work", {
       exact: true,
     }),
   ).toBeVisible();
@@ -285,7 +338,7 @@ test("a slow font does not hold the opening headline back", async ({
     )
     .toBe(true);
   await expect(headline).toHaveText(
-    "Hands-on Claude skills and training for your business.",
+    "Train teams. Build useful skills. Automate the work.",
   );
 });
 

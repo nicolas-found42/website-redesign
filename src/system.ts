@@ -311,7 +311,9 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     const to = next.nodes.map((node) => nextLayout.nodes[node.id].at);
 
     // The outgoing routes retract before the incoming ones draw, so the two
-    // never overlap into an unreadable tangle.
+    // never overlap into an unreadable tangle. A preference change can interrupt
+    // this target; `settle` remains idempotent, but the swap callback also checks
+    // the live motion preference before starting the incoming draw.
     const outgoing = paths;
     tweens.push(
       animate(
@@ -359,6 +361,10 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     const drawIn = window.setTimeout(() => {
       timers.delete(drawIn);
       if (active !== index) return;
+      if (still()) {
+        settle(index);
+        return;
+      }
       routesLayer.innerHTML = routeMarkup(nextLayout);
       paths = [...routesLayer.querySelectorAll("path")];
       lengths = paths.map((path) => path.getTotalLength());

@@ -9,6 +9,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "playwright test",
+    "test:stress": "playwright test --repeat-each=12 --workers=2",
     "preview:pages": "node scripts/serve-pages.mjs"
   },
   "devDependencies": {

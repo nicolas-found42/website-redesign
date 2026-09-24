@@ -1,10 +1,11 @@
 import { mountInteractions } from "./interactions";
-import { previewNote, siteFooter, siteHeader } from "./homepage/chrome";
+import { siteHeader, siteFooter } from "./homepage/chrome";
 import { hero } from "./homepage/hero";
 import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
 import { audiencesSection } from "./homepage/audiences";
 import { credibilitySection } from "./homepage/credibility";
+import { inquirySection } from "./homepage/inquiry";
 import { mountSystem } from "./system";
 import { masterSchematic } from "./schematic";
 import { mountServices } from "./homepage/services-behaviour";
@@ -20,12 +21,12 @@ import type { PageMotion } from "./motion-preference";
 export function renderHomepage() {
   return `${siteHeader()}
 <main id="main">
-${previewNote()}
 ${hero()}
 ${resourcesSection()}
 ${audiencesSection()}
 ${servicesSection({ allServicesLink: true })}
 ${credibilitySection()}
+${inquirySection()}
 </main>
 ${siteFooter()}`;
 }

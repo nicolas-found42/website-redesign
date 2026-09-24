@@ -10,7 +10,6 @@ Review screenshots separately for visual consistency. `scripts/capture-evidence.
 
 A passing suite establishes local content and behavior, not working email delivery, resource fulfillment, authentic testimonials, live external submissions or a public deployment. Retain noindex until a separately authorized launch.
 
-
 ## September 16 meeting implementation
 
 Baseline at main 0ecffdc: `npm test` — 120 passed (40.9s).
@@ -84,6 +83,22 @@ evidence and logs: [artifacts/site-audit/2026-09-22](../artifacts/site-audit/202
 Re-capture with `scripts/capture-audit-evidence.mjs`. Not run: physical devices,
 real Safari, screen readers.
 
+## September 23 homepage journeys
+
+Issue #43 replaces prototype-era journey copy and local no-send forms with clear
+homepage paths, published resource destinations, interim service routes, and
+honest unavailable states. The inquiry dialog now hands off directly to Found42's
+live contact form; the scorecard's open answer remains local and is shown only as
+context to copy. The ordinary interface adopts the approachable business-site
+visual voice while the routed drawings keep their alternatives and motion states.
+
+Validation: `npm run typecheck` passed; `npm run build` passed; `npm test` —
+**257 passed (1.8m)** across unit, Chromium, Firefox and WebKit. This includes
+320px doubled-text reflow, three-engine drawing geometry, resource destination
+coverage, unavailable-state copy, and no local submission forms. A local passing
+suite still does not verify delivery by Found42's external contact form or any
+resource request route.
+
 ## Stand-up transcript follow-up
 
 Baseline at main c00cc1c: `npm test` — 183 passed. Current validation:
@@ -118,3 +133,79 @@ scorecard states at 1440, 768, 390 and 320; two phone frames of the Workflows
 drawing approaching and arrived with motion on; `report.json` (no overflow,
 no page errors, including the motion-on phone page).
 Not run: physical devices, real Safari, screen readers.
+
+## Issue #43 review remediation
+
+The final review pass aligned service and audience handoffs with the live
+form's vocabulary, kept unavailable learning routes explicit, removed the
+remaining technical visual furniture, and updated visitor-level assertions.
+The Private Equity page no longer publishes the unapproved eight-hour figure;
+the Resources opening names availability honestly, and ScoreApp and Toolkit
+links now come from the destination register.
+The service rail holds the latest explicit choice until its scroll reaches the
+selected article; reduced motion lands there immediately and settles the
+drawing. The regression failed before that change and passed 15 repeated runs
+across Chromium, Firefox and WebKit afterwards.
+
+Final local gate on the feature branch: `npm run typecheck` passed;
+`npm run build` passed; `npm test` — **251 passed (1.3m)** across unit,
+Chromium, Firefox and WebKit. The focused homepage, UX, service-drawing and
+audience set passed 37/37 in Chromium. The render contract passed 8/8 and
+content coverage passed 3/3. The new count supersedes the earlier 257-test
+implementation record above; the two runs used different test contracts.
+
+The external contact submission, gated resource fulfillment, course access
+terms and final audience recommendations still require owner-approved checks
+before release. The preview retains noindex and its current domain routing.
+
+The first PR `verify` run exposed Linux fallback-font overflow at 320px and a
+wrapped-rail WebKit choice that could lose its selected state. Both were
+reproduced in a Linux container. Constraining the inquiry-step grid and answer
+choices removed the overflow. The service rail now keeps an explicit choice
+until its article reaches the CSS scroll-margin and page scroll-padding landing;
+a settled scroll reconciles the active article after an anchor jump. Natural
+short-viewport regressions at 500px and 600px caught cases where the selected
+article starts below the viewport midpoint. Eighteen targeted Linux checks
+passed in Chromium, Firefox and WebKit, followed by the
+full local gate above. Remote verification is reported in the PR.
+
+### Reproducing browser failures
+
+Playwright keeps a trace, screenshot and video for each failed browser test and
+writes an HTML report. When Playwright tests fail, the GitHub `verify` job
+uploads `test-results/` and `playwright-report/` as a seven-day
+`playwright-failure-<run id>` artifact. Open
+the report with `npx playwright show-report`, or inspect one captured sequence
+with `npx playwright show-trace path/to/trace.zip`. The trace shows the action,
+DOM snapshot, network and console around the failure. Passing tests discard
+their media, so routine runs do not produce a large artifact.
+
+For a browser race, run the exact test repeatedly, keeping CI's two workers:
+
+```sh
+npm run test:stress -- tests/standup-gaps.spec.ts --project=webkit --grep "short-phone choice"
+```
+
+The second PR `verify` run caught an intermittent WebKit short-phone jump. A
+trace showed the selected service changing while its scroll position was still
+settling. The click now measures the wrapped rail before scrolling. At a short
+viewport, the preceding article can still span the viewport midpoint when the
+chosen article starts below the rail. The rail therefore keeps an explicit
+choice selected until the visitor scrolls or follows an anchor. The natural
+phone landing and short-phone choice tests each passed 16 repeated local
+WebKit runs. The adjacent Chromium and WebKit checks passed 42/42.
+
+The third PR `verify` run failed the same 500px WebKit check again. Content
+above the landed article was still reflowing after the 200% text change, and
+WebKit has no CSS scroll anchoring, so the article slid out of view after
+landing. A narrow choice now holds its article at the landing while the page
+resizes, until the visitor moves on. Before the hold, 7 of 40 repeated local
+WebKit runs failed; afterwards the short-phone, rapid-choice and reduced-motion
+checks passed 180/180 across Chromium, Firefox and WebKit, and the full local
+suite passed 251/251.
+
+An earlier full local `npm test` attempt reached 229/251 passes. Eighteen startup
+failures were connection refusals on the shared 4173/4179 preview ports; four
+Firefox tests then timed out or missed an element in that run. The focused
+service checks above and production build passed. The PR's isolated GitHub
+`verify` job is the full-suite gate for this change.

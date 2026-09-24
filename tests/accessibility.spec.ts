@@ -44,7 +44,16 @@ test("reduced-motion visitors can operate the drawing without animated movement"
   await page.keyboard.press("Enter");
   await expect(automate).toHaveAttribute("aria-pressed", "true");
   await expect(
-    page.getByText("Connect tasks into workflows your team can use.").first(),
+    page
+      .locator(".services-art .system-label")
+      .filter({ hasText: "Brief / operating problem" })
+      .first(),
+  ).toBeVisible();
+  await expect(
+    page
+      .locator(".services-caption")
+      .filter({ hasText: "Operating problem" })
+      .first(),
   ).toBeVisible();
   // Nothing perceptible: the reduced-motion clamp is in force on every effect
   // the page has, and none of them is still running once the choice is made.
@@ -127,11 +136,11 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await expect(
-    page.getByText("Free 5-day mini-course · Work email requested.", {
-      exact: false,
-    }),
-  ).toBeVisible();
+  const start = page.locator("#resources");
+  await expect(start).toContainText("C-Level AI Toolkit");
+  await expect(start).toContainText(
+    "Public page · Some custom GPT links require a ChatGPT account.",
+  );
   const choice = page.getByRole("button", { name: "Workflows", exact: true });
   await choice.click();
   await expect(choice).toHaveAttribute("aria-pressed", "true");

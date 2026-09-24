@@ -86,80 +86,45 @@ test("assessment branches, Back and Retake preserve source behavior", async ({
     await expect(host).toContainText("1 / 4");
   }
 });
-test("forms validate, disclose unavailable delivery, trap focus and restore trigger", async ({
+test("inquiry handoff explains the live form, traps focus and restores its trigger", async ({
   page,
 }) => {
   await page.goto("/resources/");
-  const form = page.locator("#playbook form");
-  await form.getByRole("button").click();
-  await expect(form).toContainText("Enter a valid work email.");
-  await form.getByLabel("Work email").fill("preview@example.com");
-  await form.getByRole("button").click();
-  await expect(form).toContainText("Nothing was sent");
-  const trigger = page.getByRole("button", { name: /Explore the mini-course/ });
+  const trigger = page.getByRole("button", { name: /Talk to our team/ });
   await trigger.click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  await expect(dialog).toContainText("A safe rollout pattern");
+  await expect(
+    dialog.getByRole("link", { name: "Open the live inquiry form" }),
+  ).toHaveAttribute("href", "https://www.found42.com/contact");
   await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  await expect(dialog).toContainText("Complete every field");
-  await dialog.getByLabel("Your name").fill("Preview User");
-  await dialog.getByLabel("Work email").fill("preview@example.com");
-  await dialog.getByLabel("Company").fill("Preview");
-  await dialog
-    .getByLabel("What should work better?")
-    .fill("Review a repetitive workflow");
-  await dialog.getByRole("button", { name: "Check my draft" }).click();
-  await expect(dialog).toContainText("Nothing was sent.");
   const violations = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
     .analyze();
   expect(violations.violations).toEqual([]);
 });
 
-test("all email gates validate without sending requests or claiming a subscription", async ({
+test("active resources use published destinations and inactive forms make no request", async ({
   page,
 }) => {
   const submissions: string[] = [];
-  page.on("request", (r) => {
-    if (r.method() !== "GET") submissions.push(r.url());
+  page.on("request", (request) => {
+    if (request.method() !== "GET") submissions.push(request.url());
   });
   await page.goto("/resources/");
-  for (const id of ["playbook", "library"]) {
-    const form = page.locator(`#${id} form`);
-    await form.getByLabel("Work email").fill("invalid");
-    await form.getByRole("button").click();
-    await expect(form).toContainText("Enter a valid work email.");
-    await form.getByLabel("Work email").fill("preview@example.com");
-    await form.getByRole("button").click();
-    await expect(form).toContainText("you have not been subscribed.");
-  }
-  await page.locator('[data-dialog="course"]').click();
-  const course = page.getByRole("dialog");
-  await course.getByRole("button", { name: /Start the course/ }).click();
-  await expect(course).toContainText("Enter a valid work email.");
-  await course.getByLabel("Work email").fill("preview@example.com");
-  await course.getByRole("button", { name: /Start the course/ }).click();
-  await expect(course).toContainText("Nothing was sent");
-  const close = course.getByRole("button", { name: "Close dialog" });
-  await close.focus();
-  await page.keyboard.press("Shift+Tab");
+  await expect(page.locator("#playbook form")).toHaveCount(0);
+  await expect(page.locator("#library form")).toHaveCount(0);
+  await expect(page.locator("#course form")).toHaveCount(0);
   await expect(
-    course.getByRole("button", { name: /Start the course/ }),
-  ).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect(close).toBeFocused();
-  await page.keyboard.press("Escape");
+    page.getByRole("link", { name: "Read the verified lesson" }),
+  ).toHaveAttribute("href", "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude");
   await page.goto("/blog/");
-  const newsletter = page.locator("form");
-  await newsletter.getByRole("button").click();
-  await expect(newsletter).toContainText("Enter a valid work email.");
-  await newsletter.getByLabel("Work email").fill("preview@example.com");
-  await newsletter.getByRole("button").click();
-  await expect(newsletter).toContainText("you have not been subscribed.");
+  await expect(page.locator("form")).toHaveCount(0);
+  await expect(page.locator("main")).toContainText(
+    "No newsletter subscription is available yet.",
+  );
   expect(submissions).toEqual([]);
 });
 
