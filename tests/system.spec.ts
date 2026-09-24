@@ -200,6 +200,8 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
     .toEqual(await drawing(expectedPage));
   // The rapid clicks end on Automations; the drawing must settle on that
   // customer journey even if the reading observer briefly reports another.
+  // This checks the label captured before the motion change, not its current value.
+  // eslint-disable-next-line playwright/prefer-web-first-assertions
   expect(interrupted).toBe(
     "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
   );

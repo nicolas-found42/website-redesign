@@ -43,7 +43,6 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
   const splits = new Map<HTMLElement, Parts>();
   const played = new WeakSet<HTMLElement>();
   const timers = new Set<number>();
-  let observer: IntersectionObserver | undefined;
   let resizeTimer = 0;
   let disposed = false;
 
@@ -66,7 +65,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
 
   document.documentElement.dataset.motion = "on";
 
-  observer = new IntersectionObserver(
+  const observer = new IntersectionObserver(
     (entries) => {
       const arrived = entries
         .filter((entry) => entry.isIntersecting)
@@ -77,7 +76,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
         });
       arrived.forEach((entry, index) => {
         const element = entry.target as HTMLElement;
-        observer?.unobserve(element);
+        observer.unobserve(element);
         if (element.hasAttribute("data-reveal-lines")) {
           play(element);
           return;
@@ -88,7 +87,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
     },
     { threshold: 0.1, rootMargin: "0px 0px -8% 0px" },
   );
-  targets().forEach((element) => observer?.observe(element));
+  targets().forEach((element) => observer.observe(element));
 
   /**
    * Line masks need the real line boxes, so the split waits for the fonts —
@@ -145,10 +144,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
         tagName: "span",
       });
       (parts.words ?? []).forEach((word, index) =>
-        (word as HTMLElement).style.setProperty(
-          "--word-delay",
-          `${index * WORD_STAGGER}ms`,
-        ),
+        word.style.setProperty("--word-delay", `${index * WORD_STAGGER}ms`),
       );
       splits.set(headline, {
         count: parts.words?.length ?? 0,
@@ -185,7 +181,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
       if (headline.getBoundingClientRect().top < innerHeight * 0.92) {
         play(headline);
       } else {
-        observer?.observe(headline);
+        observer.observe(headline);
       }
     }
   }
@@ -238,7 +234,7 @@ export function mountReveals(root: ParentNode, { motionPreference }: Options) {
     timers.clear();
     removeEventListener("resize", onResize);
     motionPreference.removeEventListener("change", onPreference);
-    observer?.disconnect();
+    observer.disconnect();
     showEverything();
   };
 }

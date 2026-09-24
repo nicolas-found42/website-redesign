@@ -16,7 +16,7 @@ test("meeting journey reads in order and separates audiences from delivery", asy
   await expect(page.locator("#audiences")).toContainText(
     "You do not need to be an engineer",
   );
-  expect(await page.locator("#resources h3").allTextContents()).toEqual([
+  await expect(page.locator("#resources h3")).toHaveText([
     "AI Readiness Scorecard",
     "C-Level AI Toolkit",
   ]);

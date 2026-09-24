@@ -190,7 +190,7 @@ export function selectorFor(el: Element) {
     }
     const same = node.parentElement
       ? [...node.parentElement.children].filter(
-          (sibling) => sibling.localName === node!.localName,
+          (sibling) => sibling.localName === node.localName,
         )
       : [];
     parts.unshift(
