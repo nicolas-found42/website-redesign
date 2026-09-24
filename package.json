@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "playwright test",
     "test:stress": "playwright test --repeat-each=12 --workers=2",
-    "preview:pages": "node scripts/serve-pages.mjs"
+    "preview:pages": "node scripts/serve-pages.mjs",
+    "feedback:issues": "node scripts/feedback-to-issues.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
