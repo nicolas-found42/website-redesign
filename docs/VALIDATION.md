@@ -238,3 +238,14 @@ reading line. The example now sets `--size-body` like every other reading block.
 Afterwards the short-phone check passed 60 of 60 in WebKit, the narrow services
 checks passed 180 of 180 across the three engines, and `npm test` passed 266 of
 266.
+
+## Services catalog page
+
+`/services/` now presents the service catalog instead of repeating the homepage
+(tracks, formats and starting prices, beyond training, free sessions, client
+quotes). `tests/services-catalog.spec.ts` checks every catalog entry renders,
+that each price is a starting price or "Quoted after discovery", that the
+catalog's upper bounds and client-specific terms are absent, the jump links and
+track inquiries, 320px/200% and 390px reflow, stacked table roles and axe.
+Tests that pinned the old page moved to the homepage (#32, #41) or to the new
+anchors (`#tracks`, `#formats`).

@@ -688,7 +688,7 @@ export const audiences: readonly Audience[] = [
       "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality.",
     link: {
       label: "Explore tailored training",
-      href: sitePath("services/#service-training"),
+      href: sitePath("services/#tracks"),
     },
     scene: {
       id: "contributors",

@@ -6,13 +6,11 @@ import {
   essays,
   claudeGloss,
   industryFounder,
-  services,
+  serviceCatalog,
   destinationRegister,
 } from "./content";
 import { siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
-import { servicesSection } from "./homepage/services";
-import { audiencesSection } from "./homepage/audiences";
 import { reviewScene, sceneFigure } from "./audiences";
 import { schematicFigure, masterSchematic } from "./schematic";
 import { sitePath } from "./paths";
@@ -29,9 +27,9 @@ export const pageMeta: Record<string, { title: string; description: string }> =
         "Assess one workflow and explore playbooks, skills and practical training shaped around real work.",
     },
     services: {
-      title: "Workshops, Workflows & Automations | Found42",
+      title: "Services and Pricing | Found42",
       description:
-        "Role-specific training and usable AI systems, built around your company’s work and quality standards.",
+        "Five Claude training tracks, the formats they run in and their starting prices, plus custom builds, advisory and two free 30-minute sessions.",
     },
     "industries/private-equity": {
       title: "AI for Private Equity | Found42",
@@ -56,11 +54,11 @@ export const pageMeta: Record<string, { title: string; description: string }> =
   };
 const sectionLabel = (label: string) =>
   `<p class="note section-label">${label}</p>`;
-/** An opening's lead, followed by what Claude is whenever the lead names it. */
-const lead = (body: string) =>
-  `<p class="lead">${body}</p>${body.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
+/** An opening's lead, followed by what Claude is whenever the opening names it. */
+const lead = (body: string, title = "") =>
+  `<p class="lead">${body}</p>${`${title} ${body}`.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
 const opening = (label: string, title: string, body: string, aside: string) =>
-  `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<button class="action" data-dialog="contact">Talk to our team&nbsp;→</button></div><aside class="page-aside">${aside}</aside></section><div class="wrap hero-rail page-rail"><span class="note">Your role · Your industry · Your company</span><button class="motion-toggle note" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button></div>`;
+  `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body, title)}<button class="action" data-dialog="contact">Talk to our team&nbsp;→</button></div><aside class="page-aside">${aside}</aside></section><div class="wrap hero-rail page-rail"><span class="note">Your role · Your industry · Your company</span><button class="motion-toggle note" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button></div>`;
 /**
  * Planned resources stay visibly unavailable (ADR 0005), grouped after the ones
  * a visitor can use today so they read as what is coming rather than as dead
@@ -101,35 +99,76 @@ function resourcesPage() {
       })
       .join("") +
     laterResources() +
-    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="${destinationRegister.toolkit}">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the unavailable Strategic Advisor mini-course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#engagements")}">See how engagements work&nbsp;→</a></section>` +
+    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="${destinationRegister.toolkit}">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the unavailable Strategic Advisor mini-course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#formats")}">See formats and pricing&nbsp;→</a></section>` +
     inquirySection()
   );
 }
+type CatalogRow = {
+  readonly name: string;
+  readonly mode?: string;
+  readonly detail: string;
+  readonly terms: string;
+  readonly from?: string;
+  readonly unit?: string;
+};
 /**
- * What an engagement asks and gives, before a visitor is asked to make an
- * inquiry: the question a buyer has first and the service descriptions below
- * leave open.
+ * A price list: what each option is, its terms, and the price it starts at.
+ * Only a starting price is published; an option without one is quoted after
+ * discovery. A table because a buyer compares the rows; its explicit roles
+ * survive the narrow layout, which stacks each row.
  */
-function engagementsBand() {
-  const rows = [
-    ["Starts with", "startsWith"],
-    ["You provide", "youProvide"],
-    ["You get", "youGet"],
-  ] as const;
-  return `<section id="engagements" class="wrap band engagements" aria-labelledby="engagements-title">${sectionLabel("What an engagement looks like")}<h2 id="engagements-title" class="display">What working with us looks like.</h2><div class="engagement-grid">${services.map((service) => `<article><h3>${service.title}</h3><dl>${rows.map(([term, key]) => `<div><dt class="note">${term}</dt><dd>${service.engagement[key]}</dd></div>`).join("")}</dl></article>`).join("")}</div><p class="lead engagement-terms">Length and fees depend on the work, so they are not published here. Ask about both in your first conversation.</p></section>`;
+const priceList = (label: string, heading: string, rows: readonly CatalogRow[]) =>
+  `<table class="price-list" role="table" aria-label="${label}"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">${heading}</th><th scope="col" role="columnheader">What it is</th><th scope="col" role="columnheader">Starting at</th></tr></thead><tbody role="rowgroup">${rows
+    .map(
+      (row) =>
+        `<tr role="row"><th scope="row" role="rowheader"><span class="price-name">${row.name}</span>${row.mode ? `<span class="price-mode">${row.mode}</span>` : ""}</th><td role="cell"><p>${row.detail}</p><p class="price-terms">${row.terms}</p></td><td class="price" role="cell">${row.from ? `<span class="price-from">From</span> <span class="price-figure">${row.from}</span> <span class="price-unit">${row.unit}</span>` : `<span class="price-quote">Quoted after discovery</span>`}</td></tr>`,
+    )
+    .join("")}</tbody></table>`;
+const catalogHead = (id: string, label: string, title: string, lead: string) =>
+  `<div class="section-head"><div>${sectionLabel(label)}<h2 id="${id}-title" class="display">${title}</h2></div><p class="lead">${lead}</p></div>`;
+function tracksBand() {
+  return `<section id="tracks" class="wrap band catalog-band" aria-labelledby="tracks-title">${catalogHead("tracks", "Training", "Five training tracks.", "Each track has its own curriculum, exercises and audience, and trains people to use Claude as a system, not a tool.")}<div class="track-list">${serviceCatalog.tracks
+    .map(
+      (track) =>
+        `<article class="track" id="track-${track.id}" aria-labelledby="track-${track.id}-title"><div class="track-head"><h3 id="track-${track.id}-title">${track.name}</h3><p class="track-format">${track.format}</p></div><div class="track-body"><p class="track-audience"><span class="track-term">For</span>${track.audience}</p><p class="track-term">You leave with</p><ul class="scope-list">${track.assets.map((asset) => `<li>${asset}</li>`).join("")}</ul><button class="link" data-dialog="contact" data-service="${track.name}" data-contact="${track.id}">Discuss ${track.name}&nbsp;→</button></div></article>`,
+    )
+    .join("")}</div><div class="services-industries catalog-industries"><p class="note">Built for</p><ul><li><a class="link" href="${sitePath("industries/private-equity/")}">Private Equity</a></li><li><a class="link" href="${sitePath("industries/b2b-saas/")}">B2B SaaS</a></li></ul></div></section>`;
+}
+function formatsBand() {
+  return `<section id="formats" class="wrap band catalog-band" aria-labelledby="formats-title">${catalogHead("formats", "Formats and pricing", "Priced by format, not topic.", "Specialized work, such as the AI Builders track and role-based programs, needs more preparation and costs more than the starting price. Light customization is included at no charge for private cohorts.")}${priceList("Training formats and starting prices", "Format", serviceCatalog.formats)}<div class="catalog-foot"><p class="lead">Every engagement gets a fixed quote after a free discovery assessment of what your team needs.</p><p class="note--plain">Engagements run on Claude, under Anthropic’s standard data security and confidentiality protections. Found42 can sign an NDA covering deal materials and templates used in exercises.</p><button class="action" data-dialog="contact">Ask for a fixed quote&nbsp;→</button></div></section>`;
+}
+function beyondTrainingBand() {
+  return `<section id="beyond-training" class="wrap band catalog-band" aria-labelledby="beyond-training-title">${catalogHead("beyond-training", "Beyond training", "Make it last. Keep it governed.", "Training builds capability. These services turn it into something your team keeps using, or keep its use of AI governed over time.")}${priceList("Services beyond training and starting prices", "Service", serviceCatalog.beyondTraining)}</section>`;
+}
+function freeSessionsBand() {
+  return `<section id="start-free" class="band start-free" aria-labelledby="start-free-title"><div class="wrap">${catalogHead("start-free", "Start free", "Two 30-minute sessions, at no charge.", "A short, live look at the method before you commit to anything.")}<div class="free-sessions">${serviceCatalog.freeSessions
+    .map(
+      (session) =>
+        `<article><h3>${session.name}</h3><p><span class="track-term">You leave with</span>${session.outcome}</p></article>`,
+    )
+    .join("")}</div><button class="action" data-dialog="contact" data-service="a free session" data-contact="free-session">Ask for a free session&nbsp;→</button></div></section>`;
+}
+function catalogQuotesBand() {
+  return `<section class="wrap band catalog-band" aria-labelledby="catalog-quotes-title">${catalogHead("catalog-quotes", "What clients say", "In their words.", "Attributed accounts from people who took the training. They describe their experience, not a guaranteed result.")}<div class="catalog-quotes">${serviceCatalog.quotes
+    .map(
+      (q) =>
+        `<figure class="quote"><blockquote><p>“${q.quote}”</p></blockquote><figcaption><strong>${q.name}</strong>${q.role}</figcaption></figure>`,
+    )
+    .join("")}</div><a class="link" href="${sitePath("about/")}">Meet Richard Achée&nbsp;→</a></section>`;
 }
 function servicesPage() {
   return (
     opening(
       "Services",
-      'Build capability.<br><span class="signal">Remove drag.</span>',
-      "We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem, not the technology.",
-      "<p>“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”</p>",
+      "Use Claude as a system, not a tool.",
+      "Found42 trains teams along five tracks, then helps them build and govern what they keep using. Prices below are starting points; after a free discovery assessment, you get a fixed quote.",
+      `<p class="note page-aside-label">On this page</p><ul class="page-jumps"><li><a class="link" href="#tracks">Training tracks</a></li><li><a class="link" href="#formats">Formats and pricing</a></li><li><a class="link" href="#beyond-training">Beyond training</a></li><li><a class="link" href="#start-free">Start free</a></li></ul>`,
     ) +
-    engagementsBand() +
-    audiencesSection() +
-    servicesSection() +
-    `<section class="wrap band"><p class="note">Three pillars · From learning to leverage.</p><div class="boundary-grid"><article>${sectionLabel("Clear boundary")}<h2 class="display">Free shows the pattern.</h2><p>Our resources help you test the method and improve individual practice.</p><a class="link" href="${sitePath("resources/")}">Explore free resources&nbsp;→</a></article><article>${sectionLabel("Bespoke changes the system.")}<h2 class="display">Paid builds the advantage.</h2><p>Custom engagements encode your context, quality bar, controls, and workflows.</p><p>Discovery starts with the job to be done. Co-design uses your examples and review standards. Testing and failure-mode review identify where people must stay in control.</p></article></div></section>` +
+    tracksBand() +
+    formatsBand() +
+    beyondTrainingBand() +
+    freeSessionsBand() +
+    catalogQuotesBand() +
     inquirySection()
   );
 }
@@ -149,7 +188,7 @@ function industryPage(key: keyof typeof industries) {
       d.intro,
       `<p class="page-stat">${d.aside}</p><h2 class="heading-h3">${d.asideTitle}</h2>${d.asideBody ? `<p>${d.asideBody}</p>` : ""}`,
     ) +
-    `<section class="band on-ink" data-ground="ink"><div class="wrap"><div class="section-head"><div>${sectionLabel("Where we work")}<h2 class="display">${d.heading}</h2></div><p class="lead">${d.context}</p></div><div class="industry-grid">${d.items.map(([t, b]) => `<article><h3>${t}</h3><p>${b}</p></article>`).join("")}</div></div></section>${founder ? founderBand(founder) : ""}<section class="wrap band content-split"><div>${sectionLabel("Built around your company")}<h2 class="display">Context in.<br>Judgment throughout.</h2><p>Built around your role, your industry, and your company—not a generic AI curriculum.</p><a class="link" href="${sitePath("services/")}">Workshops, Workflows & Automations&nbsp;→</a><a class="link" href="${sitePath("resources/#scorecard")}">Take the AI Readiness Scorecard&nbsp;→</a></div><div class="page-drawing">${schematicFigure(masterSchematic, "portrait")}</div></section>` +
+    `<section class="band on-ink" data-ground="ink"><div class="wrap"><div class="section-head"><div>${sectionLabel("Where we work")}<h2 class="display">${d.heading}</h2></div><p class="lead">${d.context}</p></div><div class="industry-grid">${d.items.map(([t, b]) => `<article><h3>${t}</h3><p>${b}</p></article>`).join("")}</div></div></section>${founder ? founderBand(founder) : ""}<section class="wrap band content-split"><div>${sectionLabel("Built around your company")}<h2 class="display">Context in.<br>Judgment throughout.</h2><p>Built around your role, your industry, and your company—not a generic AI curriculum.</p><a class="link" href="${sitePath("services/#tracks")}">Training tracks and pricing&nbsp;→</a><a class="link" href="${sitePath("resources/#scorecard")}">Take the AI Readiness Scorecard&nbsp;→</a></div><div class="page-drawing">${schematicFigure(masterSchematic, "portrait")}</div></section>` +
     inquirySection(d.cta, d.ctaBody)
   );
 }

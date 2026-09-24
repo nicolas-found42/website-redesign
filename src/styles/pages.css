@@ -99,15 +99,6 @@
 .service .scope-list {
   font-size: var(--size-body);
 }
-.boundary-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 72px;
-  margin-top: 40px;
-}
-.boundary-grid p {
-  margin-block: 24px;
-}
 /* The section head above already draws the rule the grid starts from. */
 .industry-grid {
   display: grid;
@@ -385,7 +376,6 @@ summary:focus-visible {
 @media (max-width: 700px) {
   .content-split,
   .biography,
-  .boundary-grid,
   .industry-grid,
   .principles {
     grid-template-columns: 1fr;
@@ -432,8 +422,10 @@ summary:focus-visible {
 }
 .page-opening > *,
 .content-split > *,
-.boundary-grid > *,
 .industry-grid > *,
+.track > *,
+.free-sessions > *,
+.catalog-quotes > *,
 .biography > *,
 .principles > *,
 .essay-list article > * {
@@ -625,41 +617,241 @@ button:disabled {
   max-width: 380px;
 }
 
-/* What an engagement asks and gives: three services, the same three rows. */
-.engagements > h2 {
-  max-width: 18ch;
-  margin-bottom: 48px;
-}
-.engagement-grid {
+/* ── The service catalog ── */
+.page-jumps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 40px;
-}
-.engagement-grid article {
-  padding-top: 24px;
-  border-top: 1px solid var(--line-strong);
-}
-.engagement-grid h3 {
-  margin: 18px 0 20px;
-}
-.engagement-grid dl {
-  display: grid;
-  gap: 18px;
+  gap: 2px;
+  padding: 0;
   margin: 0;
+  list-style: none;
 }
-.engagement-grid dt {
+
+/* Tracks read as an index: one row per track, name on the left. */
+.track-list {
+  display: flex;
+  flex-direction: column;
+}
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: 20px clamp(24px, 5vw, 96px);
+  padding-block: clamp(32px, 4vw, 56px);
+  border-top: 1px solid var(--line);
+}
+.track:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.track h3 {
+  max-width: 14ch;
+  font-size: var(--size-h3);
+}
+.track-format {
+  margin: 12px 0 0;
+  font-size: var(--size-small);
   color: var(--muted);
 }
-.engagement-grid dd {
-  margin: 6px 0 0;
+.track-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  max-width: 62ch;
 }
-.engagement-terms {
-  max-width: 52ch;
-  margin-top: 48px;
+.track-body p {
+  margin: 0;
 }
+.track-term {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--size-note);
+  font-weight: 650;
+  color: var(--muted);
+}
+.track-audience {
+  font-size: var(--size-lead);
+  line-height: 1.35;
+}
+.track .scope-list {
+  margin: 0;
+}
+.catalog-industries {
+  padding-top: 24px;
+  margin-top: clamp(32px, 4vw, 56px);
+  border-top: 1px solid var(--line);
+}
+
+/**
+ * The price list is the page's one bold element: starting prices set large in
+ * tabular display figures, right-aligned so a buyer can run down the column.
+ * Only a starting price is ever shown.
+ */
+.price-list {
+  width: 100%;
+  border-collapse: collapse;
+}
+.price-list thead th {
+  padding: 0 0 14px;
+  font-size: var(--size-note);
+  font-weight: 650;
+  color: var(--muted);
+  text-align: left;
+  border-bottom: 1px solid var(--line-strong);
+}
+.price-list tbody tr {
+  border-bottom: 1px solid var(--line);
+}
+.price-list tbody th,
+.price-list td {
+  padding: clamp(20px, 2.4vw, 32px) 32px clamp(20px, 2.4vw, 32px) 0;
+  font-weight: 400;
+  text-align: left;
+  vertical-align: top;
+}
+.price-list tbody th {
+  width: 26%;
+}
+.price-list td p {
+  max-width: 56ch;
+  margin: 0;
+}
+.price-list .price-terms {
+  margin-top: 8px;
+  font-size: var(--size-small);
+  color: var(--muted);
+}
+.price-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--size-h4);
+  font-weight: 500;
+}
+.price-mode {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--size-small);
+  color: var(--muted);
+}
+.price-list thead th:last-child,
+.price-list .price {
+  width: 22%;
+  padding-right: 0;
+  text-align: right;
+}
+.price-from,
+.price-unit {
+  display: block;
+  font-size: var(--size-note);
+  color: var(--muted);
+}
+.price-figure {
+  display: block;
+  margin-block: 4px;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.price-quote {
+  font-size: var(--size-small);
+  color: var(--muted);
+}
+.catalog-foot {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+  max-width: 62ch;
+  margin-top: clamp(32px, 4vw, 48px);
+}
+.catalog-foot p {
+  margin: 0;
+}
+
+/* The free sessions sit on the warm ground: the one band that costs nothing. */
+.start-free {
+  background: var(--paper-warm);
+}
+.start-free .section-head {
+  border-bottom-color: var(--line-strong);
+}
+.free-sessions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 72px);
+  margin-bottom: clamp(32px, 4vw, 48px);
+}
+.free-sessions h3 {
+  max-width: 18ch;
+  font-size: var(--size-h3);
+}
+.free-sessions p {
+  max-width: 44ch;
+  margin: 10px 0 0;
+}
+.catalog-quotes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 48px);
+  margin-bottom: 32px;
+}
+
 @media (max-width: 960px) {
-  .engagement-grid {
+  .catalog-quotes {
     grid-template-columns: 1fr;
-    gap: 32px;
+  }
+}
+@media (max-width: 860px) {
+  .track {
+    grid-template-columns: 1fr;
+  }
+}
+/* Narrow, each price row stacks; the roles in the markup keep it a table. */
+@media (max-width: 700px) {
+  .price-list thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+  .price-list,
+  .price-list tbody,
+  .price-list tr,
+  .price-list tbody th,
+  .price-list td {
+    display: block;
+    width: auto;
+  }
+  .price-list tbody tr {
+    padding-block: 24px;
+  }
+  .price-list tbody th,
+  .price-list td,
+  .price-list .price {
+    width: auto;
+    padding: 0;
+    text-align: left;
+  }
+  .price-list td {
+    padding-top: 10px;
+  }
+  .price-list .price {
+    padding-top: 14px;
+  }
+  .price-from,
+  .price-unit,
+  .price-figure {
+    display: inline;
+  }
+  .price-figure {
+    font-size: 2rem;
+  }
+  .free-sessions {
+    grid-template-columns: 1fr;
   }
 }

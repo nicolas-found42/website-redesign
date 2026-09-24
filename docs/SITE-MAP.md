@@ -7,7 +7,7 @@ and receive a trailing slash for static directory-index hosting.
 | --- | --- | --- |
 | `/` | `/` | Direct opening, free resources (the playbook entry with its review figure), three-audience gallery with its own scenes, services with an industries strip, attributed workshop accounts |
 | `/resources` | `/resources/` | AI Readiness Scorecard answered on the page (original ScoreApp linked), separate workflow preview, failure-mode review figure, resource access and course dialog |
-| `/services` | `/services/` | What an engagement looks like (`#engagements`), audience gallery, Workshops, Workflows, Automations; scope lists and free/bespoke boundary |
+| `/services` | `/services/` | Service catalog: training tracks (`#tracks`), formats and starting prices (`#formats`), beyond training (`#beyond-training`), two free sessions (`#start-free`), attributed client quotes |
 | `/industries/private-equity` | `/industries/private-equity/` | Deal screening, diligence, portfolio operations and firm-specific criteria; founder band; a first-pass screen example without an unapproved savings figure |
 | `/industries/b2b-saas` | `/industries/b2b-saas/` | Customer success, feedback triage, GTM enablement and team adoption |
 | `/about` | `/about/` | Complete founder biography and operating principles |
