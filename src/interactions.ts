@@ -66,7 +66,7 @@ const liveInquiry = destinationRegister.liveInquiry;
 /** The live form's own interest labels, kept separate from published service names. */
 const inquiryContext = (context: InquiryContext) => {
   const entry = inquiryInterests[context];
-  return `Choose ${entry.form} in the live form. Add “${entry.carry}” to your message so Found42 knows what to discuss.`;
+  return `${entry.form ? `Choose ${entry.form} in the live form. ` : ""}Add “${entry.carry}” to your message so Found42 knows what to discuss. The preview does not prefill the live form.`;
 };
 
 /** Makes a visitor's own words safe to show as text inside markup. */
@@ -166,12 +166,15 @@ export function mountInteractions(root: HTMLElement) {
     const service = from.dataset.service ?? "";
     const interest = from.dataset.interest ?? "";
     const contact = from.dataset.contact as InquiryContext | undefined;
-    const context = contact && contact in inquiryInterests
-      ? inquiryContext(contact)
-      : undefined;
+    const context =
+      contact && contact in inquiryInterests
+        ? inquiryContext(contact)
+        : undefined;
     dialog.dataset.type = type;
     dialog.dataset.interest = interest;
-    const carriedAnswer = escapeText(dialog.dataset.scorecardAnswer?.trim() ?? "");
+    const carriedAnswer = escapeText(
+      dialog.dataset.scorecardAnswer?.trim() ?? "",
+    );
     const carried = carriedAnswer
       ? `<div class="inquiry-draft"><p class="note">From your readiness check</p><p>${carriedAnswer}</p></div>`
       : "";

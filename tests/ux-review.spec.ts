@@ -229,7 +229,7 @@ test("#38: the Private Equity page shows the founder's published M&A experience"
   await expect(band).not.toContainText(/client|endorse/i);
 });
 
-test("#39: Services opens with the training tracks and publishes starting prices only", async ({
+test("#39: Services opens with training tracks and keeps delivery details without paid terms", async ({
   page,
 }) => {
   await page.goto("/services/");
@@ -238,19 +238,14 @@ test("#39: Services opens with the training tracks and publishes starting prices
     .locator("main > section")
     .evaluateAll((sections) => sections[1]?.id);
   expect(first).toBe("tracks");
-  const prices = await page
-    .locator("#formats .price, #beyond-training .price")
-    .allInnerTexts();
-  for (const price of prices)
-    expect(price.replace(/\s+/g, " ")).toMatch(
-      /^(From \$[\d,]+ .+|Quoted after discovery)$/,
-    );
-  await expect(page.locator("#formats")).toContainText(
-    "Every engagement gets a fixed quote after a free discovery assessment",
+  await expect(page.locator("#formats .catalog-option")).toHaveCount(6);
+  await expect(page.locator("#beyond-training .catalog-option")).toHaveCount(4);
+  expect(await page.locator("main").innerText()).not.toMatch(
+    /\$[\d,]+|starting price|pricing/i,
   );
   // The resources page's pointer lands on it.
   await page.goto("/resources/");
-  await page.getByRole("link", { name: /See formats and pricing/ }).click();
+  await page.getByRole("link", { name: /See delivery formats/ }).click();
   await expect(page).toHaveURL(/\/services\/#formats$/);
 });
 
