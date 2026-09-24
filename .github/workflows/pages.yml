@@ -21,6 +21,8 @@ jobs:
         shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
+      - name: Make the container home usable by Firefox
+        run: chown "$(id -u):$(id -g)" /github/home
       - uses: actions/setup-node@v4
         with:
           node-version: 22
