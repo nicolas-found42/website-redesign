@@ -12,12 +12,15 @@
     "test:stress": "playwright test --repeat-each=12 --workers=2",
     "preview:pages": "node scripts/serve-pages.mjs",
     "smoke:pages": "node scripts/smoke-pages.mjs",
-    "feedback:issues": "node scripts/feedback-to-issues.mjs"
+    "feedback:issues": "node scripts/feedback-to-issues.mjs",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.55.0",
-    "prettier": "^3.9.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "prettier": "^3.9.9",
     "typescript": "^5.9.2",
     "vite": "^7.1.5"
   },
