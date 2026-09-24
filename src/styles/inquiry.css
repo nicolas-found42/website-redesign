@@ -121,6 +121,21 @@
 .site-dialog .inquiry-next {
   margin-top: 8px;
 }
+.direct-contact {
+  margin-top: 20px;
+}
+.direct-contact ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+  padding: 0;
+  margin: 6px 0 0;
+  list-style: none;
+}
+.direct-contact .link {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
 
 @media (max-width: 860px) {
   .contact-grid {

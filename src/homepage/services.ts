@@ -45,14 +45,25 @@ export function servicesSection({ allServicesLink = false } = {}) {
     })
     .join("");
 
-  return `<section id="services" class="services band" data-ground="ink" aria-labelledby="services-title">
+  return `<section id="services" class="services band" aria-labelledby="services-title">
  <div class="wrap">
   <div class="services-head">
    <div>
     <p class="note section-label">Services</p>
     <h2 id="services-title" class="display" data-reveal-lines>How we deliver our services</h2>
    </div>
-   <p class="lead" data-reveal>Three ways Found42 helps: live training, tailored workflows and repeatable automations. Each engagement starts with the work, explains where you participate, and leaves your team with something usable.</p>
+   <div class="services-intro">
+    <p class="lead" data-reveal>Three ways Found42 helps: live training, tailored workflows and repeatable automations. Each engagement starts with the work, explains where you participate, and leaves your team with something usable.</p>
+    <div class="services-example" data-reveal>
+     <p class="note">For example</p>
+     <ol>
+      <li>A customer emails a purchase order.</li>
+      <li>A Claude skill reads it and drafts the order entry.</li>
+      <li>Your order desk checks the entry and approves it.</li>
+     </ol>
+     <p class="note--plain">A hypothetical example, not a client result.</p>
+    </div>
+   </div>
   </div>
   <div class="services-stage">
    <div class="services-aside">

@@ -4,20 +4,38 @@
  * The drawing holds still while three articles scroll past it. Nothing is
  * revealed by the interaction: all three services are on the page in full at
  * every width, and the sticky pane is an accompaniment to reading them.
+ *
+ * The section sits on the page's own paper ground (ADR 0005), so every colour
+ * here comes from the paper tokens rather than the ink-band tints.
  */
-.services {
-  color: #faf9f6;
-}
 .services-head {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   gap: clamp(32px, 5vw, 96px);
   align-items: end;
   padding-bottom: clamp(48px, 6vw, 96px);
-  border-bottom: 1px solid var(--line-ink);
+  border-bottom: 1px solid var(--line);
 }
 .services-head h2 {
   max-width: 13ch;
+}
+/* One everyday task, in plain words, before the three ways are named. */
+.services-example {
+  padding: 20px 22px;
+  margin-top: 28px;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--red);
+}
+.services-example ol {
+  padding-left: 1.3em;
+  margin: 10px 0 12px;
+}
+.services-example li + li {
+  margin-top: 6px;
+}
+.services-example .note--plain {
+  margin: 0;
+  color: var(--muted);
 }
 
 /**
@@ -48,7 +66,7 @@
 }
 .services-caption {
   min-height: 3em;
-  color: var(--muted-ink);
+  color: var(--muted);
 }
 
 /* ── The choice rail ── */
@@ -68,9 +86,9 @@
   font-family: var(--font-text);
   font-size: var(--size-note);
   font-weight: 650;
-  color: var(--muted-ink);
+  color: var(--muted);
   letter-spacing: 0;
-  border: 1px solid var(--line-ink);
+  border: 1px solid var(--line);
   transition:
     color 260ms var(--ease-out),
     border-color 260ms var(--ease-out);
@@ -79,22 +97,22 @@
   position: absolute;
   z-index: -1;
   content: "";
-  background: rgb(250 249 246 / 8%);
+  background: var(--paper-warm);
   transition: transform 420ms var(--ease-out);
   transform: scaleX(0);
   transform-origin: left;
   inset: 0;
 }
 .choice:hover {
-  color: #faf9f6;
-  border-color: var(--line-ink-strong);
+  color: var(--ink);
+  border-color: var(--line-strong);
 }
 .choice:hover::before {
   transform: scaleX(1);
 }
 .choice[aria-pressed="true"] {
-  color: #faf9f6;
-  border-color: var(--red-on-ink);
+  color: var(--ink);
+  border-color: var(--red);
 }
 
 /* ── The articles ── */
@@ -116,7 +134,7 @@
   min-height: 84vh;
   padding-block: clamp(32px, 6vh, 72px);
   padding-left: clamp(20px, 2.4vw, 36px);
-  border-left: 1px solid var(--line-ink);
+  border-left: 1px solid var(--line);
 }
 .service::before {
   position: absolute;
@@ -125,7 +143,7 @@
   width: 2px;
   height: 100%;
   content: "";
-  background: var(--red-on-ink);
+  background: var(--red);
   transition: transform 620ms var(--ease-out);
   transform: scaleY(0);
   transform-origin: top;
@@ -137,7 +155,7 @@
   display: none;
 }
 .service-label {
-  color: var(--red-on-ink);
+  color: var(--red);
   font-family: var(--font-text);
   font-size: var(--size-note);
   font-weight: 650;
@@ -149,13 +167,13 @@
 }
 .service .body {
   max-width: 48ch;
-  color: var(--muted-ink);
+  color: var(--muted);
 }
 .service-detail {
   position: relative;
   max-width: 44ch;
   padding-left: 20px;
-  color: #faf9f6;
+  color: var(--ink);
 }
 .service-detail::before {
   position: absolute;
@@ -164,7 +182,7 @@
   width: 7px;
   height: 7px;
   content: "";
-  background: var(--red-on-ink);
+  background: var(--red);
   border-radius: 50%;
 }
 
@@ -176,7 +194,7 @@
   justify-content: space-between;
   padding-top: clamp(40px, 5vw, 80px);
   margin-top: clamp(32px, 4vw, 64px);
-  border-top: 1px solid var(--line-ink);
+  border-top: 1px solid var(--line);
 }
 
 .services-industries {
@@ -186,7 +204,7 @@
   align-items: center;
 }
 .services-industries .note {
-  color: var(--muted-ink);
+  color: var(--muted);
 }
 .services-industries ul {
   display: flex;
@@ -272,7 +290,7 @@
     min-height: 0;
     padding-left: 0;
     padding-block: clamp(32px, 7vw, 64px);
-    border-top: 1px solid var(--line-ink);
+    border-top: 1px solid var(--line);
     border-left: 0;
   }
   /* The service is named before its drawing is shown. */

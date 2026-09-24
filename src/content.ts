@@ -12,6 +12,17 @@ export const destinationRegister = {
 } as const;
 
 /**
+ * The direct channels found42.com/contact already publishes (recorded in
+ * `docs/contexts/inquiries/AUDIT.md`), so a visitor ready to talk can reach a
+ * person without going through the form.
+ */
+export const directContact = {
+  email: "richard@found42.com",
+  phone: "(646) 300-1247",
+  tel: "+16463001247",
+} as const;
+
+/**
  * The public free-resource inventory. Availability and destination are owned
  * together so a homepage preview and the complete resource page cannot drift
  * into promising something different. Unfulfilled source offerings stay in the

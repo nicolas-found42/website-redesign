@@ -1,10 +1,14 @@
 import { arrow } from "../icons";
 import { accentSvg } from "../schematic";
-import { inquirySteps } from "../content";
+import { directContact, inquirySteps } from "../content";
 
 /** What follows an inquiry, for the closing band and the inquiry dialog. */
 export const inquiryNext = () =>
   `<div class="inquiry-next"><p class="note">What happens next</p><ol class="inquiry-steps">${inquirySteps.map((step) => `<li>${step}</li>`).join("")}</ol></div>`;
+
+/** Email and phone, for anyone who would rather reach a person than a form. */
+export const directContactLinks = () =>
+  `<div class="direct-contact"><p class="note">Prefer to reach a person?</p><ul><li><a class="link" href="mailto:${directContact.email}">Email ${directContact.email}</a></li><li><a class="link" href="tel:${directContact.tel}">Call ${directContact.phone}</a></li></ul></div>`;
 
 export function inquirySection(
   title = "Want this built for your team?",
