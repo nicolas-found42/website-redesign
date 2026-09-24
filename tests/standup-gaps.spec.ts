@@ -138,6 +138,72 @@ for (const [width, text] of [
     await context.close();
   });
 
+for (const height of [500, 600])
+  test(`a natural short-phone jump releases the choice before anchor scrolling (${height}px)`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: { width: 320, height },
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/#services");
+    await page.evaluate(
+      () => (document.documentElement.style.fontSize = "200%"),
+    );
+    await page.evaluate(() =>
+      addEventListener("scrollend", () => {
+        const article = document.querySelector('[data-service-article="2"]')!;
+        const top = article.getBoundingClientRect().top;
+        const margin = Number.parseFloat(
+          getComputedStyle(article).scrollMarginTop,
+        );
+        const padding = Number.parseFloat(
+          getComputedStyle(document.documentElement).scrollPaddingTop,
+        );
+        if (Math.abs(top - margin - padding) < 4)
+          document.documentElement.dataset.serviceJumpEnded = "true";
+      }),
+    );
+    await page.getByRole("button", { name: "Automations", exact: true }).tap();
+    const landing = () =>
+      page.evaluate(() => {
+        const article = document.querySelector('[data-service-article="2"]')!;
+        const top = article.getBoundingClientRect().top;
+        const margin = Number.parseFloat(
+          getComputedStyle(article).scrollMarginTop,
+        );
+        const padding = Number.parseFloat(
+          getComputedStyle(document.documentElement).scrollPaddingTop,
+        );
+        return { top, intended: margin + padding };
+      });
+    await expect
+      .poll(
+        async () => {
+          const { top, intended } = await landing();
+          return Math.abs(top - intended);
+        },
+        { timeout: 8000 },
+      )
+      .toBeLessThan(4);
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-service-jump-ended",
+      "true",
+    );
+    expect((await landing()).top).toBeGreaterThan(height / 2);
+    await page.evaluate(() =>
+      document
+        .querySelector('[data-service-article="1"]')!
+        .scrollIntoView({ block: "center", behavior: "instant" }),
+    );
+    await expect(
+      page.getByRole("button", { name: "Workflows", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await context.close();
+  });
+
 test("the homepage's published playbook is one click from its full inventory", async ({
   page,
 }) => {

@@ -35,6 +35,7 @@ export function mountServices(
   ];
   const choices = [...section.querySelectorAll<HTMLButtonElement>(".choice")];
   const caption = section.querySelector<HTMLElement>(".services-caption")!;
+  const aside = section.querySelector<HTMLElement>(".services-aside");
   const narrow = matchMedia(NARROW);
 
   const drawing = mountSystem(host, {
@@ -93,19 +94,52 @@ export function mountServices(
   );
   articles.forEach((article) => reader.observe(article));
 
-  /** Once a jump ends, reading resumes at the article now in the viewport. */
-  const onScrollEnd = () => {
-    if (expecting === undefined) return;
-    const box = articles[expecting].getBoundingClientRect();
+  /** A narrow jump lands at its CSS scroll margin plus page scroll padding. */
+  const atRequestedArticle = (index: number) => {
+    const box = articles[index].getBoundingClientRect();
     const middle = innerHeight / 2;
-    // Rapid jumps can emit scrollend for an interrupted earlier target. The
-    // latest choice is still in flight until its article reaches the reader.
-    if (box.top > middle || box.bottom < middle) return;
-    expecting = undefined;
-    const index = articles.findIndex((article) => {
+    if (box.top <= middle && box.bottom >= middle) return true;
+    if (!narrow.matches) return false;
+    const margin = Number.parseFloat(
+      getComputedStyle(articles[index]).scrollMarginTop,
+    );
+    const padding = Number.parseFloat(
+      getComputedStyle(document.documentElement).scrollPaddingTop,
+    );
+    const landing = margin + padding;
+    const atPageEnd =
+      scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+    return (
+      Math.abs(box.top - landing) <= 4 ||
+      (atPageEnd && box.top <= landing && box.bottom > 0)
+    );
+  };
+
+  const articleAtMiddle = () => {
+    const middle = innerHeight / 2;
+    return articles.findIndex((article) => {
       const box = article.getBoundingClientRect();
       return box.top <= middle && box.bottom >= middle;
     });
+  };
+
+  /** A settled scroll also catches an article the observer crossed while locked. */
+  const onScrollEnd = () => {
+    if (expecting === undefined) {
+      const index = articleAtMiddle();
+      if (index >= 0) show(index);
+      return;
+    }
+    // Rapid jumps can emit scrollend for an interrupted earlier target. The
+    // latest choice is still in flight until its article reaches the reader.
+    if (!atRequestedArticle(expecting)) return;
+    const requested = expecting;
+    expecting = undefined;
+    if (narrow.matches) {
+      show(requested);
+      return;
+    }
+    const index = articleAtMiddle();
     if (index >= 0) show(index);
   };
   addEventListener("scrollend", onScrollEnd);
@@ -134,7 +168,6 @@ export function mountServices(
     const onClick = () => {
       expecting = index;
       show(index, { scroll: true });
-      if (motionPreference.matches) expecting = undefined;
     };
     choice.addEventListener("click", onClick);
     return onClick;
@@ -146,7 +179,6 @@ export function mountServices(
    * A jump lands an article's start below the rail, whose height depends on
    * whether its choices fit one line at the visitor's text size.
    */
-  const aside = section.querySelector<HTMLElement>(".services-aside");
   const measureRail = new ResizeObserver(() => {
     if (aside)
       section.style.setProperty("--services-rail", `${aside.offsetHeight}px`);
@@ -211,7 +243,7 @@ export function mountServices(
       // Cancel the old smooth jump at its requested article before the
       // reading observer is allowed to report the articles it passed.
       show(expecting, { scroll: true });
-      expecting = undefined;
+      if (atRequestedArticle(expecting)) expecting = undefined;
     }
     figures.forEach((_, index) => rest(index));
   };

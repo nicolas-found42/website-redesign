@@ -149,7 +149,7 @@ drawing. The regression failed before that change and passed 15 repeated runs
 across Chromium, Firefox and WebKit afterwards.
 
 Final local gate on the feature branch: `npm run typecheck` passed;
-`npm run build` passed; `npm test` — **245 passed (1.6m)** across unit,
+`npm run build` passed; `npm test` — **251 passed (1.3m)** across unit,
 Chromium, Firefox and WebKit. The focused homepage, UX, service-drawing and
 audience set passed 37/37 in Chromium. The render contract passed 8/8 and
 content coverage passed 3/3. The new count supersedes the earlier 257-test
@@ -158,3 +158,14 @@ implementation record above; the two runs used different test contracts.
 The external contact submission, gated resource fulfillment, course access
 terms and final audience recommendations still require owner-approved checks
 before release. The preview retains noindex and its current domain routing.
+
+The first PR `verify` run exposed Linux fallback-font overflow at 320px and a
+wrapped-rail WebKit choice that could lose its selected state. Both were
+reproduced in a Linux container. Constraining the inquiry-step grid and answer
+choices removed the overflow. The service rail now keeps an explicit choice
+until its article reaches the CSS scroll-margin and page scroll-padding landing;
+a settled scroll reconciles the active article after an anchor jump. Natural
+short-viewport regressions at 500px and 600px caught cases where the selected
+article starts below the viewport midpoint. Eighteen targeted Linux checks
+passed in Chromium, Firefox and WebKit, followed by the
+full local gate above. Remote verification is reported in the PR.

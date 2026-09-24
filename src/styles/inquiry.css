@@ -99,12 +99,21 @@
   color: rgb(255 255 255 / 82%);
 }
 /* What follows an inquiry: three short steps, on the band and in the dialog. */
+.inquiry-next {
+  min-width: 0;
+  width: 100%;
+}
 .inquiry-steps {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   max-width: 52ch;
   margin: 10px 0 0;
   padding-left: 1.4em;
+}
+.inquiry-steps li {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .contact .inquiry-next {
   color: rgb(255 255 255 / 88%);

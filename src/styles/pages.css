@@ -183,10 +183,13 @@
 }
 .answer-options {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
 }
 .answer {
   display: flex;
+  min-width: 0;
+  overflow-wrap: anywhere;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
