@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 /**
@@ -136,7 +136,6 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
   for (const route of routes) {
     await page.goto(route);
     const opening = page.locator(".hero-copy, .page-opening > div").first();
-    const says = `${await opening.locator("h1").innerText()} ${await opening.locator(".lead").innerText()}`;
     const allOpeningText = await opening.innerText();
     const glosses = opening.getByText("Claude is Anthropic’s AI assistant.");
     if (allOpeningText.includes("Claude")) {
@@ -243,7 +242,9 @@ test("#39: Services opens with the training tracks and publishes starting prices
     .locator("#formats .price, #beyond-training .price")
     .allInnerTexts();
   for (const price of prices)
-    expect(price.replace(/\s+/g, " ")).toMatch(/^(From \$[\d,]+ .+|Quoted after discovery)$/);
+    expect(price.replace(/\s+/g, " ")).toMatch(
+      /^(From \$[\d,]+ .+|Quoted after discovery)$/,
+    );
   await expect(page.locator("#formats")).toContainText(
     "Every engagement gets a fixed quote after a free discovery assessment",
   );

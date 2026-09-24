@@ -77,7 +77,7 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
   let visible = false;
   let revealed = !drawIn;
   let pointer = { x: 0, y: 0 };
-  let eased = { x: 0, y: 0 };
+  const eased = { x: 0, y: 0 };
   const timers = new Set<number>();
 
   const schematic = () => compositions[active];

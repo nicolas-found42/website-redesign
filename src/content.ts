@@ -1,5 +1,3 @@
-import { sitePath } from "./paths";
-
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
   executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
@@ -241,7 +239,8 @@ export const serviceCatalog = {
     {
       id: "gtm-teams",
       name: "GTM Teams",
-      audience: "Sales, business development, marketing and revenue operations.",
+      audience:
+        "Sales, business development, marketing and revenue operations.",
       assets: [
         "A personalized set of 10 role-specific Claude Skills and plugins for lead generation, account-based marketing (ABM), contact enrichment and pipeline analysis",
         "A library of more than 200 GTM Skill templates",
@@ -285,7 +284,8 @@ export const serviceCatalog = {
     {
       name: "Private cohort",
       mode: "Virtual",
-      detail: "A dedicated half-day session for one company or a group of companies.",
+      detail:
+        "A dedicated half-day session for one company or a group of companies.",
       terms: "Flat fee, up to 20 seats",
       from: "$8,500",
       unit: "per cohort",
@@ -360,11 +360,13 @@ export const serviceCatalog = {
   freeSessions: [
     {
       name: "Claude as a Strategic Advisor",
-      outcome: "A configured strategic advisor, demonstrated live on an M&amp;A case study.",
+      outcome:
+        "A configured strategic advisor, demonstrated live on an M&amp;A case study.",
     },
     {
       name: "Claude for High-Stakes Communications",
-      outcome: "A reusable review pattern for email: tone, risks and revisions.",
+      outcome:
+        "A reusable review pattern for email: tone, risks and revisions.",
     },
   ],
   quotes: [
@@ -375,7 +377,8 @@ export const serviceCatalog = {
       role: "Former co-founder and CEO, Cameyo (acquired by Google)",
     },
     {
-      quote: "C-Level AI is a completely unique approach that cuts through the AI hype.",
+      quote:
+        "C-Level AI is a completely unique approach that cuts through the AI hype.",
       name: "Robb Henshaw",
       role: "CMO, Edgescale AI",
     },

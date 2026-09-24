@@ -202,7 +202,7 @@ export function mountReview() {
       event.preventDefault();
       event.stopImmediatePropagation();
       stopPicking();
-      choose(snap(document.activeElement!));
+      choose(snap(document.activeElement));
     }
   };
   const swallowed = [
