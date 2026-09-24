@@ -1,6 +1,5 @@
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
-  executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
   strategicAdvisorLesson:
     "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
   toolkit: "https://www.found42.com/toolkit",
@@ -114,13 +113,16 @@ export const inquiryInterests = {
   workshops: { form: "Training", carry: "Workshops" },
   workflows: { form: "Automation", carry: "Workflows" },
   automations: { form: "Automation", carry: "Automations" },
-  "ai-builder-support": { form: "Automation", carry: "AI builder support" },
   "c-level-ai": { form: "Training", carry: "the C-Level AI track" },
   analysts: { form: "Training", carry: "the Analysts track" },
   "gtm-teams": { form: "Training", carry: "the GTM Teams track" },
   "ai-builders": { form: "Training", carry: "the AI Builders track" },
   "role-based": { form: "Training", carry: "Customized Role-Based Training" },
   "free-session": { form: "Training", carry: "a free 30-minute session" },
+  "custom-build": { form: "Automation", carry: "Custom build" },
+  "advisory-retainer": { form: null, carry: "Advisory retainer" },
+  "advisory-facilitation": { form: null, carry: "Advisory facilitation" },
+  "annual-program": { form: null, carry: "Annual program" },
 } as const;
 
 export type InquiryContext = keyof typeof inquiryInterests;
@@ -209,10 +211,9 @@ export const testimonials = [
   },
 ];
 /**
- * The service catalog: what Found42 sells, to whom, in which formats, and the
- * price each format starts at. Adapted from Found42's own catalog, without any
- * client-specific terms. Prices are starting points only; every engagement gets
- * a fixed quote after a free discovery assessment.
+ * The public service catalog: five training curricula, their delivery formats,
+ * further services and no-charge entry sessions. The private proposal's paid
+ * terms and client-specific language do not belong in this register.
  */
 export const serviceCatalog = {
   tracks: [
@@ -232,7 +233,7 @@ export const serviceCatalog = {
       audience: "Deal teams, FP&amp;A, research and financial analysts.",
       assets: [
         "Role-specific Claude Skills and plugins that automate key analyst work: CIM-to-deal memo, portfolio scrubbing, pitch narratives, and deck generation that follows strict presentation templates",
-        "Deal materials handled under NDA",
+        "Practice with deal documents and the team’s presentation standards",
       ],
       format: "Virtual or in person",
     },
@@ -277,35 +278,27 @@ export const serviceCatalog = {
       mode: "Virtual",
       detail:
         "A public cohort with a mixed audience from several companies, for the standard tracks: C-Level AI, GTM Teams and AI Builders.",
-      terms: "Per seat, minimum 10 seats",
-      from: "$599",
-      unit: "per seat",
+      terms: "Minimum 10 seats",
     },
     {
       name: "Private cohort",
       mode: "Virtual",
       detail:
         "A dedicated half-day session for one company or a group of companies.",
-      terms: "Flat fee, up to 20 seats",
-      from: "$8,500",
-      unit: "per cohort",
+      terms: "Up to 20 seats",
     },
     {
       name: "Private workshop",
       mode: "In person",
       detail:
         "A hands-on half or full day on site. Time, materials and travel are included.",
-      terms: "Flat fee, up to 25 seats",
-      from: "$12,000",
-      unit: "per workshop",
+      terms: "Up to 25 seats",
     },
     {
       name: "Function clinic",
       mode: "Virtual",
       detail: "A focused 90-minute session on a single function.",
-      terms: "Flat fee, up to 20 people",
-      from: "$3,500",
-      unit: "per clinic",
+      terms: "Up to 20 people",
     },
     {
       name: "Executive 1:1",
@@ -313,8 +306,6 @@ export const serviceCatalog = {
       detail:
         "Six weeks, one to one, building a customized AI system inside the executive’s own inbox, calendar and tools, with personalized training.",
       terms: "One executive, six weeks",
-      from: "$5,000",
-      unit: "flat fee",
     },
     {
       name: "Custom role-based program",
@@ -326,35 +317,33 @@ export const serviceCatalog = {
   ],
   beyondTraining: [
     {
+      id: "custom-build",
       name: "Custom build",
       detail:
         "A durable set of customized assets, such as multi-skill plugins, automation workflows and build guides, that your team keeps using after training.",
-      terms: "Per build",
-      from: "$6,000",
-      unit: "per build",
+      terms: "Built around the team’s workflow and review standards",
     },
     {
+      id: "advisory-retainer",
       name: "Advisory retainer",
       detail:
         "A standing monthly relationship with the group that governs AI across your company or portfolio.",
-      terms: "Three-month minimum",
-      from: "$9,000",
-      unit: "per month",
+      terms: "Monthly relationship, with a three-month minimum",
     },
     {
+      id: "advisory-facilitation",
       name: "Advisory facilitation",
       mode: "Virtual or in person",
       detail:
         "One half-day or full-day working session that produces a governance policy grid and an enablement plan.",
-      terms: "Per session",
-      from: "$8,500",
-      unit: "per session",
+      terms: "One half-day or full-day session",
     },
     {
+      id: "annual-program",
       name: "Annual program",
       detail:
         "A customized bundle of virtual or in-person cohorts, builds and advisory across a year, for a company or a portfolio.",
-      terms: "Scoped to the work",
+      terms: "Across a year, shaped around the organization’s needs",
     },
   ],
   freeSessions: [
@@ -390,6 +379,12 @@ export const serviceCatalog = {
     },
   ],
 } as const;
+/** Founder account supplied with the catalog, adapted for a public reader. */
+export const catalogBiography = [
+  "Richard Achée spent over 15 years at Google in business development across Enterprise, Education and Infrastructure. He founded Found42 to bring operator discipline to AI adoption for business leaders and their teams.",
+  "He also serves as Head of Partnerships at Edgescale AI, where he works on AI in edge infrastructure, and founded BreakBeatCode, a nonprofit that has taught coding through music to more than 56,000 students in 51 countries.",
+  "Richard has advised founders through three company exits since 2020. He brings an educator’s voice to each engagement: clear, direct and built around what the team needs to change in its work.",
+] as const;
 export const questions = [
   {
     text: "How repeatable is the work you want to improve?",

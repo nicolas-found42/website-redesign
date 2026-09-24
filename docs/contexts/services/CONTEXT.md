@@ -32,10 +32,7 @@ One of the five curricula in Found42's service catalog (C-Level AI, Analysts, GT
 _Avoid_: Workshop, when the curriculum rather than the delivery modality is meant
 
 **Format**:
-How a training track is delivered and priced: open enrollment, private cohort, private workshop, function clinic, executive 1:1 or custom role-based program. Pricing follows the format, not the topic.
-
-**Starting price**:
-The lowest published price for a format or service. The public site publishes only starting prices; a **fixed quote** follows a free **discovery assessment**.
+How a training track is delivered: open enrollment, private cohort, private workshop, function clinic, executive 1:1 or custom role-based program. A format describes the group, duration and setting separately from the track's curriculum.
 
 **Custom build**:
 A durable set of customized assets, such as multi-skill plugins, automation workflows and build guides, made after or beside training.
