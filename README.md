@@ -91,6 +91,7 @@ migration does not authorize a production-domain change or direct push to main.
 - [Visual system](docs/DESIGN.md)
 - [Validation status](docs/VALIDATION.md)
 - [Launch dependencies](docs/LAUNCH-BACKLOG.md)
+- [Review mode](docs/REVIEW-MODE.md): how the team sends exact feedback
 - [Teardown](artifacts/lovable-migration/2026-09-16/teardown.md)
 - [Source-derived manifest](artifacts/lovable-migration/2026-09-16/manifest.json)
 

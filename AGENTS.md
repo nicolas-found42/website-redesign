@@ -14,6 +14,10 @@ Track issues and specs in GitHub Issues. Before reading or publishing tickets, r
 
 Use the five default triage labels. Before triaging or changing issue labels, read `docs/agents/triage-labels.md`.
 
+### Review feedback
+
+Team feedback arrives as review-mode files (`found42-feedback-*.md`). Before acting on one, read `docs/REVIEW-MODE.md`.
+
 ### Domain docs
 
 Use a multi-context layout: root `CONTEXT-MAP.md` points to domain glossaries under `docs/contexts/`. Before exploring the codebase, read `docs/agents/domain.md`.
