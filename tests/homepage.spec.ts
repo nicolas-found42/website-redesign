@@ -251,6 +251,74 @@ test("footer and inquiry actions have live destinations", async ({ page }) => {
   ).toHaveAttribute("href", "https://www.found42.com/contact");
 });
 
+test("footer navigation opens each internal destination", async ({ page }) => {
+  for (const [name, path] of [
+    ["Free resources", "/resources/"],
+    ["Services", "/services/"],
+    ["About", "/about/"],
+    ["Blog", "/blog/"],
+    ["Private Equity", "/industries/private-equity/"],
+    ["B2B SaaS", "/industries/b2b-saas/"],
+  ]) {
+    await page.goto("/");
+    await page.locator(".site-footer").getByRole("link", { name }).click();
+    await expect(page).toHaveURL(new RegExp(`${path.replaceAll("/", "\\/")}$`));
+    await expect(page.locator("main h1")).toBeVisible();
+  }
+});
+
+test("footer policy links navigate and contact links activate", async ({
+  page,
+}) => {
+  for (const [name, path] of [
+    ["Privacy", "/privacy-policy"],
+    ["Terms", "/terms-of-use"],
+  ]) {
+    await page.route(`https://www.found42.com${path}`, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "text/html",
+        body: "<main>Policy</main>",
+      }),
+    );
+    await page.goto("/");
+    await page.locator(".site-footer").getByRole("link", { name }).click();
+    await expect(page).toHaveURL(`https://www.found42.com${path}`);
+    await expect(page.getByText("Policy")).toBeVisible();
+  }
+
+  await page.goto("/");
+  await page.evaluate(() => {
+    (window as Window & { footerActivation?: string[] }).footerActivation = [];
+    document
+      .querySelector(".site-footer")
+      ?.addEventListener("click", (event) => {
+        const link = (event.target as Element).closest("a");
+        if (link?.protocol === "mailto:" || link?.protocol === "tel:") {
+          (
+            window as Window & { footerActivation?: string[] }
+          ).footerActivation?.push(link.protocol);
+        }
+      });
+  });
+  await page
+    .locator(".site-footer")
+    .getByRole("link", { name: "richard@found42.com" })
+    .click();
+  await page
+    .locator(".site-footer")
+    .getByRole("link", { name: "(646) 300-1247" })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (window as Window & { footerActivation?: string[] }).footerActivation,
+      ),
+    )
+    .toEqual(["mailto:", "tel:"]);
+});
+
 test("touch and reduced-motion controls expose every service and testimonial", async ({
   browser,
 }) => {
