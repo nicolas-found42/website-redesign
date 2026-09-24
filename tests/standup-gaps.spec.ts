@@ -93,28 +93,31 @@ for (const [width, text] of [
       (size) => (document.documentElement.style.fontSize = size),
       text,
     );
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      document
+        .querySelector("#services")!
+        .scrollIntoView({ behavior: "instant" });
+    });
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
     const automations = page.getByRole("button", {
       name: "Automations",
       exact: true,
     });
     await automations.tap();
-    // Do not depend on a smooth-scroll engine remembering the destination.
-    // Let it settle, then put the selected article's start just below the rail
-    // so both the click state and the reading observer agree in every engine.
-    await page.waitForTimeout(250);
-    await page.evaluate(() => {
-      const article = document.querySelector('[data-service-article="2"]')!;
-      const rail = document.querySelector(".services-aside")!;
-      const header = document
-        .querySelector(".site-header")!
-        .getBoundingClientRect();
-      const railBox = rail.getBoundingClientRect();
-      const target = Math.max(railBox.bottom + 1, header.bottom + 1);
-      window.scrollBy({
-        top: article.getBoundingClientRect().top - target,
-        behavior: "instant",
-      });
-    });
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const article = document.querySelector("#service-product")!;
+          const rail = document.querySelector(".services-aside")!;
+          const top = article.getBoundingClientRect().top;
+          return (
+            top >= rail.getBoundingClientRect().bottom - 1 &&
+            top < innerHeight - 20
+          );
+        }),
+      )
+      .toBe(true);
     await expect(automations).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator('[data-service-article="2"]')).toHaveClass(
       /is-current/,
@@ -139,7 +142,7 @@ for (const [width, text] of [
   });
 
 for (const height of [500, 600])
-  test(`a natural short-phone jump releases the choice before anchor scrolling (${height}px)`, async ({
+  test(`a short-phone choice survives scroll settlement and yields to reading (${height}px)`, async ({
     browser,
   }) => {
     const context = await browser.newContext({
@@ -149,50 +152,53 @@ for (const height of [500, 600])
     const page = await context.newPage();
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/#services");
+    await expect(page.locator(".services-art .system-field")).toHaveCount(1);
     await page.evaluate(
       () => (document.documentElement.style.fontSize = "200%"),
     );
-    await page.evaluate(() =>
-      addEventListener("scrollend", () => {
-        const article = document.querySelector('[data-service-article="2"]')!;
-        const top = article.getBoundingClientRect().top;
-        const margin = Number.parseFloat(
-          getComputedStyle(article).scrollMarginTop,
-        );
-        const padding = Number.parseFloat(
-          getComputedStyle(document.documentElement).scrollPaddingTop,
-        );
-        if (Math.abs(top - margin - padding) < 4)
-          document.documentElement.dataset.serviceJumpEnded = "true";
-      }),
-    );
-    await page.getByRole("button", { name: "Automations", exact: true }).tap();
-    const landing = () =>
-      page.evaluate(() => {
-        const article = document.querySelector('[data-service-article="2"]')!;
-        const top = article.getBoundingClientRect().top;
-        const margin = Number.parseFloat(
-          getComputedStyle(article).scrollMarginTop,
-        );
-        const padding = Number.parseFloat(
-          getComputedStyle(document.documentElement).scrollPaddingTop,
-        );
-        return { top, intended: margin + padding };
-      });
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      document
+        .querySelector("#services")!
+        .scrollIntoView({ behavior: "instant" });
+    });
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
     await expect
-      .poll(
-        async () => {
-          const { top, intended } = await landing();
-          return Math.abs(top - intended);
-        },
-        { timeout: 8000 },
+      .poll(() =>
+        page.evaluate(() => {
+          const section = document.querySelector<HTMLElement>("#services")!;
+          const rail = section.querySelector<HTMLElement>(".services-aside")!;
+          const measured = Number.parseFloat(
+            section.style.getPropertyValue("--services-rail"),
+          );
+          return Math.abs(measured - rail.offsetHeight);
+        }),
       )
-      .toBeLessThan(4);
-    await expect(page.locator("html")).toHaveAttribute(
-      "data-service-jump-ended",
-      "true",
+      .toBeLessThan(1);
+    const automations = page.getByRole("button", {
+      name: "Automations",
+      exact: true,
+    });
+    await automations.tap();
+    await expect(automations).toHaveAttribute("aria-pressed", "true");
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const box = document
+            .querySelector('[data-service-article="2"]')!
+            .getBoundingClientRect();
+          return box.top < innerHeight - 20 && box.bottom > 20;
+        }),
+      )
+      .toBe(true);
+    // A short viewport can still show the previous article at its midpoint.
+    // A completed rail jump remains the reader's explicit choice at rest.
+    await expect(page.locator('[data-service-article="2"]')).toHaveClass(
+      /is-current/,
     );
-    expect((await landing()).top).toBeGreaterThan(height / 2);
+    await page.evaluate(() => window.dispatchEvent(new Event("scrollend")));
+    await expect(automations).toHaveAttribute("aria-pressed", "true");
+    await page.evaluate(() => window.dispatchEvent(new Event("wheel")));
     await page.evaluate(() =>
       document
         .querySelector('[data-service-article="1"]')!

@@ -37,6 +37,10 @@ export function mountServices(
   const caption = section.querySelector<HTMLElement>(".services-caption")!;
   const aside = section.querySelector<HTMLElement>(".services-aside");
   const narrow = matchMedia(NARROW);
+  const updateRail = () => {
+    if (aside)
+      section.style.setProperty("--services-rail", `${aside.offsetHeight}px`);
+  };
 
   const drawing = mountSystem(host, {
     motionPreference,
@@ -47,6 +51,10 @@ export function mountServices(
   let current = 0;
   /** The latest rail choice stays authoritative until its jump finishes. */
   let expecting: number | undefined;
+  /** A narrow explicit choice remains selected until the visitor navigates on. */
+  let chosen = false;
+  let jumpRetried = false;
+  let jumpStarted = false;
 
   /**
    * Makes `index` the service being read: the drawing, caption, rail and rule
@@ -81,7 +89,7 @@ export function mountServices(
    */
   const reader = new IntersectionObserver(
     (entries) => {
-      if (expecting !== undefined) return;
+      if (expecting !== undefined || (narrow.matches && chosen)) return;
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         const index = Number(
@@ -126,13 +134,25 @@ export function mountServices(
   /** A settled scroll also catches an article the observer crossed while locked. */
   const onScrollEnd = () => {
     if (expecting === undefined) {
+      if (narrow.matches && chosen) return;
       const index = articleAtMiddle();
       if (index >= 0) show(index);
       return;
     }
     // Rapid jumps can emit scrollend for an interrupted earlier target. The
     // latest choice is still in flight until its article reaches the reader.
-    if (!atRequestedArticle(expecting)) return;
+    if (!jumpStarted) return;
+    if (!atRequestedArticle(expecting)) {
+      if (!jumpRetried) {
+        jumpRetried = true;
+        updateRail();
+        show(expecting, { scroll: true });
+      } else {
+        expecting = undefined;
+        chosen = false;
+      }
+      return;
+    }
     const requested = expecting;
     expecting = undefined;
     if (narrow.matches) {
@@ -145,6 +165,8 @@ export function mountServices(
   addEventListener("scrollend", onScrollEnd);
   const onManualScroll = () => {
     expecting = undefined;
+    chosen = false;
+    jumpStarted = false;
   };
   const onManualKey = (event: KeyboardEvent) => {
     if (
@@ -163,11 +185,32 @@ export function mountServices(
   addEventListener("wheel", onManualScroll, { passive: true });
   addEventListener("touchstart", onManualScroll, { passive: true });
   addEventListener("keydown", onManualKey);
+  let previousHash = location.hash;
+  const onHashChange = () => {
+    if (location.hash === previousHash) return;
+    previousHash = location.hash;
+    onManualScroll();
+  };
+  addEventListener("hashchange", onHashChange);
 
+  let jumpFrame = 0;
   const handlers = choices.map((choice, index) => {
     const onClick = () => {
       expecting = index;
-      show(index, { scroll: true });
+      chosen = true;
+      jumpRetried = false;
+      jumpStarted = false;
+      show(index);
+      updateRail();
+      cancelAnimationFrame(jumpFrame);
+      // A touch browser may scroll the focused rail button after `click`.
+      // Jump on the next frame so that default action cannot pull it back.
+      jumpFrame = requestAnimationFrame(() => {
+        if (expecting === index) {
+          jumpStarted = true;
+          show(index, { scroll: true });
+        }
+      });
     };
     choice.addEventListener("click", onClick);
     return onClick;
@@ -179,10 +222,7 @@ export function mountServices(
    * A jump lands an article's start below the rail, whose height depends on
    * whether its choices fit one line at the visitor's text size.
    */
-  const measureRail = new ResizeObserver(() => {
-    if (aside)
-      section.style.setProperty("--services-rail", `${aside.offsetHeight}px`);
-  });
+  const measureRail = new ResizeObserver(updateRail);
   if (aside) measureRail.observe(aside);
 
   /* ── Narrow: each article's own drawing, brought on by the one before it ── */
@@ -242,6 +282,8 @@ export function mountServices(
     if (expecting !== undefined) {
       // Cancel the old smooth jump at its requested article before the
       // reading observer is allowed to report the articles it passed.
+      updateRail();
+      jumpStarted = true;
       show(expecting, { scroll: true });
       if (atRequestedArticle(expecting)) expecting = undefined;
     }
@@ -250,10 +292,12 @@ export function mountServices(
   motionPreference.addEventListener("change", onPreference);
 
   return () => {
+    cancelAnimationFrame(jumpFrame);
     removeEventListener("scrollend", onScrollEnd);
     removeEventListener("wheel", onManualScroll);
     removeEventListener("touchstart", onManualScroll);
     removeEventListener("keydown", onManualKey);
+    removeEventListener("hashchange", onHashChange);
     reader.disconnect();
     measureRail.disconnect();
     arrival.disconnect();
