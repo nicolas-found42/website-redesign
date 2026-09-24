@@ -18,7 +18,7 @@ const kickers = [
 ];
 const links = [
   ["Explore the Four-Hour AI Executive on Maven", /^https:\/\/maven\.com\//],
-  ["Explore tailored training", /services\/#service-training$/],
+  ["Explore tailored training", /services\/#tracks$/],
   ["Ask about AI builder support", null],
 ] as const;
 const drawings = [

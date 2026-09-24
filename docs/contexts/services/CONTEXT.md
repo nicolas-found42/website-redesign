@@ -26,3 +26,22 @@ The Audit → Build & Deploy → Validate engagement described in Found42's intr
 
 **Found42 AI Framework**:
 The named approach associated with workflow prioritization in Found42's introductory article; the name alone does not specify its methodology.
+
+**Training track**:
+One of the five curricula in Found42's service catalog (C-Level AI, Analysts, GTM Teams, AI Builders, Customized Role-Based Training), each with its own audience, exercises and assets.
+_Avoid_: Workshop, when the curriculum rather than the delivery modality is meant
+
+**Format**:
+How a training track is delivered and priced: open enrollment, private cohort, private workshop, function clinic, executive 1:1 or custom role-based program. Pricing follows the format, not the topic.
+
+**Starting price**:
+The lowest published price for a format or service. The public site publishes only starting prices; a **fixed quote** follows a free **discovery assessment**.
+
+**Custom build**:
+A durable set of customized assets, such as multi-skill plugins, automation workflows and build guides, made after or beside training.
+
+**Advisory retainer** / **Advisory facilitation**:
+Ongoing monthly governance support for the group governing AI, and a single working session that produces a governance policy grid and enablement plan, respectively.
+
+**Free session**:
+One of two no-charge 30-minute sessions (Claude as a Strategic Advisor; Claude for High-Stakes Communications). Distinct from the unavailable five-day Strategic Advisor Mini-Course and the published Maven lesson.

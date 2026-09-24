@@ -10,7 +10,7 @@ import AxeBuilder from "@axe-core/playwright";
 test("#32: the inquiry dialog leads to the live form and carries service context", async ({
   page,
 }) => {
-  await page.goto("/services/");
+  await page.goto("/");
   await page.getByRole("button", { name: /Discuss workflows/ }).click();
   const dialog = page.getByRole("dialog");
   const live = dialog.getByRole("link", { name: "Open the live inquiry form" });
@@ -155,6 +155,7 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
   }
   expect(named).toEqual([
     "/",
+    "/services/",
     "/industries/private-equity/",
     "/industries/b2b-saas/",
     "/about/",
@@ -229,7 +230,7 @@ test("#38: the Private Equity page shows the founder's published M&A experience"
   await expect(band).not.toContainText(/client|endorse/i);
 });
 
-test("#39: Services opens with what an engagement starts with, asks and gives, and names no price", async ({
+test("#39: Services opens with the training tracks and publishes starting prices only", async ({
   page,
 }) => {
   await page.goto("/services/");
@@ -237,27 +238,19 @@ test("#39: Services opens with what an engagement starts with, asks and gives, a
   const first = await page
     .locator("main > section")
     .evaluateAll((sections) => sections[1]?.id);
-  expect(first).toBe("engagements");
-  const band = page.locator("#engagements");
-  const articles = band.locator("article");
-  await expect(articles.locator("h3")).toHaveText([
-    "Workshops",
-    "Workflows",
-    "Automations",
-  ]);
-  for (const article of await articles.all())
-    await expect(article.locator("dt")).toHaveText([
-      "Starts with",
-      "You provide",
-      "You get",
-    ]);
-  const text = await band.innerText();
-  expect(text).not.toMatch(/[$£€]|\d+\s*(weeks?|days?|months?)/i);
-  await expect(band).toContainText("Length and fees depend on the work");
+  expect(first).toBe("tracks");
+  const prices = await page
+    .locator("#formats .price, #beyond-training .price")
+    .allInnerTexts();
+  for (const price of prices)
+    expect(price.replace(/\s+/g, " ")).toMatch(/^(From \$[\d,]+ .+|Quoted after discovery)$/);
+  await expect(page.locator("#formats")).toContainText(
+    "Every engagement gets a fixed quote after a free discovery assessment",
+  );
   // The resources page's pointer lands on it.
   await page.goto("/resources/");
-  await page.getByRole("link", { name: /See how engagements work/ }).click();
-  await expect(page).toHaveURL(/\/services\/#engagements$/);
+  await page.getByRole("link", { name: /See formats and pricing/ }).click();
+  await expect(page).toHaveURL(/\/services\/#formats$/);
 });
 
 test("#40: the band and the dialog say what happens after an inquiry, not only what does not", async ({
@@ -282,7 +275,7 @@ test("#40: the band and the dialog say what happens after an inquiry, not only w
 test("#41: a Discuss button names the service in the live handoff", async ({
   page,
 }) => {
-  await page.goto("/services/");
+  await page.goto("/");
   await page.getByRole("button", { name: /Discuss workflows/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.locator(".note").first()).toHaveText("About Workflows");

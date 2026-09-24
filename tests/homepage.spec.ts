@@ -67,7 +67,7 @@ test("all three audiences expose a truthful interim next step", async ({ page })
   const contributor = page.locator(".audience-panel:not([hidden])");
   await expect(
     contributor.getByRole("link", { name: "Explore tailored training" }),
-  ).toHaveAttribute("href", /services\/#service-training$/);
+  ).toHaveAttribute("href", /services\/#tracks$/);
 
   await rail.getByRole("button", { name: /AI builders/ }).click();
   const builder = page.locator(".audience-panel:not([hidden])");
