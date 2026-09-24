@@ -300,6 +300,9 @@ test("footer policy links navigate and contact links activate", async ({
           const link = (event.target as Element).closest("a");
           (window as Window & { footerActivation?: string }).footerActivation =
             link?.protocol ?? "";
+          if (link?.protocol === "mailto:" || link?.protocol === "tel:") {
+            event.preventDefault();
+          }
         });
     });
     await page.locator(".site-footer").getByRole("link", { name }).click();
