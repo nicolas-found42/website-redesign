@@ -17,9 +17,9 @@ const kickers = [
   "For AI builders",
 ];
 const links = [
-  ["Explore the Four-Hour AI Executive on Maven", /^https:\/\/maven\.com\//],
-  ["Explore tailored training", /services\/#tracks$/],
-  ["Ask about AI builder support", null],
+  ["For executives", /services\/#track-c-level-ai$/],
+  ["For individual contributors", /services\/#track-role-based$/],
+  ["For AI builders", /services\/#track-ai-builders$/],
 ] as const;
 const drawings = [
   /Executive illustration:/,
@@ -64,8 +64,7 @@ test("a visitor can discover and choose all three audiences, and everything agre
     await expect(panel.locator(".audience-kicker")).toHaveText(kickers[index]);
     await expect(panel.getByRole("img")).toHaveAccessibleName(drawings[index]);
     const cta = panel.locator(":is(a, button)", { hasText: links[index][0] });
-    if (links[index][1])
-      await expect(cta).toHaveAttribute("href", links[index][1]);
+    await expect(cta).toHaveAttribute("href", links[index][1]);
     await expect(rail.getByRole("button", { name })).toHaveAttribute(
       "aria-pressed",
       "true",
@@ -254,9 +253,7 @@ test("the playbook page explains the verified request route", async ({
   );
 });
 
-test("public copy no longer says “no fluff” on any route", async ({
-  page,
-}) => {
+test("public copy no longer says “no fluff” on any route", async ({ page }) => {
   for (const route of [
     "",
     "resources/",

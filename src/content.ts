@@ -1,6 +1,5 @@
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
-  executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
   strategicAdvisorLesson:
     "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
   toolkit: "https://www.found42.com/toolkit",
@@ -114,7 +113,6 @@ export const inquiryInterests = {
   workshops: { form: "Training", carry: "Workshops" },
   workflows: { form: "Automation", carry: "Workflows" },
   automations: { form: "Automation", carry: "Automations" },
-  "ai-builder-support": { form: "Automation", carry: "AI builder support" },
   "c-level-ai": { form: "Training", carry: "the C-Level AI track" },
   analysts: { form: "Training", carry: "the Analysts track" },
   "gtm-teams": { form: "Training", carry: "the GTM Teams track" },

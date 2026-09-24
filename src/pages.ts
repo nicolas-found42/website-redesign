@@ -9,6 +9,7 @@ import {
   serviceCatalog,
   catalogBiography,
   destinationRegister,
+  type InquiryContext,
 } from "./content";
 import { siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
@@ -117,10 +118,12 @@ type CatalogOption = {
   readonly mode?: string;
   readonly detail: string;
   readonly terms: string;
-  readonly id?: string;
 };
-const catalogOptions = (rows: readonly CatalogOption[], inquiries = false) =>
-  `<div class="catalog-options">${rows.map((row) => `<article class="catalog-option"><div><h3>${row.name}</h3>${row.mode ? `<p class="catalog-option-mode">${row.mode}</p>` : ""}</div><div class="catalog-option-body"><p>${row.detail}</p><p class="note--plain">${row.terms}</p>${inquiries ? `<button class="link" data-dialog="contact" data-service="${row.name}" data-contact="${row.id}">Inquire about ${row.name}&nbsp;→</button>` : ""}</div></article>`).join("")}</div>`;
+const catalogOptions = <T extends CatalogOption>(
+  rows: readonly T[],
+  inquiry?: (row: T) => InquiryContext,
+) =>
+  `<div class="catalog-options">${rows.map((row) => `<article class="catalog-option"><div><h3>${row.name}</h3>${row.mode ? `<p class="catalog-option-mode">${row.mode}</p>` : ""}</div><div class="catalog-option-body"><p>${row.detail}</p><p class="note--plain">${row.terms}</p>${inquiry ? `<button class="link" data-dialog="contact" data-service="${row.name}" data-contact="${inquiry(row)}">Inquire about ${row.name}&nbsp;→</button>` : ""}</div></article>`).join("")}</div>`;
 const catalogHead = (id: string, label: string, title: string, lead: string) =>
   `<div class="section-head"><div>${sectionLabel(label)}<h2 id="${id}-title" class="display">${title}</h2></div><p class="lead">${lead}</p></div>`;
 function tracksBand() {
@@ -137,7 +140,7 @@ function formatsBand() {
   return `<section id="formats" class="wrap band catalog-band" aria-labelledby="formats-title">${catalogHead("formats", "Delivery formats", "Choose how your team learns.", "The format changes the group, time and setting. A track can be tailored to the team's work, with light customization for private cohorts.")}${catalogOptions(serviceCatalog.formats)}</section>`;
 }
 function beyondTrainingBand() {
-  return `<section id="beyond-training" class="wrap band catalog-band" aria-labelledby="beyond-training-title">${catalogHead("beyond-training", "Beyond training", "Make it last. Keep it governed.", "Training builds capability. These services turn it into something your team keeps using, or keep its use of AI governed over time.")}${catalogOptions(serviceCatalog.beyondTraining, true)}</section>`;
+  return `<section id="beyond-training" class="wrap band catalog-band" aria-labelledby="beyond-training-title">${catalogHead("beyond-training", "Beyond training", "Make it last. Keep it governed.", "Training builds capability. These services turn it into something your team keeps using, or keep its use of AI governed over time.")}${catalogOptions(serviceCatalog.beyondTraining, (service) => service.id)}</section>`;
 }
 function freeSessionsBand() {
   return `<section id="start-free" class="band start-free" aria-labelledby="start-free-title"><div class="wrap">${catalogHead("start-free", "Start free", "Two 30-minute sessions, offered at no charge.", "A short, live look at the method before you choose a longer engagement.")}<div class="free-sessions">${serviceCatalog.freeSessions
