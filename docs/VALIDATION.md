@@ -226,3 +226,15 @@ Validation: `npm run typecheck` passed; `npm test` — **266 passed (1.5m)**
 across Chromium, Firefox and WebKit, including the production build. The first
 run failed nine 320px/200%-text overflow checks on the footer email address;
 footer and dialog contact links now wrap inside the address.
+
+The `main` verify run after merging #49 failed one WebKit check, the 600px
+short-phone choice, so nothing deployed. It was a regression, not a flake: under
+stress the 500px and 600px checks failed about half the time on the merged
+commit (20 of 40), against 40 of 40 passes on the commit before it. The new
+services example sized its list by inheritance. WebKit settled that inherited
+size 100–200ms after the test doubled the root text, so the box grew from 468px
+to 1,172px after the jump had landed and pushed the chosen article off the
+reading line. The example now sets `--size-body` like every other reading block.
+Afterwards the short-phone check passed 60 of 60 in WebKit, the narrow services
+checks passed 180 of 180 across the three engines, and `npm test` passed 266 of
+266.
