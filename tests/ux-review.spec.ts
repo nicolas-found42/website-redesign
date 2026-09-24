@@ -15,11 +15,11 @@ test("#32: the inquiry dialog leads to the live form and carries service context
   const dialog = page.getByRole("dialog");
   const live = dialog.getByRole("link", { name: "Open the live inquiry form" });
   await expect(live).toHaveClass(/\baction\b/);
-  await expect(live).toHaveAttribute(
-    "href",
-    "https://www.found42.com/contact?interest=Workflows",
-  );
+  await expect(live).toHaveAttribute("href", "https://www.found42.com/contact");
   await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
+  await expect(dialog.locator(".inquiry-context")).toContainText(
+    "Choose Automation in the live form. Add “Workflows” to your message so Found42 knows what to discuss.",
+  );
   await expect(dialog.locator("form")).toHaveCount(0);
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: /Talk to our team/ }).click();
@@ -34,6 +34,36 @@ test("#32: the inquiry dialog leads to the live form and carries service context
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
     .analyze();
   expect(result.violations).toEqual([]);
+});
+
+test("#35, #36: business chrome avoids document furniture and technical surfaces", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const interfaceFont = await page
+    .locator("#navigation .nav-contact")
+    .evaluate((element) => getComputedStyle(element).fontFamily);
+  expect(interfaceFont).not.toMatch(/JetBrains|mono/i);
+  await expect(page.locator("#audiences .choice-index")).toHaveCount(0);
+  await expect(page.locator("#services .choice-index")).toHaveCount(0);
+  for (const selector of ["#services", "#contact"]) {
+    expect(
+      await page
+        .locator(selector)
+        .evaluate(
+          (element) => getComputedStyle(element, "::before").backgroundImage,
+        ),
+      selector,
+    ).toBe("none");
+  }
+
+  await page.goto("/industries/private-equity/");
+  expect(
+    await page
+      .locator(".page-stat")
+      .first()
+      .evaluate((element) => getComputedStyle(element).fontFamily),
+  ).not.toMatch(/JetBrains|mono/i);
 });
 
 /** WCAG relative-luminance contrast between two computed `rgb()` colours. */
@@ -258,9 +288,9 @@ test("#41: a Discuss button names the service in the live handoff", async ({
   await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
   await expect(
     dialog.getByRole("link", { name: "Open the live inquiry form" }),
-  ).toHaveAttribute(
-    "href",
-    "https://www.found42.com/contact?interest=Workflows",
+  ).toHaveAttribute("href", "https://www.found42.com/contact");
+  await expect(dialog.locator(".inquiry-context")).toContainText(
+    "Choose Automation in the live form",
   );
 });
 
@@ -296,23 +326,18 @@ test("#41: unwritten essays are not timed, and unavailable newsletter copy is ho
   await expect(page.locator("[data-email-form]")).toHaveCount(0);
 });
 
-test("#41: the PE opening leads with a workflow and keeps the 8h target, qualified, beside how it is built", async ({
+test("#41: the PE page leads with a workflow and makes no unapproved savings claim", async ({
   page,
 }) => {
   await page.goto("/industries/private-equity/");
   const aside = page.locator(".page-opening .page-aside");
   await expect(aside).toContainText("A consistent first-pass screen");
-  await expect(aside).not.toContainText("8h");
-  const target = page.locator(".industry-target");
-  await expect(target).toContainText("8h");
-  await expect(target).toContainText("Target weekly capacity returned");
-  await expect(target).toContainText(
-    "Per person, where workflow fit supports it.",
+  await expect(page.locator("main")).toContainText(
+    "Turn a house view into a consistent first-pass screen without flattening judgment.",
   );
-  await expect(target).toContainText("A target, not a guaranteed result.");
-  await expect(
-    page.getByText("A target, not a guaranteed result.", { exact: true }),
-  ).toHaveCount(1);
+  await expect(page.locator("main")).not.toContainText(
+    /8h|weekly capacity returned/i,
+  );
 });
 
 test("#41: the scorecard says what its result is, not what it is not", async ({

@@ -1,7 +1,7 @@
 # The AI Readiness Scorecard is answered on the page
 
-**Status:** accepted (stand-up follow-up, 2026-09-23); result wording awaits
-Found42 review
+**Status:** accepted (stand-up follow-up, 2026-09-23); inquiry handoff updated
+for issue #43; result wording awaits Found42 review
 
 Richard asked on September 18 for the scorecard to be built into the site
 rather than depend on the third-party tool. The resources page now asks the
@@ -21,10 +21,11 @@ remains for visitors who want its emailed PDF report.
   June 26 discussion there is no score and no number. The glossary's caution
   holds: this is a starting point for a conversation, not a certification or
   an audited measurement.
-- **Privacy**: answers stay in the page. Nothing is sent, stored or put in a
-  URL. The open answer is escaped when shown and, if the visitor chooses to
-  plan a next step, starts the inquiry dialog's text field unless they have
-  already written one; that dialog sends nothing either.
+- **Privacy**: answers stay in the page. Nothing is sent, persistently stored
+  or put in a URL. If the visitor chooses to plan a next step, the open answer
+  is escaped and displayed as copyable context in the inquiry dialog. The
+  visitor may carry it to Found42's live contact form; the page does not
+  prefill or submit that external form.
 
 Consequences worth knowing:
 
@@ -40,5 +41,5 @@ Consequences worth knowing:
   with the same name on one page, one of them collecting personal details
   first, is the confusion the request was meant to end.
 - Rejected: collecting an email for the result. Plan B keeps the assessment
-  broad and closed; intake belongs to a visitor ready to talk, which the
-  existing inquiry dialog serves.
+  broad and closed; intake belongs to a visitor ready to talk, who can open
+  the live inquiry form through the dialog.

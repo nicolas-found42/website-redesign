@@ -1,5 +1,8 @@
 # Stand-up convergence: implementation record
 
+This is a historical stand-up record. Issue #43 superseded its hero, audience,
+resource and eight-hour-claim descriptions; see [current design](DESIGN.md).
+
 This record covers the later stand-up meeting in which Richard asked the two
 redesigns to be brought together: Adejoke's direct explanation of the offering
 and its audiences, carried by Nicolas's visual identity, drawings, transitions

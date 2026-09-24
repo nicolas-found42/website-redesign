@@ -46,7 +46,7 @@ test("reduced-motion visitors can operate the drawing without animated movement"
   await expect(
     page
       .locator(".services-art .system-label")
-      .filter({ hasText: "Customer brief" })
+      .filter({ hasText: "Brief / operating problem" })
       .first(),
   ).toBeVisible();
   await expect(

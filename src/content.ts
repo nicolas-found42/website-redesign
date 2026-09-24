@@ -3,9 +3,11 @@ import { sitePath } from "./paths";
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
   executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
-  strategicAdvisorLesson: "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
+  strategicAdvisorLesson:
+    "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
   toolkit: "https://www.found42.com/toolkit",
   failureModePlaybook: "https://www.found42.com/ai-failure-modes-playbook",
+  scoreApp: "https://found42.scoreapp.com/",
   liveInquiry: "https://www.found42.com/contact",
 } as const;
 
@@ -98,9 +100,21 @@ export const resources = resourceInventory;
  * the September 23 stand-up added none, and they await the business owner
  * (Launch dependency 10).
  */
+/** The live form's current service-interest vocabulary, separate from public names. */
+export const inquiryInterests = {
+  workshops: { form: "Training", carry: "Workshops" },
+  workflows: { form: "Automation", carry: "Workflows" },
+  automations: { form: "Automation", carry: "Automations" },
+  "ai-builder-support": { form: "Automation", carry: "AI builder support" },
+} as const;
+
+export type InquiryContext = keyof typeof inquiryInterests;
+
 export const services = [
   {
     title: "Workshops",
+    inquiryInterest: "Training",
+    inquiryContext: "workshops",
     label: "Build capability in your own work.",
     description:
       "Live or on-demand enablement using your team’s real decisions, documents, and operating rhythms.",
@@ -122,6 +136,8 @@ export const services = [
   },
   {
     title: "Workflows",
+    inquiryInterest: "Automation",
+    inquiryContext: "workflows",
     label: "Make your expertise repeatable.",
     description:
       "Custom Claude skills and plugins designed around one high-value job to be done.",
@@ -142,6 +158,8 @@ export const services = [
   },
   {
     title: "Automations",
+    inquiryInterest: "Automation",
+    inquiryContext: "automations",
     label: "Return attention to expert work.",
     description:
       "Bespoke end-to-end workflows for repetitive work that should not consume expert attention.",
@@ -340,12 +358,6 @@ export const industries = {
     asideTitle: "A consistent first-pass screen",
     asideBody:
       "Your house view, applied the same way to every deal, with judgment left to the deal team.",
-    /** The source's 8h figure, kept with its qualification beside how the work is built. */
-    target: {
-      figure: "8h",
-      title: "Target weekly capacity returned",
-      body: "Per person, where workflow fit supports it.",
-    },
     items: [
       [
         "Deal screening",

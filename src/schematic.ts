@@ -141,10 +141,11 @@ const cast = (
   n2: string,
   n3: string,
   n4: string,
+  human = "Human direction",
 ): readonly SchematicNode[] => [
   { id: "n1", label: n1, kind: "source" },
   { id: "n2", label: n2, kind: "source" },
-  { id: "human", label: "Human direction", kind: "human" },
+  { id: "human", label: human, kind: "human" },
   { id: "n3", label: n3, kind: "source" },
   { id: "n4", label: n4, kind: "result" },
 ];
@@ -343,9 +344,10 @@ export const schematics: readonly Schematic[] = [
       "Workshop illustration: a team brings real work into live guided practice, reviews the result together, and leaves with a reusable skill and an applicable takeaway.",
     nodes: cast(
       "Team's real work",
-      "Guided practice",
-      "Group review",
+      "Live guided practice",
+      "Reusable skill",
       "Apply afterwards",
+      "Group review",
     ),
     landscape: trainingLandscape,
     portrait: trainingPortrait,
@@ -357,10 +359,11 @@ export const schematics: readonly Schematic[] = [
     description:
       "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and a workflow the team deploys and uses.",
     nodes: cast(
-      "Customer brief",
-      "Operating problem",
+      "Brief / operating problem",
+      "Tailored design and build",
       "Test and review",
-      "Team uses it",
+      "Review in customer context",
+      "Team deploys and uses it",
     ),
     landscape: automationLandscape,
     portrait: automationPortrait,

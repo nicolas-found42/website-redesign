@@ -27,10 +27,13 @@
   gap: 18px;
   min-width: 0;
 }
-.page-number {
-  font: clamp(4rem, 8vw, 8rem)/1 var(--font-note);
+.page-stat {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 500;
+  line-height: 1;
   color: var(--red);
-  letter-spacing: -0.08em;
+  letter-spacing: -0.04em;
 }
 .page-rail {
   padding-block: 20px;
@@ -272,7 +275,7 @@ summary:focus-visible {
 }
 .industry-menu {
   position: relative;
-  font: var(--size-note)/1.5 var(--font-note);
+  font: var(--size-note)/1.5 var(--font-text);
 }
 .industry-menu summary {
   cursor: pointer;
@@ -312,7 +315,7 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   gap: 12px;
-  font: var(--size-note)/1.4 var(--font-note);
+  font: var(--size-note)/1.4 var(--font-text);
   min-height: 44px;
 }
 @media (max-width: 1100px) {
@@ -642,19 +645,4 @@ button:disabled {
     grid-template-columns: 1fr;
     gap: 32px;
   }
-}
-
-/* A qualified target set beside how the work is built, in the opening aside's voice. */
-.industry-target {
-  display: grid;
-  gap: 12px;
-  margin-block: 36px;
-  padding-left: 28px;
-  border-left: 1px solid var(--red);
-}
-.content-split .industry-target p {
-  margin-block: 0;
-}
-.industry-target .page-number {
-  font-size: clamp(3rem, 5vw, 5rem);
 }

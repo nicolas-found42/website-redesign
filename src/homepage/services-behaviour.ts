@@ -44,6 +44,8 @@ export function mountServices(
   });
 
   let current = 0;
+  /** The latest rail choice stays authoritative until its jump finishes. */
+  let expecting: number | undefined;
 
   /**
    * Makes `index` the service being read: the drawing, caption, rail and rule
@@ -78,6 +80,7 @@ export function mountServices(
    */
   const reader = new IntersectionObserver(
     (entries) => {
+      if (expecting !== undefined) return;
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         const index = Number(
@@ -90,8 +93,49 @@ export function mountServices(
   );
   articles.forEach((article) => reader.observe(article));
 
+  /** Once a jump ends, reading resumes at the article now in the viewport. */
+  const onScrollEnd = () => {
+    if (expecting === undefined) return;
+    const box = articles[expecting].getBoundingClientRect();
+    const middle = innerHeight / 2;
+    // Rapid jumps can emit scrollend for an interrupted earlier target. The
+    // latest choice is still in flight until its article reaches the reader.
+    if (box.top > middle || box.bottom < middle) return;
+    expecting = undefined;
+    const index = articles.findIndex((article) => {
+      const box = article.getBoundingClientRect();
+      return box.top <= middle && box.bottom >= middle;
+    });
+    if (index >= 0) show(index);
+  };
+  addEventListener("scrollend", onScrollEnd);
+  const onManualScroll = () => {
+    expecting = undefined;
+  };
+  const onManualKey = (event: KeyboardEvent) => {
+    if (
+      [
+        "ArrowDown",
+        "ArrowUp",
+        "PageDown",
+        "PageUp",
+        "Home",
+        "End",
+        " ",
+      ].includes(event.key)
+    )
+      onManualScroll();
+  };
+  addEventListener("wheel", onManualScroll, { passive: true });
+  addEventListener("touchstart", onManualScroll, { passive: true });
+  addEventListener("keydown", onManualKey);
+
   const handlers = choices.map((choice, index) => {
-    const onClick = () => show(index, { scroll: true });
+    const onClick = () => {
+      expecting = index;
+      show(index, { scroll: true });
+      if (motionPreference.matches) expecting = undefined;
+    };
     choice.addEventListener("click", onClick);
     return onClick;
   });
@@ -162,11 +206,22 @@ export function mountServices(
 
   /** Pausing mid-approach leaves each drawing as its own still composition. */
   const onPreference = () => {
-    if (motionPreference.matches) figures.forEach((_, index) => rest(index));
+    if (!motionPreference.matches) return;
+    if (expecting !== undefined) {
+      // Cancel the old smooth jump at its requested article before the
+      // reading observer is allowed to report the articles it passed.
+      show(expecting, { scroll: true });
+      expecting = undefined;
+    }
+    figures.forEach((_, index) => rest(index));
   };
   motionPreference.addEventListener("change", onPreference);
 
   return () => {
+    removeEventListener("scrollend", onScrollEnd);
+    removeEventListener("wheel", onManualScroll);
+    removeEventListener("touchstart", onManualScroll);
+    removeEventListener("keydown", onManualKey);
     reader.disconnect();
     measureRail.disconnect();
     arrival.disconnect();

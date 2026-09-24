@@ -1,5 +1,11 @@
 # Content authority and migration provenance
 
+This is the dated September 16 migration record. Its descriptions of the
+opening, forms and eight-hour claims are historical; issue #43 changed those
+visitor journeys and removed the unsupported Private Equity target. See
+[current design](DESIGN.md), [validation](VALIDATION.md) and `src/content.ts`
+for the active preview.
+
 The migration content baseline is https://found42-claude-lab.lovable.app/, captured
 September 16, 2026. The existing redesign supplies visual and engineering
 conventions. The CEO positioning brief supplies the distinction: role-, industry-

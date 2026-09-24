@@ -42,7 +42,7 @@ test("on a phone, a service's drawing arrives as the one before it and settles a
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
   const own = await labelsOf(page, 1);
-  expect(own).toContain("Operating problem");
+  expect(own).toContain("Brief / operating problem");
   const before = await labelsOf(page, 0);
 
   await reveal(page, 1, 0.15);
@@ -105,10 +105,15 @@ for (const [width, text] of [
     await page.evaluate(() => {
       const article = document.querySelector('[data-service-article="2"]')!;
       const rail = document.querySelector(".services-aside")!;
-      const header = document.querySelector(".site-header")!.getBoundingClientRect();
+      const header = document
+        .querySelector(".site-header")!
+        .getBoundingClientRect();
       const railBox = rail.getBoundingClientRect();
       const target = Math.max(railBox.bottom + 1, header.bottom + 1);
-      window.scrollBy({ top: article.getBoundingClientRect().top - target, behavior: "instant" });
+      window.scrollBy({
+        top: article.getBoundingClientRect().top - target,
+        behavior: "instant",
+      });
     });
     await expect(automations).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator('[data-service-article="2"]')).toHaveClass(
@@ -141,9 +146,7 @@ test("the homepage's published playbook is one click from its full inventory", a
     "AI Readiness Scorecard",
     "C-Level AI Toolkit",
   ]);
-  await page
-    .getByRole("link", { name: "Explore all free resources" })
-    .click();
+  await page.getByRole("link", { name: "Explore all free resources" }).click();
   const entry = page.getByRole("link", {
     name: "Request the published AI Failure Modes Playbook",
   });
@@ -151,7 +154,9 @@ test("the homepage's published playbook is one click from its full inventory", a
     "href",
     "https://www.found42.com/ai-failure-modes-playbook",
   );
-  await expect(page.locator("#playbook")).toContainText("Failure Modes Playbook");
+  await expect(page.locator("#playbook")).toContainText(
+    "Failure Modes Playbook",
+  );
 });
 
 test("the scorecard walks forward and back, keeps what was typed, and never sends it", async ({

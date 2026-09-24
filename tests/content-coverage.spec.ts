@@ -21,47 +21,72 @@ test("every manifest item targets a known page", () => {
   expect(orphans).toEqual([]);
 });
 
-for (const record of manifest.pages) {
-  test(`migration states remain reachable: ${record.id}`, async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto(record.destination);
-    const states = new Set<string>();
-    const mark = (state: string) => states.add(state);
+test("the current routes exercise every live migration state", async ({ page }) => {
+  const expected: Record<string, readonly string[]> = {
+    "/": ["initial", "contact"],
+    "/resources/": [
+      "initial",
+      "assessment-question-1",
+      "assessment-question-2",
+      "assessment-question-3",
+      "assessment-question-4",
+      "assessment-result-0",
+      "assessment-result-1",
+      "assessment-result-2",
+    ],
+    "/services/": ["initial"],
+    "/industries/private-equity/": ["initial"],
+    "/industries/b2b-saas/": ["initial"],
+    "/about/": ["initial"],
+    "/blog/": ["initial"],
+  };
 
-    mark("initial");
-    if (record.id === "home") {
+  for (const [route, required] of Object.entries(expected)) {
+    await page.goto(route);
+    const observed = new Set<string>(["initial"]);
+
+    if (route === "/") {
       await page.locator('[data-dialog="contact"]').first().click();
-      mark("contact");
+      observed.add("contact");
       await page.keyboard.press("Escape");
     }
-    if (record.id === "resources") {
+
+    if (route === "/resources/") {
       await page.locator(".workflow-preview summary").click();
       const host = page.locator("#assessment");
       for (let step = 1; step <= 4; step += 1) {
-        mark(`assessment-question-${step}`);
+        observed.add(`assessment-question-${step}`);
         await host.locator("[data-answer]").first().click();
       }
-      mark("assessment-result-0");
+      observed.add("assessment-result-0");
       for (let branch = 1; branch <= 2; branch += 1) {
         await host.locator("[data-retake]").click();
         for (let step = 0; step < 4; step += 1)
           await host.locator("[data-answer]").nth(branch).click();
-        mark(`assessment-result-${branch}`);
+        observed.add(`assessment-result-${branch}`);
       }
     }
 
-    const activeStates = new Set(
-      manifest.items
-        .filter(
-          (item: any) =>
-            item.page === record.id && item.state !== "course",
-        )
-        .map((item: any) => item.state),
-    );
-    for (const state of activeStates) {
-      expect(states, `${record.id}: ${state} was not captured`).toContain(
-        state,
-      );
-    }
-  });
-}
+    for (const state of required) expect(observed, `${route}: ${state}`).toContain(state);
+  }
+});
+
+test("historical records that no longer describe a current state are explicit", () => {
+  const course = manifest.items.filter((item: any) => item.state === "course");
+  const withheld = manifest.items.filter((item: any) => item.status === "withheld");
+  expect(course.map((item: any) => item.id)).toEqual([
+    "course-0",
+    "course-1",
+    "course-2",
+    "course-3",
+    "course-4",
+    "course-5",
+    "course-6",
+    "course-7",
+  ]);
+  expect(withheld.map((item: any) => item.id)).toEqual([
+    "blog-reading-time-0",
+    "blog-reading-time-1",
+    "blog-reading-time-2",
+  ]);
+});

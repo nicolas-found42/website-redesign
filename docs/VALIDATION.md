@@ -134,3 +134,27 @@ scorecard states at 1440, 768, 390 and 320; two phone frames of the Workflows
 drawing approaching and arrived with motion on; `report.json` (no overflow,
 no page errors, including the motion-on phone page).
 Not run: physical devices, real Safari, screen readers.
+
+## Issue #43 review remediation
+
+The final review pass aligned service and audience handoffs with the live
+form's vocabulary, kept unavailable learning routes explicit, removed the
+remaining technical visual furniture, and updated visitor-level assertions.
+The Private Equity page no longer publishes the unapproved eight-hour figure;
+the Resources opening names availability honestly, and ScoreApp and Toolkit
+links now come from the destination register.
+The service rail holds the latest explicit choice until its scroll reaches the
+selected article; reduced motion lands there immediately and settles the
+drawing. The regression failed before that change and passed 15 repeated runs
+across Chromium, Firefox and WebKit afterwards.
+
+Final local gate on the feature branch: `npm run typecheck` passed;
+`npm run build` passed; `npm test` — **245 passed (1.6m)** across unit,
+Chromium, Firefox and WebKit. The focused homepage, UX, service-drawing and
+audience set passed 37/37 in Chromium. The render contract passed 8/8 and
+content coverage passed 3/3. The new count supersedes the earlier 257-test
+implementation record above; the two runs used different test contracts.
+
+The external contact submission, gated resource fulfillment, course access
+terms and final audience recommendations still require owner-approved checks
+before release. The preview retains noindex and its current domain routing.

@@ -123,19 +123,6 @@ html {
   isolation: isolate;
 }
 
-/* Ink bands cover the printed grid, so they carry their own. */
-.on-ink::before {
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-  content: "";
-  background-image:
-    linear-gradient(to right, rgb(250 249 246 / 5%) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(250 249 246 / 5%) 1px, transparent 1px);
-  background-position: calc(50% + 0.5px) 0;
-  background-size: 96px 96px;
-  inset: 0;
-}
 .on-ink > * {
   position: relative;
   z-index: 1;

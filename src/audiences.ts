@@ -90,7 +90,9 @@ export type Audience = {
   /** Three short things this audience gets, from the converged reference. */
   readonly points: readonly [string, string, string];
   readonly caption: string;
-  readonly link: { readonly label: string; readonly href: string };
+  readonly link: { readonly label: string; readonly href?: string };
+  /** A release gate or honest interim state beside a not-yet-final route. */
+  readonly linkNote?: string;
   readonly scene: Scene;
 };
 
@@ -657,9 +659,11 @@ export const audiences: readonly Audience[] = [
     caption:
       "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result.",
     link: {
-      label: "Explore the Four-Hour AI Executive",
+      label: "Interim preview: Explore the Four-Hour AI Executive",
       href: destinationRegister.executiveCourse,
     },
+    linkNote:
+      "This external course still needs Found42 owner approval before launch.",
     scene: {
       id: "executives",
       description:
@@ -709,9 +713,10 @@ export const audiences: readonly Audience[] = [
     caption:
       "From a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step.",
     link: {
-      label: "Talk to us about AI builder support",
-      href: destinationRegister.liveInquiry,
+      label: "Ask about AI builder support",
     },
+    linkNote:
+      "Interim path: no verified AI Builder course is published.",
     scene: {
       id: "builders",
       description:

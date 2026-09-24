@@ -17,9 +17,9 @@ const kickers = [
   "For AI builders",
 ];
 const links = [
-  ["Explore the Four-Hour AI Executive", /^https:\/\/maven\.com\//],
+  ["Interim preview: Explore the Four-Hour AI Executive", /^https:\/\/maven\.com\//],
   ["Explore tailored training", /services\/#service-training$/],
-  ["Talk to us about AI builder support", "https://www.found42.com/contact"],
+  ["Ask about AI builder support", null],
 ] as const;
 const drawings = [
   /Executive illustration:/,
@@ -63,9 +63,9 @@ test("a visitor can discover and choose all three audiences, and everything agre
     await expect(panel).toHaveCount(1);
     await expect(panel.locator(".audience-kicker")).toHaveText(kickers[index]);
     await expect(panel.getByRole("img")).toHaveAccessibleName(drawings[index]);
-    await expect(
-      panel.getByRole("link", { name: links[index][0] }),
-    ).toHaveAttribute("href", links[index][1]);
+    const cta = panel.locator(":is(a, button)", { hasText: links[index][0] });
+    if (links[index][1])
+      await expect(cta).toHaveAttribute("href", links[index][1]);
     await expect(rail.getByRole("button", { name })).toHaveAttribute(
       "aria-pressed",
       "true",

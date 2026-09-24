@@ -8,20 +8,6 @@
   position: relative;
   color: #fff;
   background: var(--red);
-  isolation: isolate;
-  overflow: clip;
-}
-.contact::before {
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-  content: "";
-  background-image:
-    linear-gradient(to right, rgb(255 255 255 / 7%) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 7%) 1px, transparent 1px);
-  background-position: calc(50% + 0.5px) 0;
-  background-size: 96px 96px;
-  inset: 0;
 }
 .contact-accent {
   position: absolute;

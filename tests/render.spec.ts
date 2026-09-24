@@ -9,16 +9,31 @@ import {
   scorecardResult,
 } from "../src/interactions";
 const page = renderHomepage();
-test("every source resource has its description and truthful access terms", () => {
+test("the complete resource page owns the current catalog and availability", async ({
+  page,
+}) => {
+  await page.goto("/resources/");
+  const sections = page.locator(".resource-detail, #scorecard");
+  await expect(sections).toHaveCount(5);
+  await expect(
+    page.getByRole("heading", { name: "Start with the work." }),
+  ).toBeVisible();
+  await expect(page.locator(".page-opening")).toContainText(
+    "Five resources and learning options, with current availability shown below",
+  );
   for (const item of resources) {
-    const resourcesPage = renderPage("resources");
-    expect(resourcesPage).toContain(item.title);
-    if (item.id !== "scorecard") expect(resourcesPage).toContain(item.description);
-    if (item.id !== "scorecard") expect(resourcesPage).toContain(item.gate);
+    const section = page.locator(`#${item.id}`);
+    await expect(section).toContainText(item.title);
+    await expect(section).toContainText(item.description);
+    if (item.id === "scorecard") {
+      await expect(section).toContainText(
+        "No email required. Your answers stay in this browser and are not sent or stored.",
+      );
+    } else {
+      await expect(section).toContainText(item.gate);
+    }
   }
-  expect(page).toContain("AI Readiness Scorecard");
-  expect(page).toContain("C-Level AI Toolkit");
-  expect(page).not.toContain("Strategic Advisor Mini-Course");
+  await expect(page.locator("#scorecard")).toContainText("Question 1 of 12");
 });
 test("source offerings and attributed workshop proof are preserved", () => {
   for (const item of services) {
@@ -145,7 +160,9 @@ test("the September 23 content delta is handled honestly rather than preserved v
   expect(home).not.toContain("Target: 8 hours saved weekly, per person");
   expect(home).toContain("Who Found42 helps");
   expect(home).toContain("Use AI for your decisions");
-  expect(home).toContain("Train teams. Build useful skills. Automate the work.");
+  expect(home).toContain(
+    "Train teams. Build useful skills. Automate the work.",
+  );
   // Every non-adopted source line records why it is not carried forward.
   for (const item of delta.items)
     if (item.disposition === "not adopted") expect(item.note).toBeTruthy();
@@ -184,5 +201,5 @@ test("every active resource and verified lesson has its published destination", 
   expect(resourcesPage).toContain("No starter files are available yet");
   expect(resourcesPage).not.toContain("data-email-form");
   expect(renderPage("blog")).not.toContain("data-email-form");
-  expect(resourcesPage).not.toContain("data-dialog=\"course\"");
+  expect(resourcesPage).not.toContain('data-dialog="course"');
 });

@@ -75,11 +75,6 @@
     color 260ms var(--ease-out),
     border-color 260ms var(--ease-out);
 }
-.choice-index {
-  font-weight: 400;
-  opacity: 0.6;
-  font-variant-numeric: tabular-nums;
-}
 .choice::before {
   position: absolute;
   z-index: -1;
@@ -100,10 +95,6 @@
 .choice[aria-pressed="true"] {
   color: #faf9f6;
   border-color: var(--red-on-ink);
-}
-.choice[aria-pressed="true"] .choice-index {
-  color: var(--red-on-ink);
-  opacity: 1;
 }
 
 /* ── The articles ── */
@@ -249,9 +240,9 @@
 /**
  * Narrow, with room to spare: the rail rides under the header while the
  * articles pass, so it keeps reporting which service is being read and keeps
- * offering the jump. It gives up its index numbers and some tracking to stay
- * on one line down to 320px; at a large text size it wraps rather than clip a
- * name, and a short landscape screen keeps it in the flow instead.
+ * offering the jump. It gives up some tracking to stay on one line down to
+ * 320px; at a large text size it wraps rather than clip a name, and a short
+ * landscape screen keeps it in the flow instead.
  */
 @media (max-width: 960px) and (min-height: 560px) {
   .services-aside {
@@ -271,9 +262,6 @@
     padding-inline: 4px;
     font-size: clamp(0.75rem, 3.6vw, 0.875rem);
     letter-spacing: 0;
-  }
-  .services-rail .choice-index {
-    display: none;
   }
 }
 

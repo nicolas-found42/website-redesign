@@ -48,19 +48,41 @@ test("Start Here previews the scorecard and public toolkit, not the full catalog
     "Question 1 of 12",
   );
 });
-test("all three audiences expose a truthful next step", async ({ page }) => {
+test("all three audiences expose a truthful interim next step", async ({ page }) => {
   await page.goto("/#audiences");
   const rail = page.getByRole("group", { name: "Choose an audience" });
-  const expected = [
-    ["Explore the Four-Hour AI Executive", "https://maven.com/richard-achee/four-hour-ai"],
-    ["Explore tailored training", /services\/#service-training$/],
-    ["Talk to us about AI builder support", "https://www.found42.com/contact"],
-  ] as const;
-  for (const [index, [name, href]] of expected.entries()) {
-    await rail.getByRole("button").nth(index).click();
-    const panel = page.locator(".audience-panel:not([hidden])");
-    await expect(panel.getByRole("link", { name })).toHaveAttribute("href", href);
-  }
+
+  await rail.getByRole("button", { name: /C-level executives/ }).click();
+  const executive = page.locator(".audience-panel:not([hidden])");
+  await expect(
+    executive.getByRole("link", {
+      name: "Interim preview: Explore the Four-Hour AI Executive",
+    }),
+  ).toHaveAttribute("href", "https://maven.com/richard-achee/four-hour-ai");
+  await expect(executive).toContainText(
+    "This external course still needs Found42 owner approval before launch.",
+  );
+
+  await rail.getByRole("button", { name: /Individual contributors/ }).click();
+  const contributor = page.locator(".audience-panel:not([hidden])");
+  await expect(
+    contributor.getByRole("link", { name: "Explore tailored training" }),
+  ).toHaveAttribute("href", /services\/#service-training$/);
+
+  await rail.getByRole("button", { name: /AI builders/ }).click();
+  const builder = page.locator(".audience-panel:not([hidden])");
+  await expect(builder).toContainText(
+    "Interim path: no verified AI Builder course is published.",
+  );
+  await builder
+    .getByRole("button", { name: "Ask about AI builder support" })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toContainText("AI builder support");
+  await expect(
+    dialog.getByRole("link", { name: "Open the live inquiry form" }),
+  ).toHaveAttribute("href", "https://www.found42.com/contact");
+
   await expect(page.locator("#audiences h2")).toHaveText("Who Found42 helps");
   await expect(page.locator("#audiences")).not.toContainText("One method");
 });

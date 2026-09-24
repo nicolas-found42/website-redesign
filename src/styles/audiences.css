@@ -54,18 +54,6 @@
 .audience-choice[aria-pressed="true"]::before {
   transform: scaleX(1);
 }
-.audience-choice .choice-index {
-  font-family: var(--font-text);
-  font-size: var(--size-note);
-  font-weight: 650;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  transition: color 220ms var(--ease-out);
-  font-variant-numeric: tabular-nums;
-}
-.audience-choice[aria-pressed="true"] .choice-index {
-  color: var(--red);
-}
 .audience-choice-name {
   font-family: var(--font-display);
   font-size: var(--size-h4);
@@ -76,9 +64,6 @@
 .audience-choice-note {
   grid-column: 2;
   color: var(--muted);
-}
-.audience-choice:hover .choice-index {
-  color: var(--red);
 }
 .audience-choice:focus-visible {
   z-index: 1;

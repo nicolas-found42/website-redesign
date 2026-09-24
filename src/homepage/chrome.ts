@@ -1,4 +1,5 @@
 import { arrow, icon } from "../icons";
+import { destinationRegister } from "../content";
 import { sitePath } from "../paths";
 const nav = [
   ["Free resources", "resources/"],
@@ -38,7 +39,7 @@ export function siteFooter() {
     "Industries",
     industries.map(([t, p]) => [t, sitePath(p)] as const),
   )}${group("Contact & legal", [
-    ["Contact Found42", "https://www.found42.com/contact"],
+    ["Contact Found42", destinationRegister.liveInquiry],
     ["Privacy Policy", "https://www.found42.com/privacy-policy"],
     ["Terms of Use", "https://www.found42.com/terms-of-use"],
   ])}</div><div class="footer-base"><span>© ${new Date().getFullYear()} Found42 LLC</span></div></div></footer>`;

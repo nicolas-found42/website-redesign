@@ -28,7 +28,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
   const rail = schematics
     .map(
       (schematic, index) =>
-        `<button class="choice" type="button" data-service="${index}" aria-pressed="${index === 0}"><span class="choice-index" aria-hidden="true">0${index + 1}</span><span>${schematic.choice}</span></button>`,
+        `<button class="choice" type="button" data-service="${index}" aria-pressed="${index === 0}"><span>${schematic.choice}</span></button>`,
     )
     .join("");
 
@@ -40,7 +40,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
   <p class="service-label note">${service.label}</p>
   <h3 id="service-${schematic.id}-title">${service.title}</h3>
   <p class="body">${service.description}</p>
-  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact" data-interest="${service.title}">Discuss ${service.title.toLowerCase()}&nbsp;→</button>
+  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact" data-service="${service.title}" data-interest="${service.inquiryInterest}" data-contact="${service.inquiryContext}">Discuss ${service.title.toLowerCase()}&nbsp;→</button>
  </article>`;
     })
     .join("");

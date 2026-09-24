@@ -1,4 +1,11 @@
-import { destinationRegister, questions, results, scorecard } from "./content";
+import {
+  destinationRegister,
+  inquiryInterests,
+  questions,
+  results,
+  scorecard,
+  type InquiryContext,
+} from "./content";
 import { inquiryNext } from "./homepage/inquiry";
 import { sitePath } from "./paths";
 /** Source scoring preserved: four 1–3 answers, thresholds 6 and 9. */
@@ -55,6 +62,12 @@ export function scorecardResult(answers: readonly boolean[]) {
 
 /** The live inquiry route; see `src/content.ts` for the destination register. */
 const liveInquiry = destinationRegister.liveInquiry;
+
+/** The live form's own interest labels, kept separate from published service names. */
+const inquiryContext = (context: InquiryContext) => {
+  const entry = inquiryInterests[context];
+  return `Choose ${entry.form} in the live form. Add “${entry.carry}” to your message so Found42 knows what to discuss.`;
+};
 
 /** Makes a visitor's own words safe to show as text inside markup. */
 const escapeText = (text: string) =>
@@ -143,27 +156,31 @@ export function mountInteractions(root: HTMLElement) {
   let trigger: HTMLElement | null = null;
   const close = () => dialog.close();
   /**
-   * Opens the inquiry handoff. A trigger that names a service
-   * (`data-interest`) carries that context into the live-form URL, while the
-   * dialog explains the inquiry and the steps that follow it.
+   * Opens the inquiry handoff. `data-service` keeps the published name visible
+   * in the dialog; `data-interest` is reserved for the live form's domain
+   * vocabulary, and `data-contact` maps that service to concrete instructions
+   * for the visitor carrying context to the live form.
    */
   function openDialog(type: string, from: HTMLElement) {
     trigger = from;
+    const service = from.dataset.service ?? "";
     const interest = from.dataset.interest ?? "";
-    const params = new URLSearchParams();
-    if (interest) params.set("interest", interest);
-    const inquiryHref = params.size
-      ? `${liveInquiry}?${params.toString()}`
-      : liveInquiry;
+    const contact = from.dataset.contact as InquiryContext | undefined;
+    const context = contact && contact in inquiryInterests
+      ? inquiryContext(contact)
+      : undefined;
     dialog.dataset.type = type;
     dialog.dataset.interest = interest;
     const carriedAnswer = escapeText(dialog.dataset.scorecardAnswer?.trim() ?? "");
     const carried = carriedAnswer
       ? `<div class="inquiry-draft"><p class="note">From your readiness check</p><p>${carriedAnswer}</p></div>`
       : "";
+    const carriedContext = context
+      ? `<p class="note--plain inquiry-context">${context}</p>`
+      : "";
     dialog.innerHTML =
       `<button class="dialog-close" aria-label="Close dialog" data-close>Close ×</button>` +
-      `<p class="note">${interest ? `About ${interest}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>You’re sending a consultation inquiry, not reserving a meeting. Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${inquiryHref}">Open the live inquiry form&nbsp;→</a><p class="note--plain">The live form currently starts news and updates at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${carried}${inquiryNext()}`;
+      `<p class="note">${service ? `About ${service}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>You’re sending a consultation inquiry, not reserving a meeting. Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a>${carriedContext}<p class="note--plain">The live form currently starts news and updates at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${carried}${inquiryNext()}`;
     delete dialog.dataset.scorecardAnswer;
     dialog.showModal();
     document.body.classList.add("dialog-open");
