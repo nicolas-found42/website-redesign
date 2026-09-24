@@ -195,7 +195,16 @@ choice selected until the visitor scrolls or follows an anchor. The natural
 phone landing and short-phone choice tests each passed 16 repeated local
 WebKit runs. The adjacent Chromium and WebKit checks passed 42/42.
 
-A full local `npm test` attempt reached 229/251 passes. Eighteen startup
+The third PR `verify` run failed the same 500px WebKit check again. Content
+above the landed article was still reflowing after the 200% text change, and
+WebKit has no CSS scroll anchoring, so the article slid out of view after
+landing. A narrow choice now holds its article at the landing while the page
+resizes, until the visitor moves on. Before the hold, 7 of 40 repeated local
+WebKit runs failed; afterwards the short-phone, rapid-choice and reduced-motion
+checks passed 180/180 across Chromium, Firefox and WebKit, and the full local
+suite passed 251/251.
+
+An earlier full local `npm test` attempt reached 229/251 passes. Eighteen startup
 failures were connection refusals on the shared 4173/4179 preview ports; four
 Firefox tests then timed out or missed an element in that run. The focused
 service checks above and production build passed. The PR's isolated GitHub

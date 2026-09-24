@@ -225,6 +225,18 @@ export function mountServices(
   const measureRail = new ResizeObserver(updateRail);
   if (aside) measureRail.observe(aside);
 
+  /**
+   * Content above a landed choice can still grow, from late text or drawing
+   * layout. Browsers without CSS scroll anchoring would leave the reader
+   * displaced, so the chosen article is held at its landing until they move on.
+   */
+  const holdLanding = new ResizeObserver(() => {
+    if (!narrow.matches || !chosen || !jumpStarted) return;
+    if (expecting !== undefined || atRequestedArticle(current)) return;
+    articles[current].scrollIntoView({ behavior: "auto", block: "start" });
+  });
+  holdLanding.observe(document.body);
+
   /* ── Narrow: each article's own drawing, brought on by the one before it ── */
   const figures = articles.map((article) =>
     article.querySelector<HTMLElement>(".service-figure"),
@@ -300,6 +312,7 @@ export function mountServices(
     removeEventListener("hashchange", onHashChange);
     reader.disconnect();
     measureRail.disconnect();
+    holdLanding.disconnect();
     arrival.disconnect();
     motionPreference.removeEventListener("change", onPreference);
     choices.forEach((choice, index) =>
