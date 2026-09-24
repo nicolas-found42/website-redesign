@@ -17,7 +17,9 @@ export default defineConfig({
       reuseExistingServer: true,
     },
     {
-      command: "npm run build && npm run preview:pages",
+      command: process.env.CI
+        ? "npm run preview:pages"
+        : "npm run build && npm run preview:pages",
       url: "http://127.0.0.1:4179/website-redesign/",
       reuseExistingServer: !process.env.CI,
     },

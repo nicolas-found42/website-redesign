@@ -149,18 +149,21 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
     "data-motion-changed",
     "true",
   );
-  const targetOffset = await page.evaluate(
-    () =>
-      new Promise<number>((resolve) =>
-        requestAnimationFrame(() => {
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
           const box = document
             .querySelector('[data-service-article="2"]')!
             .getBoundingClientRect();
-          resolve(Math.abs(box.top + box.height / 2 - innerHeight / 2));
+          return Math.abs(box.top + box.height / 2 - innerHeight / 2);
         }),
-      ),
-  );
-  expect(targetOffset).toBeLessThan(60);
+      {
+        message: "reducing motion should promptly land at the latest choice",
+        timeout: 1000,
+      },
+    )
+    .toBeLessThan(60);
 
   const expectedPage = await context.newPage();
   await expectedPage.emulateMedia({ reducedMotion: "reduce" });
