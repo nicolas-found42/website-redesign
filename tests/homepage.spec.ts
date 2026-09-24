@@ -287,36 +287,31 @@ test("footer policy links navigate and contact links activate", async ({
     await expect(page.getByText("Policy")).toBeVisible();
   }
 
-  await page.goto("/");
-  await page.evaluate(() => {
-    (window as Window & { footerActivation?: string[] }).footerActivation = [];
-    document
-      .querySelector(".site-footer")
-      ?.addEventListener("click", (event) => {
-        const link = (event.target as Element).closest("a");
-        if (link?.protocol === "mailto:" || link?.protocol === "tel:") {
-          (
-            window as Window & { footerActivation?: string[] }
-          ).footerActivation?.push(link.protocol);
-        }
-      });
-  });
-  await page
-    .locator(".site-footer")
-    .getByRole("link", { name: "richard@found42.com" })
-    .click();
-  await page
-    .locator(".site-footer")
-    .getByRole("link", { name: "(646) 300-1247" })
-    .click();
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          (window as Window & { footerActivation?: string[] }).footerActivation,
-      ),
-    )
-    .toEqual(["mailto:", "tel:"]);
+  for (const [name, protocol] of [
+    ["richard@found42.com", "mailto:"],
+    ["(646) 300-1247", "tel:"],
+  ]) {
+    await page.goto("/");
+    await page.evaluate(() => {
+      (window as Window & { footerActivation?: string }).footerActivation = "";
+      document
+        .querySelector(".site-footer")
+        ?.addEventListener("click", (event) => {
+          const link = (event.target as Element).closest("a");
+          (window as Window & { footerActivation?: string }).footerActivation =
+            link?.protocol ?? "";
+        });
+    });
+    await page.locator(".site-footer").getByRole("link", { name }).click();
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (window as Window & { footerActivation?: string }).footerActivation,
+        ),
+      )
+      .toBe(protocol);
+  }
 });
 
 test("touch and reduced-motion controls expose every service and testimonial", async ({
