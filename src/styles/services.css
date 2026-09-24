@@ -19,9 +19,15 @@
 .services-head h2 {
   max-width: 13ch;
 }
-/* One everyday task, in plain words, before the three ways are named. */
+/**
+ * One everyday task, in plain words, before the three ways are named. Its type
+ * is sized explicitly like every other reading block: WebKit settles inherited
+ * sizes a frame or two after the root text size changes, and the box growing
+ * late would shift a narrow rail jump's landing below it.
+ */
 .services-example {
   padding: 20px 22px;
+  font-size: var(--size-body);
   margin-top: 28px;
   background: var(--paper-warm);
   border-left: 2px solid var(--red);
