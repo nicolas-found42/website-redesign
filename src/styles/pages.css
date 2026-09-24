@@ -56,6 +56,20 @@
   border-top: 1px solid var(--line);
   position: relative;
 }
+.resources-later-head {
+  padding-block: 64px 8px;
+  border-top: 1px solid var(--line);
+}
+.resources-later-head .lead {
+  max-width: 44ch;
+  margin: 0;
+}
+.resource-later {
+  padding-block: 40px;
+}
+.resource-later h2 {
+  font-size: var(--size-h3);
+}
 .resource-access {
   border-left: 1px solid var(--red);
   padding-left: 32px;

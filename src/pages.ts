@@ -61,27 +61,46 @@ const lead = (body: string) =>
   `<p class="lead">${body}</p>${body.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
 const opening = (label: string, title: string, body: string, aside: string) =>
   `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<button class="action" data-dialog="contact">Talk to our team&nbsp;→</button></div><aside class="page-aside">${aside}</aside></section><div class="wrap hero-rail page-rail"><span class="note">Your role · Your industry · Your company</span><button class="motion-toggle note" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button></div>`;
+/**
+ * Planned resources stay visibly unavailable (ADR 0005), grouped after the ones
+ * a visitor can use today so they read as what is coming rather than as dead
+ * ends among the working links. Each states its status once.
+ */
+function laterResources() {
+  const later = resources.filter((resource) => resource.status === "unavailable");
+  return `<div class="wrap resources-later-head"><p class="note section-label">Coming later</p><p class="lead">Planned, not available yet. Each says what you can use today instead.</p></div>${later
+    .map((resource) => {
+      const action =
+        "href" in resource
+          ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`
+          : `<button class="link" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</button>`;
+      return `<section id="${resource.id}" class="resource-detail resource-later"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${action}</div></div></section>`;
+    })
+    .join("")}`;
+}
 function resourcesPage() {
   return (
     opening(
       "Free resources",
       "Start with the work.",
-      "Five resources and learning options, with current availability shown below. Choose better use cases, build stronger skills, and catch weak outputs.",
+      "Three free resources you can use today, and two more that are coming later. Choose better use cases, build stronger skills, and catch weak outputs.",
       '<p class="note page-aside-label">No abstract AI curriculum.</p>',
     ) +
     `<section id="scorecard" class="wrap band"><div class="content-split scorecard-split"><div class="scorecard-intro"><p class="note section-label">AI Readiness Scorecard</p><h2 class="display">AI Readiness Scorecard</h2><p>${resources[0].description}</p><p>Twelve yes-or-no questions about your current AI use, data practices, workflows, team readiness and automation goals, then one open question. It takes about five minutes.</p><p>Your result is a readiness stage, a status for each area and where to start.</p><p class="note--plain">No email required. Your answers stay in this browser and are not sent or stored.</p></div><div id="scorecard-app" class="assessment scorecard" role="group" aria-label="AI Readiness Scorecard"><noscript><p class="assessment-body">The scorecard needs JavaScript. The original assessment on ScoreApp is linked on this page.</p></noscript></div><div class="scorecard-original"><p class="note--plain">Prefer an emailed PDF report? The original assessment on ScoreApp asks for your first and last name, email, company and country before the questions. Its privacy and communications terms apply.</p><a class="link" href="${destinationRegister.scoreApp}">Take the original assessment on ScoreApp&nbsp;→</a></div></div><details class="workflow-preview"><summary>Try the four-question workflow preview · No email required</summary><p>From the redesign prototype: test one workflow against repetition, output clarity, review safety and frequency. It is separate from the AI Readiness Scorecard above, which looks at the business rather than one workflow.</p><div id="assessment" class="assessment" aria-label="Workflow discussion preview"></div></details></section>` +
     resources
-      .filter((resource) => resource.id !== "scorecard")
+      .filter(
+        (resource) =>
+          resource.id !== "scorecard" && resource.status === "available",
+      )
       .map((resource) => {
         const access =
-          resource.status === "unavailable"
-            ? `<div class="resource-unavailable"><p>${resource.gate}</p>${"href" in resource ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>` : `<button class="link" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</button>`}</div>`
-            : resource.id === "playbook"
-              ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, LinkedIn profile and a human check.</p>`
-              : `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`;
-        return `<section id="${resource.id}" class="resource-detail ${resource.id === "library" ? "on-ink" : ""}" ${resource.id === "library" ? 'data-ground="ink"' : ""}><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</button></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
+          resource.id === "playbook"
+            ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, LinkedIn profile and a human check.</p>`
+            : `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`;
+        return `<section id="${resource.id}" class="resource-detail"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</button></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
       })
       .join("") +
+    laterResources() +
     `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="${destinationRegister.toolkit}">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the unavailable Strategic Advisor mini-course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#engagements")}">See how engagements work&nbsp;→</a></section>` +
     inquirySection()
   );

@@ -209,3 +209,20 @@ failures were connection refusals on the shared 4173/4179 preview ports; four
 Firefox tests then timed out or missed an element in that run. The focused
 service checks above and production build passed. The PR's isolated GitHub
 `verify` job is the full-suite gate for this change.
+
+## September 23 small-business UX review (#45–#48)
+
+The deployed services section had lost its ink band in #44 while its type kept
+ink-band colours: 24 elements at 1:1 and 9 more under 4.5:1 on the homepage and
+`/services/`, in every engine. Axe did not report it because the text reveals on
+scroll. `tests/ux-review-phone.spec.ts` now measures every visible text node on
+all seven routes at 390px after reveals settle, against the first opaque ground
+behind it; the same scan reports 33 failures against the pre-fix deployment and
+none locally. It also covers the direct email and phone links, the skill gloss
+and example, the executive link note, the resources grouping, the outlined hero
+action and the 13px annotation floor.
+
+Validation: `npm run typecheck` passed; `npm test` — **266 passed (1.5m)**
+across Chromium, Firefox and WebKit, including the production build. The first
+run failed nine 320px/200%-text overflow checks on the footer email address;
+footer and dialog contact links now wrap inside the address.

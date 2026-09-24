@@ -19,7 +19,7 @@ test("the complete resource page owns the current catalog and availability", asy
     page.getByRole("heading", { name: "Start with the work." }),
   ).toBeVisible();
   await expect(page.locator(".page-opening")).toContainText(
-    "Five resources and learning options, with current availability shown below",
+    "Three free resources you can use today, and two more that are coming later",
   );
   for (const item of resources) {
     const section = page.locator(`#${item.id}`);

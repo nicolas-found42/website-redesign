@@ -325,7 +325,10 @@
 .footer-group a {
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   min-height: 40px;
+  /* An email address is one long word; at doubled text it breaks, not the page. */
+  overflow-wrap: anywhere;
   font-size: var(--size-small);
   color: #d9d7cf;
   transition: color 200ms var(--ease-out);

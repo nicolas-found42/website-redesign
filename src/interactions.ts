@@ -6,7 +6,7 @@ import {
   scorecard,
   type InquiryContext,
 } from "./content";
-import { inquiryNext } from "./homepage/inquiry";
+import { directContactLinks, inquiryNext } from "./homepage/inquiry";
 import { sitePath } from "./paths";
 /** Source scoring preserved: four 1–3 answers, thresholds 6 and 9. */
 export const readinessResult = (answers: number[]) =>
@@ -180,7 +180,7 @@ export function mountInteractions(root: HTMLElement) {
       : "";
     dialog.innerHTML =
       `<button class="dialog-close" aria-label="Close dialog" data-close>Close ×</button>` +
-      `<p class="note">${service ? `About ${service}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>You’re sending a consultation inquiry, not reserving a meeting. Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a>${carriedContext}<p class="note--plain">The live form currently starts news and updates at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${carried}${inquiryNext()}`;
+      `<p class="note">${service ? `About ${service}` : "Start with the bottleneck"}</p><h2 id="dialog-title">Talk to our team</h2><p>You’re sending a consultation inquiry, not reserving a meeting. Tell us where work is slow, repetitive, or inconsistent.</p><a class="action" href="${liveInquiry}">Open the live inquiry form&nbsp;→</a>${directContactLinks()}${carriedContext}<p class="note--plain">The live form currently starts news and updates at Yes: choose No if you only want a reply. It also asks you to agree to Found42 communications before it sends.</p>${carried}${inquiryNext()}`;
     delete dialog.dataset.scorecardAnswer;
     dialog.showModal();
     document.body.classList.add("dialog-open");

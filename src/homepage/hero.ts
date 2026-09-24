@@ -5,8 +5,10 @@ import { sitePath } from "../paths";
 /**
  * The opening spread. The headline says what Found42 does in plain words —
  * training teams, building useful skills and automating repeatable work. The
- * two actions give self-serve and consultation visitors equal, clear routes,
- * and the attributed workshop account sits beside the opening claim.
+ * two actions give self-serve and consultation visitors clear routes: the
+ * second is outlined so the pair reads as a choice, and its arrow points on
+ * rather than out because it opens a dialog on this page. The attributed
+ * workshop account sits beside the opening claim.
  * The headline and the working-system drawing are one composition rather than
  * two columns: the drawing fills the field and the type sits over its open
  * left side, lifted clear by a warm paper wash.
@@ -20,11 +22,11 @@ export function hero() {
  <div class="wrap hero-inner">
   <div class="hero-copy">
    <h1 id="hero-title" class="display" data-reveal-lines><span class="sentence">Train teams.</span> <span class="sentence">Build useful skills.</span> <span class="sentence"><span class="signal">Automate the work.</span></span></h1>
-   <p class="lead hero-lead" data-reveal>Found42 helps non-technical teams use AI in the work they already own. We train people in their roles, build tailored skills and workflows, and automate repeatable work while judgment stays with your team.</p>
+   <p class="lead hero-lead" data-reveal>Found42 helps non-technical teams use AI in the work they already own. We train people in their roles, build tailored skills (saved instructions and examples Claude follows for one recurring job), and automate repeatable work while judgment stays with your team.</p>
    <p class="note--plain hero-gloss" data-reveal>${claudeGloss}</p>
    <div class="hero-actions" data-reveal>
     <a class="action" href="${sitePath("resources/")}">Explore free resources ${arrow}</a>
-    <button class="action" type="button" data-dialog="contact">Talk to our team ${arrow}</button>
+    <button class="action action--ghost" type="button" data-dialog="contact">Talk to our team ${icon("right")}</button>
    </div>
   </div>
   <figure class="hero-proof" aria-labelledby="hero-proof-title">

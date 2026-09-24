@@ -65,8 +65,9 @@ without a development SPA fallback.
 - `scripts/serve-pages.mjs`: strict local static server for production checks.
 - `tests/`: source-manifest coverage, browser journeys, assessment branches,
   accessibility, motion, reflow, static routing and script-failure checks;
-  `audit-remediation.spec.ts` and `ux-review.spec.ts` guard the September 22
-  audit and September 23 UX review findings.
+  `audit-remediation.spec.ts`, `ux-review.spec.ts` and
+  `ux-review-phone.spec.ts` guard the September 22 audit and the two
+  September 23 UX review findings.
 
 ## GitHub Pages
 

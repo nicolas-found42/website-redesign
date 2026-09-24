@@ -56,11 +56,11 @@ test("all three audiences expose a truthful interim next step", async ({ page })
   const executive = page.locator(".audience-panel:not([hidden])");
   await expect(
     executive.getByRole("link", {
-      name: "Interim preview: Explore the Four-Hour AI Executive",
+      name: "Explore the Four-Hour AI Executive on Maven",
     }),
   ).toHaveAttribute("href", "https://maven.com/richard-achee/four-hour-ai");
   await expect(executive).toContainText(
-    "This external course still needs Found42 owner approval before launch.",
+    "Preview link, still being confirmed. The course page and its access terms are on Maven.",
   );
 
   await rail.getByRole("button", { name: /Individual contributors/ }).click();

@@ -659,11 +659,11 @@ export const audiences: readonly Audience[] = [
     caption:
       "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result.",
     link: {
-      label: "Interim preview: Explore the Four-Hour AI Executive",
+      label: "Explore the Four-Hour AI Executive on Maven",
       href: destinationRegister.executiveCourse,
     },
     linkNote:
-      "This external course still needs Found42 owner approval before launch.",
+      "Preview link, still being confirmed. The course page and its access terms are on Maven.",
     scene: {
       id: "executives",
       description:
