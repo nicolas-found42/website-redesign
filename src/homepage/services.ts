@@ -1,4 +1,4 @@
-import { services } from "../content";
+import { destinationRegister, services } from "../content";
 import { arrow } from "../icons";
 import { schematicFigure, schematics } from "../schematic";
 import { sitePath } from "../paths";
@@ -40,7 +40,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
   <p class="service-label note">${service.label}</p>
   <h3 id="service-${schematic.id}-title">${service.title}</h3>
   <p class="body">${service.description}</p>
-  <p class="service-detail note--plain">${service.context}</p><ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact" data-service="${service.title}" data-interest="${service.inquiryInterest}" data-contact="${service.inquiryContext}">Discuss ${service.title.toLowerCase()}&nbsp;→</button>
+  <ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-service="${service.title}" data-interest="${service.inquiryInterest}" data-contact="${service.inquiryContext}">Talk to us about ${service.title.toLowerCase()}&nbsp;→</a>
  </article>`;
     })
     .join("");
@@ -50,19 +50,10 @@ export function servicesSection({ allServicesLink = false } = {}) {
   <div class="services-head">
    <div>
     <p class="note section-label">Services</p>
-    <h2 id="services-title" class="display" data-reveal-lines>How we deliver our services</h2>
+    <h2 id="services-title" class="display" data-reveal-lines>Three ways we help</h2>
    </div>
    <div class="services-intro">
-    <p class="lead" data-reveal>Three ways Found42 helps: live training, tailored workflows and repeatable automations. Each engagement starts with the work, explains where you participate, and leaves your team with something usable.</p>
-    <div class="services-example" data-reveal>
-     <p class="note">For example</p>
-     <ol>
-      <li>A customer emails a purchase order.</li>
-      <li>A Claude skill reads it and drafts the order entry.</li>
-      <li>Your order desk checks the entry and approves it.</li>
-     </ol>
-     <p class="note--plain">A hypothetical example, not a client result.</p>
-    </div>
+    <p class="lead" data-reveal>Every engagement starts with your work and leaves your team with something it can use.</p>
    </div>
   </div>
   <div class="services-stage">
@@ -83,7 +74,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
      <li><a class="link" href="${sitePath("industries/b2b-saas/")}">B2B SaaS</a></li>${allServicesLink ? `\n     <li><a class="link" href="${sitePath("services/")}">See all services</a></li>` : ""}
     </ul>
    </div>
-   <button class="link" data-dialog="contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</button>
+   <a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</a>
   </div>
  </div>
 </section>`;

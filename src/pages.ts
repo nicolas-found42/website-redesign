@@ -16,6 +16,7 @@ import { audiencesSection } from "./homepage/audiences";
 import { reviewScene, sceneFigure } from "./audiences";
 import { schematicFigure, masterSchematic } from "./schematic";
 import { sitePath } from "./paths";
+import { catalogSections } from "./catalog";
 export const pageMeta: Record<string, { title: string; description: string }> =
   {
     "": {
@@ -29,9 +30,9 @@ export const pageMeta: Record<string, { title: string; description: string }> =
         "Assess one workflow and explore playbooks, skills and practical training shaped around real work.",
     },
     services: {
-      title: "Workshops, Workflows & Automations | Found42",
+      title: "Training Tracks, Formats & Services | Found42",
       description:
-        "Role-specific training and usable AI systems, built around your company’s work and quality standards.",
+        "Explore five training tracks, six delivery formats, custom builds, advisory services and no-charge starting sessions.",
     },
     "industries/private-equity": {
       title: "AI for Private Equity | Found42",
@@ -60,20 +61,22 @@ const sectionLabel = (label: string) =>
 const lead = (body: string) =>
   `<p class="lead">${body}</p>${body.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
 const opening = (label: string, title: string, body: string, aside: string) =>
-  `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<button class="action" data-dialog="contact">Talk to our team&nbsp;→</button></div><aside class="page-aside">${aside}</aside></section><div class="wrap hero-rail page-rail"><span class="note">Your role · Your industry · Your company</span><button class="motion-toggle note" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button></div>`;
+  `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<a class="action" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to our team&nbsp;→</a></div><aside class="page-aside">${aside}</aside></section>`;
 /**
  * Planned resources stay visibly unavailable (ADR 0005), grouped after the ones
  * a visitor can use today so they read as what is coming rather than as dead
  * ends among the working links. Each states its status once.
  */
 function laterResources() {
-  const later = resources.filter((resource) => resource.status === "unavailable");
+  const later = resources.filter(
+    (resource) => resource.status === "unavailable",
+  );
   return `<div class="wrap resources-later-head"><p class="note section-label">Coming later</p><p class="lead">Planned, not available yet. Each says what you can use today instead.</p></div>${later
     .map((resource) => {
       const action =
         "href" in resource
           ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`
-          : `<button class="link" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</button>`;
+          : `<a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</a>`;
       return `<section id="${resource.id}" class="resource-detail resource-later"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${action}</div></div></section>`;
     })
     .join("")}`;
@@ -97,11 +100,11 @@ function resourcesPage() {
           resource.id === "playbook"
             ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, LinkedIn profile and a human check.</p>`
             : `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`;
-        return `<section id="${resource.id}" class="resource-detail"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</button></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
+        return `<section id="${resource.id}" class="resource-detail"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</a></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
       })
       .join("") +
     laterResources() +
-    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="${destinationRegister.toolkit}">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the unavailable Strategic Advisor mini-course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#engagements")}">See how engagements work&nbsp;→</a></section>` +
+    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="${destinationRegister.toolkit}">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the unavailable Strategic Advisor mini-course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#tracks")}">Explore training and services&nbsp;→</a></section>` +
     inquirySection()
   );
 }
@@ -116,20 +119,20 @@ function engagementsBand() {
     ["You provide", "youProvide"],
     ["You get", "youGet"],
   ] as const;
-  return `<section id="engagements" class="wrap band engagements" aria-labelledby="engagements-title">${sectionLabel("What an engagement looks like")}<h2 id="engagements-title" class="display">What working with us looks like.</h2><div class="engagement-grid">${services.map((service) => `<article><h3>${service.title}</h3><dl>${rows.map(([term, key]) => `<div><dt class="note">${term}</dt><dd>${service.engagement[key]}</dd></div>`).join("")}</dl></article>`).join("")}</div><p class="lead engagement-terms">Length and fees depend on the work, so they are not published here. Ask about both in your first conversation.</p></section>`;
+  return `<section id="engagements" class="wrap band engagements" aria-labelledby="engagements-title">${sectionLabel("What an engagement looks like")}<h2 id="engagements-title" class="display">What working with us looks like.</h2><div class="engagement-grid">${services.map((service) => `<article><h3>${service.title}</h3><dl>${rows.map(([term, key]) => `<div><dt class="note">${term}</dt><dd>${service.engagement[key]}</dd></div>`).join("")}</dl></article>`).join("")}</div></section>`;
 }
 function servicesPage() {
   return (
     opening(
       "Services",
-      'Build capability.<br><span class="signal">Remove drag.</span>',
-      "We train teams, build custom skills, and automate repeatable work. Every engagement starts with the operating problem, not the technology.",
-      "<p>“Use free resources to learn. Bring us the workflow when it needs to work under pressure.”</p>",
+      'Training, skills and automations<br><span class="signal">for your real work.</span>',
+      "Explore five training tracks, six delivery formats and ongoing services. Start with a no-charge session or inquire about the work your team needs.",
+      `<p class="note page-aside-label">On this page</p><ul class="page-jumps"><li><a class="link" href="#tracks">Training tracks</a></li><li><a class="link" href="#formats">Delivery formats</a></li><li><a class="link" href="#beyond-training">Beyond training</a></li><li><a class="link" href="#start-free">Start free</a></li></ul>`,
     ) +
     engagementsBand() +
     audiencesSection() +
     servicesSection() +
-    `<section class="wrap band"><p class="note">Three pillars · From learning to leverage.</p><div class="boundary-grid"><article>${sectionLabel("Clear boundary")}<h2 class="display">Free shows the pattern.</h2><p>Our resources help you test the method and improve individual practice.</p><a class="link" href="${sitePath("resources/")}">Explore free resources&nbsp;→</a></article><article>${sectionLabel("Bespoke changes the system.")}<h2 class="display">Paid builds the advantage.</h2><p>Custom engagements encode your context, quality bar, controls, and workflows.</p><p>Discovery starts with the job to be done. Co-design uses your examples and review standards. Testing and failure-mode review identify where people must stay in control.</p></article></div></section>` +
+    catalogSections() +
     inquirySection()
   );
 }
@@ -149,7 +152,7 @@ function industryPage(key: keyof typeof industries) {
       d.intro,
       `<p class="page-stat">${d.aside}</p><h2 class="heading-h3">${d.asideTitle}</h2>${d.asideBody ? `<p>${d.asideBody}</p>` : ""}`,
     ) +
-    `<section class="band on-ink" data-ground="ink"><div class="wrap"><div class="section-head"><div>${sectionLabel("Where we work")}<h2 class="display">${d.heading}</h2></div><p class="lead">${d.context}</p></div><div class="industry-grid">${d.items.map(([t, b]) => `<article><h3>${t}</h3><p>${b}</p></article>`).join("")}</div></div></section>${founder ? founderBand(founder) : ""}<section class="wrap band content-split"><div>${sectionLabel("Built around your company")}<h2 class="display">Context in.<br>Judgment throughout.</h2><p>Built around your role, your industry, and your company—not a generic AI curriculum.</p><a class="link" href="${sitePath("services/")}">Workshops, Workflows & Automations&nbsp;→</a><a class="link" href="${sitePath("resources/#scorecard")}">Take the AI Readiness Scorecard&nbsp;→</a></div><div class="page-drawing">${schematicFigure(masterSchematic, "portrait")}</div></section>` +
+    `<section class="band on-ink" data-ground="ink"><div class="wrap"><div class="section-head"><div>${sectionLabel("Where we work")}<h2 class="display">${d.heading}</h2></div><p class="lead">${d.context}</p></div><div class="industry-grid">${d.items.map(([t, b]) => `<article><h3>${t}</h3><p>${b}</p></article>`).join("")}</div></div></section>${founder ? founderBand(founder) : ""}<section class="wrap band content-split"><div>${sectionLabel("Built around your company")}<h2 class="display">Context in.<br>Judgment throughout.</h2><p>Built around your role, your industry, and your company—not a generic AI curriculum.</p><a class="link" href="${sitePath("services/#tracks")}">Explore training tracks&nbsp;→</a><a class="link" href="${sitePath("resources/#scorecard")}">Take the AI Readiness Scorecard&nbsp;→</a></div><div class="page-drawing">${schematicFigure(masterSchematic, "portrait")}</div></section>` +
     inquirySection(d.cta, d.ctaBody)
   );
 }

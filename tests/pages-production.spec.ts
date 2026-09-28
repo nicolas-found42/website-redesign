@@ -99,3 +99,51 @@ test("prerendered content survives script failure and forms cannot submit accide
   ).toBeVisible();
   await context.close();
 });
+
+test("a phone without script can reach the complete homepage and catalog", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 390, height: 844 },
+  });
+  const page = await context.newPage();
+  await page.goto(base + "/");
+  const navigation = page.getByRole("navigation", { name: "Main navigation" });
+  await expect(navigation).toBeVisible();
+  await expect(
+    navigation.getByRole("link", { name: "Talk to us" }),
+  ).toHaveAttribute("href", "https://www.found42.com/contact");
+  await expect(
+    page.locator("#hero").getByRole("link", { name: "Talk to us" }),
+  ).toHaveAttribute("href", "https://www.found42.com/contact");
+  await expect(page.locator(".testimonial-card")).toHaveCount(5);
+  for (const card of await page.locator(".testimonial-card").all())
+    await expect(card).toBeVisible();
+  await navigation.getByRole("link", { name: "Services", exact: true }).click();
+  await expect(page).toHaveURL(base + "/services/");
+  await expect(page.locator("#tracks .track")).toHaveCount(5);
+  for (const section of [
+    "#tracks",
+    "#formats",
+    "#beyond-training",
+    "#start-free",
+    ".catalog-start",
+  ]) {
+    const inquiry = page
+      .locator(section)
+      .getByRole("link", { name: /Inquire about/ })
+      .first();
+    await expect(inquiry).toHaveAttribute(
+      "href",
+      "https://www.found42.com/contact",
+    );
+  }
+  await expect(page.locator("main button[data-dialog]")).toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await context.close();
+});

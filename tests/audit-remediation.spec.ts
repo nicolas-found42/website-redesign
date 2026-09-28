@@ -19,7 +19,7 @@ test("F01: a wheel over the inquiry dialog scrolls the dialog, not the page behi
   await page.setViewportSize({ width: 1280, height: 560 });
   await page.goto("/resources/");
   await page
-    .getByRole("button", { name: /Talk to us/ })
+    .getByRole("link", { name: /Talk to us/ })
     .first()
     .click();
   const dialog = page.getByRole("dialog");
@@ -53,9 +53,7 @@ test("F01: a wheel over the open mobile menu scrolls the menu, not the page", as
     .poll(() => nav.evaluate((el) => el.scrollTop))
     .toBeGreaterThan(0);
   expect(await page.evaluate(() => scrollY)).toBe(0);
-  await expect(
-    nav.getByRole("button", { name: /Talk to us/ }),
-  ).toBeInViewport();
+  await expect(nav.getByRole("link", { name: /Talk to us/ })).toBeInViewport();
   // The toggle sits above the panel, not inside it: a wheel there must not
   // move the page behind the menu either.
   const toggle = await page.locator(".menu-toggle").boundingBox();
@@ -72,7 +70,7 @@ test("F02, F06: the inquiry backdrop and focus dismissal still work", async ({
   page,
 }) => {
   await page.goto("/resources/");
-  const trigger = page.getByRole("button", { name: /Talk to our team/ });
+  const trigger = page.getByRole("link", { name: /Talk to our team/ });
   await trigger.click();
   const dialog = page.getByRole("dialog");
   // A click inside the dialog's own box never dismisses it…
@@ -89,7 +87,7 @@ test("F03, F17: the live inquiry handoff is accessible and honest", async ({
   page,
 }) => {
   await page.goto("/resources/");
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await page.getByRole("link", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText(
     "consultation inquiry, not reserving a meeting",
@@ -257,24 +255,28 @@ test("F08: executive scene annotations are not covered by the drawing", async ({
   }
 });
 
-test("F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule", async ({
+test("F10, F12: the resources column is centered, and industry grids draw one rule", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const grid = await box(page, ".resource-grid");
-  const foot = await box(page, ".resource-foot");
-  expect(Math.abs(foot.x - grid.x)).toBeLessThanOrEqual(1);
+  const resources = await box(page, ".resources");
+  const leftInset = grid.x - resources.x;
+  const rightInset = resources.x + resources.width - (grid.x + grid.width);
+  expect(Math.abs(leftInset - rightInset)).toBeLessThanOrEqual(1);
 
   await page.goto("/industries/private-equity/");
-  const head = await box(page, ".on-ink .section-head");
+  const industryHead = await box(page, ".on-ink .section-head");
   const industryGrid = await box(page, ".industry-grid");
   expect(
     await page
       .locator(".industry-grid")
       .evaluate((el) => getComputedStyle(el).borderTopWidth),
   ).toBe("0px");
-  expect(industryGrid.y - (head.y + head.height)).toBeLessThanOrEqual(72);
+  expect(
+    industryGrid.y - (industryHead.y + industryHead.height),
+  ).toBeLessThanOrEqual(72);
 });
 
 test("F15: page openings do not skip a heading level", async ({ page }) => {
