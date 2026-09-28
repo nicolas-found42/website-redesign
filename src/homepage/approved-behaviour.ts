@@ -1,6 +1,13 @@
 /** Homepage selectors only enhance content that is fully present in the HTML. */
-export function mountApprovedHomepage(root: HTMLElement) {
+import type { PageMotion } from "../motion-preference";
+import { mountFlows } from "./flow-behaviour";
+
+export function mountApprovedHomepage(
+  root: HTMLElement,
+  motionPreference: PageMotion,
+) {
   const homepage = root.querySelector<HTMLElement>(".approved-homepage")!;
+  const disposeFlows = mountFlows(root, motionPreference);
   const choices = [
     ...homepage.querySelectorAll<HTMLButtonElement>("[data-approved-service]"),
   ];
@@ -75,6 +82,7 @@ export function mountApprovedHomepage(root: HTMLElement) {
   homepage.addEventListener("click", onCarousel);
   track.addEventListener("keydown", onCarouselKey);
   return () => {
+    disposeFlows();
     homepage.removeEventListener("click", onService);
     homepage.removeEventListener("keydown", onServiceKey);
     homepage.removeEventListener("click", onCarousel);
