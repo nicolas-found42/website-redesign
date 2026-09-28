@@ -1,5 +1,3 @@
-import { sitePath } from "./paths";
-
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
   executiveCourse: "https://maven.com/richard-achee/four-hour-ai",

@@ -339,7 +339,7 @@ animate((progress) => pathEl.setAttribute("d", morph(progress)), {
 
 ## New dependencies to add (net 3)
 
-```
+```bash
 npm i lenis split-type @paper-design/shaders
 ```
 

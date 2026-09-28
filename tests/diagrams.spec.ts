@@ -336,13 +336,11 @@ test("nothing draws itself, runs along a line, or loops", async ({ page }) => {
     expect(animation.iterations).toBe(1);
   }
   // Nor is anything built to travel: no moving signal, no SMIL.
-  expect(
-    await page
-      .locator(
-        ".system-field :is(.signal, .route, animate, animateMotion, animateTransform)",
-      )
-      .count(),
-  ).toBe(0);
+  await expect(
+    page.locator(
+      ".system-field :is(.signal, .route, animate, animateMotion, animateTransform)",
+    ),
+  ).toHaveCount(0);
 });
 
 test("an assembled drawing rests exactly where a still one does", async ({

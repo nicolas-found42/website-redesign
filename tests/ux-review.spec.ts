@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 /**
@@ -136,7 +136,6 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
   for (const route of routes) {
     await page.goto(route);
     const opening = page.locator(".hero-copy, .page-opening > div").first();
-    const says = `${await opening.locator("h1").innerText()} ${await opening.locator(".lead").innerText()}`;
     const allOpeningText = await opening.innerText();
     const glosses = opening.getByText("Claude is Anthropic’s AI assistant.");
     if (allOpeningText.includes("Claude")) {
