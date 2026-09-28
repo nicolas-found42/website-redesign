@@ -25,7 +25,6 @@
 import { artFor } from "./art";
 import { drawingId, fieldHtml } from "./art/field";
 import type { Art, Orientation } from "./art/kit";
-import { destinationRegister } from "./content";
 import { sitePath } from "./paths";
 
 export type SceneOrientation = Orientation;
@@ -222,7 +221,8 @@ export const audiences: readonly Audience[] = [
   {
     id: "executives",
     choice: "C-level executives",
-    proposition: "Use AI in your decisions and operations.",
+    proposition:
+      "Bring the operating problem behind a decision or result. We shape an AI skill for it while your people stay responsible for the call.",
     kicker: "For C-level executives",
     title: "Use AI for your decisions,<br>teams and operations.",
     body: "Bring the operating problem behind a team, decision or business result. Found42 helps you shape a useful AI skill or workflow for that work, while your people remain responsible for the decision and its quality.",
@@ -234,11 +234,9 @@ export const audiences: readonly Audience[] = [
     caption:
       "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result.",
     link: {
-      label: "Explore the Four-Hour AI Executive on Maven",
-      href: destinationRegister.executiveCourse,
+      label: "For executives",
+      href: sitePath("services/#track-c-level-ai"),
     },
-    linkNote:
-      "Preview link, still being confirmed. The course page and its access terms are on Maven.",
     scene: {
       id: "executives",
       description:
@@ -249,7 +247,8 @@ export const audiences: readonly Audience[] = [
   {
     id: "contributors",
     choice: "Individual contributors",
-    proposition: "Skills specific to your role.",
+    proposition:
+      "Training built around your role, industry and company, so skills take on recurring work and free you for judgment.",
     kicker: "For individual contributors",
     title: "Automate the repetitive,<br>keep the craft.",
     body: "Training is built around your role, industry and company: your recurring decisions, documents, terminology and review standards. Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop.",
@@ -261,8 +260,8 @@ export const audiences: readonly Audience[] = [
     caption:
       "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality.",
     link: {
-      label: "Explore tailored training",
-      href: sitePath("services/#service-training"),
+      label: "For individual contributors",
+      href: sitePath("services/#track-role-based"),
     },
     scene: {
       id: "contributors",
@@ -274,7 +273,8 @@ export const audiences: readonly Audience[] = [
   {
     id: "builders",
     choice: "AI builders",
-    proposition: "Build workflows your team uses.",
+    proposition:
+      "No engineering background needed. Learn to test, troubleshoot and anticipate failure modes in workflows your team relies on.",
     kicker: "For AI builders",
     title: "Build for your team,<br>no engineering background.",
     body: "You do not need to be an engineer to build AI automations for colleagues and teams. Learn product-engineering principles: testing, troubleshooting and anticipating failure modes, with people reviewing the work.",
@@ -286,9 +286,9 @@ export const audiences: readonly Audience[] = [
     caption:
       "From a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step.",
     link: {
-      label: "Ask about AI builder support",
+      label: "For AI builders",
+      href: sitePath("services/#track-ai-builders"),
     },
-    linkNote: "Interim path: no verified AI Builder course is published.",
     scene: {
       id: "builders",
       description:

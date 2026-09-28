@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { renderHomepage } from "../src/homepage";
 import { renderPage } from "../src/pages";
-import { resources, scorecard, services, testimonials } from "../src/content";
+import { resources, scorecard, services } from "../src/content";
+import { homepageTestimonials } from "../src/homepage/testimonials";
 import {
   readinessResult,
   scorecardQuestions,
@@ -41,9 +42,10 @@ test("source offerings and attributed workshop proof are preserved", () => {
     expect(page).toContain(item.description);
     for (const detail of item.details) expect(page).toContain(detail);
   }
-  for (const item of testimonials) {
+  for (const item of homepageTestimonials) {
     expect(page).toContain(item.quote);
-    expect(page).toContain(item.label);
+    expect(page).toContain(item.name);
+    expect(page).toContain(item.role);
   }
   expect(page).not.toMatch(/8 hours saved weekly|eight hours is a target/i);
   expect(page).not.toContain("measurable results");
@@ -158,8 +160,10 @@ test("the September 23 content delta is handled honestly rather than preserved v
   expect(home).not.toContain("Three audiences. One method.");
   expect(home).not.toContain("The work changes by role. The method does not:");
   expect(home).not.toContain("Target: 8 hours saved weekly, per person");
-  expect(home).toContain("Who Found42 helps");
-  expect(home).toContain("Use AI for your decisions");
+  expect(home).toContain("Find the work that sounds like yours");
+  expect(home).toContain(
+    "Bring the operating problem behind a decision or result",
+  );
   expect(home).toContain(
     "Train teams. Build useful skills. Automate the work.",
   );

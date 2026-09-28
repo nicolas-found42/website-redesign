@@ -1,0 +1,168 @@
+/* ── The service catalog ── */
+.catalog-band,
+.track,
+.start-free {
+  scroll-margin-top: calc(var(--header-height, 72px) + 16px);
+}
+.page-jumps {
+  display: grid;
+  gap: 2px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* One track per card keeps the longer curriculum and inquiry together. */
+.track-list {
+  display: grid;
+  gap: 18px;
+}
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: 20px clamp(24px, 5vw, 72px);
+  padding: clamp(24px, 3vw, 44px);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--red);
+  background: #fff;
+}
+.track h3 {
+  max-width: 14ch;
+  font-size: var(--size-h3);
+}
+.track-format {
+  margin: 12px 0 0;
+  font-size: var(--size-small);
+  color: var(--muted);
+}
+.track-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  max-width: 62ch;
+}
+.track-body p {
+  margin: 0;
+}
+.track-term {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--size-note);
+  font-weight: 650;
+  color: var(--muted);
+}
+.track-audience {
+  font-size: var(--size-lead);
+  line-height: 1.35;
+}
+.track .scope-list {
+  margin: 0;
+}
+.catalog-industries {
+  padding-top: 24px;
+  margin-top: clamp(32px, 4vw, 56px);
+  border-top: 1px solid var(--line);
+}
+
+.catalog-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.catalog-option {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.catalog-option h3 {
+  font: 500 var(--size-h3)/1.15 var(--font-display);
+}
+.catalog-option-mode,
+.catalog-option .note--plain {
+  margin-top: 8px;
+  color: var(--muted);
+}
+.catalog-option-body {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+.catalog-option-body p {
+  max-width: 54ch;
+}
+.catalog-option-body .link {
+  align-self: end;
+  margin-top: 10px;
+}
+.catalog-biography {
+  display: grid;
+  grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr);
+  align-items: start;
+  gap: clamp(32px, 6vw, 88px);
+}
+.catalog-biography .portrait {
+  max-width: 380px;
+}
+.catalog-biography p {
+  max-width: 62ch;
+  margin-block: 20px;
+}
+.catalog-start {
+  border-top: 1px solid var(--line);
+}
+.catalog-start .lead {
+  max-width: 62ch;
+  margin-block: 24px 32px;
+}
+
+/* The free sessions sit on the warm ground: the one band that costs nothing. */
+.start-free {
+  background: var(--paper-warm);
+}
+.start-free .section-head {
+  border-bottom-color: var(--line-strong);
+}
+.free-sessions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 72px);
+  margin-bottom: clamp(32px, 4vw, 48px);
+}
+.free-sessions h3 {
+  max-width: 18ch;
+  font-size: var(--size-h3);
+}
+.free-sessions p {
+  max-width: 44ch;
+  margin: 10px 0 0;
+}
+.catalog-quotes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 48px);
+  margin-bottom: 32px;
+}
+
+@media (max-width: 960px) {
+  .catalog-quotes {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 860px) {
+  .track,
+  .catalog-biography {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .catalog-options {
+    grid-template-columns: 1fr;
+  }
+  .free-sessions {
+    grid-template-columns: 1fr;
+  }
+}

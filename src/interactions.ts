@@ -66,7 +66,7 @@ const liveInquiry = destinationRegister.liveInquiry;
 /** The live form's own interest labels, kept separate from published service names. */
 const inquiryContext = (context: InquiryContext) => {
   const entry = inquiryInterests[context];
-  return `Choose ${entry.form} in the live form. Add “${entry.carry}” to your message so Found42 knows what to discuss.`;
+  return `${entry.form ? `Choose ${entry.form} in the live form. ` : ""}Add “${entry.carry}” to your message so Found42 knows what to discuss.`;
 };
 
 /** Makes a visitor's own words safe to show as text inside markup. */
@@ -166,12 +166,15 @@ export function mountInteractions(root: HTMLElement) {
     const service = from.dataset.service ?? "";
     const interest = from.dataset.interest ?? "";
     const contact = from.dataset.contact as InquiryContext | undefined;
-    const context = contact && contact in inquiryInterests
-      ? inquiryContext(contact)
-      : undefined;
+    const context =
+      contact && contact in inquiryInterests
+        ? inquiryContext(contact)
+        : undefined;
     dialog.dataset.type = type;
     dialog.dataset.interest = interest;
-    const carriedAnswer = escapeText(dialog.dataset.scorecardAnswer?.trim() ?? "");
+    const carriedAnswer = escapeText(
+      dialog.dataset.scorecardAnswer?.trim() ?? "",
+    );
     const carried = carriedAnswer
       ? `<div class="inquiry-draft"><p class="note">From your readiness check</p><p>${carriedAnswer}</p></div>`
       : "";
@@ -233,7 +236,7 @@ export function mountInteractions(root: HTMLElement) {
     "click",
     (event) => {
       const target = (event.target as HTMLElement).closest<HTMLElement>(
-        "button",
+        "button, a[data-dialog]",
       );
       if (!target) return;
       if (target.hasAttribute("data-scorecard-answer")) {
@@ -265,6 +268,18 @@ export function mountInteractions(root: HTMLElement) {
         answers = [];
         renderAssessment(true);
       } else if (target.dataset.dialog) {
+        // A real contact link remains usable in the prerendered page when
+        // scripts are unavailable. Ordinary clicks get the contextual handoff.
+        if (
+          target instanceof HTMLAnchorElement &&
+          (event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey ||
+            event.button !== 0)
+        )
+          return;
+        event.preventDefault();
         // The scorecard's open answer is local-only, so it is offered as text
         // the visitor can carry to the live form rather than prefilled here.
         if (target.hasAttribute("data-scorecard-prefill") && openAnswer)
