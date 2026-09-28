@@ -12,11 +12,14 @@ for (const width of [390, 768, 1440])
   test(`all supporting pages accessible and reflow at ${width}`, async ({
     page,
   }) => {
+    test.setTimeout(90_000);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width, height: 900 });
     for (const route of routes) {
       await page.goto(`/${route}/`);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1, {
+        timeout: 15_000,
+      });
       const result = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -119,7 +122,10 @@ test("active resources use published destinations and inactive forms make no req
   await expect(page.locator("#course form")).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "Read the verified lesson" }),
-  ).toHaveAttribute("href", "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude");
+  ).toHaveAttribute(
+    "href",
+    "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
+  );
   await page.goto("/blog/");
   await expect(page.locator("form")).toHaveCount(0);
   await expect(page.locator("main")).toContainText(

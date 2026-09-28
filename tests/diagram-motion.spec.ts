@@ -32,6 +32,8 @@ test("the homepage diagrams can be explored and progress while in view", async (
   await hero.locator("button.ah-flow-step").nth(2).focus();
   await page.keyboard.press("ArrowLeft");
   await expect(hero).toHaveAttribute("data-active-step", "1");
+  await hero.locator("button.ah-flow-step").first().locator("svg").click();
+  await expect(hero).toHaveAttribute("data-active-step", "0");
 
   const audience = flows.nth(1);
   await audience.scrollIntoViewIfNeeded();
@@ -59,13 +61,50 @@ test("pause and reduced motion stop automatic diagram progression", async ({
   await page.goto("/");
   const hero = page.locator(".ah-system .ah-flow");
   await expect(hero).toHaveAttribute("data-active-step", /[0-2]/);
+  await expect(hero).toHaveAttribute("data-motion", "running");
+  await expect
+    .poll(() =>
+      hero
+        .locator('.ah-flow-step[data-state="active"] svg')
+        .evaluate((element) => getComputedStyle(element).animationName),
+    )
+    .toBe("ah-paper-stamp");
+  await page.locator(".ah-closing").scrollIntoViewIfNeeded();
+  await expect(hero).toHaveAttribute("data-motion", "idle");
+  await expect
+    .poll(() =>
+      hero
+        .locator(".ah-flow-step--end svg")
+        .evaluate((element) => getComputedStyle(element).animationName),
+    )
+    .toBe("none");
+  await hero.scrollIntoViewIfNeeded();
+  await expect(hero).toHaveAttribute("data-motion", "running");
   await page.getByRole("button", { name: "Pause motion" }).click();
   await expect(hero).toHaveAttribute("data-motion", "paused");
   await expect(hero).toHaveAttribute("data-active-step", "2");
+  const glyph = hero.locator(".ah-flow-step--end svg");
+  await expect
+    .poll(() =>
+      glyph.evaluate((element) => getComputedStyle(element).animationName),
+    )
+    .toBe("none");
+  await expect
+    .poll(() =>
+      hero
+        .locator(".ah-flow-step--end")
+        .evaluate((element) => getComputedStyle(element).transitionDuration),
+    )
+    .toBe("0s");
 
   await page.getByRole("button", { name: "Resume motion" }).click();
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(hero).toHaveAttribute("data-motion", "paused");
+  await expect
+    .poll(() =>
+      glyph.evaluate((element) => getComputedStyle(element).animationName),
+    )
+    .toBe("none");
 });
 
 test("without JavaScript the diagrams retain their complete still content", async ({
