@@ -11,8 +11,12 @@ concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  verify:
+  browser-tests:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,22 +26,32 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run typecheck
-      - run: npm test -- --workers=4
+      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-failure-${{ github.run_id }}
+          name: playwright-failure-${{ github.run_id }}-${{ matrix.shard }}
           path: |
             test-results/
             playwright-report/
           if-no-files-found: ignore
           retention-days: 7
       - run: npm run build
+        if: github.ref == 'refs/heads/main' && matrix.shard == 1
       - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && matrix.shard == 1
         with:
           path: dist
+  verify:
+    if: ${{ always() }}
+    needs: browser-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every browser shard to pass
+        env:
+          SHARD_RESULT: ${{ needs.browser-tests.result }}
+        run: test "$SHARD_RESULT" = success
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: verify
