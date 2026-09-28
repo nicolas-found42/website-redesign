@@ -1,5 +1,8 @@
+import { sitePath } from "./paths";
+
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
+  executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
   strategicAdvisorLesson:
     "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
   toolkit: "https://www.found42.com/toolkit",
@@ -113,16 +116,7 @@ export const inquiryInterests = {
   workshops: { form: "Training", carry: "Workshops" },
   workflows: { form: "Automation", carry: "Workflows" },
   automations: { form: "Automation", carry: "Automations" },
-  "c-level-ai": { form: "Training", carry: "the C-Level AI track" },
-  analysts: { form: "Training", carry: "the Analysts track" },
-  "gtm-teams": { form: "Training", carry: "the GTM Teams track" },
-  "ai-builders": { form: "Training", carry: "the AI Builders track" },
-  "role-based": { form: "Training", carry: "Customized Role-Based Training" },
-  "free-session": { form: "Training", carry: "a free 30-minute session" },
-  "custom-build": { form: "Automation", carry: "Custom build" },
-  "advisory-retainer": { form: null, carry: "Advisory retainer" },
-  "advisory-facilitation": { form: null, carry: "Advisory facilitation" },
-  "annual-program": { form: null, carry: "Annual program" },
+  "ai-builder-support": { form: "Automation", carry: "AI builder support" },
 } as const;
 
 export type InquiryContext = keyof typeof inquiryInterests;
@@ -210,181 +204,6 @@ export const testimonials = [
     label: "Carmen Paredes Ramirez · Founder & CEO of Ruruka and Maraja",
   },
 ];
-/**
- * The public service catalog: five training curricula, their delivery formats,
- * further services and no-charge entry sessions. The private proposal's paid
- * terms and client-specific language do not belong in this register.
- */
-export const serviceCatalog = {
-  tracks: [
-    {
-      id: "c-level-ai",
-      name: "C-Level AI",
-      audience: "C-level executives, owners, partners and principals.",
-      assets: [
-        "A personalized Chief of Staff Claude plugin",
-        "Skills including a Daily Briefing, Executive Coaching, Meeting Killer and Automated Meeting Follow-Up",
-      ],
-      format: "Virtual or in person",
-    },
-    {
-      id: "analysts",
-      name: "Analysts",
-      audience: "Deal teams, FP&amp;A, research and financial analysts.",
-      assets: [
-        "Role-specific Claude Skills and plugins that automate key analyst work: CIM-to-deal memo, portfolio scrubbing, pitch narratives, and deck generation that follows strict presentation templates",
-        "Practice with deal documents and the team’s presentation standards",
-      ],
-      format: "Virtual or in person",
-    },
-    {
-      id: "gtm-teams",
-      name: "GTM Teams",
-      audience:
-        "Sales, business development, marketing and revenue operations.",
-      assets: [
-        "A personalized set of 10 role-specific Claude Skills and plugins for lead generation, account-based marketing (ABM), contact enrichment and pipeline analysis",
-        "A library of more than 200 GTM Skill templates",
-      ],
-      format: "Virtual or in person",
-    },
-    {
-      id: "ai-builders",
-      name: "AI Builders",
-      audience:
-        "Designated AI champions and advanced users who are not engineers. The track takes them from using AI to building it.",
-      assets: [
-        "Personalized Claude Skills and automations to build, deploy and maintain AI agents inside your organization",
-        "Train-the-trainer content",
-        "A library of Claude Skills and Claude Code automations: Meeting Debrief Coach, Weekly AI Wins Capture Agent and Competitive Intelligence Digest",
-        "A Chief of Staff toolkit: Daily Briefing, Weekly Briefing and Post-Meeting Automations",
-        "Failure mode training, live debugging sessions and engineering best practices for builders who are not engineers",
-      ],
-      format: "Virtual or hybrid: in person, virtual and on demand",
-    },
-    {
-      id: "role-based",
-      name: "Customized Role-Based Training",
-      audience: "Any function the other tracks don’t cover.",
-      assets: [
-        "A personalized set of 10 role-specific Claude Skills and plugins tailored to the job function",
-      ],
-      format: "Virtual or in person",
-    },
-  ],
-  formats: [
-    {
-      name: "Open enrollment",
-      mode: "Virtual",
-      detail:
-        "A public cohort with a mixed audience from several companies, for the standard tracks: C-Level AI, GTM Teams and AI Builders.",
-      terms: "Minimum 10 seats",
-    },
-    {
-      name: "Private cohort",
-      mode: "Virtual",
-      detail:
-        "A dedicated half-day session for one company or a group of companies.",
-      terms: "Up to 20 seats",
-    },
-    {
-      name: "Private workshop",
-      mode: "In person",
-      detail:
-        "A hands-on half or full day on site. Time, materials and travel are included.",
-      terms: "Up to 25 seats",
-    },
-    {
-      name: "Function clinic",
-      mode: "Virtual",
-      detail: "A focused 90-minute session on a single function.",
-      terms: "Up to 20 people",
-    },
-    {
-      name: "Executive 1:1",
-      mode: "Virtual",
-      detail:
-        "Six weeks, one to one, building a customized AI system inside the executive’s own inbox, calendar and tools, with personalized training.",
-      terms: "One executive, six weeks",
-    },
-    {
-      name: "Custom role-based program",
-      mode: "Virtual",
-      detail:
-        "Discovery, findings, clinics and automation builds for one or more functions the tracks don’t cover.",
-      terms: "Scoped to the work",
-    },
-  ],
-  beyondTraining: [
-    {
-      id: "custom-build",
-      name: "Custom build",
-      detail:
-        "A durable set of customized assets, such as multi-skill plugins, automation workflows and build guides, that your team keeps using after training.",
-      terms: "Built around the team’s workflow and review standards",
-    },
-    {
-      id: "advisory-retainer",
-      name: "Advisory retainer",
-      detail:
-        "A standing monthly relationship with the group that governs AI across your company or portfolio.",
-      terms: "Monthly relationship, with a three-month minimum",
-    },
-    {
-      id: "advisory-facilitation",
-      name: "Advisory facilitation",
-      mode: "Virtual or in person",
-      detail:
-        "One half-day or full-day working session that produces a governance policy grid and an enablement plan.",
-      terms: "One half-day or full-day session",
-    },
-    {
-      id: "annual-program",
-      name: "Annual program",
-      detail:
-        "A customized bundle of virtual or in-person cohorts, builds and advisory across a year, for a company or a portfolio.",
-      terms: "Across a year, shaped around the organization’s needs",
-    },
-  ],
-  freeSessions: [
-    {
-      name: "Claude as a Strategic Advisor",
-      outcome:
-        "A configured strategic advisor, demonstrated live on an M&amp;A case study.",
-    },
-    {
-      name: "Claude for High-Stakes Communications",
-      outcome:
-        "A reusable review pattern for email: tone, risks and revisions.",
-    },
-  ],
-  quotes: [
-    {
-      quote:
-        "Richard’s C-Level AI workshop went beyond theory. It helped me turn ChatGPT into a trusted advisor in less than an hour.",
-      name: "Andrew Miller",
-      role: "Former co-founder and CEO, Cameyo (acquired by Google)",
-    },
-    {
-      quote:
-        "C-Level AI is a completely unique approach that cuts through the AI hype.",
-      name: "Robb Henshaw",
-      role: "CMO, Edgescale AI",
-    },
-    {
-      quote:
-        "What stood out in the C-Level AI workshop was how practical it was. The exercises turned AI from concept to execution.",
-      name: "Paul Keely",
-      role: "Co-founder and managing director, Palladium Security",
-    },
-  ],
-} as const;
-/** Founder account supplied with the catalog, adapted for a public reader. */
-export const catalogBiography = [
-  "Richard Achée spent over 15 years at Google in business development across Enterprise, Education and Infrastructure. He founded Found42 to bring operator discipline to AI adoption for business leaders and their teams.",
-  "He also serves as Head of Partnerships at Edgescale AI, where he works on AI in edge infrastructure, and founded BreakBeatCode, a nonprofit that has taught coding through music to more than 56,000 students in 51 countries.",
-  "Richard has advised founders through three company exits since 2020. He brings an educator’s voice to each engagement: clear, direct and built around what the team needs to change in its work.",
-] as const;
 export const questions = [
   {
     text: "How repeatable is the work you want to improve?",
@@ -480,8 +299,8 @@ export const scorecard = {
       advice:
         "Agree which AI tools are approved, and give the people who will use them practice on their own work.",
       link: {
-        label: "See the training tracks",
-        href: "services/#tracks",
+        label: "See how workshops work",
+        href: "services/#service-training",
       },
     },
     {

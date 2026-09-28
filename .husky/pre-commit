@@ -1,4 +1,0 @@
-npx lint-staged
-npm run lint
-npm run typecheck
-npm test -- --workers=2

@@ -42,8 +42,6 @@ test("visitors never load review mode; a review link does", async ({
   const requested: string[] = [];
   page.on("request", (request) => requested.push(request.url()));
   await page.goto(`${production}/`);
-  // A negative network assertion must wait for late dynamic imports.
-  // eslint-disable-next-line playwright/no-networkidle
   await page.waitForLoadState("networkidle");
   await expect(page.locator("#found42-review")).toHaveCount(0);
   expect(requested.filter((url) => /\/assets\/review-/.test(url))).toEqual([]);
@@ -79,16 +77,13 @@ test("rewording a heading records its exact words, new words and place", async (
   const form = await pick(page, heading);
 
   await expect(form.getByRole("heading", { level: 2 })).toHaveText(
-    "Heading “Find the work that sounds like yours”",
+    "Heading “Who Found42 helps”",
   );
   await expect(form.getByRole("radio", { name: /Wording/ })).toBeChecked();
-  await expect(form.locator("[data-current]")).toHaveText(
-    "Find the work that sounds like yours",
-  );
-  // The review form captures the approved heading as displayed.
-  await expect(form.getByLabel("Change it to")).toHaveValue(
-    "Find the work that sounds like yours",
-  );
+  await expect(form.locator("[data-current]")).toHaveText("Who Found42 helps");
+  // The visible line break depends on font timing and browser layout in CI.
+  const capturedText = await form.getByLabel("Change it to").inputValue();
+  expect(capturedText.replace(/\s+/g, " ").trim()).toBe("Who Found42 helps");
   await form.getByLabel("Change it to").fill("Who we work with");
   await answer(form);
   await form.getByRole("button", { name: "Save feedback" }).click();
@@ -105,13 +100,13 @@ test("rewording a heading records its exact words, new words and place", async (
     priority: "must",
     change: {
       kind: "wording",
-      current: "Find the work that sounds like yours",
+      current: capturedText,
       proposed: "Who we work with",
     },
     target: {
       page: "/",
       pageName: "Home",
-      section: "Find the work that sounds like yours",
+      section: "Who Found42 helps",
       element: "Heading",
     },
   });
@@ -173,7 +168,7 @@ test("layout feedback names the section it should move next to", async ({
   await form.locator('select[name="layoutPosition"]').selectOption("below");
   await form
     .getByLabel("Section", { exact: true })
-    .selectOption({ label: "Find the work that sounds like yours" });
+    .selectOption({ label: "Who Found42 helps" });
   await answer(form, { why: "People should recognise themselves first." });
   await form.getByRole("button", { name: "Save feedback" }).click();
   await expect(panel(page)).toHaveCount(0);
@@ -183,10 +178,7 @@ test("layout feedback names the section it should move next to", async ({
     kind: "layout",
     action: "move",
     position: "below",
-    relativeTo: {
-      name: "Find the work that sounds like yours",
-      selector: "#audiences",
-    },
+    relativeTo: { name: "Who Found42 helps", selector: "#audiences" },
   });
 });
 

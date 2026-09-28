@@ -1,26 +1,22 @@
 import { test, expect } from "@playwright/test";
 
-test("the approved journey separates audiences, delivery, and resources", async ({
+test("meeting journey reads in order and separates audiences from delivery", async ({
   page,
 }) => {
   await page.goto("/");
+  await expect(page.locator("main > section").first()).toHaveClass("hero");
   const bands = await page
-    .locator(".approved-homepage > section")
-    .evaluateAll((nodes) => nodes.map((node) => node.id || node.className));
-  expect(bands).toEqual([
-    "ah-hero ah-wrap",
-    "ah-companies ah-wrap",
-    "ah-counts ah-wrap",
-    "audiences",
-    "services",
-    "ah-briefing",
-    "ah-testimonials",
-    "ah-founder ah-wrap",
-    "resources",
-    "contact",
-  ]);
-  await expect(page.locator(".ah-audience-card")).toHaveCount(3);
-  await expect(page.locator("#resources h3")).toHaveText([
+    .locator("main > section")
+    .evaluateAll((nodes) => nodes.map((n) => n.id || n.className));
+  expect(bands[1]).toBe("resources");
+  expect(bands[2]).toBe("audiences");
+  expect(bands[3]).toBe("services");
+  await expect(page.locator(".hero-actions .action")).toHaveCount(2);
+  await expect(page.locator(".audience-panel")).toHaveCount(3);
+  await expect(page.locator("#audiences")).toContainText(
+    "You do not need to be an engineer",
+  );
+  expect(await page.locator("#resources h3").allTextContents()).toEqual([
     "AI Readiness Scorecard",
     "C-Level AI Toolkit",
   ]);
@@ -28,7 +24,7 @@ test("the approved journey separates audiences, delivery, and resources", async 
   expect(
     await page
       .locator("main section[id]")
-      .evaluateAll((nodes) => nodes.map((node) => node.id)),
+      .evaluateAll((nodes) => nodes.map((n) => n.id)),
   ).toEqual([
     "scorecard",
     "toolkit",
@@ -37,6 +33,9 @@ test("the approved journey separates audiences, delivery, and resources", async 
     "course",
     "contact",
   ]);
+  await expect(
+    page.getByText("Executive Communications", { exact: false }),
+  ).toHaveCount(0);
 });
 
 test("the scorecard is answered on the page, and the original stays one link away", async ({

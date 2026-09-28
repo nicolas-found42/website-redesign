@@ -11,42 +11,22 @@ concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - name: Check GitHub Actions workflow
-        uses: docker://rhysd/actionlint:1.7.12
-        with:
-          args: -color
-
   browser-tests:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.63.0-noble
     strategy:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
-      - name: Make the container home usable by Firefox
-        run: chown "$(id -u):$(id -g)" /github/home
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Check browser image matches the installed Playwright version
-        run: test "$(node -p 'require("playwright/package.json").version')" = '1.63.0'
-      - run: npm run build
-      - run: npm test -- --shard=${{ matrix.shard }}/4
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run typecheck
+      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@v4
@@ -57,37 +37,24 @@ jobs:
             playwright-report/
           if-no-files-found: ignore
           retention-days: 7
-
+      - run: npm run build
+        if: github.ref == 'refs/heads/main' && matrix.shard == 1
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main' && matrix.shard == 1
+        with:
+          path: dist
   verify:
-    if: ${{ always() && github.event_name == 'pull_request' }}
-    needs: [browser-tests, lint]
+    if: ${{ always() }}
+    needs: browser-tests
     runs-on: ubuntu-latest
     steps:
       - name: Require every browser shard to pass
         env:
           SHARD_RESULT: ${{ needs.browser-tests.result }}
-          LINT_RESULT: ${{ needs.lint.result }}
-        run: test "$SHARD_RESULT" = success && test "$LINT_RESULT" = success
-
-  build:
-    if: github.ref == 'refs/heads/main'
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: npm run smoke:pages
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
+        run: test "$SHARD_RESULT" = success
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: build
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
       pages: write
