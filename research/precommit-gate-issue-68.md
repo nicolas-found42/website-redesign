@@ -16,16 +16,19 @@ server. No port listener was present for its measurements.
 
 ## Before: original hook
 
-| Staged set  | Formatting | Full lint | Typecheck | Browser suite |     Total | Result                                                |
-| ----------- | ---------: | --------: | --------: | ------------: | --------: | ----------------------------------------------------- |
-| Docs only   |    ~0.94 s |   ~3.06 s |   ~0.68 s |     ~213.45 s | 218.117 s | Failed: 315 passed, two WebKit drawing-state failures |
-| Source only |    ~0.59 s |   ~3.01 s |   ~0.68 s |     ~231.83 s | 236.108 s | Failed: same two WebKit failures, 315 passed          |
+| Staged set  | Run | Formatting | Full lint | Typecheck | Browser suite |     Total | Result                                                |
+| ----------- | --: | ---------: | --------: | --------: | ------------: | --------: | ----------------------------------------------------- |
+| Docs only   |   1 |    ~0.94 s |   ~3.06 s |   ~0.68 s |     ~213.45 s | 218.117 s | Failed: 315 passed, two WebKit drawing-state failures |
+| Docs only   |   2 |    ~0.43 s |   ~2.19 s |   ~0.48 s |     ~192.99 s | 196.092 s | Failed: 316 passed, one of the same WebKit failures   |
+| Source only |   1 |    ~0.59 s |   ~3.01 s |   ~0.68 s |     ~231.83 s | 236.108 s | Failed: 315 passed, two WebKit failures               |
+| Source only |   2 |    ~0.48 s |   ~2.52 s |   ~0.51 s |     ~220.01 s | 223.515 s | Failed: 315 passed, same two WebKit failures          |
 
 The command times are approximate boundaries from the first npm command banner
 in the timestamped hook output. The totals are wall-clock measurements. These
 failed runs are not passing-suite baselines and do not establish a measured
-speedup. There was one baseline run per staged set, so no within-set baseline
-variation is available. Both runs launched all 317 tests.
+speedup. The two docs runs ranged from 196.092 to 218.117 seconds (22.025
+seconds apart); the two source runs ranged from 223.515 to 236.108 seconds
+(12.593 seconds apart). All four runs launched all 317 tests.
 
 ## After: staged-file gate
 
@@ -63,3 +66,11 @@ report. A final local `npm test -- --workers=2` run exercised all 317 tests:
 before-change baselines (`tests/system.spec.ts:78` and `:103`). The hook change
 does not affect Playwright configuration, site code, or those tests. A passing
 local full-suite result remains unverified.
+
+## Controlled CI failure
+
+On draft PR #71, a temporary test with `expect(1).toBe(2)` was committed and
+pushed as `f621b82`. [The CI run](https://github.com/nicolas-found42/website-redesign/actions/runs/36493731044)
+passed lint, reported that exact failure in the Chromium, Firefox, and WebKit
+browser shards, and failed the required `verify` job. The deliberate test was
+then removed in revert commit `5d54244`; it is absent from the final diff.
