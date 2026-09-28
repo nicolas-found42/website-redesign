@@ -21,8 +21,8 @@ const resourceLink = (resource: PublicResource) => {
 const resourceCard = (resource: PublicResource) => `
   <article class="resource" data-reveal>
    <h3>${resource.title}</h3>
-   <p class="body">${resource.description}</p>
-   <p class="note--plain access">${resource.gate}</p>
+   <p class="body">${resource.id === "scorecard" ? "Assess your AI use, data practices and workflow readiness before deciding where to focus." : "Workshop video, slides, practice cases and custom GPT links built for executive AI practice."}</p>
+   <p class="note--plain access">${resource.id === "scorecard" ? "12 yes-or-no questions · No email required" : "Public page · Some links need a ChatGPT account"}</p>
    ${resourceLink(resource)}
   </article>`;
 
@@ -33,10 +33,9 @@ const resourceCard = (resource: PublicResource) => `
 export function resourcesSection() {
   return `<section id="resources" class="band wrap resources" aria-labelledby="resources-title">
  <div class="section-head">
-  <div><p class="note section-label">Free resources</p><h2 id="resources-title" class="display" data-reveal-lines>Start Here</h2></div>
-  <p class="lead" data-reveal>Choose a useful first step. Take the readiness check on this site, or explore the public C-Level AI workshop materials.</p>
+  <div><p class="note section-label">Free resources</p><h2 id="resources-title" class="display" data-reveal-lines>Not ready to talk? Start here</h2></div>
+  <a class="link" href="${sitePath("resources/")}">All free resources ${arrow}</a>
  </div>
  <div class="resource-grid resource-grid--preview">${preview.map(resourceCard).join("")}</div>
- <div class="resource-foot"><a class="action action--ghost" href="${sitePath("resources/")}">Explore all free resources ${arrow}</a></div>
 </section>`;
 }

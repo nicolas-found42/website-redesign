@@ -139,7 +139,7 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
   const start = page.locator("#resources");
   await expect(start).toContainText("C-Level AI Toolkit");
   await expect(start).toContainText(
-    "Public page · Some custom GPT links require a ChatGPT account.",
+    "Public page · Some links need a ChatGPT account",
   );
   const choice = page.getByRole("button", { name: "Workflows", exact: true });
   await choice.click();

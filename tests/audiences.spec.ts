@@ -8,19 +8,19 @@ import { readField } from "./drawing";
  * three audiences a visitor can discover and choose with a pointer, a touch or
  * a keyboard; copy, drawing, control state and link that agree with each other;
  * three genuinely different drawings; a complete still picture under reduced
- * motion or a pause; and all three panels readable without a script.
+ * motion; and all three panels readable without a script.
  */
 
 const names = [/C-level executives/, /Individual contributors/, /AI builders/];
 const kickers = [
-  "For C-level executives",
-  "For individual contributors",
-  "For AI builders",
+  "C-level executives",
+  "Individual contributors",
+  "AI builders",
 ];
 const links = [
-  ["Explore the Four-Hour AI Executive on Maven", /^https:\/\/maven\.com\//],
-  ["Explore tailored training", /services\/#service-training$/],
-  ["Ask about AI builder support", null],
+  ["For executives", /services\/#track-c-level-ai$/],
+  ["For individual contributors", /services\/#track-role-based$/],
+  ["For AI builders", /services\/#track-ai-builders$/],
 ] as const;
 const drawings = [
   /Executive illustration:/,
@@ -34,7 +34,7 @@ const shown = (page: Page) =>
     const panel = document.querySelector(".audience-panel:not([hidden])")!;
     const field = panel.querySelector(".scene-field")!;
     return {
-      kicker: panel.querySelector(".audience-kicker")?.textContent?.trim(),
+      kicker: panel.querySelector(".audience-scene-title")?.textContent?.trim(),
       describedBy: field.getAttribute("aria-label"),
       pressed: [...document.querySelectorAll("[data-audience]")].map((el) =>
         el.getAttribute("aria-pressed"),
@@ -67,11 +67,15 @@ test("a visitor can discover and choose all three audiences, and everything agre
     await rail.getByRole("button", { name }).click();
     const panel = page.locator(".audience-panel:not([hidden])");
     await expect(panel).toHaveCount(1);
-    await expect(panel.locator(".audience-kicker")).toHaveText(kickers[index]);
+    await expect(panel.locator(".audience-scene-title")).toHaveText(
+      kickers[index],
+    );
     await expect(panel.getByRole("img")).toHaveAccessibleName(drawings[index]);
-    const cta = panel.locator(":is(a, button)", { hasText: links[index][0] });
-    if (links[index][1])
-      await expect(cta).toHaveAttribute("href", links[index][1]);
+    const cta = page
+      .locator(".audience-card")
+      .nth(index)
+      .getByRole("link", { name: links[index][0] });
+    await expect(cta).toHaveAttribute("href", links[index][1]);
     await expect(rail.getByRole("button", { name })).toHaveAttribute(
       "aria-pressed",
       "true",
@@ -90,7 +94,7 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   const previous = page.getByRole("button", { name: "Previous audience" });
   await next.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    /Automate the repetitive,\s*keep the craft\./,
+    "Individual contributors",
   );
   // Focus is not moved into the panel by the choice. WebKit does not focus a
   // clicked button at all, so what is asserted is where focus did not go.
@@ -102,11 +106,11 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   await next.click();
   await next.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    /Use AI for your decisions,\s*teams and operations\./,
+    "C-level executives",
   );
   await previous.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    /Build for your team,\s*no engineering background\./,
+    "AI builders",
   );
 
   const first = page.getByRole("button", { name: names[0] });
@@ -121,7 +125,7 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   await expect(first).toBeFocused();
   await expect(first).toHaveAttribute("aria-pressed", "true");
   await expect(
-    page.locator(".audience-panel:not([hidden]) .audience-kicker"),
+    page.locator(".audience-panel:not([hidden]) .audience-scene-title"),
   ).toHaveText(kickers[0]);
 });
 
@@ -181,14 +185,14 @@ test("a reduced-motion visitor gets a complete still scene on every choice", asy
   }
 });
 
-test("pausing while a scene is being told leaves it complete, not mid-draw", async ({
+test("requesting reduced motion while a scene is being told leaves it complete", async ({
   page,
 }) => {
   await page.goto("/#audiences");
   await page.evaluate(() => document.fonts.ready);
   await page.getByRole("button", { name: names[2] }).click();
   await page.waitForTimeout(250);
-  await page.getByRole("button", { name: "Pause motion" }).click();
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await expect.poll(async () => (await shown(page)).drawing).toBe(0);
   await expect.poll(async () => (await shown(page)).faded).toBe(0);
   await expect
@@ -223,7 +227,7 @@ test("a visitor on a phone gets the portrait scenes and can choose by touch", as
   expect(ratio.trim()).toMatch(/^620 \//);
   await page.getByRole("button", { name: names[1] }).tap();
   await expect(
-    page.locator(".audience-panel:not([hidden]) .audience-kicker"),
+    page.locator(".audience-panel:not([hidden]) .audience-scene-title"),
   ).toHaveText(kickers[1]);
   await expect(
     page.locator(".audience-panel:not([hidden])").getByText("Deal team", {

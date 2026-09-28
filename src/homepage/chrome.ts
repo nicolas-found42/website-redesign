@@ -24,7 +24,7 @@ export function siteHeader() {
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(
       "",
-    )}<button class="nav-contact" data-dialog="contact">Talk to us ${arrow}</button></nav></header>`;
+    )}<a class="nav-contact" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to us ${arrow}</a></nav></header>`;
 }
 export function siteFooter() {
   const group = (
@@ -32,7 +32,7 @@ export function siteFooter() {
     links: readonly (readonly [string, string])[],
   ) =>
     `<div class="footer-group"><h2>${title}</h2><ul>${links.map(([t, p]) => `<li><a href="${p}">${t}</a></li>`).join("")}</ul></div>`;
-  return `<footer class="site-footer on-ink" data-ground="ink"><div class="wrap"><div class="footer-grid"><div class="footer-mark">${logo()}<p>Practical AI. Built around the work.</p><p class="note--plain">Practical Claude skills, workflows and automations shaped around real business work.</p></div>${group(
+  return `<footer class="site-footer on-ink" data-ground="ink"><div class="wrap"><div class="footer-grid"><div class="footer-mark">${logo()}<p>Practical AI. Built around the work.</p></div>${group(
     "Explore",
     nav.map(([t, p]) => [t, sitePath(p)] as const),
   )}${group(
@@ -44,5 +44,5 @@ export function siteFooter() {
     [`Call ${directContact.phone}`, `tel:${directContact.tel}`],
     ["Privacy Policy", "https://www.found42.com/privacy-policy"],
     ["Terms of Use", "https://www.found42.com/terms-of-use"],
-  ])}</div><div class="footer-base"><span>© ${new Date().getFullYear()} Found42 LLC</span></div></div></footer>`;
+  ])}</div><div class="footer-base"><span>Diagrams and examples on this site are illustrative, not client results. Claude is Anthropic's AI assistant.</span><span>© ${new Date().getFullYear()} Found42 LLC</span></div></div></footer>`;
 }

@@ -4,7 +4,13 @@ import { hero } from "./homepage/hero";
 import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
 import { audiencesSection } from "./homepage/audiences";
-import { credibilitySection } from "./homepage/credibility";
+import { companiesSection } from "./homepage/companies";
+import { briefingSection } from "./homepage/briefing";
+import { founderSection } from "./homepage/founder";
+import {
+  mountTestimonials,
+  testimonialsSection,
+} from "./homepage/testimonials";
 import { inquirySection } from "./homepage/inquiry";
 import { mountSystem } from "./system";
 import { masterSchematic } from "./schematic";
@@ -22,10 +28,13 @@ export function renderHomepage() {
   return `${siteHeader()}
 <main id="main">
 ${hero()}
-${resourcesSection()}
+${companiesSection()}
 ${audiencesSection()}
 ${servicesSection({ allServicesLink: true })}
-${credibilitySection()}
+${briefingSection()}
+${testimonialsSection()}
+${founderSection()}
+${resourcesSection()}
 ${inquirySection()}
 </main>
 ${siteFooter()}`;
@@ -172,7 +181,7 @@ export function mountPage(
    * it without it ever intersecting, and an observer would never report it.
    */
   const header = root.querySelector<HTMLElement>(".site-header")!;
-  const sentinel = root.querySelector<HTMLElement>(".page-opening, .hero-rail");
+  const sentinel = root.querySelector<HTMLElement>(".page-opening, .hero");
   /** Lifts the header exactly while the opening is above the viewport. */
   const readLift = () => {
     if (sentinel)
@@ -247,28 +256,6 @@ export function mountPage(
     : null;
   if (heroSystem) disposers.push(() => heroSystem.dispose());
 
-  /* ── Pausing the page's motion (WCAG 2.2.2) ── */
-  const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]");
-  const label = toggle?.querySelector("span:last-child");
-  const syncToggle = () => {
-    if (!toggle || !label) return;
-    toggle.setAttribute("aria-pressed", String(motionPreference.byVisitor));
-    label.textContent = motionPreference.byVisitor
-      ? "Resume motion"
-      : "Pause motion";
-  };
-  const onToggle = () => {
-    motionPreference.setPaused(!motionPreference.byVisitor);
-    syncToggle();
-  };
-  toggle?.addEventListener("click", onToggle);
-  motionPreference.addEventListener("change", syncToggle);
-  syncToggle();
-  disposers.push(() => {
-    toggle?.removeEventListener("click", onToggle);
-    motionPreference.removeEventListener("change", syncToggle);
-  });
-
   /* ── The scroll-linked services sequence ── */
   if (root.querySelector(".services-art"))
     disposers.push(mountServices(root, { motionPreference }));
@@ -276,6 +263,9 @@ export function mountPage(
   /* ── The audience gallery and any scene drawn on its own ── */
   if (root.querySelector("[data-scene-host]"))
     disposers.push(mountAudiences(root, { motionPreference }));
+
+  if (root.querySelector("#testimonials"))
+    disposers.push(mountTestimonials(root));
 
   /* ── Page-wide entrances and scroll feel ── */
   disposers.push(mountReveals(root, { motionPreference }));

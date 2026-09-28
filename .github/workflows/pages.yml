@@ -27,18 +27,22 @@ jobs:
           args: -color
   browser-tests:
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
     strategy:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
+      - name: Make the container home usable by Firefox
+        run: chown "$(id -u):$(id -g)" /github/home
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Check browser image matches the installed Playwright version
+        run: test "$(node -p 'require("playwright/package.json").version')" = '1.63.0'
       - run: npm run typecheck
       - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
       - name: Upload browser failure evidence

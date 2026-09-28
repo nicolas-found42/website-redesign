@@ -79,13 +79,17 @@ test("rewording a heading records its exact words, new words and place", async (
   const form = await pick(page, heading);
 
   await expect(form.getByRole("heading", { level: 2 })).toHaveText(
-    "Heading “Who Found42 helps”",
+    "Heading “Find the work that sounds like yours”",
   );
   await expect(form.getByRole("radio", { name: /Wording/ })).toBeChecked();
-  await expect(form.locator("[data-current]")).toHaveText("Who Found42 helps");
+  await expect(form.locator("[data-current]")).toHaveText(
+    "Find the work that sounds like yours",
+  );
   // The visible line break depends on font timing and browser layout in CI.
   const capturedText = await form.getByLabel("Change it to").inputValue();
-  expect(capturedText.replace(/\s+/g, " ").trim()).toBe("Who Found42 helps");
+  expect(capturedText.replace(/\s+/g, " ").trim()).toBe(
+    "Find the work that sounds like yours",
+  );
   await form.getByLabel("Change it to").fill("Who we work with");
   await answer(form);
   await form.getByRole("button", { name: "Save feedback" }).click();
@@ -108,7 +112,7 @@ test("rewording a heading records its exact words, new words and place", async (
     target: {
       page: "/",
       pageName: "Home",
-      section: "Who Found42 helps",
+      section: "Find the work that sounds like yours",
       element: "Heading",
     },
   });
@@ -170,7 +174,7 @@ test("layout feedback names the section it should move next to", async ({
   await form.locator('select[name="layoutPosition"]').selectOption("below");
   await form
     .getByLabel("Section", { exact: true })
-    .selectOption({ label: "Who Found42 helps" });
+    .selectOption({ label: "Find the work that sounds like yours" });
   await answer(form, { why: "People should recognise themselves first." });
   await form.getByRole("button", { name: "Save feedback" }).click();
   await expect(panel(page)).toHaveCount(0);
@@ -180,7 +184,10 @@ test("layout feedback names the section it should move next to", async ({
     kind: "layout",
     action: "move",
     position: "below",
-    relativeTo: { name: "Who Found42 helps", selector: "#audiences" },
+    relativeTo: {
+      name: "Find the work that sounds like yours",
+      selector: "#audiences",
+    },
   });
 });
 
