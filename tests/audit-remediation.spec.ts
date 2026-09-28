@@ -257,24 +257,28 @@ test("F08: executive scene annotations are not covered by the drawing", async ({
   }
 });
 
-test("F10, F12: the resources foot keeps the column's edge, and industry grids draw one rule", async ({
+test("F10, F12: the resources column is centered, and industry grids draw one rule", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const grid = await box(page, ".resource-grid");
-  const foot = await box(page, ".resource-foot");
-  expect(Math.abs(foot.x - grid.x)).toBeLessThanOrEqual(1);
+  const resources = await box(page, ".resources");
+  const leftInset = grid.x - resources.x;
+  const rightInset = resources.x + resources.width - (grid.x + grid.width);
+  expect(Math.abs(leftInset - rightInset)).toBeLessThanOrEqual(1);
 
   await page.goto("/industries/private-equity/");
-  const head = await box(page, ".on-ink .section-head");
+  const industryHead = await box(page, ".on-ink .section-head");
   const industryGrid = await box(page, ".industry-grid");
   expect(
     await page
       .locator(".industry-grid")
       .evaluate((el) => getComputedStyle(el).borderTopWidth),
   ).toBe("0px");
-  expect(industryGrid.y - (head.y + head.height)).toBeLessThanOrEqual(72);
+  expect(
+    industryGrid.y - (industryHead.y + industryHead.height),
+  ).toBeLessThanOrEqual(72);
 });
 
 test("F15: page openings do not skip a heading level", async ({ page }) => {

@@ -20,7 +20,9 @@ const routes = [
 
 /** Scrolls the whole page so every reveal and drawing has settled. */
 async function settle(page: Page) {
-  const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  const height = await page.evaluate(
+    () => document.documentElement.scrollHeight,
+  );
   for (let y = 0; y < height; y += 700) {
     await page.evaluate((top) => scrollTo(0, top), y);
     await page.waitForTimeout(30);
@@ -54,21 +56,31 @@ const lowContrastText = () => {
     return rgba(getComputedStyle(document.documentElement).backgroundColor);
   };
   const failures: string[] = [];
-  for (const element of document.querySelectorAll("header *, main *, footer *")) {
-    if (!element.checkVisibility({ opacityProperty: true, visibilityProperty: true }))
+  for (const element of document.querySelectorAll(
+    "header *, main *, footer *",
+  )) {
+    if (
+      !element.checkVisibility({
+        opacityProperty: true,
+        visibilityProperty: true,
+      })
+    )
       continue;
     if (element.closest('svg, [aria-hidden="true"]')) continue;
     const ownText = [...element.childNodes].some(
-      (node) => node.nodeType === Node.TEXT_NODE && node.textContent!.trim().length > 1,
+      (node) =>
+        node.nodeType === Node.TEXT_NODE && node.textContent!.trim().length > 1,
     );
     if (!ownText) continue;
     const style = getComputedStyle(element);
-    const [a, b] = [luminance(rgba(style.color)), luminance(ground(element))].sort(
-      (x, y) => y - x,
-    );
+    const [a, b] = [
+      luminance(rgba(style.color)),
+      luminance(ground(element)),
+    ].sort((x, y) => y - x);
     const ratio = (a + 0.05) / (b + 0.05);
     const size = parseFloat(style.fontSize);
-    const large = size >= 24 || (size >= 18.66 && Number(style.fontWeight) >= 700);
+    const large =
+      size >= 24 || (size >= 18.66 && Number(style.fontWeight) >= 700);
     if (ratio < (large ? 3 : 4.5))
       failures.push(
         `${ratio.toFixed(2)}:1 ${style.color} "${(element as HTMLElement).innerText.trim().slice(0, 40)}"`,
@@ -77,7 +89,9 @@ const lowContrastText = () => {
   return failures;
 };
 
-test("#45: every page's text is readable against its own ground", async ({ page }) => {
+test("#45: every page's text is readable against its own ground", async ({
+  page,
+}) => {
   test.slow();
   await page.setViewportSize(phone);
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -96,19 +110,23 @@ test("#45: the services section reads on paper, with a visible current choice", 
   await page.goto("/");
   const services = page.locator("#services");
   await expect(services).not.toHaveAttribute("data-ground", "ink");
-  await services.getByRole("heading", { name: "How we deliver our services" }).scrollIntoViewIfNeeded();
+  await services
+    .getByRole("heading", { name: "Three ways we help" })
+    .scrollIntoViewIfNeeded();
   await expect(page.locator(".site-header")).not.toHaveClass(/is-over-ink/);
   const pressed = services.locator('.choice[aria-pressed="true"]');
   await expect(pressed).toHaveText("Workshops");
-  expect(
-    await pressed.evaluate((el) => getComputedStyle(el).color),
-  ).not.toBe(await page.evaluate(() => getComputedStyle(document.body).backgroundColor));
+  expect(await pressed.evaluate((el) => getComputedStyle(el).color)).not.toBe(
+    await page.evaluate(() => getComputedStyle(document.body).backgroundColor),
+  );
 });
 
-test("#46: a visitor can email or call Found42 without the form", async ({ page }) => {
+test("#46: a visitor can email or call Found42 without the form", async ({
+  page,
+}) => {
   await page.setViewportSize(phone);
   await page.goto("/");
-  await page.getByRole("button", { name: "Talk to our team" }).first().click();
+  await page.getByRole("button", { name: "Talk to us" }).first().click();
   const dialog = page.getByRole("dialog");
   await expect(
     dialog.getByRole("link", { name: "Email richard@found42.com" }),
@@ -126,23 +144,27 @@ test("#46: a visitor can email or call Found42 without the form", async ({ page 
   ).toHaveAttribute("href", "tel:+16463001247");
 });
 
-test("#47: the opening explains a skill and the services show one everyday example", async ({
+test("#47: the approved opening and illustrative briefing explain the work", async ({
   page,
 }) => {
   await page.goto("/");
   await expect(page.locator(".hero-lead")).toContainText(
-    "build tailored skills (saved instructions and examples Claude follows for one recurring job)",
+    "build tailored Claude skills, and automate repeatable work while judgment stays with your team",
   );
-  const example = page.locator("#services .services-example");
-  await expect(example.locator("li")).toHaveText([
-    "A customer emails a purchase order.",
-    "A Claude skill reads it and drafts the order entry.",
-    "Your order desk checks the entry and approves it.",
+  const example = page.locator("#briefing");
+  await expect(example.locator(".briefing-steps strong")).toHaveText([
+    "The skill gathers your week",
+    "It builds a briefing for every call",
+    "You get the summary and decide",
   ]);
-  await expect(example).toContainText("A hypothetical example, not a client result.");
+  await expect(example).toContainText(
+    "Illustrative example. No live Calendar, Email, Drive, Notion or Slack integration.",
+  );
 });
 
-test("#48: visitor-facing copy, resources, actions and annotations", async ({ page }) => {
+test("#48: visitor-facing copy, resources, actions and annotations", async ({
+  page,
+}) => {
   await page.setViewportSize(phone);
   await page.goto("/#audiences");
   await expect(page.locator("main")).not.toContainText("owner approval");
@@ -170,7 +192,15 @@ test("#48: visitor-facing copy, resources, actions and annotations", async ({ pa
   const ids = await page
     .locator("main section[id], .resources-later-head")
     .evaluateAll((nodes) => nodes.map((n) => n.id || "later"));
-  expect(ids).toEqual(["scorecard", "toolkit", "playbook", "later", "library", "course", "contact"]);
+  expect(ids).toEqual([
+    "scorecard",
+    "toolkit",
+    "playbook",
+    "later",
+    "library",
+    "course",
+    "contact",
+  ]);
   for (const id of ["library", "course"]) {
     const section = page.locator(`#${id}`);
     await expect(section.getByText(/^Unavailable ·/)).toHaveCount(1);

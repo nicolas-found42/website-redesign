@@ -16,7 +16,7 @@ test("homepage renders using local assets without contacting an external content
   });
   await page.goto("/");
   await page
-    .getByRole("img", { name: "Richard Achée, founder of Found42" })
+    .getByRole("img", { name: "Richard Achée, Founder and CEO of Found42" })
     .scrollIntoViewIfNeeded();
   await expect
     .poll(() =>

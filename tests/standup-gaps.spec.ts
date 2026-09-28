@@ -215,7 +215,7 @@ test("the homepage's published playbook is one click from its full inventory", a
     "AI Readiness Scorecard",
     "C-Level AI Toolkit",
   ]);
-  await page.getByRole("link", { name: "Explore all free resources" }).click();
+  await page.getByRole("link", { name: "All free resources" }).click();
   const entry = page.getByRole("link", {
     name: "Request the published AI Failure Modes Playbook",
   });

@@ -263,37 +263,30 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
   await context.close();
 });
 
-test("a visitor can stop the page's motion and start it again", async ({
+test("every route removes the manual motion toggle while keeping drawing content", async ({
   page,
 }) => {
+  for (const route of [
+    "/",
+    "/services/",
+    "/resources/",
+    "/about/",
+    "/blog/",
+    "/industries/private-equity/",
+    "/industries/b2b-saas/",
+  ]) {
+    await page.goto(route);
+    await expect(
+      page.getByRole("button", {
+        name: /Pause motion|Play motion|Resume motion/,
+      }),
+    ).toHaveCount(0);
+  }
   await page.goto("/");
-  const toggle = page.getByRole("button", { name: "Pause motion" });
-  await expect(toggle).toHaveAttribute("aria-pressed", "false");
-  await toggle.click();
-  await expect(
-    page.getByRole("button", { name: "Resume motion" }),
-  ).toHaveAttribute("aria-pressed", "true");
-
-  // Paused means nothing is running, not that anything has disappeared.
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          document
-            .getAnimations()
-            .filter((animation) => animation.playState === "running").length,
-      ),
-    )
-    .toBe(0);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(
     page.locator(".hero-art .system-field .system-label").first(),
   ).toBeVisible();
-
-  await page.getByRole("button", { name: "Resume motion" }).click();
-  await expect(
-    page.getByRole("button", { name: "Pause motion" }),
-  ).toHaveAttribute("aria-pressed", "false");
 });
 
 test("a slow font does not hold the opening headline back", async ({
@@ -338,7 +331,7 @@ test("a slow font does not hold the opening headline back", async ({
   }
 });
 
-test("pausing during a transition leaves the drawing settled, not mid-draw", async ({
+test("requesting reduced motion during a transition leaves the drawing settled", async ({
   page,
 }) => {
   await page.goto("/#services");
@@ -348,24 +341,27 @@ test("pausing during a transition leaves the drawing settled, not mid-draw", asy
   ).toHaveAttribute("aria-pressed", "true");
 
   /**
-   * Driven from inside the page so the pause lands at a known point: the new
+   * Driven from inside the page so the preference change lands at a known point: the new
    * composition's pieces are laid on a timer once the old ones have been
    * lifted off, and the whole question is whether that timer survives the
-   * pause. Round-tripping each click through the driver would let its latency
+   * preference change. Round-tripping each click through the driver would let its latency
    * drift past the window being tested.
    *
    * Sampled across that window rather than polled for an eventual state — a
    * stale entrance finishes on its own, so waiting for quiet would pass whether
    * or not it ever started.
    */
-  const disturbed = await page.evaluate(async () => {
+  await page.evaluate(async () => {
     const sleep = (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms));
-    const field = document.querySelector(".services-art")!;
     document.querySelector<HTMLButtonElement>('[data-service="1"]')!.click();
     await sleep(120);
-    document.querySelector<HTMLButtonElement>("[data-motion-toggle]")!.click();
-
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const disturbed = await page.evaluate(async () => {
+    const field = document.querySelector(".services-art")!;
+    const sleep = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
     const seen = { drawing: 0, running: 0 };
     for (let sample = 0; sample < 15; sample += 1) {
       await sleep(60);

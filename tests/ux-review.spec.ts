@@ -11,7 +11,9 @@ test("#32: the inquiry dialog leads to the live form and carries service context
   page,
 }) => {
   await page.goto("/services/");
-  await page.getByRole("button", { name: /Discuss workflows/ }).click();
+  await page
+    .getByRole("button", { name: /Talk to us about workflows/ })
+    .click();
   const dialog = page.getByRole("dialog");
   const live = dialog.getByRole("link", { name: "Open the live inquiry form" });
   await expect(live).toHaveClass(/\baction\b/);
@@ -252,11 +254,13 @@ test("#39: Services opens with what an engagement starts with, asks and gives, a
     ]);
   const text = await band.innerText();
   expect(text).not.toMatch(/[$£€]|\d+\s*(weeks?|days?|months?)/i);
-  await expect(band).toContainText("Length and fees depend on the work");
-  // The resources page's pointer lands on it.
+  await expect(band).not.toContainText(/price|fees/i);
+  // The resources page's pointer lands on the public catalog.
   await page.goto("/resources/");
-  await page.getByRole("link", { name: /See how engagements work/ }).click();
-  await expect(page).toHaveURL(/\/services\/#engagements$/);
+  await page
+    .getByRole("link", { name: /Explore training and services/ })
+    .click();
+  await expect(page).toHaveURL(/\/services\/#tracks$/);
 });
 
 test("#40: the band and the dialog say what happens after an inquiry, not only what does not", async ({
@@ -278,11 +282,13 @@ test("#40: the band and the dialog say what happens after an inquiry, not only w
   expect(await dialog.innerText()).not.toMatch(/\bbook(ed|ing)?\b/i);
 });
 
-test("#41: a Discuss button names the service in the live handoff", async ({
+test("#41: a contextual service action names the service in the live handoff", async ({
   page,
 }) => {
   await page.goto("/services/");
-  await page.getByRole("button", { name: /Discuss workflows/ }).click();
+  await page
+    .getByRole("button", { name: /Talk to us about workflows/ })
+    .click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
   await expect(
