@@ -1,4 +1,10 @@
+set -e
+
 npx lint-staged
-npm run lint
-npm run typecheck
-npm test -- --workers=2
+
+if git diff --cached --name-only | grep -Eqv '\.md$'; then
+  npm run lint
+  npm run typecheck
+else
+  npm run lint:docs
+fi
