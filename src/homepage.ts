@@ -267,7 +267,7 @@ export function mountPage(
     disposers.push(mountAudiences(root, { motionPreference }));
 
   if (root.querySelector(".approved-homepage"))
-    disposers.push(mountApprovedHomepage(root));
+    disposers.push(mountApprovedHomepage(root, motionPreference));
 
   /* ── Page-wide entrances and scroll feel ── */
   disposers.push(mountReveals(root, { motionPreference }));
