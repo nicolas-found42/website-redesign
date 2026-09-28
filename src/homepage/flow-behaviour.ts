@@ -1,6 +1,6 @@
 import type { PageMotion } from "../motion-preference";
 
-const STEP_MS = 1150;
+const STEP_MS = 1750;
 
 /** Adds a guided path to the complete, readable diagrams in the page markup. */
 export function mountFlows(root: HTMLElement, motionPreference: PageMotion) {
@@ -28,7 +28,7 @@ export function mountFlows(root: HTMLElement, motionPreference: PageMotion) {
         const button = document.createElement("button");
         button.type = "button";
         button.className = step.className;
-        button.textContent = step.textContent;
+        button.append(...step.childNodes);
         step.replaceWith(button);
         return button;
       },
@@ -89,11 +89,17 @@ export function mountFlows(root: HTMLElement, motionPreference: PageMotion) {
       schedule(STEP_MS * 3);
     };
     const onClick = (event: Event) => {
-      const index = steps.indexOf(event.target as HTMLButtonElement);
+      const target = (event.target as Element).closest<HTMLButtonElement>(
+        ".ah-flow-step",
+      );
+      const index = target ? steps.indexOf(target) : -1;
       if (index !== -1) choose(index);
     };
     const onFocus = (event: FocusEvent) => {
-      const index = steps.indexOf(event.target as HTMLButtonElement);
+      const target = (event.target as Element).closest<HTMLButtonElement>(
+        ".ah-flow-step",
+      );
+      const index = target ? steps.indexOf(target) : -1;
       if (index !== -1) choose(index);
     };
     const onBlur = (event: FocusEvent) => {
