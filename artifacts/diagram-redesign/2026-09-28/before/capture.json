@@ -1,0 +1,480 @@
+{
+  "origin": "https://nicolas-found42.github.io/website-redesign/",
+  "captured": "2026-09-28T19:51:11.448Z",
+  "shots": [
+    {
+      "diagram": "hero-opening",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "motion/hero-opening.gif"
+    },
+    {
+      "diagram": "audience-builders-told",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "motion/audience-builders-told.gif"
+    },
+    {
+      "diagram": "service-transition",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "motion/service-transition.gif"
+    },
+    {
+      "diagram": "hero",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "hero-1440.png"
+    },
+    {
+      "diagram": "audience-executives",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "audience-executives-1440.png"
+    },
+    {
+      "diagram": "audience-contributors",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "audience-contributors-1440.png"
+    },
+    {
+      "diagram": "audience-builders",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "audience-builders-1440.png"
+    },
+    {
+      "diagram": "service-training",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "service-training-1440.png"
+    },
+    {
+      "diagram": "service-automation",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "service-automation-1440.png"
+    },
+    {
+      "diagram": "service-product",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "service-product-1440.png"
+    },
+    {
+      "diagram": "review",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "review-1440.png"
+    },
+    {
+      "diagram": "industry",
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "file": "industry-1440.png"
+    },
+    {
+      "diagram": "hero",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "hero-1024.png"
+    },
+    {
+      "diagram": "audience-executives",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "audience-executives-1024.png"
+    },
+    {
+      "diagram": "audience-contributors",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "audience-contributors-1024.png"
+    },
+    {
+      "diagram": "audience-builders",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "audience-builders-1024.png"
+    },
+    {
+      "diagram": "service-training",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "service-training-1024.png"
+    },
+    {
+      "diagram": "service-automation",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "service-automation-1024.png"
+    },
+    {
+      "diagram": "service-product",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "service-product-1024.png"
+    },
+    {
+      "diagram": "review",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "review-1024.png"
+    },
+    {
+      "diagram": "industry",
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "scale": 1
+      },
+      "file": "industry-1024.png"
+    },
+    {
+      "diagram": "hero",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "hero-900.png"
+    },
+    {
+      "diagram": "audience-executives",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "audience-executives-900.png"
+    },
+    {
+      "diagram": "audience-contributors",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "audience-contributors-900.png"
+    },
+    {
+      "diagram": "audience-builders",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "audience-builders-900.png"
+    },
+    {
+      "diagram": "service-training",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "service-training-900.png"
+    },
+    {
+      "diagram": "service-automation",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "service-automation-900.png"
+    },
+    {
+      "diagram": "service-product",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "service-product-900.png"
+    },
+    {
+      "diagram": "review",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "review-900.png"
+    },
+    {
+      "diagram": "industry",
+      "viewport": {
+        "name": "900",
+        "width": 900,
+        "height": 1000,
+        "scale": 1
+      },
+      "file": "industry-900.png"
+    },
+    {
+      "diagram": "hero",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "hero-390.png"
+    },
+    {
+      "diagram": "audience-executives",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "audience-executives-390.png"
+    },
+    {
+      "diagram": "audience-contributors",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "audience-contributors-390.png"
+    },
+    {
+      "diagram": "audience-builders",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "audience-builders-390.png"
+    },
+    {
+      "diagram": "service-training",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "service-training-390.png"
+    },
+    {
+      "diagram": "service-automation",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "service-automation-390.png"
+    },
+    {
+      "diagram": "service-product",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "service-product-390.png"
+    },
+    {
+      "diagram": "review",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "review-390.png"
+    },
+    {
+      "diagram": "industry",
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "scale": 2
+      },
+      "file": "industry-390.png"
+    },
+    {
+      "diagram": "hero",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "hero-320.png"
+    },
+    {
+      "diagram": "audience-executives",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "audience-executives-320.png"
+    },
+    {
+      "diagram": "audience-contributors",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "audience-contributors-320.png"
+    },
+    {
+      "diagram": "audience-builders",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "audience-builders-320.png"
+    },
+    {
+      "diagram": "service-training",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "service-training-320.png"
+    },
+    {
+      "diagram": "service-automation",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "service-automation-320.png"
+    },
+    {
+      "diagram": "service-product",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "service-product-320.png"
+    },
+    {
+      "diagram": "review",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "review-320.png"
+    },
+    {
+      "diagram": "industry",
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 640,
+        "scale": 2
+      },
+      "file": "industry-320.png"
+    }
+  ]
+}

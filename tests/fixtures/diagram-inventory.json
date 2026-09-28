@@ -1,0 +1,1209 @@
+{
+  "source": "40e42eb",
+  "schematics": [
+    {
+      "id": "master",
+      "choice": "Found42",
+      "detail": "People, workflows and products — connected, with people in charge.",
+      "description": "Found42 illustration: people, workflows and products connect through human direction into practical AI in everyday work.",
+      "nodes": [
+        {
+          "id": "n1",
+          "label": "Your people",
+          "kind": "source"
+        },
+        {
+          "id": "n2",
+          "label": "Your workflows",
+          "kind": "source"
+        },
+        {
+          "id": "human",
+          "label": "Human direction",
+          "kind": "human"
+        },
+        {
+          "id": "n3",
+          "label": "What your business knows",
+          "kind": "source"
+        },
+        {
+          "id": "n4",
+          "label": "Practical AI at work",
+          "kind": "result"
+        }
+      ],
+      "flow": {
+        "landscape": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "n3",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "n4",
+            "weight": "trunk"
+          },
+          {
+            "from": "human",
+            "to": "out1",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "out2",
+            "weight": "branch"
+          }
+        ],
+        "portrait": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n3",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "human",
+            "to": "n4",
+            "weight": "trunk"
+          }
+        ]
+      }
+    },
+    {
+      "id": "training",
+      "choice": "Workshops",
+      "detail": "Real work → live practice → review → a takeaway the team applies.",
+      "description": "Workshop illustration: a team brings real work into live guided practice, reviews the result together, and leaves with a reusable skill and an applicable takeaway.",
+      "nodes": [
+        {
+          "id": "n1",
+          "label": "Team's real work",
+          "kind": "source"
+        },
+        {
+          "id": "n2",
+          "label": "Live guided practice",
+          "kind": "source"
+        },
+        {
+          "id": "human",
+          "label": "Group review",
+          "kind": "human"
+        },
+        {
+          "id": "n3",
+          "label": "Reusable skill",
+          "kind": "source"
+        },
+        {
+          "id": "n4",
+          "label": "Apply afterwards",
+          "kind": "result"
+        }
+      ],
+      "flow": {
+        "landscape": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "n3",
+            "weight": "trunk"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "weight": "branch"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "weight": "return"
+          }
+        ],
+        "portrait": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "n3",
+            "weight": "trunk"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "weight": "branch"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "weight": "return"
+          }
+        ]
+      }
+    },
+    {
+      "id": "automation",
+      "choice": "Workflows",
+      "detail": "Operating problem → tailored design → testing and review → team deployment.",
+      "description": "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and a workflow the team deploys and uses.",
+      "nodes": [
+        {
+          "id": "n1",
+          "label": "Brief / operating problem",
+          "kind": "source"
+        },
+        {
+          "id": "n2",
+          "label": "Tailored design and build",
+          "kind": "source"
+        },
+        {
+          "id": "human",
+          "label": "Team deploys and uses it",
+          "kind": "human"
+        },
+        {
+          "id": "n3",
+          "label": "Test and review",
+          "kind": "source"
+        },
+        {
+          "id": "n4",
+          "label": "Review in customer context",
+          "kind": "result"
+        }
+      ],
+      "flow": {
+        "landscape": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "n3",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "n4",
+            "weight": "trunk"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "weight": "return"
+          }
+        ],
+        "portrait": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n3",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "human",
+            "to": "n4",
+            "weight": "trunk"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "weight": "return"
+          }
+        ]
+      }
+    },
+    {
+      "id": "product",
+      "choice": "Automations",
+      "detail": "Repetitive process → system handoffs → human review → usable output.",
+      "description": "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
+      "nodes": [
+        {
+          "id": "n1",
+          "label": "Repetitive work",
+          "kind": "source"
+        },
+        {
+          "id": "n2",
+          "label": "System handoffs",
+          "kind": "source"
+        },
+        {
+          "id": "human",
+          "label": "Human direction",
+          "kind": "human"
+        },
+        {
+          "id": "n3",
+          "label": "Human review",
+          "kind": "source"
+        },
+        {
+          "id": "n4",
+          "label": "Usable output",
+          "kind": "result"
+        }
+      ],
+      "flow": {
+        "landscape": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "n3",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "n4",
+            "weight": "trunk"
+          },
+          {
+            "from": "human",
+            "to": "out1",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "out2",
+            "weight": "branch"
+          }
+        ],
+        "portrait": [
+          {
+            "from": "n1",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n2",
+            "to": "human",
+            "weight": "branch"
+          },
+          {
+            "from": "n3",
+            "to": "human",
+            "weight": "trunk"
+          },
+          {
+            "from": "human",
+            "to": "n4",
+            "weight": "trunk"
+          },
+          {
+            "from": "human",
+            "to": "out1",
+            "weight": "branch"
+          },
+          {
+            "from": "human",
+            "to": "out2",
+            "weight": "branch"
+          }
+        ]
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "executives",
+      "description": "Executive illustration: an operating problem enters a tailored skill and produces an illustrative decision brief, with human direction deciding how it is used.",
+      "landscape": {
+        "labels": [
+          {
+            "text": "Your operating problem",
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "text": "Tailored executive skill",
+            "kind": "control",
+            "beat": 1
+          },
+          {
+            "text": "A decision brief you use",
+            "kind": "result",
+            "beat": 2
+          },
+          {
+            "text": "Illustrative executive operating view",
+            "kind": "caption",
+            "beat": 3
+          },
+          {
+            "text": "Executive direction",
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "marks": [
+          {
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "kind": "result",
+            "beat": 2
+          },
+          {
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "frames": [
+          {
+            "kind": "control",
+            "beat": 1
+          },
+          {
+            "kind": "panel",
+            "beat": 3
+          }
+        ],
+        "routes": [
+          {
+            "weight": "trunk",
+            "beat": 1
+          },
+          {
+            "weight": "trunk",
+            "beat": 2
+          },
+          {
+            "weight": "trunk",
+            "beat": 3,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 3
+          },
+          {
+            "weight": "branch",
+            "beat": 4,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "branch",
+            "beat": 4,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "return",
+            "beat": 5
+          }
+        ]
+      },
+      "portrait": {
+        "labels": [
+          {
+            "text": "Your operating problem",
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "text": "Tailored executive skill",
+            "kind": "control",
+            "beat": 1
+          },
+          {
+            "text": "A decision brief you use",
+            "kind": "result",
+            "beat": 2
+          },
+          {
+            "text": "Illustrative executive operating view",
+            "kind": "caption",
+            "beat": 3
+          },
+          {
+            "text": "Executive direction",
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "marks": [
+          {
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "kind": "result",
+            "beat": 2
+          },
+          {
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "frames": [
+          {
+            "kind": "control",
+            "beat": 1
+          },
+          {
+            "kind": "panel",
+            "beat": 3
+          }
+        ],
+        "routes": [
+          {
+            "weight": "trunk",
+            "beat": 1
+          },
+          {
+            "weight": "trunk",
+            "beat": 2
+          },
+          {
+            "weight": "trunk",
+            "beat": 3,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 3
+          },
+          {
+            "weight": "branch",
+            "beat": 4,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "branch",
+            "beat": 4,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "return",
+            "beat": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "contributors",
+      "description": "Contributor illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, all ending with the human in the loop.",
+      "landscape": {
+        "labels": [
+          {
+            "text": "Your company",
+            "kind": "caption",
+            "beat": 0
+          },
+          {
+            "text": "Deal team",
+            "kind": "source",
+            "beat": 1
+          },
+          {
+            "text": "Deal screening",
+            "kind": "card",
+            "beat": 1
+          },
+          {
+            "text": "Operations",
+            "kind": "source",
+            "beat": 2
+          },
+          {
+            "text": "Plans and reviews",
+            "kind": "card",
+            "beat": 2
+          },
+          {
+            "text": "Product",
+            "kind": "source",
+            "beat": 3
+          },
+          {
+            "text": "Feedback triage",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Sales",
+            "kind": "source",
+            "beat": 4
+          },
+          {
+            "text": "Account planning",
+            "kind": "card",
+            "beat": 4
+          },
+          {
+            "text": "Human in the loop",
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "marks": [
+          {
+            "kind": "person",
+            "beat": 1
+          },
+          {
+            "kind": "person",
+            "beat": 2
+          },
+          {
+            "kind": "person",
+            "beat": 3
+          },
+          {
+            "kind": "person",
+            "beat": 4
+          },
+          {
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "frames": [
+          {
+            "kind": "outline",
+            "beat": 0
+          },
+          {
+            "kind": "block",
+            "beat": 1
+          },
+          {
+            "kind": "block",
+            "beat": 2
+          },
+          {
+            "kind": "block",
+            "beat": 3
+          },
+          {
+            "kind": "block",
+            "beat": 4
+          }
+        ],
+        "routes": [
+          {
+            "weight": "branch",
+            "beat": 1
+          },
+          {
+            "weight": "branch",
+            "beat": 1
+          },
+          {
+            "weight": "branch",
+            "beat": 2
+          },
+          {
+            "weight": "branch",
+            "beat": 2
+          },
+          {
+            "weight": "branch",
+            "beat": 3
+          },
+          {
+            "weight": "branch",
+            "beat": 3
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "trunk",
+            "beat": 5,
+            "carry": true
+          }
+        ]
+      },
+      "portrait": {
+        "labels": [
+          {
+            "text": "Your company",
+            "kind": "caption",
+            "beat": 0
+          },
+          {
+            "text": "Deal team",
+            "kind": "source",
+            "beat": 1
+          },
+          {
+            "text": "Deal screening",
+            "kind": "card",
+            "beat": 1
+          },
+          {
+            "text": "Operations",
+            "kind": "source",
+            "beat": 2
+          },
+          {
+            "text": "Plans and reviews",
+            "kind": "card",
+            "beat": 2
+          },
+          {
+            "text": "Product",
+            "kind": "source",
+            "beat": 3
+          },
+          {
+            "text": "Feedback triage",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Sales",
+            "kind": "source",
+            "beat": 4
+          },
+          {
+            "text": "Account planning",
+            "kind": "card",
+            "beat": 4
+          },
+          {
+            "text": "Human in the loop",
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "marks": [
+          {
+            "kind": "person",
+            "beat": 1
+          },
+          {
+            "kind": "person",
+            "beat": 2
+          },
+          {
+            "kind": "person",
+            "beat": 3
+          },
+          {
+            "kind": "person",
+            "beat": 4
+          },
+          {
+            "kind": "human",
+            "beat": 5
+          }
+        ],
+        "frames": [
+          {
+            "kind": "outline",
+            "beat": 0
+          },
+          {
+            "kind": "block",
+            "beat": 1
+          },
+          {
+            "kind": "block",
+            "beat": 2
+          },
+          {
+            "kind": "block",
+            "beat": 3
+          },
+          {
+            "kind": "block",
+            "beat": 4
+          }
+        ],
+        "routes": [
+          {
+            "weight": "branch",
+            "beat": 1
+          },
+          {
+            "weight": "branch",
+            "beat": 1
+          },
+          {
+            "weight": "branch",
+            "beat": 2
+          },
+          {
+            "weight": "branch",
+            "beat": 2
+          },
+          {
+            "weight": "branch",
+            "beat": 3
+          },
+          {
+            "weight": "branch",
+            "beat": 3
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "branch",
+            "beat": 4
+          },
+          {
+            "weight": "trunk",
+            "beat": 5,
+            "carry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "builders",
+      "description": "Builder illustration: a learner with a work problem climbs three reviewed steps — test, troubleshoot, anticipate failures — to a workflow in use.",
+      "landscape": {
+        "labels": [
+          {
+            "text": "A learner with a work problem",
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "text": "Test",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "Troubleshoot",
+            "kind": "caption",
+            "beat": 2
+          },
+          {
+            "text": "Anticipate failures",
+            "kind": "caption",
+            "beat": 3
+          },
+          {
+            "text": "Workflow in use",
+            "kind": "result",
+            "beat": 4
+          }
+        ],
+        "marks": [
+          {
+            "kind": "person",
+            "beat": 0
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "check",
+            "beat": 2
+          },
+          {
+            "kind": "check",
+            "beat": 3
+          },
+          {
+            "kind": "result",
+            "beat": 4
+          }
+        ],
+        "frames": [
+          {
+            "kind": "block",
+            "beat": 5
+          },
+          {
+            "kind": "block",
+            "beat": 5
+          },
+          {
+            "kind": "block",
+            "beat": 5
+          }
+        ],
+        "routes": [
+          {
+            "weight": "trunk",
+            "beat": 1
+          },
+          {
+            "weight": "trunk",
+            "beat": 2
+          },
+          {
+            "weight": "trunk",
+            "beat": 3
+          },
+          {
+            "weight": "trunk",
+            "beat": 4
+          },
+          {
+            "weight": "branch",
+            "beat": 4,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 5
+          },
+          {
+            "weight": "branch",
+            "beat": 5
+          },
+          {
+            "weight": "branch",
+            "beat": 5
+          }
+        ]
+      },
+      "portrait": {
+        "labels": [
+          {
+            "text": "A learner with a work problem",
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "text": "Test",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "Troubleshoot",
+            "kind": "caption",
+            "beat": 2
+          },
+          {
+            "text": "Anticipate failures",
+            "kind": "caption",
+            "beat": 3
+          },
+          {
+            "text": "Workflow in use",
+            "kind": "result",
+            "beat": 4
+          }
+        ],
+        "marks": [
+          {
+            "kind": "person",
+            "beat": 0
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "check",
+            "beat": 2
+          },
+          {
+            "kind": "check",
+            "beat": 3
+          },
+          {
+            "kind": "result",
+            "beat": 4
+          }
+        ],
+        "frames": [
+          {
+            "kind": "block",
+            "beat": 5
+          },
+          {
+            "kind": "block",
+            "beat": 5
+          },
+          {
+            "kind": "block",
+            "beat": 5
+          }
+        ],
+        "routes": [
+          {
+            "weight": "trunk",
+            "beat": 1
+          },
+          {
+            "weight": "trunk",
+            "beat": 2
+          },
+          {
+            "weight": "trunk",
+            "beat": 3
+          },
+          {
+            "weight": "trunk",
+            "beat": 4
+          },
+          {
+            "weight": "branch",
+            "beat": 4,
+            "carry": true
+          },
+          {
+            "weight": "branch",
+            "beat": 5
+          },
+          {
+            "weight": "branch",
+            "beat": 5
+          },
+          {
+            "weight": "branch",
+            "beat": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "review",
+      "description": "Failure-mode review illustration: a draft result passes three checks — weak outputs, missing context, false confidence — and human review before it reaches the business.",
+      "landscape": {
+        "labels": [
+          {
+            "text": "A draft result",
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "text": "Weak outputs",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "Missing context",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "False confidence",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "Human review",
+            "kind": "human",
+            "beat": 2
+          },
+          {
+            "text": "Reaches the business",
+            "kind": "result",
+            "beat": 3
+          }
+        ],
+        "marks": [
+          {
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "human",
+            "beat": 2
+          },
+          {
+            "kind": "result",
+            "beat": 3
+          }
+        ],
+        "frames": [],
+        "routes": [
+          {
+            "weight": "trunk",
+            "beat": 1,
+            "carry": true
+          },
+          {
+            "weight": "trunk",
+            "beat": 3
+          }
+        ]
+      },
+      "portrait": {
+        "labels": [
+          {
+            "text": "A draft result",
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "text": "Weak outputs",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "Missing context",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "False confidence",
+            "kind": "caption",
+            "beat": 1
+          },
+          {
+            "text": "Human review",
+            "kind": "human",
+            "beat": 2
+          },
+          {
+            "text": "Reaches the business",
+            "kind": "result",
+            "beat": 3
+          }
+        ],
+        "marks": [
+          {
+            "kind": "source",
+            "beat": 0
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "check",
+            "beat": 1
+          },
+          {
+            "kind": "human",
+            "beat": 2
+          },
+          {
+            "kind": "result",
+            "beat": 3
+          }
+        ],
+        "frames": [],
+        "routes": [
+          {
+            "weight": "trunk",
+            "beat": 1,
+            "carry": true
+          },
+          {
+            "weight": "trunk",
+            "beat": 3
+          }
+        ]
+      }
+    }
+  ],
+  "captions": [
+    {
+      "id": "executives",
+      "caption": "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result."
+    },
+    {
+      "id": "contributors",
+      "caption": "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality."
+    },
+    {
+      "id": "builders",
+      "caption": "From a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step."
+    }
+  ]
+}
