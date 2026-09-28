@@ -21,6 +21,7 @@
  * composition is always the resting state.
  */
 import { cornerRadius, roundedPolyline, type Point } from "./schematic";
+import { destinationRegister } from "./content";
 import { sitePath } from "./paths";
 
 export type SceneAnchor =
@@ -89,7 +90,9 @@ export type Audience = {
   /** Three short things this audience gets, from the converged reference. */
   readonly points: readonly [string, string, string];
   readonly caption: string;
-  readonly link: { readonly label: string; readonly href: string };
+  readonly link: { readonly label: string; readonly href?: string };
+  /** A release gate or honest interim state beside a not-yet-final route. */
+  readonly linkNote?: string;
   readonly scene: Scene;
 };
 
@@ -203,13 +206,7 @@ const executiveLandscape: SceneLayout = {
     label([70, 150], "under", "Your operating problem", "source", 0, 220),
     label([430, 150], "center", "Tailored executive skill", "control", 1, 260),
     label([740, 150], "start", "A decision brief you use", "result", 2),
-    label(
-      [292, 250],
-      "under",
-      "Illustrative executive operating view",
-      "caption",
-      3,
-    ),
+    label([292, 250], "under", "Illustrative executive operating view", "caption", 3),
     label([260, 398], "end", "Executive direction", "human", 5),
   ],
 };
@@ -271,13 +268,7 @@ const executivePortrait: SceneLayout = {
     label([190, 60], "right", "Your operating problem", "source", 0),
     label([190, 178], "center", "Tailored executive skill", "control", 1, 340),
     label([190, 250], "right", "A decision brief you use", "result", 2),
-    label(
-      [72, 306],
-      "above",
-      "Illustrative executive operating view",
-      "caption",
-      3,
-    ),
+    label([72, 306], "above", "Illustrative executive operating view", "caption", 3),
     label([40, 700], "under", "Executive direction", "human", 5),
   ],
 };
@@ -668,9 +659,11 @@ export const audiences: readonly Audience[] = [
     caption:
       "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result.",
     link: {
-      label: "For executives",
-      href: sitePath("services/#track-c-level-ai"),
+      label: "Explore the Four-Hour AI Executive on Maven",
+      href: destinationRegister.executiveCourse,
     },
+    linkNote:
+      "Preview link, still being confirmed. The course page and its access terms are on Maven.",
     scene: {
       id: "executives",
       description:
@@ -694,8 +687,8 @@ export const audiences: readonly Audience[] = [
     caption:
       "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality.",
     link: {
-      label: "For individual contributors",
-      href: sitePath("services/#track-role-based"),
+      label: "Explore tailored training",
+      href: sitePath("services/#service-training"),
     },
     scene: {
       id: "contributors",
@@ -720,9 +713,10 @@ export const audiences: readonly Audience[] = [
     caption:
       "From a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step.",
     link: {
-      label: "For AI builders",
-      href: sitePath("services/#track-ai-builders"),
+      label: "Ask about AI builder support",
     },
+    linkNote:
+      "Interim path: no verified AI Builder course is published.",
     scene: {
       id: "builders",
       description:

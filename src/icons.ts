@@ -8,6 +8,7 @@ import {
   BookOpen,
   ScanLine,
   SlidersHorizontal,
+  type IconNode,
 } from "lucide";
 
 const icons = {
@@ -46,7 +47,7 @@ const markup = (attributes: Record<string, string | number | undefined>) =>
     .join("");
 
 export function icon(name: keyof typeof icons) {
-  const paths = icons[name]
+  const paths = (icons[name] as IconNode)
     .map(([tag, attributes]) => `<${tag}${markup(attributes)}/>`)
     .join("");
   return `<svg${markup(shell)}>${paths}</svg>`;

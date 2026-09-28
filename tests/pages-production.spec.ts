@@ -81,11 +81,16 @@ test("prerendered content survives script failure and forms cannot submit accide
   );
   await expect(page.locator("#library form")).toHaveCount(0);
   await page.goto(base + "/");
-  // The prerendered homepage leaves every service and testimonial readable.
-  await expect(page.locator(".ah-service-panel")).toHaveCount(3);
-  for (const panel of await page.locator(".ah-service-panel").all())
+  // Without a script the gallery is three panels read one after another.
+  await expect(page.locator(".audience-panel")).toHaveCount(3);
+  for (const panel of await page.locator(".audience-panel").all())
     await expect(panel).toBeVisible();
-  await expect(page.locator(".ah-quote")).toHaveCount(5);
+  await expect(page.locator(".audience-nav")).toBeHidden();
+  await expect(
+    page
+      .locator("#audience-builders")
+      .getByText("Troubleshoot", { exact: true }),
+  ).toBeVisible();
   await page.goto(base + "/about/");
   await expect(
     page.getByText(

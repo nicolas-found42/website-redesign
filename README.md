@@ -1,103 +1,103 @@
-# Found42 website
+# Found42 website preview
 
-A seven-page, responsive preview of the Found42 website, built with Vite and
-TypeScript. The site uses the **Working Drawings** visual system and presents
-Found42's resources, learning materials, services, and inquiry paths.
+A seven-page Found42 site built with Vite and TypeScript. The Lovable content
+baseline is expressed through the existing **Working Drawings** visual system:
+paper and ink, red signals, editorial typography, and responsive schematic
+illustrations. The opening says it plainly: hands-on Claude skills and
+training for your business — usable systems for executives, practical training
+for the people doing the work, built around a specific role, industry and company.
 
-## Preview and feedback
+This is a noindex design preview. Local resource delivery, newsletter subscriptions,
+course enrollment and local inquiry submission are not connected. The AI
+Readiness Scorecard is answered on the page and sends nothing; the original
+ScoreApp assessment is linked for its emailed report. Every page opens with
+one preview notice saying so, rather than each card repeating it. Forms
+validate locally and state that nothing was sent. The inquiry dialog leads with
+the established Found42 contact form; its local draft can be checked and copied
+into that form.
 
-| Destination      | Link                                                                                            |
-| ---------------- | ----------------------------------------------------------------------------------------------- |
-| Website preview  | [Open the hosted preview](https://nicolas-found42.github.io/website-redesign/)                  |
-| Team review mode | **[Open the feedback review link](https://nicolas-found42.github.io/website-redesign/?review)** |
+## Develop and validate
 
-To leave feedback, open the review link, choose **Add feedback**, and select the
-part of the page you want to discuss. When finished, choose **Send** to download
-or copy the feedback file and share it with the team. Review mode stays active
-as you navigate between pages in the same tab. See the
-[review guide](docs/REVIEW-MODE.md) for the full process.
-
-This is a **noindex design preview**. Newsletter subscription, course
-enrollment, and the Skills Starter Library are unavailable here. The on-page
-AI Readiness Scorecard keeps answers in the browser; the separate ScoreApp
-assessment offers an emailed report whose delivery has not been verified.
-Consultation inquiries open Found42's live contact form. Available resources
-link to their published destinations.
-
-## Get started
-
-Requires Node.js 22.13+ or 24+, and npm.
+Requires Node.js 22.12+ and npm.
 
 ```sh
 npm ci
 npm run dev -- --port 4173
-```
-
-Open <http://127.0.0.1:4173/> for the development site. To validate the
-production build with the same base path used by GitHub Pages:
-
-```sh
+npm run typecheck
+npx playwright install chromium firefox webkit
 npm run build
+npm test
 npm run preview:pages
 ```
 
-Open <http://127.0.0.1:4179/website-redesign/> for the static preview.
-`preview:pages` checks directory indexes, trailing-slash redirects, and real
-404 responses without a development server's SPA fallback. Rebuild after code
-changes before testing against an already-running production server.
+Development: http://127.0.0.1:4173/.
+Static production validation: http://127.0.0.1:4179/website-redesign/.
+The test configuration starts both servers when needed. After changing code,
+rebuild before testing against an already-running production server.
 
-## Quality checks
+`npm run preview` is also available, but the acceptance checks use
+`preview:pages`: directory indexes, trailing-slash redirects and real 404s,
+without a development SPA fallback.
 
-```sh
-npm run lint
-npm run typecheck
-npx playwright install chromium firefox webkit
-npm test
-```
+## Structure
 
-`npm run lint` checks TypeScript, JavaScript, CSS, and repository Markdown.
-`npm run lint:actions` also checks the GitHub Actions workflow; it requires
-actionlint locally (`brew install actionlint` on macOS). The commit hook runs
-lint, typecheck, and the full Playwright suite.
+- `src/content.ts`: source offerings, resources, biography, industry scopes,
+  forthcoming essays and assessment wording.
+- `src/homepage.ts`: homepage rendering and shared page mounting; navigation,
+  adaptive header, motion controls, reveal and drawing lifecycles.
+- `src/homepage/`: homepage bands and reusable site header/footer/inquiry,
+  including the three-audience gallery (`audiences.ts`, `audiences-behaviour.ts`).
+- `src/audiences.ts`, `src/scene.ts`: the audience scenes (executives install
+  and use a system; contributors get a skill per role; builders climb to a
+  workflow in use) and the failure-mode review figure, with their live engine.
+- `src/pages.ts`: dedicated resource, services, industry, biography and blog
+  layouts, plus route metadata. Plain render functions match existing conventions.
+- `src/interactions.ts`: assessment state, native dialogs and local validation.
+  No form sends or stores visitor data.
+- `src/paths.ts`: deployment-aware internal routes and assets.
+- `src/schematic.ts`, `src/system.ts`: authored landscape/portrait drawings and
+  their shared motion engine. Geometry is retained; service labels now match
+  Workshops, Workflows and Automations.
+- `src/styles/`: existing tokens and band styles, extended by `pages.css`.
+  `motion.css` remains last so reduced-motion preferences take precedence.
+- `public/assets/`: existing logo, founder portrait and license notices.
+- `scripts/prerender.mjs`: generates HTML for every route after Vite builds.
+- `scripts/serve-pages.mjs`: strict local static server for production checks.
+- `tests/`: source-manifest coverage, browser journeys, assessment branches,
+  accessibility, motion, reflow, static routing and script-failure checks;
+  `audit-remediation.spec.ts`, `ux-review.spec.ts` and
+  `ux-review-phone.spec.ts` guard the September 22 audit and the two
+  September 23 UX review findings.
 
-## Project layout
+## GitHub Pages
 
-| Path                               | Responsibility                                                  |
-| ---------------------------------- | --------------------------------------------------------------- |
-| `src/content.ts`                   | Offerings, resources, biography, and page copy                  |
-| `src/homepage.ts`, `src/homepage/` | Homepage and shared site sections                               |
-| `src/pages.ts`                     | Dedicated page layouts and route metadata                       |
-| `src/interactions.ts`              | Scorecard, workflow preview, and inquiry handoff                |
-| `src/review/`                      | Optional, on-demand feedback tools                              |
-| `src/paths.ts`                     | Deployment-aware routes and asset paths                         |
-| `src/styles/`                      | Design tokens and page styles                                   |
-| `scripts/prerender.mjs`            | Static HTML generation for every route                          |
-| `scripts/serve-pages.mjs`          | Strict static server for production checks                      |
-| `tests/`                           | Browser journeys, accessibility, routing, and regression checks |
+The production base is `/website-redesign/`. Build emits `/index.html`, six
+nested directory `index.html` files and `/404.html`, all with real rendered
+content, individual metadata and `noindex, nofollow`. JavaScript enhances those
+pages; normal anchors handle navigation and browser history. Unknown paths
+render a dedicated missing-page view rather than the homepage. Forms are
+disabled until their validation handlers are attached, preventing accidental
+native submission when scripts fail.
 
-## Deployment
+`.github/workflows/pages.yml` verifies PRs and deploys **only `dist`** after a
+merge to `main`. Audit captures, research, scripts and tests are outside the
+published output. All changes use a feature branch and pull request; this
+migration does not authorize a production-domain change or direct push to main.
 
-The production base path is `/website-redesign/`. The build generates an
-`index.html` for each route and a dedicated `404.html`, with page-specific
-metadata and `noindex, nofollow`. Navigation uses normal links; JavaScript
-enhances the rendered pages.
+## Migration evidence
 
-[The GitHub Pages workflow](.github/workflows/pages.yml) verifies pull requests
-and deploys the `dist` directory after a merge to `main`. Changes go through a
-feature branch and pull request. A production-domain launch requires a
-separate decision.
+- [Site map](docs/SITE-MAP.md)
+- [Content authority and access limits](docs/CONTENT-SOURCES.md)
+- [Visual system](docs/DESIGN.md)
+- [Validation status](docs/VALIDATION.md)
+- [Launch dependencies](docs/LAUNCH-BACKLOG.md)
+- [Review mode](docs/REVIEW-MODE.md): how the team sends exact feedback
+- [Teardown](artifacts/lovable-migration/2026-09-16/teardown.md)
+- [Source-derived manifest](artifacts/lovable-migration/2026-09-16/manifest.json)
 
-## Project documentation
+The earlier found42.com audits remain historical evidence. Their homepage-only
+scope and older offer/resource taxonomy do not constrain this migration.
 
-- [Site map](docs/SITE-MAP.md) and [content sources](docs/CONTENT-SOURCES.md)
-- [Visual system](docs/DESIGN.md) and [domain context map](CONTEXT-MAP.md)
-- [Validation status](docs/VALIDATION.md) and
-  [launch dependencies](docs/LAUNCH-BACKLOG.md)
-- [Review mode instructions](docs/REVIEW-MODE.md)
-- [Migration teardown](artifacts/lovable-migration/2026-09-16/teardown.md) and
-  [source-derived manifest](artifacts/lovable-migration/2026-09-16/manifest.json)
-- [September 16 implementation coverage](docs/MEETING-COVERAGE.md) and
-  [stand-up convergence record](docs/STANDUP-CONVERGENCE.md)
-
-Earlier found42.com audits are historical evidence. The seven-page migration
-and its source manifest define the current preview scope.
+September 16 meeting implementation: [requirements and Adejoke handoff](docs/MEETING-COVERAGE.md).
+Stand-up convergence (direct opening, audience scenes, failure-mode figure,
+copy changes): [implementation record](docs/STANDUP-CONVERGENCE.md).

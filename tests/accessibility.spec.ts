@@ -15,7 +15,7 @@ test("mobile menu supports keyboard navigation and returns focus to the chosen s
   await expect(menu).toBeFocused();
   await expect(
     page.getByRole("navigation", { name: "Main navigation" }),
-  ).toBeHidden();
+  ).not.toBeVisible();
   await menu.press("Enter");
   // WebKit on macOS uses Option-Tab to include links in keyboard navigation.
   await page.keyboard.press(
@@ -31,20 +31,30 @@ test("mobile menu supports keyboard navigation and returns focus to the chosen s
   await expect(menu).toHaveAttribute("aria-expanded", "false");
 });
 
-test("reduced-motion visitors can operate the service selector without animated movement", async ({
+test("reduced-motion visitors can operate the drawing without animated movement", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/#services");
   const automate = page.getByRole("button", {
-    name: /Workflows/,
+    name: "Workflows",
+    exact: true,
   });
   await automate.focus();
   await page.keyboard.press("Enter");
   await expect(automate).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".ah-service-panel:not([hidden])")).toContainText(
-    "Your brief and quality bar",
-  );
+  await expect(
+    page
+      .locator(".services-art .system-label")
+      .filter({ hasText: "Brief / operating problem" })
+      .first(),
+  ).toBeVisible();
+  await expect(
+    page
+      .locator(".services-caption")
+      .filter({ hasText: "Operating problem" })
+      .first(),
+  ).toBeVisible();
   // Nothing perceptible: the reduced-motion clamp is in force on every effect
   // the page has, and none of them is still running once the choice is made.
   expect(
@@ -129,9 +139,9 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
   const start = page.locator("#resources");
   await expect(start).toContainText("C-Level AI Toolkit");
   await expect(start).toContainText(
-    "Public page · Some links need a ChatGPT account",
+    "Public page · Some custom GPT links require a ChatGPT account.",
   );
-  const choice = page.getByRole("button", { name: /Workflows/ });
+  const choice = page.getByRole("button", { name: "Workflows", exact: true });
   await choice.click();
   await expect(choice).toHaveAttribute("aria-pressed", "true");
 });
