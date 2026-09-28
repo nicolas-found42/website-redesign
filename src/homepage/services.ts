@@ -1,4 +1,4 @@
-import { services } from "../content";
+import { destinationRegister, services } from "../content";
 import { arrow } from "../icons";
 import { schematicFigure, schematics } from "../schematic";
 import { sitePath } from "../paths";
@@ -40,7 +40,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
   <p class="service-label note">${service.label}</p>
   <h3 id="service-${schematic.id}-title">${service.title}</h3>
   <p class="body">${service.description}</p>
-  <ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><button class="link" data-dialog="contact" data-service="${service.title}" data-interest="${service.inquiryInterest}" data-contact="${service.inquiryContext}">Talk to us about ${service.title.toLowerCase()}&nbsp;→</button>
+  <ul class="scope-list">${service.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-service="${service.title}" data-interest="${service.inquiryInterest}" data-contact="${service.inquiryContext}">Talk to us about ${service.title.toLowerCase()}&nbsp;→</a>
  </article>`;
     })
     .join("");
@@ -74,7 +74,7 @@ export function servicesSection({ allServicesLink = false } = {}) {
      <li><a class="link" href="${sitePath("industries/b2b-saas/")}">B2B SaaS</a></li>${allServicesLink ? `\n     <li><a class="link" href="${sitePath("services/")}">See all services</a></li>` : ""}
     </ul>
    </div>
-   <button class="link" data-dialog="contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</button>
+   <a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</a>
   </div>
  </div>
 </section>`;

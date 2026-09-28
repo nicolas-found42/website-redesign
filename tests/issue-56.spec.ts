@@ -110,15 +110,13 @@ test("Services has the complete public catalog and contextual inquiry handoff", 
   await expect(
     page.getByRole("heading", { name: "A useful place to begin" }),
   ).toBeVisible();
-  await expect(page.locator("#tracks .track button[data-dialog]")).toHaveCount(
-    5,
-  );
+  await expect(page.locator("#tracks .track a[data-dialog]")).toHaveCount(5);
   await expect(
-    page.locator("#beyond-training .catalog-option button[data-dialog]"),
+    page.locator("#beyond-training .catalog-option a[data-dialog]"),
   ).toHaveCount(4);
   await page
     .locator("#track-ai-builders")
-    .getByRole("button", { name: /Inquire about AI Builders/ })
+    .getByRole("link", { name: /Inquire about AI Builders/ })
     .click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText("AI Builders");

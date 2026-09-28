@@ -90,7 +90,7 @@ test("inquiry handoff explains the live form, traps focus and restores its trigg
   page,
 }) => {
   await page.goto("/resources/");
-  const trigger = page.getByRole("button", { name: /Talk to our team/ });
+  const trigger = page.getByRole("link", { name: /Talk to our team/ });
   await trigger.click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
@@ -119,7 +119,10 @@ test("active resources use published destinations and inactive forms make no req
   await expect(page.locator("#course form")).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "Read the verified lesson" }),
-  ).toHaveAttribute("href", "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude");
+  ).toHaveAttribute(
+    "href",
+    "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
+  );
   await page.goto("/blog/");
   await expect(page.locator("form")).toHaveCount(0);
   await expect(page.locator("main")).toContainText(
@@ -150,7 +153,7 @@ test("mobile menu stays readable over ink, exposes industries, and traps keyboar
   expect(result.violations).toEqual([]);
   await menu.focus();
   await page.keyboard.press("Shift+Tab");
-  await expect(nav.getByRole("button", { name: "Talk to us" })).toBeFocused();
+  await expect(nav.getByRole("link", { name: "Talk to us" })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(menu).toBeFocused();
   await page.keyboard.press("Escape");

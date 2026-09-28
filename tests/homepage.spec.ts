@@ -10,7 +10,7 @@ test("the homepage offers a clear resource and consultation path with near-hero 
   await expect(
     hero.getByRole("link", { name: /Explore free resources/ }),
   ).toHaveAttribute("href", "/resources/");
-  const team = hero.getByRole("button", { name: "Talk to us" });
+  const team = hero.getByRole("link", { name: "Talk to us" });
   await expect(team).toBeVisible();
   await team.click();
   const inquiry = page.getByRole("dialog");
@@ -96,7 +96,7 @@ test("published workshop quotes remain attributed and inquiries use the live rou
     "Carmen Paredes Ramirez",
   );
   await page
-    .getByRole("button", { name: "Talk to us", exact: true })
+    .getByRole("link", { name: "Talk to us", exact: true })
     .first()
     .click();
   const dialog = page.getByRole("dialog");

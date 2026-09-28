@@ -90,14 +90,21 @@ test("a completed choice rests in the same still composition as a fresh page", a
   await motionlessPage
     .getByRole("button", { name: "Workflows", exact: true })
     .click();
+  // WebKit suspends animations in background tabs. Capture the fresh still
+  // state while its tab is active, then close it before polling the first page.
+  await expect
+    .poll(async () => (await drawing(motionlessPage)).field.animating)
+    .toBe(0);
+  const still = await drawing(motionlessPage);
+  await motionlessPage.close();
+  await page.bringToFront();
 
   await expect
     .poll(async () => drawing(page), {
       message: "a settled drawing should leave no entrance state behind",
       timeout: 8000,
     })
-    .toEqual(await drawing(motionlessPage));
-  await motionlessPage.close();
+    .toEqual(still);
 });
 
 test("switching to reduced motion during rapid choices leaves a complete drawing", async ({
@@ -156,6 +163,13 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
   await expectedPage
     .getByRole("button", { name: "Automations", exact: true })
     .click();
+  await expectedPage.waitForTimeout(500);
+  await expect
+    .poll(async () => (await drawing(expectedPage)).field.animating)
+    .toBe(0);
+  const still = await drawing(expectedPage);
+  await expectedPage.close();
+  await page.bringToFront();
 
   await expect(page.locator("html")).toHaveAttribute(
     "data-service-scroll-settled",
@@ -181,7 +195,7 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
       message: "an interrupted drawing should finish as the motionless one",
       timeout: 8000,
     })
-    .toEqual(await drawing(expectedPage));
+    .toEqual(still);
   // The rapid clicks end on Automations; the drawing must settle on that
   // customer journey even if the reading observer briefly reports another.
   // This checks the label captured before the motion change, not its current value.
@@ -189,7 +203,6 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
   expect(interrupted).toBe(
     "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
   );
-  await expectedPage.close();
 });
 
 test("the opening drawing is complete and labelled without any interaction", async ({

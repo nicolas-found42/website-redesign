@@ -236,7 +236,7 @@ export function mountInteractions(root: HTMLElement) {
     "click",
     (event) => {
       const target = (event.target as HTMLElement).closest<HTMLElement>(
-        "button",
+        "button, a[data-dialog]",
       );
       if (!target) return;
       if (target.hasAttribute("data-scorecard-answer")) {
@@ -268,6 +268,18 @@ export function mountInteractions(root: HTMLElement) {
         answers = [];
         renderAssessment(true);
       } else if (target.dataset.dialog) {
+        // A real contact link remains usable in the prerendered page when
+        // scripts are unavailable. Ordinary clicks get the contextual handoff.
+        if (
+          target instanceof HTMLAnchorElement &&
+          (event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey ||
+            event.button !== 0)
+        )
+          return;
+        event.preventDefault();
         // The scorecard's open answer is local-only, so it is offered as text
         // the visitor can carry to the live form rather than prefilled here.
         if (target.hasAttribute("data-scorecard-prefill") && openAnswer)

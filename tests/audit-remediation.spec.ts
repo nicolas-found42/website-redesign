@@ -19,7 +19,7 @@ test("F01: a wheel over the inquiry dialog scrolls the dialog, not the page behi
   await page.setViewportSize({ width: 1280, height: 560 });
   await page.goto("/resources/");
   await page
-    .getByRole("button", { name: /Talk to us/ })
+    .getByRole("link", { name: /Talk to us/ })
     .first()
     .click();
   const dialog = page.getByRole("dialog");
@@ -53,9 +53,7 @@ test("F01: a wheel over the open mobile menu scrolls the menu, not the page", as
     .poll(() => nav.evaluate((el) => el.scrollTop))
     .toBeGreaterThan(0);
   expect(await page.evaluate(() => scrollY)).toBe(0);
-  await expect(
-    nav.getByRole("button", { name: /Talk to us/ }),
-  ).toBeInViewport();
+  await expect(nav.getByRole("link", { name: /Talk to us/ })).toBeInViewport();
   // The toggle sits above the panel, not inside it: a wheel there must not
   // move the page behind the menu either.
   const toggle = await page.locator(".menu-toggle").boundingBox();
@@ -72,7 +70,7 @@ test("F02, F06: the inquiry backdrop and focus dismissal still work", async ({
   page,
 }) => {
   await page.goto("/resources/");
-  const trigger = page.getByRole("button", { name: /Talk to our team/ });
+  const trigger = page.getByRole("link", { name: /Talk to our team/ });
   await trigger.click();
   const dialog = page.getByRole("dialog");
   // A click inside the dialog's own box never dismisses it…
@@ -89,7 +87,7 @@ test("F03, F17: the live inquiry handoff is accessible and honest", async ({
   page,
 }) => {
   await page.goto("/resources/");
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await page.getByRole("link", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText(
     "consultation inquiry, not reserving a meeting",

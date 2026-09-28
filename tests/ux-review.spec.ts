@@ -11,9 +11,7 @@ test("#32: the inquiry dialog leads to the live form and carries service context
   page,
 }) => {
   await page.goto("/services/");
-  await page
-    .getByRole("button", { name: /Talk to us about workflows/ })
-    .click();
+  await page.getByRole("link", { name: /Talk to us about workflows/ }).click();
   const dialog = page.getByRole("dialog");
   const live = dialog.getByRole("link", { name: "Open the live inquiry form" });
   await expect(live).toHaveClass(/\baction\b/);
@@ -24,7 +22,7 @@ test("#32: the inquiry dialog leads to the live form and carries service context
   );
   await expect(dialog.locator("form")).toHaveCount(0);
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await page.getByRole("link", { name: /Talk to our team/ }).click();
   await expect(
     dialog.getByRole("link", { name: "Open the live inquiry form" }),
   ).toHaveAttribute("href", "https://www.found42.com/contact");
@@ -193,7 +191,7 @@ test("#37: before handing off, the dialog says what the live form will ask", asy
   page,
 }) => {
   await page.goto("/about/");
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await page.getByRole("link", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText(
     "starts news and updates at Yes: choose No if you only want a reply.",
@@ -275,7 +273,7 @@ test("#40: the band and the dialog say what happens after an inquiry, not only w
   const band = page.locator("#contact");
   await expect(band.locator(".inquiry-steps li")).toHaveText(steps);
   await expect(band).not.toContainText("does not book an appointment");
-  await band.getByRole("button", { name: "Talk to us" }).click();
+  await band.getByRole("link", { name: "Talk to us" }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.locator(".inquiry-steps li")).toHaveText(steps);
   // Nothing claims a meeting has been booked.
@@ -286,9 +284,7 @@ test("#41: a contextual service action names the service in the live handoff", a
   page,
 }) => {
   await page.goto("/services/");
-  await page
-    .getByRole("button", { name: /Talk to us about workflows/ })
-    .click();
+  await page.getByRole("link", { name: /Talk to us about workflows/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.locator(".note").first()).toHaveText("About Workflows");
   await expect(
@@ -306,7 +302,7 @@ test("#41: unavailable resource forms and local inquiry forms are absent", async
   await expect(page.locator("#library form")).toHaveCount(0);
   await expect(page.locator("#course form")).toHaveCount(0);
   await expect(page.locator("form[data-contact-form]")).toHaveCount(0);
-  await page.getByRole("button", { name: /Talk to our team/ }).click();
+  await page.getByRole("link", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.locator("form")).toHaveCount(0);
   await expect(

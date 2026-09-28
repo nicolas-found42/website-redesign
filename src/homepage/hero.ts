@@ -1,4 +1,4 @@
-import { claudeGloss } from "../content";
+import { claudeGloss, destinationRegister } from "../content";
 import { arrow, icon } from "../icons";
 import { sitePath } from "../paths";
 
@@ -27,7 +27,7 @@ export function hero() {
    <p class="lead hero-lead" data-reveal>Found42 helps non-technical teams use AI in the work they already own. We train people in their roles, build tailored Claude skills, and automate repeatable work while judgment stays with your team.</p>
    <p class="note--plain hero-gloss" data-reveal>${claudeGloss}</p>
    <div class="hero-actions" data-reveal>
-    <button class="action" type="button" data-dialog="contact">Talk to us ${icon("right")}</button>
+    <a class="action" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to us ${icon("right")}</a>
     <a class="action action--ghost" href="${sitePath("resources/")}">Explore free resources ${arrow}</a>
    </div>
   </div>

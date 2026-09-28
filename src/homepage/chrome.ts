@@ -24,7 +24,7 @@ export function siteHeader() {
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(
       "",
-    )}<button class="nav-contact" data-dialog="contact">Talk to us ${arrow}</button><noscript><a class="nav-contact" href="${destinationRegister.liveInquiry}">Talk to us ${arrow}</a></noscript></nav></header>`;
+    )}<a class="nav-contact" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to us ${arrow}</a></nav></header>`;
 }
 export function siteFooter() {
   const group = (

@@ -61,7 +61,7 @@ const sectionLabel = (label: string) =>
 const lead = (body: string) =>
   `<p class="lead">${body}</p>${body.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
 const opening = (label: string, title: string, body: string, aside: string) =>
-  `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<button class="action" data-dialog="contact">Talk to our team&nbsp;→</button></div><aside class="page-aside">${aside}</aside></section>`;
+  `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<a class="action" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to our team&nbsp;→</a></div><aside class="page-aside">${aside}</aside></section>`;
 /**
  * Planned resources stay visibly unavailable (ADR 0005), grouped after the ones
  * a visitor can use today so they read as what is coming rather than as dead
@@ -76,7 +76,7 @@ function laterResources() {
       const action =
         "href" in resource
           ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`
-          : `<button class="link" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</button>`;
+          : `<a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</a>`;
       return `<section id="${resource.id}" class="resource-detail resource-later"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${action}</div></div></section>`;
     })
     .join("")}`;
@@ -100,7 +100,7 @@ function resourcesPage() {
           resource.id === "playbook"
             ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, LinkedIn profile and a human check.</p>`
             : `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`;
-        return `<section id="${resource.id}" class="resource-detail"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<button class="link" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</button></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
+        return `<section id="${resource.id}" class="resource-detail"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</a></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
       })
       .join("") +
     laterResources() +
