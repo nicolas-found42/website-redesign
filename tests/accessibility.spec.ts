@@ -15,7 +15,7 @@ test("mobile menu supports keyboard navigation and returns focus to the chosen s
   await expect(menu).toBeFocused();
   await expect(
     page.getByRole("navigation", { name: "Main navigation" }),
-  ).not.toBeVisible();
+  ).toBeHidden();
   await menu.press("Enter");
   // WebKit on macOS uses Option-Tab to include links in keyboard navigation.
   await page.keyboard.press(

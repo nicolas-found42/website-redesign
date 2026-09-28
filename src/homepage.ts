@@ -245,11 +245,11 @@ export function mountPage(
         portrait: "(max-width: 1179px)",
       })
     : null;
-  if (heroSystem) disposers.push(heroSystem.dispose);
+  if (heroSystem) disposers.push(() => heroSystem.dispose());
 
   /* ── Pausing the page's motion (WCAG 2.2.2) ── */
-  const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]")!;
-  const label = toggle?.querySelector("span:last-child")!;
+  const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]");
+  const label = toggle?.querySelector("span:last-child");
   const syncToggle = () => {
     if (!toggle || !label) return;
     toggle.setAttribute("aria-pressed", String(motionPreference.byVisitor));

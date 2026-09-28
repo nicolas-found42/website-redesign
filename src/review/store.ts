@@ -63,8 +63,18 @@ export function createStore() {
   const read = (): Saved => {
     if (!persistent) return memory;
     try {
-      const saved = JSON.parse(localStorage.getItem(key) ?? "null");
-      if (saved?.version === 1 && Array.isArray(saved.items)) memory = saved;
+      const saved: unknown = JSON.parse(localStorage.getItem(key) ?? "null");
+      if (
+        saved &&
+        typeof saved === "object" &&
+        "version" in saved &&
+        saved.version === 1 &&
+        "reviewer" in saved &&
+        typeof saved.reviewer === "string" &&
+        "items" in saved &&
+        Array.isArray(saved.items)
+      )
+        memory = saved as Saved;
     } catch {
       /* An unreadable list keeps the last one this page knew. */
     }

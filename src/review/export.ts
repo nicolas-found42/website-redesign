@@ -182,16 +182,27 @@ export interface FeedbackRecord {
 export function parseFeedbackFile(text: string): FeedbackRecord {
   const blocks = [...text.matchAll(/```json\s*\n([\s\S]*?)\n```/g)].reverse();
   for (const [, json] of blocks) {
-    let record: FeedbackRecord | undefined;
+    let record: unknown;
     try {
       record = JSON.parse(json);
     } catch {
       continue;
     }
-    if (record?.format !== dataMarker) continue;
-    if (record.version !== 1 || !Array.isArray(record.items))
+    if (
+      !record ||
+      typeof record !== "object" ||
+      !("format" in record) ||
+      record.format !== dataMarker
+    )
+      continue;
+    if (
+      !("version" in record) ||
+      record.version !== 1 ||
+      !("items" in record) ||
+      !Array.isArray(record.items)
+    )
       throw new Error("This isn't version 1 review-mode feedback.");
-    return record;
+    return record as FeedbackRecord;
   }
   throw new Error(
     `No review-mode data found. The file should end with a JSON block marked "${dataMarker}".`,

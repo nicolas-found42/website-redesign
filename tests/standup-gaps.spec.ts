@@ -10,15 +10,12 @@ const phone = { width: 390, height: 844 };
 
 /** The words a service article's drawing currently shows. */
 const labelsOf = (page: Page, index: number) =>
-  page.evaluate(
-    (index) =>
-      [
-        ...document
-          .querySelectorAll(".service-figure")
-          [index].querySelectorAll(".system-label"),
-      ].map((label) => label.textContent),
-    index,
-  );
+  page.evaluate((index) => {
+    const figure = document.querySelectorAll(".service-figure")[index];
+    return [...figure.querySelectorAll(".system-label")].map(
+      (label) => label.textContent,
+    );
+  }, index);
 
 /** Puts the top `share` of a service article's drawing on screen. */
 const reveal = (page: Page, index: number, share: number) =>
@@ -265,7 +262,7 @@ test("the scorecard walks forward and back, keeps what was typed, and never send
   await expect(app.locator(".scorecard-areas li")).toHaveCount(5);
   await expect(app.locator(".scorecard-next > li")).toHaveCount(3);
   await expect(app.locator(".scorecard-echo")).toContainText(typed);
-  expect(await app.locator(".scorecard-echo img").count()).toBe(0);
+  await expect(app.locator(".scorecard-echo img")).toHaveCount(0);
   expect(await page.evaluate(() => "injected" in window)).toBe(false);
   expect(
     await app.locator(".scorecard-result").evaluate((node) => node.textContent),

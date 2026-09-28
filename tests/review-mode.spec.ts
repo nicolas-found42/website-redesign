@@ -42,6 +42,8 @@ test("visitors never load review mode; a review link does", async ({
   const requested: string[] = [];
   page.on("request", (request) => requested.push(request.url()));
   await page.goto(`${production}/`);
+  // A negative network assertion must wait for late dynamic imports.
+  // eslint-disable-next-line playwright/no-networkidle
   await page.waitForLoadState("networkidle");
   await expect(page.locator("#found42-review")).toHaveCount(0);
   expect(requested.filter((url) => /\/assets\/review-/.test(url))).toEqual([]);

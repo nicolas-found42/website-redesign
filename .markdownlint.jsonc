@@ -1,0 +1,8 @@
+{
+  "default": true,
+  // Source records and audits keep long lines and literal URLs for inspection.
+  "MD013": false,
+  "MD034": false,
+  // Existing compact tables are valid Markdown; Prettier formats new tables.
+  "MD060": false,
+}

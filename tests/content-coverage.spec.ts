@@ -1,9 +1,14 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
+type Manifest = {
+  pages: { id: string }[];
+  items: { id: string; page: string; state?: string; status?: string }[];
+};
+
 const manifest = JSON.parse(
   readFileSync("artifacts/lovable-migration/2026-09-16/manifest.json", "utf8"),
-);
+) as Manifest;
 
 /**
  * The migration manifest is historical provenance, not a frozen transcript.
@@ -14,14 +19,16 @@ const manifest = JSON.parse(
  * copy to survive verbatim. Current behavior is specified by the route tests.
  */
 test("every manifest item targets a known page", () => {
-  const pageIds = new Set(manifest.pages.map((record: any) => record.id));
+  const pageIds = new Set(manifest.pages.map((record) => record.id));
   const orphans = manifest.items
-    .filter((item: any) => !pageIds.has(item.page))
-    .map((item: any) => `${item.id} -> ${item.page}`);
+    .filter((item) => !pageIds.has(item.page))
+    .map((item) => `${item.id} -> ${item.page}`);
   expect(orphans).toEqual([]);
 });
 
-test("the current routes exercise every live migration state", async ({ page }) => {
+test("the current routes exercise every live migration state", async ({
+  page,
+}) => {
   const expected: Record<string, readonly string[]> = {
     "/": ["initial", "contact"],
     "/resources/": [
@@ -67,14 +74,15 @@ test("the current routes exercise every live migration state", async ({ page }) 
       }
     }
 
-    for (const state of required) expect(observed, `${route}: ${state}`).toContain(state);
+    for (const state of required)
+      expect(observed, `${route}: ${state}`).toContain(state);
   }
 });
 
 test("historical records that no longer describe a current state are explicit", () => {
-  const course = manifest.items.filter((item: any) => item.state === "course");
-  const withheld = manifest.items.filter((item: any) => item.status === "withheld");
-  expect(course.map((item: any) => item.id)).toEqual([
+  const course = manifest.items.filter((item) => item.state === "course");
+  const withheld = manifest.items.filter((item) => item.status === "withheld");
+  expect(course.map((item) => item.id)).toEqual([
     "course-0",
     "course-1",
     "course-2",
@@ -84,7 +92,7 @@ test("historical records that no longer describe a current state are explicit", 
     "course-6",
     "course-7",
   ]);
-  expect(withheld.map((item: any) => item.id)).toEqual([
+  expect(withheld.map((item) => item.id)).toEqual([
     "blog-reading-time-0",
     "blog-reading-time-1",
     "blog-reading-time-2",

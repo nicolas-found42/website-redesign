@@ -18,17 +18,25 @@ into that form.
 
 ## Develop and validate
 
-Requires Node.js 22.12+ and npm.
+Requires Node.js 22.13+ or 24+, and npm.
 
 ```sh
 npm ci
 npm run dev -- --port 4173
+npm run lint
 npm run typecheck
 npx playwright install chromium firefox webkit
 npm run build
 npm test
 npm run preview:pages
 ```
+
+`npm run lint` checks TypeScript and JavaScript with ESLint (including Playwright
+test rules), CSS with Stylelint, and repository Markdown with markdownlint-cli2.
+Run `npm run lint:actions` to check the GitHub Actions workflow with actionlint.
+Install its binary first (`brew install actionlint` on macOS); CI runs the
+versioned actionlint image. The commit hook runs lint, typecheck, and the full
+Playwright suite.
 
 Development: http://127.0.0.1:4173/.
 Static production validation: http://127.0.0.1:4179/website-redesign/.
