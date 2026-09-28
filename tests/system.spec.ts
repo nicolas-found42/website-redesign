@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { readField } from "./drawing";
 
 /**
  * The working-system drawing.
@@ -6,33 +7,18 @@ import { test, expect, type Page } from "@playwright/test";
  * These cover what the drawing has to guarantee rather than how it is built:
  * three distinct compositions a visitor can reach with a keyboard or a touch,
  * the same still composition at rest however it was reached, and no drawing
- * state left behind by an interrupted or reduced-motion transition.
+ * state — a piece still lifted, a word still faded, an animation still
+ * attached — left behind by an interrupted or reduced-motion transition.
  */
 
 /** Everything the sticky drawing shows, as a browser would report it. */
-const drawing = (target: Page) =>
-  target.evaluate(() => {
+const drawing = async (target: Page) => ({
+  field: await target
+    .locator(".services-art .system-field")
+    .evaluate(readField),
+  ...(await target.evaluate(() => {
     const round = (value: number) => Math.round(value * 10) / 10;
-    const field = document.querySelector(".services-art .system-field")!;
-    const labels = [...field.querySelectorAll(".system-label")];
     return {
-      labels: labels.map((label) => label.textContent?.trim()),
-      places: labels.map((label) => {
-        const style = (label as HTMLElement).style;
-        return [style.getPropertyValue("--x"), style.getPropertyValue("--y")];
-      }),
-      markers: [...field.querySelectorAll(".marker")].map((marker) =>
-        marker.getAttribute("transform"),
-      ),
-      paths: [...field.querySelectorAll(".route")].map((path) =>
-        path.getAttribute("d"),
-      ),
-      // A settled drawing must carry no half-finished draw on any route.
-      drawState: [...field.querySelectorAll(".route")].map((path) => {
-        const style = getComputedStyle(path);
-        return [style.strokeDasharray, style.strokeDashoffset];
-      }),
-      describedBy: field.getAttribute("aria-label"),
       caption: document.querySelector(".services-caption")?.textContent,
       pressed: [...document.querySelectorAll("#services .choice")].map(
         (choice) => choice.getAttribute("aria-pressed"),
@@ -45,7 +31,8 @@ const drawing = (target: Page) =>
         ),
       ),
     };
-  });
+  })),
+});
 
 test("the service diagrams make each customer stage visible", async ({
   page,
@@ -106,7 +93,7 @@ test("a completed choice rests in the same still composition as a fresh page", a
 
   await expect
     .poll(async () => drawing(page), {
-      message: "a settled drawing should leave no draw state behind",
+      message: "a settled drawing should leave no entrance state behind",
       timeout: 8000,
     })
     .toEqual(await drawing(motionlessPage));
@@ -216,17 +203,15 @@ test("the opening drawing is complete and labelled without any interaction", asy
   await expect(
     opening.getByText("Human direction", { exact: true }),
   ).toBeVisible();
+  // Once assembled, every piece and every word is at rest and nothing is
+  // left running on the drawing.
   await expect
-    .poll(() =>
-      opening
-        .locator(".route")
-        .evaluateAll((routes) =>
-          routes.every(
-            (route) => getComputedStyle(route).strokeDasharray === "none",
-          ),
-        ),
-    )
-    .toBe(true);
+    .poll(async () => {
+      const state = await opening.evaluate(readField);
+      return { ...state.unsettled, animating: state.animating };
+    })
+    .toEqual({ parts: 0, words: 0, animating: 0 });
+  expect((await opening.evaluate(readField)).parts.length).toBeGreaterThan(5);
 });
 
 test("a visitor on a phone gets each service's own drawing and can jump between them", async ({
@@ -361,14 +346,15 @@ test("pausing during a transition leaves the drawing settled, not mid-draw", asy
   ).toHaveAttribute("aria-pressed", "true");
 
   /**
-   * Driven from inside the page so the pause lands at a known point: the routes
-   * of a transition are swapped in on a timer, and the whole question is
-   * whether that timer survives the pause. Round-tripping each click through
-   * the driver would let its latency drift past the window being tested.
+   * Driven from inside the page so the pause lands at a known point: the new
+   * composition's pieces are laid on a timer once the old ones have been
+   * lifted off, and the whole question is whether that timer survives the
+   * pause. Round-tripping each click through the driver would let its latency
+   * drift past the window being tested.
    *
    * Sampled across that window rather than polled for an eventual state — a
-   * stale draw finishes on its own, so waiting for quiet would pass whether or
-   * not it ever started.
+   * stale entrance finishes on its own, so waiting for quiet would pass whether
+   * or not it ever started.
    */
   const disturbed = await page.evaluate(async () => {
     const sleep = (ms: number) =>
@@ -383,9 +369,9 @@ test("pausing during a transition leaves the drawing settled, not mid-draw", asy
       await sleep(60);
       seen.drawing = Math.max(
         seen.drawing,
-        // A draw writes these as attributes; a settled route carries neither.
-        [...field.querySelectorAll(".route")].filter((route) =>
-          route.hasAttribute("stroke-dasharray"),
+        // A piece lifted off, or laid and not yet at rest, is not settled.
+        [...field.querySelectorAll(".part-body, .system-label-text")].filter(
+          (piece) => getComputedStyle(piece).opacity !== "1",
         ).length,
       );
       seen.running = Math.max(
@@ -416,44 +402,65 @@ test("the service drawings are three different drawings, not one repeated", asyn
   await page.goto("http://127.0.0.1:4173/#services");
   await page.evaluate(() => document.fonts.ready);
 
-  const signatures = await page.evaluate(() =>
-    [...document.querySelectorAll(".service-figure .system-field")].map(
-      (field) =>
-        JSON.stringify([
-          [...field.querySelectorAll(".route")].map((route) =>
-            route.getAttribute("d"),
-          ),
-          [...field.querySelectorAll(".marker")].map((marker) =>
-            marker.getAttribute("transform"),
-          ),
-          [...field.querySelectorAll(".system-label")].map((label) => [
-            (label as HTMLElement).style.getPropertyValue("--x"),
-            (label as HTMLElement).style.getPropertyValue("--y"),
-            label.textContent,
-          ]),
-        ]),
-    ),
+  const figures = page.locator(".service-figure .system-field");
+  await expect(figures).toHaveCount(3);
+  const states = await Promise.all(
+    [0, 1, 2].map((index) => figures.nth(index).evaluate(readField)),
   );
-  expect(signatures).toHaveLength(3);
-  expect(new Set(signatures).size).toBe(3);
+  // The artwork differs, not only the words: no two share their geometry, and
+  // no two are built from the same pieces.
+  expect(new Set(states.map((state) => state.geometry)).size).toBe(3);
+  expect(
+    new Set(
+      states.map((state) =>
+        JSON.stringify(state.parts.map((piece) => piece.name)),
+      ),
+    ).size,
+  ).toBe(3);
   await context.close();
 });
 
 test("the drawing's CSS geometry resolves the same in every engine", async ({
   page,
 }) => {
-  // `r` takes a length. A unitless value is accepted by one engine and dropped
-  // by the other two, which sized the result marker differently per browser.
+  // Every entrance scales, swings or unfolds a piece about a point given in
+  // the drawing's own units. That needs `transform-box: view-box` and a
+  // length-valued origin; an engine that dropped either would turn every
+  // piece about the wrong point, so both must resolve as written everywhere.
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          getComputedStyle(
-            document.querySelector(".hero-art .marker--result .marker-core")!,
-          ).r,
-      ),
-    )
-    .toBe("5.5px");
+  const bodies = await page
+    .locator(".hero-art .system-field .part-body")
+    .evaluateAll((all) =>
+      all.map((body) => {
+        const style = getComputedStyle(body);
+        const lengths = (value: string) =>
+          [...value.matchAll(/(-?[\d.]+)px/g)].map((match) => Number(match[1]));
+        return {
+          box: style.transformBox,
+          // As authored in the markup, before any engine serialises it.
+          written: lengths(
+            /transform-origin:\s*([^;]+)/.exec(
+              body.getAttribute("style") ?? "",
+            )?.[1] ?? "",
+          ),
+          // Engines differ only in whether they print a zero depth.
+          resolved: lengths(style.transformOrigin),
+        };
+      }),
+    );
+  expect(bodies.length).toBeGreaterThan(5);
+  for (const body of bodies) {
+    expect(body.box).toBe("view-box");
+    expect(body.written).toHaveLength(2);
+    expect(body.resolved.slice(0, 2)).toEqual(body.written);
+    expect(body.resolved.slice(2).every((depth) => depth === 0)).toBe(true);
+  }
+  // And each word resolves to real, readable type in every engine.
+  const sizes = await page
+    .locator(".hero-art .system-label-text")
+    .evaluateAll((all) =>
+      all.map((text) => parseFloat(getComputedStyle(text).fontSize)),
+    );
+  expect(Math.min(...sizes)).toBeGreaterThanOrEqual(13);
 });

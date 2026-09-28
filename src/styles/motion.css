@@ -143,10 +143,8 @@ html[data-motion="on"] [data-draw].is-in {
   .menu-toggle {
     border: 1px solid;
   }
-  .route,
-  .marker-ring,
-  .marker-core,
-  .signal {
+  /* The drawings are pictures: their prints and red keep their meaning. */
+  .system-svg {
     forced-color-adjust: none;
   }
   body::before,

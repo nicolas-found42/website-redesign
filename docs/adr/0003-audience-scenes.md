@@ -1,6 +1,6 @@
 # The audience scenes
 
-**Status:** accepted (stand-up convergence)
+**Status:** accepted (stand-up convergence); its visual language is superseded by [ADR 0006](0006-drawings-made-of-material.md)
 
 The three audiences are drawn as **scenes**: pictures in the working-system's
 hand — ink routes, ringed markers, red for what is human or live, monospaced

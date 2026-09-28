@@ -1,6 +1,6 @@
 # The working-system drawing
 
-**Status:** accepted (2026-09-14)
+**Status:** accepted (2026-09-14); its visual language is superseded by [ADR 0006](0006-drawings-made-of-material.md)
 
 The homepage's illustration is a **composition** of the working-system
 schematic: labelled nodes joined by routes that run horizontally, vertically or

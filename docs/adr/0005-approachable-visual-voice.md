@@ -1,6 +1,6 @@
 # The approachable business-site visual voice
 
-**Status:** accepted (2026-09-23)
+**Status:** accepted (2026-09-23); the drawings' visual language is superseded by [ADR 0006](0006-drawings-made-of-material.md)
 
 The website now presents a calm, approachable business-site voice while retaining
 the drawing systems accepted in [ADR 0002](0002-working-system-drawing.md),
