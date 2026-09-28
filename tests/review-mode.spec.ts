@@ -72,6 +72,7 @@ test("rewording a heading records its exact words, new words and place", async (
   page,
 }) => {
   await page.goto("/?review");
+  await page.evaluate(() => document.fonts.ready);
   const heading = page.locator("#audiences-title");
   await heading.scrollIntoViewIfNeeded();
   const form = await pick(page, heading);

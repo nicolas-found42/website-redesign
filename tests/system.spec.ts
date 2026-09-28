@@ -315,31 +315,40 @@ test("a slow font does not hold the opening headline back", async ({
   // The split waits for the fonts so it can measure real line boxes. If that
   // wait also gated the entrance, a slow font would leave the headline hidden
   // for as long as it took — so the entrance must not wait for it.
+  let releaseFonts = () => {};
+  const fontsHeld = new Promise<void>((resolve) => {
+    releaseFonts = resolve;
+  });
   await page.route("**/*.woff2", async (route) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await fontsHeld;
     await route.continue();
   });
-  await page.goto("/", { waitUntil: "commit" });
 
-  const headline = page.getByRole("heading", { level: 1 });
-  await expect(headline).toHaveClass(/is-in/, { timeout: 1000 });
-  await expect
-    .poll(
-      () =>
-        headline.evaluate((element) =>
-          [...element.querySelectorAll(".line-move, .word")].every((part) => {
-            const transform = getComputedStyle(part).transform;
-            return (
-              transform === "none" || transform === "matrix(1, 0, 0, 1, 0, 0)"
-            );
-          }),
-        ),
-      { timeout: 2000 },
-    )
-    .toBe(true);
-  await expect(headline).toHaveText(
-    "Train teams. Build useful skills. Automate the work.",
-  );
+  try {
+    await page.goto("/", { waitUntil: "commit" });
+
+    const headline = page.getByRole("heading", { level: 1 });
+    await expect(headline).toHaveClass(/is-in/, { timeout: 5000 });
+    await expect
+      .poll(
+        () =>
+          headline.evaluate((element) =>
+            [...element.querySelectorAll(".line-move, .word")].every((part) => {
+              const transform = getComputedStyle(part).transform;
+              return (
+                transform === "none" || transform === "matrix(1, 0, 0, 1, 0, 0)"
+              );
+            }),
+          ),
+        { timeout: 2000 },
+      )
+      .toBe(true);
+    await expect(headline).toHaveText(
+      "Train teams. Build useful skills. Automate the work.",
+    );
+  } finally {
+    releaseFonts();
+  }
 });
 
 test("pausing during a transition leaves the drawing settled, not mid-draw", async ({
