@@ -91,7 +91,9 @@ test("F03, F17: the live inquiry handoff is accessible and honest", async ({
   await page.goto("/resources/");
   await page.getByRole("button", { name: /Talk to our team/ }).click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog).toContainText("consultation inquiry, not reserving a meeting");
+  await expect(dialog).toContainText(
+    "consultation inquiry, not reserving a meeting",
+  );
   await expect(dialog.locator("form")).toHaveCount(0);
   await expect(
     dialog.getByRole("link", { name: "Open the live inquiry form" }),
@@ -226,25 +228,16 @@ test("F08: executive scene annotations are not covered by the drawing", async ({
       const pill = [...panel.querySelectorAll(".system-label")]
         .find((el) => el.textContent?.includes("Tailored executive skill"))!
         .getBoundingClientRect();
-      // The operating view's first rule: the topmost horizontal route inside the panel.
+      // The operating view's header rule, which the caption must stay above.
       const scale = field.height / svg.viewBox.baseVal.height;
-      const rule = Math.min(
-        ...[...svg.querySelectorAll(".route")]
-          .map((route) =>
-            (route.getAttribute("d") ?? "").match(
-              /^M\s*[\d.]+[ ,]([\d.]+)\s*L\s*[\d.]+[ ,]\1$/,
-            ),
-          )
-          .filter((match): match is RegExpMatchArray => !!match)
-          .map((match) => Number(match[1]))
-          .filter((y) => y > 300),
-      );
-      if (!Number.isFinite(rule))
-        throw new Error("No horizontal operating-view rule found in the scene");
+      const ruleEl = svg.querySelector<SVGRectElement>("[data-rule]");
+      if (!ruleEl) throw new Error("No operating-view rule found in the scene");
+      const rule = ruleEl.y.baseVal.value;
       return {
         problemRight: text("Your operating problem").right - field.left,
         pillLeft: pill.left - field.left,
-        captionBottom: text("Illustrative executive operating view").bottom - field.top,
+        captionBottom:
+          text("Illustrative executive operating view").bottom - field.top,
         ruleTop: rule * scale,
       };
     });

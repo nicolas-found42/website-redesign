@@ -1,9 +1,11 @@
 /**
  * The opening spread.
  *
- * The drawing is the field; the type sits on it. A warm radial wash — the paper
- * equivalent of a dark site's glow behind its hero object — lifts the headline
- * clear of the linework without hiding the drawing behind a panel.
+ * Two columns that never share ground: the headline, lead, actions and the
+ * participant's words on one side, the drawing on the other. Nothing is set over
+ * the drawing, so no word can cover it and it can cover none — at a middle width
+ * the drawing takes its portrait composition beside the words rather than
+ * spreading under them, and on a narrow screen it follows them.
  */
 .hero {
   position: relative;
@@ -15,30 +17,22 @@
   overflow: clip;
 }
 .hero-inner {
-  display: flex;
+  display: grid;
   flex: 1;
+  grid-template-areas:
+    "copy art"
+    "proof art";
+  grid-template-rows: auto auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.14fr);
+  gap: 0 clamp(36px, 4.4vw, 84px);
+  align-content: center;
   align-items: center;
-}
-.hero-copy {
-  position: relative;
-  z-index: 2;
-  /* Sized so the headline sets in three lines at the wide sizes, which is what
-     keeps the lead and both actions inside the opening viewport. */
-  width: min(100%, 700px);
   padding-block: clamp(16px, 2.4vh, 40px);
 }
-.hero-copy::before {
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-  background: radial-gradient(
-    62% 58% at 32% 50%,
-    rgb(250 249 246 / 96%) 0%,
-    rgb(250 249 246 / 88%) 42%,
-    rgb(250 249 246 / 0%) 100%
-  );
-  inset: -14% -28% -14% -40%;
+.hero-copy {
+  grid-area: copy;
+  align-self: end;
+  min-width: 0;
 }
 
 /**
@@ -77,18 +71,36 @@
   gap: 14px;
 }
 
+/* ── The participant's words: under the actions, in the words' own column ── */
+.hero-proof {
+  grid-area: proof;
+  align-self: start;
+  max-width: 46ch;
+  padding-top: 18px;
+  margin-top: clamp(28px, 3.4vw, 48px);
+  border-top: 1px solid var(--line);
+}
+.hero-proof .note {
+  margin-bottom: 8px;
+  color: var(--muted);
+}
+.hero-proof blockquote p {
+  margin: 0 0 8px;
+  font-size: var(--size-body);
+  color: var(--ink);
+}
+.hero-proof figcaption {
+  font-size: var(--size-small);
+  color: var(--muted);
+}
+
 /* ── The drawing ── */
-/**
- * It bleeds past the content column and off the right edge: a working drawing
- * continues beyond the sheet. Its dense half stays clear of the type.
- */
 .hero-art {
-  position: absolute;
-  top: 54%;
-  right: max(-2vw, -36px);
-  z-index: 1;
-  width: min(61vw, 880px);
-  translate: 0 -50%;
+  position: relative;
+  grid-area: art;
+  align-self: center;
+  width: 100%;
+  min-width: 0;
 }
 
 /* ── The rail ── */
@@ -112,9 +124,9 @@
 }
 /**
  * The control that stops the page's own movement. It is a real switch, not a
- * hint: pausing settles every drawing, stops the signals, ends smooth scrolling
- * and drops pointer depth. When the operating system has already asked for
- * reduced motion there is nothing left for it to stop, so it is not shown.
+ * hint: pausing settles every drawing, ends smooth scrolling and drops pointer
+ * depth. When the operating system has already asked for reduced motion there
+ * is nothing left for it to stop, so it is not shown.
  */
 .motion-toggle {
   display: inline-flex;
@@ -173,17 +185,18 @@
   transform: translateY(4px);
 }
 
-@media (max-width: 1240px) {
-  .hero-art {
-    right: max(-8vw, -110px);
-    width: 68vw;
+/* ── Middle widths: the portrait drawing, beside the words ── */
+@media (max-width: 1179px) {
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
   }
-  .hero-copy {
-    width: min(100%, 52%);
+  .hero-art {
+    max-width: 440px;
+    justify-self: end;
   }
 }
 
-/* ── Narrow: the drawing is its own composition, under the message ── */
+/* ── Narrow: one column, the drawing after the words ── */
 @media (max-width: 860px) {
   .hero {
     min-height: 0;
@@ -191,40 +204,20 @@
     overflow: visible;
   }
   .hero-inner {
-    display: block;
-  }
-  .hero-copy {
-    width: 100%;
+    grid-template-areas:
+      "copy"
+      "proof"
+      "art";
+    grid-template-columns: minmax(0, 1fr);
     padding-block: clamp(24px, 5vh, 56px) 0;
-  }
-  .hero-copy::before {
-    display: none;
   }
   .hero h1 {
     max-width: 18ch;
   }
-  /**
-   * In flow the drawing would come first, because the wide layout takes it out
-   * of flow and places it. Ordering puts the message and both actions ahead of
-   * it, which is the rule for the narrow layout.
-   *
-   * It is also a child of the full-bleed section, so 100% is already the whole
-   * viewport; anything wider pushes the document sideways.
-   */
-  .hero-inner {
-    order: 1;
-  }
   .hero-art {
-    position: relative;
-    top: auto;
-    right: auto;
-    order: 2;
-    width: 100%;
+    justify-self: stretch;
+    max-width: 480px;
     margin-block: clamp(32px, 7vw, 56px) clamp(8px, 2vw, 20px);
-    translate: none;
-  }
-  .hero-rail {
-    order: 3;
   }
   .hero-rail {
     flex-wrap: wrap;

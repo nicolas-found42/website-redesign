@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { readField } from "./drawing";
 
 /**
  * Three audiences, one method, each drawn its own way.
@@ -38,11 +39,16 @@ const shown = (page: Page) =>
       pressed: [...document.querySelectorAll("[data-audience]")].map((el) =>
         el.getAttribute("aria-pressed"),
       ),
-      // A settled drawing carries no half-finished draw on any route.
-      drawing: [...field.querySelectorAll(".route")].filter((route) =>
-        route.hasAttribute("stroke-dasharray"),
-      ).length,
-      faded: [...field.querySelectorAll(".marker-body, .system-label-text")]
+      // A settled drawing has every piece laid: none still held back for its
+      // beat, dropping, sliding or unfolding.
+      drawing: [...field.querySelectorAll(".part-body")].filter((body) => {
+        const style = getComputedStyle(body);
+        return (
+          style.opacity !== "1" ||
+          !["none", "matrix(1, 0, 0, 1, 0, 0)"].includes(style.transform)
+        );
+      }).length,
+      faded: [...field.querySelectorAll(".part-body, .system-label-text")]
         .map((el) => getComputedStyle(el).opacity)
         .filter((opacity) => opacity !== "1").length,
     };
@@ -124,24 +130,21 @@ test("the three audience drawings are three different drawings, not one relabell
 }) => {
   await page.goto("/#audiences");
   await page.evaluate(() => document.fonts.ready);
-  const signatures = await page.evaluate(() =>
-    [...document.querySelectorAll(".audience-panel .scene-field")].map(
-      (field) =>
-        JSON.stringify([
-          [...field.querySelectorAll(".route")].map((route) =>
-            route.getAttribute("d"),
-          ),
-          [...field.querySelectorAll(".frame")].map((frame) =>
-            frame.getAttribute("width"),
-          ),
-          [...field.querySelectorAll(".marker")].map((marker) =>
-            marker.getAttribute("class"),
-          ),
-        ]),
-    ),
+  const scenes = page.locator(".audience-panel .scene-field");
+  await expect(scenes).toHaveCount(3);
+  const states = await Promise.all(
+    [0, 1, 2].map((index) => scenes.nth(index).evaluate(readField)),
   );
-  expect(signatures).toHaveLength(3);
-  expect(new Set(signatures).size).toBe(3);
+  // Different artwork, built from different pieces — not one drawing with
+  // its words swapped.
+  expect(new Set(states.map((state) => state.geometry)).size).toBe(3);
+  expect(
+    new Set(
+      states.map((state) =>
+        JSON.stringify(state.parts.map((piece) => piece.name)),
+      ),
+    ).size,
+  ).toBe(3);
   // Distinct from the service schematics as well, not only from each other.
   const cast = await page.evaluate(() =>
     [...document.querySelectorAll(".audience-panel .system-label")].map(
@@ -254,9 +257,7 @@ test("the playbook page explains the verified request route", async ({
   );
 });
 
-test("public copy no longer says “no fluff” on any route", async ({
-  page,
-}) => {
+test("public copy no longer says “no fluff” on any route", async ({ page }) => {
   for (const route of [
     "",
     "resources/",

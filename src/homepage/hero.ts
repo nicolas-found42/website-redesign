@@ -8,17 +8,18 @@ import { sitePath } from "../paths";
  * two actions give self-serve and consultation visitors clear routes: the
  * second is outlined so the pair reads as a choice, and its arrow points on
  * rather than out because it opens a dialog on this page. The attributed
- * workshop account sits beside the opening claim.
- * The headline and the working-system drawing are one composition rather than
- * two columns: the drawing fills the field and the type sits over its open
- * left side, lifted clear by a warm paper wash.
+ * workshop account sits under the actions, in the same column.
+ *
+ * The words and the drawing are two columns that never share ground: the
+ * headline, lead and quote on one side, the plait on the other. Nothing is set
+ * over the drawing, so nothing covers it at any width; on a narrow screen the
+ * drawing follows the words.
  *
  * The drawing mounts into the element this reserves; nothing in the headline,
  * the actions or the lead waits on it.
  */
 export function hero() {
   return `<section class="hero" aria-labelledby="hero-title">
- <div class="hero-art" data-system-host></div>
  <div class="wrap hero-inner">
   <div class="hero-copy">
    <h1 id="hero-title" class="display" data-reveal-lines><span class="sentence">Train teams.</span> <span class="sentence">Build useful skills.</span> <span class="sentence"><span class="signal">Automate the work.</span></span></h1>
@@ -34,6 +35,7 @@ export function hero() {
    <blockquote><p>“What stood out in the C-Level AI workshop was how practical it was.”</p></blockquote>
    <figcaption>Paul Keely · Co-founder / Managing Director, Palladium Security LLC</figcaption>
   </figure>
+  <div class="hero-art" data-system-host></div>
  </div>
  <div class="wrap hero-rail">
   <button class="motion-toggle note" type="button" data-motion-toggle aria-pressed="false"><span class="motion-toggle-mark" aria-hidden="true"></span><span>Pause motion</span></button>

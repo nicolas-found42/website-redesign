@@ -239,6 +239,10 @@ export function mountPage(
         motionPreference,
         compositions: [masterSchematic],
         live: true,
+        // Beside the words at a middle width the drawing's column is narrow
+        // and tall, so it takes its portrait composition sooner than the
+        // drawings that span their section.
+        portrait: "(max-width: 1179px)",
       })
     : null;
   if (heroSystem) disposers.push(heroSystem.dispose);

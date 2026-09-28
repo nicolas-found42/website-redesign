@@ -1,10 +1,11 @@
-import { animate, stagger, type AnimationPlaybackControls } from "motion";
+import { animate, type AnimationPlaybackControls } from "motion";
+import { artInner, drawingId, labelsHtml } from "./art/field";
+import type { Art } from "./art/kit";
+import { assemble, BEAT, cancelAll, clear, whenDone } from "./art/motion";
 import {
   fieldMarkup,
-  labelMarkup,
-  markerMarkup,
-  routeMarkup,
-  type Layout,
+  schematicArt,
+  schematicLabels,
   type Orientation,
   type Schematic,
 } from "./schematic";
@@ -13,10 +14,12 @@ import type { MotionPreference } from "./motion-preference";
 /**
  * The live working-system drawing.
  *
- * One drawing shows one composition at a time. It can be revealed (routes draw
- * themselves), switched (the same nodes travel to their new places while the
- * old routes retract and the new ones draw), and it carries signals — red dots
- * running the routes, which is what makes the system read as *working*.
+ * One drawing shows one composition at a time. It is assembled in front of the
+ * visitor the first time it comes into view — each piece placed in the beat it
+ * belongs to — and it can be switched: the pieces of the old composition are
+ * lifted off, the five named pieces' words travel to their new places, and the
+ * new object is assembled under them, quickly, because the visitor has already
+ * seen how a drawing is made.
  *
  * Every state is reachable without animation. A still composition is always the
  * resting state, so an interrupted, reduced-motion or script-free drawing shows
@@ -29,7 +32,7 @@ export type SystemOptions = {
   compositions: readonly Schematic[];
   /** Index of the composition to show first. */
   initial?: number;
-  /** Signals and pointer depth belong to the flagship drawing, not the small ones. */
+  /** Pointer depth belongs to the flagship drawings, not the small ones. */
   live?: boolean;
   /**
    * A drawing composed for one shape keeps it at every width. The services
@@ -37,19 +40,23 @@ export type SystemOptions = {
    * which is wider than the viewport query that turns other drawings portrait.
    */
   orientation?: Orientation;
+  /** When the drawing turns portrait, if it follows the viewport. */
+  portrait?: string;
   /**
-   * Whether the routes draw themselves in on first view. A drawing that is
-   * brought on screen by a transition from another composition skips it: the
-   * transition is its entrance.
+   * Whether the drawing is assembled in front of the visitor on first view. A
+   * drawing brought on screen by a transition from another composition skips
+   * it: the transition is its entrance.
    */
   drawIn?: boolean;
 };
 
-type Signal = { route: number; phase: number };
-
 const PORTRAIT = "(max-width: 860px)";
-/** Route speed in field units a second: the same apparent pace on every route. */
-const SIGNAL_SPEED = 190;
+/** The beat of a transition: the same story, told briskly. */
+const QUICK = 0.14;
+/** How long the lifted pieces take to leave before the new ones arrive. */
+const LIFT = 300;
+/** How long the named pieces' words take to reach their new places. */
+const TRAVEL = 0.78;
 
 const orientationOf = (matches: boolean): Orientation =>
   matches ? "portrait" : "landscape";
@@ -67,163 +74,81 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     live = true,
     drawIn = true,
   } = options;
-  const portrait = matchMedia(PORTRAIT);
+  const portrait = matchMedia(options.portrait ?? PORTRAIT);
+  const uid = drawingId("system");
 
   let active = initial;
   let orientation = options.orientation ?? orientationOf(portrait.matches);
-  let tweens: AnimationPlaybackControls[] = [];
+  let animations: Animation[] = [];
+  let travel: AnimationPlaybackControls | undefined;
   let frame = 0;
-  let started = 0;
   let visible = false;
   let revealed = !drawIn;
+  /** Bumped by every settle, so a transition's late steps know they are stale. */
+  let generation = 0;
   let pointer = { x: 0, y: 0 };
-  let eased = { x: 0, y: 0 };
+  const eased = { x: 0, y: 0 };
   const timers = new Set<number>();
 
   const schematic = () => compositions[active];
-  const layout = (): Layout => schematic()[orientation];
   const still = () => motionPreference.matches;
+  const artOf = (index: number): Art =>
+    schematicArt(compositions[index], orientation, uid);
 
-  host.innerHTML = `<div class="system" data-system>${fieldMarkup(schematic(), orientation)}</div>`;
+  host.innerHTML = `<div class="system" data-system>${fieldMarkup(schematic(), orientation, uid)}</div>`;
 
   const frameEl = host.querySelector<HTMLElement>(".system-field")!;
   const svg = host.querySelector<SVGSVGElement>(".system-svg")!;
-  const routesLayer = svg.querySelector<SVGGElement>(".routes")!;
-  const signalsLayer = svg.querySelector<SVGGElement>(".signals")!;
-  const markersLayer = svg.querySelector<SVGGElement>(".markers")!;
   const labelsLayer = host.querySelector<HTMLElement>(".system-labels")!;
 
-  let signals: Signal[] = [];
-  let signalNodes: SVGCircleElement[] = [];
-  let paths: SVGPathElement[] = [];
-  let lengths: number[] = [];
-
   /**
-   * Stops everything in flight, including the timeout that swaps a transition's
-   * routes in. Left running, that timeout fires after a pause or an orientation
-   * change and starts a route draw the drawing has already settled out of.
+   * Stops everything in flight, including the timeout that swaps a
+   * transition's pieces in. Left running, that timeout fires after a pause or
+   * an orientation change and starts an entrance the drawing has already
+   * settled out of.
    */
-  function stopTweens() {
-    tweens.forEach((tween) => tween.stop());
-    tweens = [];
+  function stopMotion() {
+    cancelAll(animations);
+    travel?.stop();
+    travel = undefined;
     timers.forEach((timer) => clearTimeout(timer));
     timers.clear();
   }
 
-  /**
-   * Clears everything a draw leaves on a path.
-   *
-   * A `pathLength` tween draws a route by writing `stroke-dasharray` and
-   * `stroke-dashoffset` as presentation *attributes*. Left behind, they hold
-   * every route at a one-unit dash pattern — a solid line rendered as dots —
-   * and they override the stylesheet's own dash on the feedback route. The
-   * geometry underneath is already complete, so clearing them is all a
-   * finished draw needs.
-   */
-  function clearDrawing() {
-    for (const path of paths) {
-      path.getAnimations().forEach((animation) => animation.cancel());
-      for (const name of [
-        "stroke-dasharray",
-        "stroke-dashoffset",
-        "pathLength",
-      ]) {
-        path.removeAttribute(name);
-        path.style.removeProperty(name);
-      }
-    }
+  function paint(art: Art) {
+    svg.setAttribute("viewBox", `0 0 ${art.width} ${art.height}`);
+    frameEl.style.setProperty("--ratio", `${art.width} / ${art.height}`);
+    svg.innerHTML = artInner(art);
   }
 
-  /** Rebuilds every layer from the current composition, with no tween running. */
+  /** Rebuilds every layer from the current composition, with nothing running. */
   function build() {
-    const current = schematic();
-    const current_layout = layout();
-    svg.setAttribute(
-      "viewBox",
-      `0 0 ${current_layout.width} ${current_layout.height}`,
-    );
-    frameEl.style.setProperty(
-      "--ratio",
-      `${current_layout.width} / ${current_layout.height}`,
-    );
-    routesLayer.innerHTML = routeMarkup(current_layout);
-    markersLayer.innerHTML = markerMarkup(current, current_layout);
-    labelsLayer.innerHTML = labelMarkup(current, current_layout);
-    frameEl.setAttribute("aria-label", current.description);
-    paths = [...routesLayer.querySelectorAll("path")];
-    lengths = paths.map((path) => path.getTotalLength());
-    buildSignals(current_layout);
+    const art = artOf(active);
+    paint(art);
+    labelsLayer.innerHTML = labelsHtml(art, schematicLabels(schematic(), art));
+    frameEl.setAttribute("aria-label", schematic().description);
   }
 
-  function buildSignals(current_layout: Layout) {
-    if (!live) {
-      signalsLayer.innerHTML = "";
-      signals = [];
-      signalNodes = [];
-      return;
-    }
-    // A signal per carrying route, and a second one on the trunks, so the
-    // busiest part of the drawing is visibly the busiest.
-    signals = [];
-    current_layout.routes.forEach((route, index) => {
-      if (route.weight === "return") return;
-      signals.push({ route: index, phase: (index * 0.37) % 1 });
-      if (route.weight === "trunk") {
-        signals.push({ route: index, phase: (index * 0.37 + 0.55) % 1 });
-      }
-    });
-    signalsLayer.innerHTML = signals
-      .map(() => '<circle class="signal" r="4.5"/>')
-      .join("");
-    signalNodes = [...signalsLayer.querySelectorAll("circle")];
-    placeSignals(0);
-  }
+  /* ── Pointer depth ── */
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
+  const depthEnabled = () => live && fine.matches && !still();
 
-  function placeSignals(elapsed: number) {
-    for (let index = 0; index < signals.length; index += 1) {
-      const signal = signals[index];
-      const path = paths[signal.route];
-      const length = lengths[signal.route];
-      if (!path || !length) continue;
-      const travelled =
-        ((elapsed * SIGNAL_SPEED) / length + signal.phase) % 1 || 0;
-      const point = path.getPointAtLength(travelled * length);
-      const node = signalNodes[index];
-      node.setAttribute("cx", point.x.toFixed(2));
-      node.setAttribute("cy", point.y.toFixed(2));
-      // Signals fade in and out at the ends of their route rather than popping.
-      const edge = Math.min(travelled, 1 - travelled) / 0.12;
-      node.style.opacity = String(Math.min(1, edge));
-    }
-  }
-
-  function tick(now: number) {
+  function tick() {
     frame = requestAnimationFrame(tick);
-    if (!started) started = now;
-    placeSignals((now - started) / 1000);
-    if (depthEnabled()) {
-      eased.x += (pointer.x - eased.x) * 0.08;
-      eased.y += (pointer.y - eased.y) * 0.08;
-      frameEl.style.setProperty("--lean-x", eased.x.toFixed(3));
-      frameEl.style.setProperty("--lean-y", eased.y.toFixed(3));
-    }
+    eased.x += (pointer.x - eased.x) * 0.08;
+    eased.y += (pointer.y - eased.y) * 0.08;
+    frameEl.style.setProperty("--lean-x", eased.x.toFixed(3));
+    frameEl.style.setProperty("--lean-y", eased.y.toFixed(3));
   }
-
   function runLoop() {
-    if (!live || still() || !visible || frame) return;
-    started = 0;
+    if (!depthEnabled() || !visible || frame) return;
     frame = requestAnimationFrame(tick);
   }
-
   function pauseLoop() {
     if (!frame) return;
     cancelAnimationFrame(frame);
     frame = 0;
   }
-
-  const fine = matchMedia("(hover: hover) and (pointer: fine)");
-  const depthEnabled = () => live && fine.matches && !still();
-
   function onPointerMove(event: PointerEvent) {
     if (!depthEnabled()) return;
     const box = frameEl.getBoundingClientRect();
@@ -236,169 +161,111 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     pointer = { x: 0, y: 0 };
   }
 
-  /** Draws the routes in, once, when the drawing first comes into view. */
+  /** Assembles the drawing, once, when it first comes into view. */
   function reveal() {
     if (revealed) return;
     revealed = true;
-    if (still()) {
-      runLoop();
-      return;
-    }
-    tweens.push(
-      animate(
-        paths,
-        { pathLength: [0, 1] },
-        {
-          duration: 1.1,
-          ease: [0.16, 1, 0.3, 1],
-          delay: stagger(0.08),
-          onComplete: clearDrawing,
-        },
-      ),
-    );
-    tweens.push(
-      animate(
-        [...markersLayer.querySelectorAll(".marker-body")],
-        { opacity: [0, 1], scale: [0.4, 1] },
-        {
-          duration: 0.5,
-          ease: [0.34, 1.32, 0.64, 1],
-          delay: stagger(0.06, { startDelay: 0.45 }),
-        },
-      ),
-    );
-    tweens.push(
-      animate(
-        [...labelsLayer.querySelectorAll(".system-label-text")],
-        { opacity: [0, 1], y: [8, 0] },
-        {
-          duration: 0.5,
-          ease: [0.16, 1, 0.3, 1],
-          delay: stagger(0.06, { startDelay: 0.6 }),
-        },
-      ),
-    );
-    runLoop();
+    if (still()) return;
+    animations = assemble(frameEl, { beat: BEAT });
   }
 
   /** The complete still composition of `index`, with nothing left running. */
   function settle(index = active) {
     active = index;
-    stopTweens();
+    generation += 1;
+    stopMotion();
     build();
-    clearDrawing();
     revealed = true;
     runLoop();
   }
 
-  function select(index: number, options: { animate?: boolean } = {}) {
+  function select(index: number, choice: { animate?: boolean } = {}) {
     if (index === active) return;
-    const previous = layout();
-    const previousNodes = schematic().nodes;
+    const previousArt = artOf(active);
+    const previous = schematic();
     active = index;
     const next = schematic();
-    const nextLayout = layout();
+    const nextArt = artOf(index);
 
-    if (still() || options.animate === false || !revealed) {
+    if (still() || choice.animate === false || !revealed) {
       settle(index);
       return;
     }
 
-    stopTweens();
-    const markers = [...markersLayer.children] as SVGGElement[];
+    stopMotion();
+    const mine = (generation += 1);
     const labels = [...labelsLayer.children] as HTMLElement[];
-    const from = previousNodes.map((node) => previous.nodes[node.id].at);
-    const to = next.nodes.map((node) => nextLayout.nodes[node.id].at);
+    const nextLabels = schematicLabels(next, nextArt);
+    const at = (art: Art, key: string) => art.labels[key].at;
+    const from = previous.nodes.map((node) => at(previousArt, node.id));
+    const to = next.nodes.map((node) => at(nextArt, node.id));
 
-    // The outgoing routes retract before the incoming ones draw, so the two
-    // never overlap into an unreadable tangle. A preference change can interrupt
-    // this target; `settle` remains idempotent, but the swap callback also checks
-    // the live motion preference before starting the incoming draw.
-    const outgoing = paths;
-    tweens.push(
-      animate(
-        outgoing,
-        { pathLength: [1, 0] },
-        { duration: 0.34, ease: [0.65, 0, 0.35, 1], delay: stagger(0.03) },
-      ),
-    );
+    // The old object is lifted off before the new one is laid, so the two
+    // never overlap into one unreadable picture.
+    animations = clear(svg, LIFT);
 
-    // Labels change their words at the midpoint of their own travel, so no word
-    // is ever read in the wrong place.
+    // Words travel with their node and change at the midpoint of their own
+    // travel, so no word is ever read in the wrong place.
     let swapped = false;
-    tweens.push(
-      animate(0, 1, {
-        duration: 0.78,
-        ease: [0.65, 0, 0.35, 1],
-        onUpdate(progress) {
-          if (active !== index) return;
-          for (let i = 0; i < markers.length; i += 1) {
-            const x = from[i][0] + (to[i][0] - from[i][0]) * progress;
-            const y = from[i][1] + (to[i][1] - from[i][1]) * progress;
-            markers[i].setAttribute("transform", `translate(${x} ${y})`);
-            labels[i].style.setProperty(
-              "--x",
-              ((x / nextLayout.width) * 100).toFixed(3),
+    travel = animate(0, 1, {
+      duration: TRAVEL,
+      ease: [0.65, 0, 0.35, 1],
+      onUpdate(progress) {
+        if (generation !== mine) return;
+        for (let i = 0; i < labels.length; i += 1) {
+          const x = from[i][0] + (to[i][0] - from[i][0]) * progress;
+          const y = from[i][1] + (to[i][1] - from[i][1]) * progress;
+          // A field changes shape only with orientation, never between
+          // compositions, so one field's shares serve both ends.
+          labels[i].style.setProperty(
+            "--x",
+            ((x / nextArt.width) * 100).toFixed(3),
+          );
+          labels[i].style.setProperty(
+            "--y",
+            ((y / nextArt.height) * 100).toFixed(3),
+          );
+        }
+        if (!swapped && progress > 0.5) {
+          swapped = true;
+          const fresh = document.createElement("div");
+          fresh.innerHTML = labelsHtml(nextArt, nextLabels);
+          [...fresh.children].forEach((label, i) => {
+            const target = labels[i];
+            const source = label as HTMLElement;
+            if (!target) return;
+            target.className = source.className;
+            target.dataset.node = source.dataset.node;
+            target.dataset.beat = source.dataset.beat;
+            target.style.setProperty(
+              "--w",
+              source.style.getPropertyValue("--w"),
             );
-            labels[i].style.setProperty(
-              "--y",
-              ((y / nextLayout.height) * 100).toFixed(3),
-            );
-          }
-          if (!swapped && progress > 0.5) {
-            swapped = true;
-            applyLabels(next, nextLayout, labels);
-          }
-        },
-        onComplete() {
-          if (active !== index) return;
-          settle(index);
-        },
-      }),
-    );
+            target.querySelector("i")!.textContent = source.textContent;
+          });
+        }
+      },
+    });
 
-    // Swap in the new routes once the old ones have gone, then draw them.
-    const drawIn = window.setTimeout(() => {
-      timers.delete(drawIn);
-      if (active !== index) return;
+    // Once the old pieces have gone, the new object is laid under the words.
+    const swap = window.setTimeout(() => {
+      timers.delete(swap);
+      if (generation !== mine) return;
       if (still()) {
         settle(index);
         return;
       }
-      routesLayer.innerHTML = routeMarkup(nextLayout);
-      paths = [...routesLayer.querySelectorAll("path")];
-      lengths = paths.map((path) => path.getTotalLength());
-      buildSignals(nextLayout);
-      tweens.push(
-        animate(
-          paths,
-          { pathLength: [0, 1] },
-          {
-            duration: 0.75,
-            ease: [0.16, 1, 0.3, 1],
-            delay: stagger(0.05),
-            onComplete: clearDrawing,
-          },
-        ),
-      );
-    }, 300);
-    timers.add(drawIn);
+      cancelAll(animations);
+      paint(nextArt);
+      animations = assemble(svg, { beat: QUICK });
+      const entrance = [...animations];
+      void Promise.all([whenDone(entrance), travel?.finished]).then(() => {
+        if (generation === mine) settle(index);
+      });
+    }, LIFT);
+    timers.add(swap);
 
     frameEl.setAttribute("aria-label", next.description);
-  }
-
-  function applyLabels(
-    current: Schematic,
-    current_layout: Layout,
-    labels: HTMLElement[],
-  ) {
-    current.nodes.forEach((node, index) => {
-      const label = labels[index];
-      if (!label) return;
-      label.querySelector("i")!.textContent = node.label;
-      label.className = `system-label system-label--${current_layout.nodes[node.id].anchor} system-label--${node.kind}`;
-      label.dataset.node = node.id;
-    });
   }
 
   build();
@@ -422,8 +289,9 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
   const onPreference = () => {
     if (still()) {
       pauseLoop();
+      frameEl.style.removeProperty("--lean-x");
+      frameEl.style.removeProperty("--lean-y");
       settle();
-      placeSignals(0.6);
     } else {
       runLoop();
     }
@@ -443,7 +311,6 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     frameEl.addEventListener("pointermove", onPointerMove);
     frameEl.addEventListener("pointerleave", onPointerLeave);
   }
-  if (still()) placeSignals(0.6);
 
   return {
     select,
@@ -452,9 +319,8 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
       return active;
     },
     dispose() {
-      stopTweens();
-      timers.forEach((timer) => clearTimeout(timer));
-      timers.clear();
+      generation += 1;
+      stopMotion();
       pauseLoop();
       observer.disconnect();
       motionPreference.removeEventListener("change", onPreference);
