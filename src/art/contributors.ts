@@ -182,7 +182,7 @@ function landscape(): Art {
   });
   const frame = { x: 806, y: 196, w: 84, h: 268 };
   // Past the gate the four paths part to ends of their own on the result.
-  const panel = { x: 1085, y: 196, w: 160, h: 268 };
+  const panel = { x: 1100, y: 196, w: 190, h: 268 };
   const gap = 70;
   const ends = lanes.map((_, lane) => centre + (lane - 1.5) * gap);
   const beyond = frame.x + frame.w + 10;
@@ -193,7 +193,7 @@ function landscape(): Art {
       ground: "red",
     }),
     result: place([panel.x + panel.w / 2, centre], "center", "middle", {
-      width: panel.w - 28,
+      width: panel.w - 26,
       ground: "ink",
     }),
   };
@@ -203,7 +203,7 @@ function landscape(): Art {
       width: 164,
       ground: "ink",
     });
-    labels[`skill${n}`] = place([490, y], "center", "middle", { width: 214 });
+    labels[`skill${n}`] = place([490, y], "center", "middle", { width: 190 });
     const d = `M290 ${y} L640 ${y} ${easeX([640, y], [675, lanes[i]], 0.5)}${braided.paths[i]} L${beyond} ${lanes[braided.leaves[i]]}`;
     return part(
       {
@@ -242,7 +242,7 @@ function landscape(): Art {
   const parts = [
     part(
       { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(30, 44, 1240, 552),
+      backdrop(30, 44, 1280, 552),
     ),
     part(
       {
@@ -277,7 +277,7 @@ function landscape(): Art {
       resultPanel(panel.x, panel.y, panel.w, panel.h),
     ),
   ];
-  return { width: 1300, height: 620, parts: parts.join(""), labels };
+  return { width: 1340, height: 620, parts: parts.join(""), labels };
 }
 
 function portrait(): Art {
