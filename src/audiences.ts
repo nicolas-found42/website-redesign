@@ -144,15 +144,20 @@ const rosterScene: SceneContent = {
       label(`skill${index + 1}`, skill, "card", index + 1),
     ]),
     label("human", "Human in the loop", "human", 5),
+    label("result", "Reviewed work returns to each role.", "result", 6),
   ],
   marks: [
     ...roles.map((_, index) => mark(`role${index + 1}`, "person", index + 1)),
     mark("human", "human", 5),
+    mark("result", "result", 6),
   ],
-  links: roles.flatMap((_, index) => [
-    `role${index + 1}>skill${index + 1}`,
-    `skill${index + 1}>human`,
-  ]),
+  links: [
+    ...roles.flatMap((_, index) => [
+      `role${index + 1}>skill${index + 1}`,
+      `skill${index + 1}>human`,
+    ]),
+    "human>result",
+  ],
 };
 
 /* ── Builders: from a work problem to a workflow in use ── */
@@ -282,7 +287,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "contributors",
       description:
-        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate.",
+        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
       ...rosterScene,
     },
   },
