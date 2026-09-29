@@ -55,8 +55,13 @@ history.
   Revenue and Recommended Actions, with the executive's decision stamped on the
   recommendations. It is fictional and does not imply a live Claude, email,
   calendar or CRM integration. This supersedes ADR 0005's rejection of a
-  daily-brief visual and ADR 0006's roller onto an operating view. The
-  weekly-briefing band is unchanged.
+  daily-brief visual and ADR 0006's roller onto an operating view.
+- **Weekly briefing** band keeps its document and Slack-style message mockup
+  and its illustrative disclosure. Revised by #78: the message reads "Ready
+  for your review" and its faux control reads "Review briefing", so the
+  mockup shows the moment before a person reviews and decides rather than a
+  recorded decision. Nothing in the band is interactive or implies a live
+  integration.
 - **AI builders** begins the stair at Design: Design → Test → Troubleshoot →
   Anticipate failures → Workflow in use, each reviewed. This supersedes ADR
   0006's three-step stair.
