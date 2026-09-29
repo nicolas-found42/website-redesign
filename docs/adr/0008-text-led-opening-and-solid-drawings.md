@@ -25,7 +25,7 @@ history.
   and issue #56's preservation of them.
 - **Organizations are shown by their own marks.** "Teams we have worked with"
   shows five logos in the owner's order — Google, Edgescale AI, Millsapps,
-  Ballinger & Associates (MB&A), Scottish Equity Partners (SEP) and PeakSpan
+  Ballinger & Associates (MB&A), Seidler Equity Partners (SEP) and PeakSpan
   Capital. Each is the organization's own mark from its official site, bundled
   locally and shown unaltered. The owner confirmed the relationships and that
   each mark's use is approved; the site does not verify that approval.
