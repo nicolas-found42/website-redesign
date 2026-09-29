@@ -24,6 +24,8 @@ import type { MotionPreference } from "./motion-preference";
 export type SceneOptions = {
   motionPreference: MotionPreference;
   scene: Scene;
+  /** A sequence article retains its authored composition across viewport widths. */
+  orientation?: SceneOrientation;
 };
 
 const PORTRAIT = "(max-width: 860px)";
@@ -35,7 +37,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
   const { motionPreference, scene } = options;
   const portrait = matchMedia(PORTRAIT);
 
-  let orientation = orientationOf(portrait.matches);
+  let orientation = options.orientation ?? orientationOf(portrait.matches);
   let animations: Animation[] = [];
   let visible = false;
   let told = false;
@@ -68,6 +70,23 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
   /** Tells the scene from its first beat. Under reduced motion it is simply shown. */
   function play() {
     if (disposed) return;
+    // An explicit choice can precede its observer notification, or select a
+    // desktop host hidden by the stacked/reduced-motion layout. Defer its
+    // entrance until the drawing itself is actually on screen.
+    const box = frameEl.getBoundingClientRect();
+    if (
+      !box.width ||
+      !box.height ||
+      box.bottom <= 0 ||
+      box.top >= innerHeight ||
+      box.right <= 0 ||
+      box.left >= innerWidth
+    ) {
+      cancelAll(animations);
+      build();
+      told = false;
+      return;
+    }
     if (still()) {
       settle();
       return;
@@ -83,6 +102,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
       for (const entry of entries) {
         visible = entry.isIntersecting;
         if (visible && !told) play();
+        else if (!visible && animations.length) settle();
       }
     },
     { threshold: 0.12 },
@@ -93,7 +113,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
     if (still()) settle();
   };
   const onOrientation = () => {
-    const next = orientationOf(portrait.matches);
+    const next = options.orientation ?? orientationOf(portrait.matches);
     if (next === orientation) return;
     orientation = next;
     settle();

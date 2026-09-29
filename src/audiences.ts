@@ -5,11 +5,9 @@
  * in the site's inks, red for what is human — but each one is its own
  * object rather than the plait with new words on it:
  *
- * - **Executives** feed a crumpled operating problem through a tailored skill,
- *   which presses it into an illustrative Claude-style Daily Brief; the brief
- *   is read by an executive, who directs what happens next, and its
- *   recommendations feed back to the problem. The brief is hypothetical, not
- *   a client artifact or a live integration.
+ * - **Executives** use four cards through a working day: Claude Daily Brief,
+ *   Meeting Brief, Meeting Debrief and Actions from Transcripts. The final
+ *   decision stays with them. These are illustrative, with no live integration.
  * - **Individual Contributors and Teams** each run a ribbon of their own role
  *   through a skill cut for it — four roles in one company — and the four
  *   ribbons braid together through one gate: the human in the loop.
@@ -91,40 +89,35 @@ const mark = (
 
 type SceneContent = Pick<Scene, "labels" | "marks" | "links">;
 
-/* ── Executives: a problem in, a Daily Brief out, a decision made ── */
-
-export const briefSections: readonly string[] = [
-  "Critical",
-  "Needle Movers",
-  "Calendar Intelligence",
-  "Pipeline & Revenue",
-  "Recommended Actions",
-];
+/* ── Executives: four cards through a working day ── */
 
 const executiveScene: SceneContent = {
   labels: [
-    label("problem", "Your operating problem", "source", 0),
-    label("skill", "Tailored executive skill", "control", 1),
-    label("brief", "Claude Daily Brief", "result", 2),
-    ...briefSections.map((section, index) =>
-      label(`section${index + 1}`, section, "card", 3),
-    ),
+    label("brief", "Claude Daily Brief", "source", 0),
+    label("meeting", "Meeting Brief", "card", 1),
+    label("debrief", "Meeting Debrief", "card", 2),
+    label("actions", "Actions from Transcripts", "result", 3),
+    label("direction", "You decide", "human", 4),
     label(
       "illustrative",
       "Illustrative example · no live integrations",
       "caption",
-      3,
+      4,
     ),
-    label("direction", "Executive direction", "human", 5),
   ],
   marks: [
-    mark("problem", "source", 0),
-    mark("brief", "result", 2),
-    mark("direction", "human", 5),
+    mark("brief", "source", 0),
+    mark("meeting", "result", 1),
+    mark("debrief", "result", 2),
+    mark("actions", "result", 3),
+    mark("direction", "human", 4),
   ],
-  // The brief's recommendations feed back into the problem they answer, and
-  // the executive's direction decides what is done with the brief.
-  links: ["problem>skill", "skill>brief", "direction>brief", "brief>problem"],
+  links: [
+    "brief>meeting",
+    "meeting>debrief",
+    "debrief>actions",
+    "direction>actions",
+  ],
 };
 
 /* ── Contributors: the same method, a different skill for each role ── */
@@ -253,7 +246,7 @@ export const audiences: readonly Audience[] = [
       "Judgment stays with your people",
     ],
     caption:
-      "Illustrative Claude Daily Brief: real work enters a tailored skill, produces a brief of what matters and what to do next, and the decision stays with the executive. This is a hypothetical example, not a client result and not a live email, calendar or CRM integration.",
+      "Illustrative Claude example: Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts. You decide what happens next. This is a hypothetical example, not a client result, with no live calendar, email, CRM or transcript integration.",
     link: {
       label: "For executives",
       href: sitePath("services/#track-c-level-ai"),
@@ -261,7 +254,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "executives",
       description:
-        "Executive illustration: an operating problem enters a tailored skill and produces an illustrative Claude Daily Brief — critical items, needle movers, calendar intelligence, pipeline and revenue, recommended actions — with the executive deciding what to do.",
+        "Executive day: Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts, with a red You decide mark on the last card. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
       ...executiveScene,
     },
   },

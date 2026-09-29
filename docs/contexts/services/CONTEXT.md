@@ -30,3 +30,15 @@ The named approach associated with workflow prioritization in Found42's introduc
 **Individual Contributors and Teams**:
 The audience for Customized Role-Based Training on the homepage and Services choices: people who own recurring work in a role, and the teams they work in. Formerly named "Teams and individual contributors", and before that "Individual contributors". The Services audience field for Customized Role-Based Training uses the same name.
 _Avoid_: Teams and individual contributors, Individual contributors alone
+
+**Workflows**:
+Custom Claude skills and plugins built around high-value, time-consuming tasks
+a team does every day. The team's source material, examples and quality bar
+shape the skills and plugins it deploys and uses.
+_Avoid_: End-to-end automation connected across systems
+
+**Automations**:
+End-to-end automations connected to a team's CRM, productivity apps and systems
+of record, taking repetitive work off the team while people control decisions
+that need judgment.
+_Avoid_: Everyday task skills and plugins alone

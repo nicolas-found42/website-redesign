@@ -20,7 +20,7 @@ import {
  * revised by hand, not regenerated, for the review's intentional changes: a
  * Design step before Test, an illustrative Claude Daily Brief for executives,
  * a whiteboard-to-keyboard Workshops drawing and the teams-and-contributors
- * name and gate.
+ * name and gate. Issue #80 replaces the executive scene with four day cards.
  */
 
 type Link = { from: string; to: string; weight: string };
@@ -54,17 +54,17 @@ const inventory = JSON.parse(
 
 /**
  * The scenes' connections, read from the deployed drawings' routes: which
- * piece each route ran from and to. The executive view feeds back to the
- * problem it answers; each role's skill answers to the human in the loop; the
+ * piece each route ran from and to. The executive day runs through four
+ * cards with a final human decision; each role's skill answers to the human in the loop; the
  * builder's workflow is three linked parts; the review passes the three checks
  * in order before a person, then the business.
  */
 const sceneLinks: Record<string, string[]> = {
   executives: [
-    "problem>skill",
-    "skill>brief",
-    "direction>brief",
-    "brief>problem",
+    "brief>meeting",
+    "meeting>debrief",
+    "debrief>actions",
+    "direction>actions",
   ],
   contributors: [
     ...[1, 2, 3, 4].flatMap((n) => [`role${n}>skill${n}`, `skill${n}>human`]),
@@ -245,7 +245,7 @@ test("each audience scene keeps its words, marks, beats and connections", async 
       expectScene(
         await panel.locator(".scene-field").evaluate(readField),
         id,
-        orientation,
+        "portrait",
       );
       await expect(panel.locator(".audience-caption")).toHaveText(
         inventory.captions.find((c) => c.id === id)!.caption,
@@ -422,32 +422,163 @@ test("the builder stair starts at Design and keeps its reviewed steps", async ({
   ).toHaveLength(4);
 });
 
-test("the executive scene reads as an illustrative Claude Daily Brief", async ({
+test("the executive day names four ordered cards and keeps the decision illustrative", async ({
   page,
 }) => {
-  await open(page, "/", 390);
-  const panel = page.locator("#audience-executives");
-  await expect(panel.getByRole("img")).toHaveAccessibleName(
-    /Claude Daily Brief/,
-  );
-  const words = (await panel.locator(".system-label").allTextContents()).map(
-    (text) => text.trim(),
-  );
-  for (const word of [
+  const labels = [
     "Claude Daily Brief",
-    "Critical",
-    "Needle Movers",
-    "Calendar Intelligence",
-    "Pipeline & Revenue",
-    "Recommended Actions",
-    "Executive direction",
-    "Illustrative example · no live integrations",
-  ])
-    expect(words).toContain(word);
-  await expect(panel.locator(".audience-caption")).toContainText(
-    "not a live email, calendar or CRM integration",
-  );
+    "Meeting Brief",
+    "Meeting Debrief",
+    "Actions from Transcripts",
+  ];
+  for (const route of ["/", "/services/"]) {
+    for (const width of [1440, 384]) {
+      await open(page, route, width);
+      const panel = page.locator("#audience-executives");
+      const field = panel.locator(".scene-field");
+      const words = await field.locator(".system-label").allTextContents();
+      expect(
+        words
+          .filter((word) => labels.includes(word.trim()))
+          .map((word) => word.trim()),
+      ).toEqual(labels);
+      await expect(field.getByText("You decide", { exact: true })).toHaveCount(
+        1,
+      );
+      for (const removed of [
+        "Your operating problem",
+        "Tailored executive skill",
+        "Executive direction",
+      ])
+        await expect(field.getByText(removed, { exact: true })).toHaveCount(0);
+      await expect(field).toHaveAccessibleName(
+        /Claude Daily Brief.*Meeting Brief.*Meeting Debrief.*Actions from Transcripts.*You decide.*illustrative.*no live calendar, email, CRM or transcript integration/i,
+      );
+      await expect(panel.locator(".audience-caption")).toContainText(
+        "Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts",
+      );
+      await expect(panel.locator(".audience-caption")).toContainText(
+        "no live calendar, email, CRM or transcript integration",
+      );
+    }
+  }
 });
+
+test("executive timeline words stay whole and separate with enlarged text", async ({
+  page,
+}) => {
+  for (const width of [384, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto("/");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    expect(
+      await page
+        .locator("html")
+        .evaluate((html) => getComputedStyle(html).fontSize),
+    ).toBe("32px");
+    await page.evaluate(() => document.fonts.ready);
+    await page.getByRole("button", { name: /C-level executives/ }).click();
+    const fields = page.locator(
+      '.audience-art [data-audience-scene="0"] .scene-field:visible, #audience-executives .scene-field:visible',
+    );
+    await expect(fields).toHaveCount(1);
+    await fields.first().scrollIntoViewIfNeeded();
+    await expect
+      .poll(async () => {
+        const field = fields.first();
+        const state = await field.evaluate(readField);
+        const fit = await field.evaluate(readTextFit);
+        return {
+          animating: state.animating,
+          unsettled: state.unsettled,
+          problems: wordProblems(fit),
+          decisionOnCard: fit.find((label) => label.text === "You decide")
+            ?.onCard,
+        };
+      })
+      .toEqual({
+        animating: 0,
+        unsettled: { parts: 0, words: 0 },
+        problems: [],
+        decisionOnCard: true,
+      });
+    await expect
+      .poll(() =>
+        fields.first().evaluate((field) => {
+          const caption = field
+            .querySelector('[data-node="illustrative"] .system-label-text')!
+            .getBoundingClientRect();
+          const box = field.getBoundingClientRect();
+          return caption.top >= box.top && caption.bottom <= box.bottom;
+        }),
+      )
+      .toBe(true);
+    const overlaps = await fields.first().evaluate((field) => {
+      const boxes = [...field.querySelectorAll(".system-label-text")].map(
+        (label) => ({
+          text: label.textContent,
+          box: label.getBoundingClientRect(),
+        }),
+      );
+      return boxes.flatMap((a, i) =>
+        boxes
+          .slice(i + 1)
+          .filter(
+            (b) =>
+              a.box.left < b.box.right - 1 &&
+              b.box.left < a.box.right - 1 &&
+              a.box.top < b.box.bottom - 1 &&
+              b.box.top < a.box.bottom - 1,
+          )
+          .map((b) => `${a.text} / ${b.text}`),
+      );
+    });
+    expect(overlaps).toEqual([]);
+  }
+});
+
+for (const [width, height] of [
+  [384, 686],
+  [384, 742],
+] as const) {
+  test(`the executive timeline is complete without scripting at ${width}×${height}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width, height },
+    });
+    const page = await context.newPage();
+    await page.goto("http://127.0.0.1:4179/website-redesign/");
+    const field = page.locator("#audience-executives .scene-field:visible");
+    for (const text of [
+      "Claude Daily Brief",
+      "Meeting Brief",
+      "Meeting Debrief",
+      "Actions from Transcripts",
+      "You decide",
+    ])
+      await expect(field.getByText(text, { exact: true })).toBeVisible();
+    await expect
+      .poll(() => page.evaluate(() => document.fonts.status))
+      .toBe("loaded");
+    const fit = await field.evaluate(readTextFit);
+    expect(wordProblems(fit)).toEqual([]);
+    for (const label of fit)
+      expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    expect(
+      await field.evaluate((element) => element.getBoundingClientRect().width),
+    ).toBeGreaterThan(300);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await context.close();
+  });
+}
 
 test("the Workshops drawing shows people designing, practising and reviewing", async ({
   page,

@@ -1,250 +1,144 @@
-import { test, expect, type Page } from "@playwright/test";
-import { readField } from "./drawing";
-
-/**
- * Three audiences, one method, each drawn its own way.
- *
- * These cover what the gallery has to guarantee rather than how it is built:
- * three audiences a visitor can discover and choose with a pointer, a touch or
- * a keyboard; copy, drawing, control state and link that agree with each other;
- * three genuinely different drawings; a complete still picture under reduced
- * motion; and all three panels readable without a script.
- */
+import { test, expect } from "@playwright/test";
 
 const names = [
-  /C-level executives/,
-  /Individual Contributors and Teams/,
-  /AI builders/,
-];
-const kickers = [
   "C-level executives",
   "Individual Contributors and Teams",
   "AI builders",
 ];
-const links = [
-  ["For executives", /services\/#track-c-level-ai$/],
-  ["For Individual Contributors and Teams", /services\/#track-role-based$/],
-  ["For AI builders", /services\/#track-ai-builders$/],
-] as const;
-const drawings = [
-  /Executive illustration:/,
-  /Individual Contributors and Teams illustration:/,
-  /Builder illustration:/,
+const ids = ["executives", "contributors", "builders"];
+const destinations = [
+  "/services/#track-c-level-ai",
+  "/services/#track-role-based",
+  "/services/#track-ai-builders",
 ];
 
-/** Everything the shown scene has settled into, as a browser reports it. */
-const shown = (page: Page) =>
-  page.evaluate(() => {
-    const panel = document.querySelector(".audience-panel:not([hidden])")!;
-    const field = panel.querySelector(".scene-field")!;
-    return {
-      kicker: panel.querySelector(".audience-scene-title")?.textContent?.trim(),
-      describedBy: field.getAttribute("aria-label"),
-      pressed: [...document.querySelectorAll("[data-audience]")].map((el) =>
-        el.getAttribute("aria-pressed"),
-      ),
-      // A settled drawing has every piece laid: none still held back for its
-      // beat, dropping, sliding or unfolding.
-      drawing: [...field.querySelectorAll(".part-body")].filter((body) => {
-        const style = getComputedStyle(body);
-        return (
-          style.opacity !== "1" ||
-          !["none", "matrix(1, 0, 0, 1, 0, 0)"].includes(style.transform)
-        );
-      }).length,
-      faded: [...field.querySelectorAll(".part-body, .system-label-text")]
-        .map((el) => getComputedStyle(el).opacity)
-        .filter((opacity) => opacity !== "1").length,
-    };
-  });
-
-test("a visitor can discover and choose all three audiences, and everything agrees", async ({
+test("Home and Services let a visitor read and jump between three complete audience articles", async ({
   page,
 }) => {
+  for (const route of ["/", "/services/"]) {
+    await page.goto(route);
+    const section = page.locator("#audiences");
+    const rail = section.getByRole("group", { name: "Choose an audience" });
+    await expect(rail.getByRole("button")).toHaveCount(3);
+    await expect(
+      section.getByRole("button", { name: /Previous audience|Next audience/ }),
+    ).toHaveCount(0);
+    for (const [index, name] of names.entries()) {
+      const article = section.getByRole("article", { name, exact: true });
+      await expect(
+        article.getByRole("heading", { name, exact: true }),
+      ).toBeVisible();
+      await expect(article.locator("li")).toHaveCount(3);
+      await expect(article.getByRole("link")).toHaveAttribute(
+        "href",
+        destinations[index],
+      );
+      await rail.getByRole("button", { name, exact: true }).click();
+      await expect(
+        rail.getByRole("button", { name, exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
+      await expect(article).toBeInViewport();
+    }
+  }
+});
+
+test("reading an audience changes the pinned scene and the announced selection", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/#audiences");
   const rail = page.getByRole("group", { name: "Choose an audience" });
-  for (const name of names)
-    await expect(rail.getByRole("button", { name })).toBeVisible();
-  await expect(page.locator(".audience-panel:not([hidden])")).toHaveCount(1);
+  for (const [index, id] of ids.entries()) {
+    await page
+      .locator(`#audience-${id}`)
+      .evaluate((article) => article.scrollIntoView({ block: "center" }));
+    await expect(
+      rail.getByRole("button", { name: names[index], exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator(".audience-art").getByRole("img")).toHaveCount(1);
+    await expect(
+      page.locator(".audience-art").getByRole("img"),
+    ).toHaveAccessibleName(
+      new RegExp(
+        index === 0
+          ? "Executive day"
+          : index === 1
+            ? "Individual Contributors and Teams illustration"
+            : "Builder illustration",
+      ),
+    );
+  }
+  await expect(page.locator(".audience-pinned-caption")).not.toHaveAttribute(
+    "aria-live",
+  );
+});
 
-  for (const [index, name] of names.entries()) {
-    await rail.getByRole("button", { name }).click();
-    const panel = page.locator(".audience-panel:not([hidden])");
-    await expect(panel).toHaveCount(1);
-    await expect(panel.locator(".audience-scene-title")).toHaveText(
-      kickers[index],
-    );
-    await expect(panel.getByRole("img")).toHaveAccessibleName(drawings[index]);
-    const cta = page
-      .locator(".audience-card")
-      .nth(index)
-      .getByRole("link", { name: links[index][0] });
-    await expect(cta).toHaveAttribute("href", links[index][1]);
-    await expect(rail.getByRole("button", { name })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
+test("phone visitors read each audience beside its own scene and operate the wrapping pills", async ({
+  page,
+}) => {
+  for (const height of [686, 742]) {
+    await page.setViewportSize({ width: 384, height });
+    await page.goto("/#audiences");
+    for (const [index, name] of names.entries()) {
+      const choice = page.getByRole("button", { name, exact: true });
+      await choice.focus();
+      await page.keyboard.press("Enter");
+      await expect(choice).toHaveAttribute("aria-pressed", "true");
+      await expect(choice).toBeFocused();
+      expect(
+        await choice.evaluate(
+          (button) => getComputedStyle(button).outlineStyle,
+        ),
+      ).not.toBe("none");
+      const article = page.getByRole("article", { name, exact: true });
+      await expect(article.getByRole("img")).toHaveCount(1);
+      await expect(article.getByRole("img")).toBeVisible();
+      await expect(article).toBeInViewport();
+      await expect(article.getByRole("link")).toHaveAttribute(
+        "href",
+        destinations[index],
+      );
+    }
     expect(
-      (await shown(page)).pressed.filter((p) => p === "true"),
-    ).toHaveLength(1);
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
   }
 });
 
-test("the arrows and the arrow keys move the choice, and focus stays where it was", async ({
-  page,
-}) => {
-  await page.goto("/#audiences");
-  const next = page.getByRole("button", { name: "Next audience" });
-  const previous = page.getByRole("button", { name: "Previous audience" });
-  await next.click();
-  await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    "Individual Contributors and Teams",
-  );
-  // Focus is not moved into the panel by the choice. WebKit does not focus a
-  // clicked button at all, so what is asserted is where focus did not go.
-  expect(
-    await page.evaluate(
-      () => !document.activeElement?.closest(".audience-panel"),
-    ),
-  ).toBe(true);
-  await next.click();
-  await next.click();
-  await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    "C-level executives",
-  );
-  await previous.click();
-  await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    "AI builders",
-  );
-
-  const first = page.getByRole("button", { name: names[0] });
-  await first.focus();
-  await page.keyboard.press("ArrowRight");
-  const second = page.getByRole("button", { name: names[1] });
-  await expect(second).toBeFocused();
-  await expect(second).toHaveAttribute("aria-pressed", "true");
-  await page.keyboard.press("End");
-  await expect(page.getByRole("button", { name: names[2] })).toBeFocused();
-  await page.keyboard.press("Home");
-  await expect(first).toBeFocused();
-  await expect(first).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.locator(".audience-panel:not([hidden]) .audience-scene-title"),
-  ).toHaveText(kickers[0]);
-});
-
-test("the three audience drawings are three different drawings, not one relabelled", async ({
-  page,
-}) => {
-  await page.goto("/#audiences");
-  await page.evaluate(() => document.fonts.ready);
-  const scenes = page.locator(".audience-panel .scene-field");
-  await expect(scenes).toHaveCount(3);
-  const states = await Promise.all(
-    [0, 1, 2].map((index) => scenes.nth(index).evaluate(readField)),
-  );
-  // Different artwork, built from different pieces — not one drawing with
-  // its words swapped.
-  expect(new Set(states.map((state) => state.geometry)).size).toBe(3);
-  expect(
-    new Set(
-      states.map((state) =>
-        JSON.stringify(state.parts.map((piece) => piece.name)),
-      ),
-    ).size,
-  ).toBe(3);
-  // Distinct from the service schematics as well, not only from each other.
-  const cast = await page.evaluate(() =>
-    [...document.querySelectorAll(".audience-panel .system-label")].map(
-      (label) => label.textContent,
-    ),
-  );
-  expect(cast).toContain("Tailored executive skill");
-  expect(cast).toContain("Deal team");
-  expect(cast).toContain("Troubleshoot");
-  expect(cast).not.toContain("Useful prompts");
-});
-
-test("a reduced-motion visitor gets a complete still scene on every choice", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/#audiences");
-  await page.evaluate(() => document.fonts.ready);
-  for (const name of [names[1], names[2], names[0]]) {
-    await page.getByRole("button", { name }).click();
-    const state = await shown(page);
-    expect(state.drawing).toBe(0);
-    expect(state.faded).toBe(0);
-    expect(
-      await page.evaluate(() =>
-        document
-          .getAnimations()
-          .map((animation) =>
-            Number(animation.effect?.getTiming().duration ?? 0),
-          )
-          .filter((duration) => duration > 1),
-      ),
-    ).toEqual([]);
-  }
-});
-
-test("requesting reduced motion while a scene is being told leaves it complete", async ({
-  page,
-}) => {
-  await page.goto("/#audiences");
-  await page.evaluate(() => document.fonts.ready);
-  await page.getByRole("button", { name: names[2] }).click();
-  await page.waitForTimeout(250);
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect.poll(async () => (await shown(page)).drawing).toBe(0);
-  await expect.poll(async () => (await shown(page)).faded).toBe(0);
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          document
-            .getAnimations()
-            .filter((animation) => animation.playState === "running").length,
-      ),
-    )
-    .toBe(0);
-  await expect(
-    page.locator(".audience-panel:not([hidden]) .system-label").first(),
-  ).toBeVisible();
-});
-
-test("a visitor on a phone gets the portrait scenes and can choose by touch", async ({
-  browser,
-}) => {
-  const context = await browser.newContext({
-    viewport: { width: 390, height: 844 },
-    hasTouch: true,
+for (const mode of ["reduced motion", "without scripting"] as const) {
+  test(`${mode} leaves every audience article and complete still scene in reading order`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: mode !== "without scripting",
+      reducedMotion: mode === "reduced motion" ? "reduce" : "no-preference",
+      viewport: { width: 1440, height: 1000 },
+    });
+    const page = await context.newPage();
+    await page.goto(
+      mode === "without scripting"
+        ? (process.env.PW_AUDIENCE_STATIC_URL ??
+            "http://127.0.0.1:4179/website-redesign/") + "#audiences"
+        : "/#audiences",
+    );
+    await expect(page.locator(".audience-panel h3")).toHaveText(names);
+    for (const name of names) {
+      const article = page.getByRole("article", { name, exact: true });
+      await expect(article).toBeVisible();
+      await expect(article.getByRole("img")).toBeVisible();
+      expect(
+        await article
+          .locator(".part-body")
+          .evaluateAll((parts) =>
+            parts.every((part) => getComputedStyle(part).opacity === "1"),
+          ),
+      ).toBe(true);
+    }
+    await context.close();
   });
-  const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4173/#audiences");
-  const ratio = await page
-    .locator(".audience-panel:not([hidden]) .scene-field")
-    .evaluate((field) =>
-      (field as HTMLElement).style.getPropertyValue("--ratio"),
-    );
-  expect(ratio.trim()).toMatch(/^620 \//);
-  await page.getByRole("button", { name: names[1] }).tap();
-  await expect(
-    page.locator(".audience-panel:not([hidden]) .audience-scene-title"),
-  ).toHaveText(kickers[1]);
-  await expect(
-    page.locator(".audience-panel:not([hidden])").getByText("Deal team", {
-      exact: true,
-    }),
-  ).toBeVisible();
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
-  await context.close();
-});
+}
 
 test("the playbook page explains the verified request route", async ({
   page,
@@ -295,29 +189,6 @@ test("the approved audience introduction appears wherever the audiences do", asy
   }
 });
 
-test("Individual Contributors and Teams is named the same everywhere it appears", async ({
-  page,
-}) => {
-  await page.goto("/#audiences");
-  const card = page.locator(".audience-card").nth(1);
-  await expect(card.getByRole("button")).toContainText(
-    "Individual Contributors and Teams",
-  );
-  await expect(card.getByRole("button")).toContainText(
-    "Training built around your role, industry and company, so skills take on recurring work and free you for judgment.",
-  );
-  await card.getByRole("button").click();
-  await expect(
-    page.locator(".audience-panel:not([hidden]) .audience-scene-title"),
-  ).toHaveText("Individual Contributors and Teams");
-  await expect(page.locator("#audiences")).not.toContainText(
-    /Teams and individual contributors|^Individual contributors$/im,
-  );
-  await expect(
-    card.getByRole("link", { name: "For Individual Contributors and Teams" }),
-  ).toHaveAttribute("href", "/services/#track-role-based");
-});
-
 test("Services names the people Customized Role-Based Training serves", async ({
   page,
 }) => {
@@ -331,83 +202,140 @@ test("Services names the people Customized Role-Based Training serves", async ({
   );
 });
 
-/** How much of a picture is red, and the tallest unbroken vertical run of it: a bar. */
-async function redIn(page: Page, png: Buffer) {
-  return page.evaluate(async (b64) => {
-    const image = new Image();
-    image.src = `data:image/png;base64,${b64}`;
-    await image.decode();
-    const canvas = document.createElement("canvas");
-    canvas.width = image.width;
-    canvas.height = image.height;
-    const context = canvas.getContext("2d")!;
-    context.drawImage(image, 0, 0);
-    const { data, width, height } = context.getImageData(
-      0,
-      0,
-      canvas.width,
-      canvas.height,
-    );
-    const red = (x: number, y: number) => {
-      const at = (y * width + x) * 4;
-      return data[at] > 140 && data[at + 1] < 80 && data[at + 2] < 80;
-    };
-    let anywhere = 0;
-    let tallest = 0;
-    for (let x = 0; x < width; x += 1) {
-      let run = 0;
-      for (let y = 0; y < height; y += 1) {
-        if (red(x, y)) {
-          anywhere += 1;
-          run += 1;
-          tallest = Math.max(tallest, run);
-        } else run = 0;
-      }
-    }
-    return { tallest, anywhere };
-  }, png.toString("base64"));
-}
-
-test("a selected audience shows selection without a red vertical bar", async ({
+test("phone keyboard reading moves the pressed audience beyond a chosen pill", async ({
   page,
+  browserName,
 }) => {
+  await page.setViewportSize({ width: 384, height: 742 });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  for (const width of [1440, 1024, 768, 480, 384, 320]) {
-    await page.setViewportSize({ width, height: 844 });
-    await page.goto("/#audiences");
-    await page.evaluate(() => document.fonts.ready);
-    const cards = page.locator(".audience-card");
-    for (const index of [1, 0, 2]) {
-      await cards.nth(index).getByRole("button").click();
-      await expect(cards.nth(index).getByRole("button")).toHaveAttribute(
-        "aria-pressed",
-        "true",
-      );
-      const red = await redIn(page, await cards.nth(index).screenshot());
-      // A bar is a tall unbroken run; red text and a rule are not.
-      expect(red.tallest, `${width}px, choice ${index + 1}`).toBeLessThan(24);
-      // Selection is still unmistakable: something in the card is red.
-      expect(red.anywhere, `${width}px, choice ${index + 1}`).toBeGreaterThan(
-        20,
-      );
-    }
+  const nextFocus = browserName === "webkit" ? "Alt+Tab" : "Tab";
+  for (const route of ["/", "/services/"]) {
+    await page.goto(route + "#audiences");
+    const first = page.getByRole("button", { name: names[0], exact: true });
+    await first.focus();
+    await page.keyboard.press("Enter");
+    await expect(first).toHaveAttribute("aria-pressed", "true");
+    for (let step = 0; step < 4; step++) await page.keyboard.press(nextFocus);
+    const contributors = page.getByRole("article", {
+      name: names[1],
+      exact: true,
+    });
+    await expect(contributors.getByRole("link")).toBeFocused();
+    await expect(
+      page.getByRole("button", { name: names[1], exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await page.keyboard.press(nextFocus);
+    await expect(
+      page.getByRole("button", { name: names[2], exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
   }
 });
 
-test("all three audience choices stay operable and visibly focused on a phone", async ({
+test("narrow audience jumps retry when an interrupted article only crosses the viewport midpoint", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 384, height: 742 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript(() => {
+    Element.prototype.scrollIntoView = function () {
+      const count = Number(
+        document.documentElement.dataset.testScrollIntoViewCalls ?? 0,
+      );
+      document.documentElement.dataset.testScrollIntoViewCalls = String(
+        count + 1,
+      );
+      if (count !== 0) return;
+
+      const box = this.getBoundingClientRect();
+      const middle = innerHeight / 2;
+      const targetTop = middle - 10;
+      window.scrollTo({
+        top: scrollY + box.top - targetTop,
+        behavior: "instant",
+      });
+      const landed = this.getBoundingClientRect();
+      const landing =
+        Number.parseFloat(getComputedStyle(this).scrollMarginTop) +
+        Number.parseFloat(
+          getComputedStyle(document.documentElement).scrollPaddingTop,
+        );
+      document.documentElement.dataset.testInterruptWasMidpointOnly = String(
+        landed.top < landing && landed.top < middle && landed.bottom > middle,
+      );
+      window.dispatchEvent(new Event("scrollend"));
+    };
+  });
+
+  for (const route of ["/", "/services/"]) {
+    await page.goto(route + "#audiences");
+    const choice = page.getByRole("button", {
+      name: names[2],
+      exact: true,
+    });
+    await choice.click();
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-test-interrupt-was-midpoint-only",
+      "true",
+    );
+    await expect
+      .poll(() =>
+        page.locator("html").getAttribute("data-test-scroll-into-view-calls"),
+      )
+      .toBe("2");
+  }
+});
+
+test("phone audience choices keep the hidden pinned drawings still", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 384, height: 742 });
   await page.goto("/#audiences");
-  const rail = page.getByRole("group", { name: "Choose an audience" });
-  for (const name of names) {
-    const choice = rail.getByRole("button", { name });
-    await choice.focus();
-    await page.keyboard.press("Enter");
-    await expect(choice).toHaveAttribute("aria-pressed", "true");
-    const outline = await choice.evaluate(
-      (el) => getComputedStyle(el).outlineStyle,
-    );
-    expect(outline).not.toBe("none");
+  const choice = page.getByRole("button", { name: names[1], exact: true });
+  await choice.focus();
+  await page.keyboard.press("Enter");
+  await expect(choice).toHaveAttribute("aria-pressed", "true");
+  expect(
+    await page.locator(".audience-art").evaluate(
+      (pane) =>
+        document.getAnimations().filter((animation) => {
+          const target = (animation.effect as KeyframeEffect).target;
+          return target instanceof Element && pane.contains(target);
+        }).length,
+    ),
+  ).toBe(0);
+});
+
+test("mouse scrolling releases a narrow audience or service pill selection", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 800, height: 742 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const route of ["/", "/services/"]) {
+    for (const [section, firstName, articleId, nextName] of [
+      ["audiences", names[0], "audience-builders", names[2]],
+      ["services", "Workshops", "service-product", "Automations"],
+    ]) {
+      await page.goto(route + "#" + section);
+      const region = page.locator("#" + section);
+      const first = region.getByRole("button", {
+        name: firstName,
+        exact: true,
+      });
+      await first.click();
+      await expect(first).toHaveAttribute("aria-pressed", "true");
+      // A scrollbar drag produces a mouse press and scrolling, without wheel,
+      // touch or a navigation key. Keep the scroll separate from those inputs.
+      await page.mouse.move(799, 400);
+      await page.mouse.down();
+      await page
+        .locator("#" + articleId)
+        .evaluate((article) =>
+          article.scrollIntoView({ block: "center", behavior: "instant" }),
+        );
+      await page.mouse.up();
+      await expect(
+        region.getByRole("button", { name: nextName, exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
+    }
   }
 });

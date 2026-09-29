@@ -108,7 +108,7 @@ export const schematics: readonly Schematic[] = [
     detail:
       "Operating problem → tailored design → testing and review → team deployment.",
     description:
-      "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and a workflow the team deploys and uses.",
+      "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and skills and plugins the team deploys and uses.",
     nodes: cast(
       "Brief / operating problem",
       "Tailored design and build",
