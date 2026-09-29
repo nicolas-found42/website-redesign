@@ -182,28 +182,31 @@ function landscape(): Art {
   });
   const frame = { x: 806, y: 196, w: 84, h: 268 };
   // Past the gate the four paths part to ends of their own on the result.
-  const panel = { x: 1100, y: 196, w: 190, h: 268 };
+  const panel = { x: 1060, y: 196, w: 230, h: 268 };
+  // The canvas ends a margin past the panel, and the company's backdrop fills
+  // it: nothing here is a number of its own to drift from the panel's.
+  const canvasWidth = panel.x + panel.w + 50;
   const gap = 70;
   const ends = lanes.map((_, lane) => centre + (lane - 1.5) * gap);
   const beyond = frame.x + frame.w + 10;
   const labels: Record<string, LabelPlace> = {
     company: place([62, 70], "start", "below", { width: 400 }),
     human: place([frame.x + frame.w / 2, 531], "center", "middle", {
-      width: 210,
+      width: 330,
       ground: "red",
     }),
     result: place([panel.x + panel.w / 2, centre], "center", "middle", {
-      width: panel.w - 26,
+      width: panel.w - 30,
       ground: "ink",
     }),
   };
   const rows = ys.map((y, i) => {
     const n = i + 1;
     labels[`role${n}`] = place([124, y], "start", "middle", {
-      width: 164,
+      width: 200,
       ground: "ink",
     });
-    labels[`skill${n}`] = place([490, y], "center", "middle", { width: 190 });
+    labels[`skill${n}`] = place([490, y], "center", "middle", { width: 214 });
     const d = `M290 ${y} L640 ${y} ${easeX([640, y], [675, lanes[i]], 0.5)}${braided.paths[i]} L${beyond} ${lanes[braided.leaves[i]]}`;
     return part(
       {
@@ -216,8 +219,8 @@ function landscape(): Art {
         marks: [`person:role${n}`],
       },
       strip(d, width, FILLS[i]) +
-        buckle(360, y, 260, 76, width) +
-        tab(60, y, 230, 58),
+        buckle(360, y, 260, 94, width) +
+        tab(60, y, 270, 58),
     );
   });
   const returns = ys.map((_, i) => {
@@ -242,7 +245,7 @@ function landscape(): Art {
   const parts = [
     part(
       { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(30, 44, 1280, 552),
+      backdrop(30, 44, canvasWidth - 60, 552),
     ),
     part(
       {
@@ -256,7 +259,7 @@ function landscape(): Art {
       gate(frame) +
         seal([frame.x + frame.w / 2, frame.y - 4], 20, -8) +
         `<path class="s-red" d="M${frame.x + frame.w / 2} ${frame.y + frame.h} L${frame.x + frame.w / 2} 500" stroke-width="4"/>` +
-        plate(frame.x + frame.w / 2 - 124, 500, 248, 62),
+        plate(frame.x + frame.w / 2 - 180, 500, 360, 62),
     ),
     ...rows,
     part(
@@ -277,7 +280,7 @@ function landscape(): Art {
       resultPanel(panel.x, panel.y, panel.w, panel.h),
     ),
   ];
-  return { width: 1340, height: 620, parts: parts.join(""), labels };
+  return { width: canvasWidth, height: 620, parts: parts.join(""), labels };
 }
 
 function portrait(): Art {
@@ -299,7 +302,10 @@ function portrait(): Art {
   });
   const frame = { x: 470, y: 762, w: 134, h: 74 };
   // Past the gate the four paths part to ends of their own on the result.
-  const panel = { x: 210, y: 1004, w: 380, h: 76 };
+  const panel = { x: 120, y: 1004, w: 470, h: 104 };
+  // The canvas ends a margin below the panel, and the company's backdrop fills
+  // it: nothing here is a number of its own to drift from the panel's.
+  const canvasHeight = panel.y + panel.h + 40;
   const beyond = frame.y + frame.h + 10;
   const ends = bundle.map((_, lane) => 300 + lane * 84);
   const labels: Record<string, LabelPlace> = {
@@ -319,11 +325,11 @@ function portrait(): Art {
     const n = i + 1;
     const x = lanes[i];
     const radius = Math.min(24, x - 480);
-    labels[`role${n}`] = place([98, y], "start", "middle", {
-      width: 162,
+    labels[`role${n}`] = place([88, y], "start", "middle", {
+      width: 188,
       ground: "ink",
     });
-    labels[`skill${n}`] = place([382, y], "center", "middle", { width: 128 });
+    labels[`skill${n}`] = place([382, y], "center", "middle", { width: 170 });
     const d = `M262 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${braidStart - 30} ${easeY([x, braidStart - 30], [bundle[strandOf(i)], braidStart], 0.5)}${braided.paths[strandOf(i)]} L${bundle[braided.leaves[strandOf(i)]]} ${beyond}`;
     return part(
       {
@@ -337,7 +343,7 @@ function portrait(): Art {
       },
       strip(d, width, FILLS[i]) +
         buckle(288, y, 188, 92, width) +
-        tab(34, y, 228, 60),
+        tab(34, y, 244, 60),
     );
   });
   const returns = ys.map((_, i) => {
@@ -361,7 +367,7 @@ function portrait(): Art {
   const parts = [
     part(
       { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(14, 30, 592, 1060),
+      backdrop(14, 30, 592, canvasHeight - 60),
     ),
     part(
       {
@@ -375,7 +381,7 @@ function portrait(): Art {
       gate(frame) +
         seal([frame.x - 4, frame.y + 4], 18, -8) +
         `<path class="s-red" d="M${frame.x} ${frame.y + frame.h / 2} L440 ${frame.y + frame.h / 2}" stroke-width="4"/>` +
-        plate(172, frame.y + frame.h / 2 - 32, 268, 64),
+        plate(172, frame.y + frame.h / 2 - 48, 268, 96),
     ),
     ...rows,
     part(
@@ -396,7 +402,7 @@ function portrait(): Art {
       resultPanel(panel.x, panel.y, panel.w, panel.h),
     ),
   ];
-  return { width: 620, height: 1120, parts: parts.join(""), labels };
+  return { width: 620, height: canvasHeight, parts: parts.join(""), labels };
 }
 
 export const contributorsArt = (orientation: Orientation): Art =>

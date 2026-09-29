@@ -335,19 +335,38 @@ export const sceneArt = (scene: Scene, orientation: SceneOrientation): Art =>
 export function sceneFieldMarkup(
   scene: Scene,
   orientation: SceneOrientation = "landscape",
+  className = "",
 ): string {
   return fieldHtml(
     sceneArt(scene, orientation),
     scene.labels,
     scene.description,
-    "system-field scene-field",
+    `system-field scene-field${className ? ` ${className}` : ""}`,
   );
 }
 
+/**
+ * The scenes whose script-free still also carries the narrow composition, so
+ * a narrow screen without scripts is shown the drawing authored for it, as
+ * the live scene is (ADR 0006). The other scenes are unchanged: their
+ * script-free still is the wide composition at every width.
+ */
+const narrowStills: ReadonlySet<string> = new Set(["contributors"]);
+
 /** A still scene in a host the live drawing can later take over. */
-export const sceneFigure = (
+export function sceneFigure(
   scene: Scene,
   orientation: SceneOrientation,
   className = "system system--quiet",
-): string =>
-  `<div class="${className}" data-scene-host data-scene="${scene.id}">${sceneFieldMarkup(scene, orientation)}</div>`;
+): string {
+  // Both compositions are set and a media query shows the one that fits
+  // (`.scene-field--wide` / `--narrow` in system.css, switching where
+  // `mountScene` does). The live drawing replaces the host's contents, so it
+  // only ever sees one.
+  const still =
+    orientation === "landscape" && narrowStills.has(scene.id)
+      ? sceneFieldMarkup(scene, "landscape", "scene-field--wide") +
+        sceneFieldMarkup(scene, "portrait", "scene-field--narrow")
+      : sceneFieldMarkup(scene, orientation);
+  return `<div class="${className}" data-scene-host data-scene="${scene.id}">${still}</div>`;
+}
