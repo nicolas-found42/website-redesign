@@ -5,6 +5,7 @@ node_modules/
 dist/
 test-results/
 playwright-report/
+playwright-timings/
 
 # Review-mode feedback files: they name people, and issues are public.
 feedback/

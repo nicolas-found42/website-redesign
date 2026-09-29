@@ -102,6 +102,21 @@ test("the scorecard asks the Plan B assessment in the five advertised areas", ()
 
 test("every one of the 4,096 answer sets gets a stage and places to start, never a score", () => {
   const sizes = scorecard.areas.map((area) => area.questions.length);
+  const failures: string[] = [];
+  const check = (
+    mask: number,
+    name: string,
+    actual: unknown,
+    expected: unknown,
+  ) => {
+    if (
+      JSON.stringify(actual) !== JSON.stringify(expected) &&
+      failures.length < 10
+    )
+      failures.push(
+        `${mask}: ${name}: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`,
+      );
+  };
   const stageFor = (yes: number) =>
     yes >= 9
       ? "Ready to scale"
@@ -116,12 +131,15 @@ test("every one of the 4,096 answer sets gets a stage and places to start, never
     );
     const result = scorecardResult(answers);
     const areaYes = answers.slice(0, 10).filter(Boolean).length;
-    expect(result.stage.title).toBe(stageFor(areaYes));
+    check(mask, "stage", result.stage.title, stageFor(areaYes));
     let at = 0;
     result.areas.forEach((area, index) => {
       const yes = answers.slice(at, at + sizes[index]).filter(Boolean).length;
       at += sizes[index];
-      expect(area.status).toBe(
+      check(
+        mask,
+        `area ${index}`,
+        area.status,
         yes === sizes[index]
           ? "In place"
           : yes > 0
@@ -129,24 +147,43 @@ test("every one of the 4,096 answer sets gets a stage and places to start, never
             : "Next to build",
       );
     });
-    expect(result.next.length).toBeLessThanOrEqual(3);
-    expect(result.next.every((area) => area.status !== "In place")).toBe(true);
+    check(mask, "at most three next steps", result.next.length <= 3, true);
+    check(
+      mask,
+      "next steps are not complete",
+      result.next.every((area) => area.status !== "In place"),
+      true,
+    );
     const shares = result.next.map((area) => area.share);
-    expect(shares).toEqual([...shares].sort((a, b) => a - b));
-    expect(result.barriers.map((barrier) => barrier.id)).toEqual(
+    check(
+      mask,
+      "weakest areas first",
+      shares,
+      [...shares].sort((a, b) => a - b),
+    );
+    check(
+      mask,
+      "barriers",
+      result.barriers.map((barrier) => barrier.id),
       [answers[10] && "cost", answers[11] && "fit"].filter(Boolean),
     );
-    expect(
-      readable(
-        [
-          result.stage.title,
-          result.stage.body,
-          ...result.next.map(({ area }) => area.advice),
-          ...result.barriers.map((barrier) => barrier.advice),
-        ].join(" "),
+    check(
+      mask,
+      "no numeric score",
+      /\d/.test(
+        readable(
+          [
+            result.stage.title,
+            result.stage.body,
+            ...result.next.map(({ area }) => area.advice),
+            ...result.barriers.map((barrier) => barrier.advice),
+          ].join(" "),
+        ),
       ),
-    ).not.toMatch(/\d/);
+      false,
+    );
   }
+  expect(failures).toEqual([]);
 });
 
 test("the September 23 content delta is handled honestly rather than preserved verbatim", () => {
