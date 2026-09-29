@@ -15,6 +15,15 @@ test("homepage renders using local assets without contacting an external content
     return route.continue();
   });
   await page.goto("/");
+  const organizations = page.getByRole("region", {
+    name: "Teams we have worked with",
+  });
+  await expect(organizations.getByRole("img")).toHaveCount(15);
+  for (const mark of await organizations.locator("img").all()) {
+    await expect(mark).toHaveJSProperty("complete", true);
+    await expect(mark).not.toHaveJSProperty("naturalWidth", 0);
+    expect(await mark.getAttribute("src")).toMatch(/^\/assets\/logos\//);
+  }
   await page
     .getByRole("img", { name: "Richard Achée, Founder and CEO of Found42" })
     .scrollIntoViewIfNeeded();
