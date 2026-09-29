@@ -21,8 +21,10 @@ import {
  * ribbons are then braided into one bundle. The bundle passes through a gate:
  * the human in the loop, where a person reviews before anything leaves. The
  * ribbons stay four ribbons the whole way; the method is shared, the skill is
- * not. The ribbons alternate the owner's red, charcoal and white, each with a
- * charcoal outline.
+ * not. Past the gate the four ribbons part into four separate paths, each with
+ * room of its own, and end together at one shared result: reviewed work
+ * returns to each role. The ribbons alternate the owner's red, charcoal and
+ * white, each with a charcoal outline.
  */
 
 /** Red, charcoal, white, red: one per role, alternating along the bundle. */
@@ -157,6 +159,14 @@ const backdrop = (x: number, y: number, w: number, h: number) =>
   `<rect class="f-warm" x="${x}" y="${y}" width="${w}" height="${h}" rx="12"/>` +
   `<rect class="s-line" x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="none" stroke-width="2"/>`;
 
+/**
+ * The shared result: one charcoal panel the four paths end under, so they
+ * arrive together and the caption is said once.
+ */
+const resultPanel = (x: number, y: number, w: number, h: number) =>
+  `<rect class="f-sunk" x="${r(x + 5)}" y="${r(y + 6)}" width="${w}" height="${h}" rx="8"/>` +
+  `<rect class="f-ink s-ink" x="${x}" y="${y}" width="${w}" height="${h}" rx="8" stroke-width="2.5"/>`;
+
 function landscape(): Art {
   const ys = [170, 272, 374, 476];
   const centre = 330;
@@ -170,13 +180,21 @@ function landscape(): Art {
     fills: FILLS,
     axis: "x",
   });
-  const exit = 675 + 40 * 3;
   const frame = { x: 806, y: 196, w: 84, h: 268 };
+  // Past the gate the four paths part to ends of their own on the result.
+  const panel = { x: 1100, y: 196, w: 190, h: 268 };
+  const gap = 70;
+  const ends = lanes.map((_, lane) => centre + (lane - 1.5) * gap);
+  const beyond = frame.x + frame.w + 10;
   const labels: Record<string, LabelPlace> = {
     company: place([62, 70], "start", "below", { width: 400 }),
     human: place([frame.x + frame.w / 2, 531], "center", "middle", {
       width: 210,
       ground: "red",
+    }),
+    result: place([panel.x + panel.w / 2, centre], "center", "middle", {
+      width: panel.w - 26,
+      ground: "ink",
     }),
   };
   const rows = ys.map((y, i) => {
@@ -185,8 +203,8 @@ function landscape(): Art {
       width: 164,
       ground: "ink",
     });
-    labels[`skill${n}`] = place([490, y], "center", "middle", { width: 214 });
-    const d = `M290 ${y} L640 ${y} ${easeX([640, y], [675, lanes[i]], 0.5)}${braided.paths[i]} L${exit + 150} ${lanes[braided.leaves[i]]}`;
+    labels[`skill${n}`] = place([490, y], "center", "middle", { width: 190 });
+    const d = `M290 ${y} L640 ${y} ${easeX([640, y], [675, lanes[i]], 0.5)}${braided.paths[i]} L${beyond} ${lanes[braided.leaves[i]]}`;
     return part(
       {
         name: "role",
@@ -202,10 +220,29 @@ function landscape(): Art {
         tab(60, y, 230, 58),
     );
   });
+  const returns = ys.map((_, i) => {
+    const y = lanes[braided.leaves[i]];
+    const tail = `L${beyond + 30} ${y} ${easeX([beyond + 30, y], [panel.x + 30, ends[braided.leaves[i]]], 0.5)}`;
+    return part(
+      {
+        name: "return",
+        beat: 6,
+        enter: "slide-right",
+        origin: [beyond, y],
+        order: i,
+        links: ["human>result"],
+      },
+      // The paper starts a little before the edge, so it meets the ribbon
+      // that arrived at the gate without a seam.
+      strip(`M${beyond - 2} ${y} ${tail}`, width, FILLS[i], {
+        fillPath: `M${beyond - 3.5} ${y} ${tail}`,
+      }),
+    );
+  });
   const parts = [
     part(
       { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(30, 44, 940, 552),
+      backdrop(30, 44, 1280, 552),
     ),
     part(
       {
@@ -226,8 +263,21 @@ function landscape(): Art {
       { name: "crossings", beat: 4, enter: "fade", order: 1 },
       braided.overs,
     ),
+    ...returns,
+    part(
+      {
+        name: "result",
+        beat: 6,
+        enter: "unfold-x",
+        origin: [panel.x, centre],
+        order: 4,
+        nodes: ["result"],
+        marks: ["result:result"],
+      },
+      resultPanel(panel.x, panel.y, panel.w, panel.h),
+    ),
   ];
-  return { width: 1000, height: 620, parts: parts.join(""), labels };
+  return { width: 1340, height: 620, parts: parts.join(""), labels };
 }
 
 function portrait(): Art {
@@ -247,11 +297,23 @@ function portrait(): Art {
     fills: [...FILLS].reverse(),
     axis: "y",
   });
-  const exit = braidStart + 34 * 3;
   const frame = { x: 470, y: 762, w: 134, h: 74 };
+  // Past the gate the four paths part to ends of their own on the result.
+  const panel = { x: 210, y: 1004, w: 380, h: 76 };
+  const beyond = frame.y + frame.h + 10;
+  const ends = bundle.map((_, lane) => 300 + lane * 84);
   const labels: Record<string, LabelPlace> = {
     company: place([40, 54], "start", "below", { width: 520 }),
     human: place([306, 799], "center", "middle", { width: 250, ground: "red" }),
+    result: place(
+      [panel.x + panel.w / 2, panel.y + panel.h / 2],
+      "center",
+      "middle",
+      {
+        width: panel.w - 32,
+        ground: "ink",
+      },
+    ),
   };
   const rows = ys.map((y, i) => {
     const n = i + 1;
@@ -261,8 +323,8 @@ function portrait(): Art {
       width: 162,
       ground: "ink",
     });
-    labels[`skill${n}`] = place([382, y], "center", "middle", { width: 170 });
-    const d = `M262 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${braidStart - 30} ${easeY([x, braidStart - 30], [bundle[strandOf(i)], braidStart], 0.5)}${braided.paths[strandOf(i)]} L${bundle[braided.leaves[strandOf(i)]]} ${exit + 130}`;
+    labels[`skill${n}`] = place([382, y], "center", "middle", { width: 128 });
+    const d = `M262 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${braidStart - 30} ${easeY([x, braidStart - 30], [bundle[strandOf(i)], braidStart], 0.5)}${braided.paths[strandOf(i)]} L${bundle[braided.leaves[strandOf(i)]]} ${beyond}`;
     return part(
       {
         name: "role",
@@ -278,10 +340,28 @@ function portrait(): Art {
         tab(34, y, 228, 60),
     );
   });
+  const returns = ys.map((_, i) => {
+    const lane = braided.leaves[strandOf(i)];
+    const x = bundle[lane];
+    const tail = `L${x} ${beyond + 26} ${easeY([x, beyond + 26], [ends[lane], panel.y + 30], 0.5)}`;
+    return part(
+      {
+        name: "return",
+        beat: 6,
+        enter: "slide-down",
+        origin: [x, beyond],
+        order: i,
+        links: ["human>result"],
+      },
+      strip(`M${x} ${beyond - 2} ${tail}`, width, FILLS[i], {
+        fillPath: `M${x} ${beyond - 3.5} ${tail}`,
+      }),
+    );
+  });
   const parts = [
     part(
       { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(14, 30, 592, 850),
+      backdrop(14, 30, 592, 1060),
     ),
     part(
       {
@@ -302,8 +382,21 @@ function portrait(): Art {
       { name: "crossings", beat: 4, enter: "fade", order: 1 },
       braided.overs,
     ),
+    ...returns,
+    part(
+      {
+        name: "result",
+        beat: 6,
+        enter: "unfold-y",
+        origin: [panel.x + panel.w / 2, panel.y],
+        order: 4,
+        nodes: ["result"],
+        marks: ["result:result"],
+      },
+      resultPanel(panel.x, panel.y, panel.w, panel.h),
+    ),
   ];
-  return { width: 620, height: 900, parts: parts.join(""), labels };
+  return { width: 620, height: 1120, parts: parts.join(""), labels };
 }
 
 export const contributorsArt = (orientation: Orientation): Art =>

@@ -49,7 +49,10 @@ history.
 - **Individual Contributors and Teams** replaces the ring with a gate. Four
   role ribbons — alternating #c42323 red, charcoal and white — run through
   their skills, braid together and pass through a gate labelled "Human in the
-  loop". This supersedes ADR 0006's ribbons through a ring.
+  loop". Past the gate the four ribbons part into four separate paths that end
+  together at one shared result caption, "Reviewed work returns to each role."
+  The result is one statement for all four roles; it adds no role-specific
+  outcome claims. This supersedes ADR 0006's ribbons through a ring.
 - **Executives** shows an illustrative Claude Daily Brief in place of the
   operating view: Critical, Needle Movers, Calendar Intelligence, Pipeline &
   Revenue and Recommended Actions, with the executive's decision stamped on the

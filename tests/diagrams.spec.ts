@@ -61,10 +61,10 @@ const sceneLinks: Record<string, string[]> = {
     "direction>brief",
     "brief>problem",
   ],
-  contributors: [1, 2, 3, 4].flatMap((n) => [
-    `role${n}>skill${n}`,
-    `skill${n}>human`,
-  ]),
+  contributors: [
+    ...[1, 2, 3, 4].flatMap((n) => [`role${n}>skill${n}`, `skill${n}>human`]),
+    "human>result",
+  ],
   builders: [
     "learner>design",
     "design>test",
@@ -492,6 +492,39 @@ test("the teams scene braids four role ribbons through a labelled human-review g
     "aria-label",
     /braided together and passing through the human-review gate/,
   );
+});
+
+test("the teams scene carries four separate paths past the gate to one shared result caption", async ({
+  page,
+}) => {
+  const caption = "Reviewed work returns to each role.";
+  for (const [path, width] of [
+    ["/", 1440],
+    ["/", 384],
+    ["/services/", 1440],
+  ] as const) {
+    const where = `${path} at ${width}`;
+    await open(page, path, width);
+    await page
+      .getByRole("button", { name: /Individual Contributors and Teams/ })
+      .first()
+      .click();
+    const field = page.locator("#audience-contributors .scene-field");
+    const state = await field.evaluate(readField);
+    expect(
+      state.labels.filter((label) => label.text === caption),
+      `${where}: one caption`,
+    ).toHaveLength(1);
+    expect(
+      state.parts.filter((piece) => piece.links.includes("human>result")),
+      `${where}: four paths continue past the gate`,
+    ).toHaveLength(4);
+    await expect(field, where).toHaveAttribute(
+      "aria-label",
+      /reviewed work returns to each role/,
+    );
+    await expect(field.getByText(caption), where).toBeVisible();
+  }
 });
 
 for (const [route, text] of [
