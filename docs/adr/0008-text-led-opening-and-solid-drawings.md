@@ -27,8 +27,11 @@ history.
   shows five logos in the owner's order — Google, Edgescale AI, Millsapps,
   Ballinger & Associates (MB&A), Seidler Equity Partners (SEP) and PeakSpan
   Capital. Each is the organization's own mark from its official site, bundled
-  locally and shown unaltered. The owner confirmed the relationships and that
-  each mark's use is approved; the site does not verify that approval.
+  locally and shown unaltered. Seidler's mark is its own artwork from
+  sepfunds.com (`seidler-equity-partners.svg`), which replaced the earlier
+  `sep.svg` that had been copied from Scottish Equity Partners (#78). The
+  owner confirmed the relationships and that each mark's use is approved; the
+  site does not verify that approval.
 - **No decorative textures in any drawing.** The dots, stripes and rules that
   ADR 0006 gave the first three node identities, and every dashed or stitched
   detail, are removed from every visualization on every route. Strips and
@@ -52,7 +55,10 @@ history.
   loop". Past the gate the four ribbons part into four separate paths that end
   together at one shared result caption, "Reviewed work returns to each role."
   The result is one statement for all four roles; it adds no role-specific
-  outcome claims. This supersedes ADR 0006's ribbons through a ring.
+  outcome claims. Without script, its prerendered still carries both the wide
+  and the narrow composition and a media query shows the narrow one at 860px
+  and below, where the live scene takes it. This supersedes ADR 0006's ribbons
+  through a ring.
 - **Executives** shows an illustrative Claude Daily Brief in place of the
   operating view: Critical, Needle Movers, Calendar Intelligence, Pipeline &
   Revenue and Recommended Actions, with the executive's decision stamped on the
