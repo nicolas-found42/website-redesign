@@ -24,10 +24,10 @@ const companies = [
     height: 215,
   },
   {
-    file: "sep.svg",
-    name: "Scottish Equity Partners (SEP)",
-    width: 60,
-    height: 40,
+    file: "seidler-equity-partners.svg",
+    name: "Seidler Equity Partners (SEP)",
+    width: 295,
+    height: 108,
   },
   {
     file: "peakspan-capital.svg",
@@ -38,8 +38,8 @@ const companies = [
 ] as const;
 
 export function companiesSection() {
-  return `<section id="companies" class="companies wrap" aria-label="Teams we have worked with">
-   <p class="note section-label">Teams we have worked with</p>
+  return `<section id="companies" class="companies wrap" aria-labelledby="companies-title">
+   <h2 id="companies-title" class="companies-title">Teams we have worked with</h2>
    <ul class="company-logos">${companies
      .map((company) => {
        const image = `<img src="${sitePath(`assets/logos/${company.file}`)}" alt="${company.name}" width="${company.width}" height="${company.height}" loading="lazy" decoding="async">`;
