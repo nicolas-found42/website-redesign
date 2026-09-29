@@ -480,6 +480,27 @@ test("executive timeline words stay whole and separate with enlarged text", asyn
     expect(wordProblems(await fields.first().evaluate(readTextFit))).toEqual(
       [],
     );
+    const overlaps = await fields.first().evaluate((field) => {
+      const boxes = [...field.querySelectorAll(".system-label-text")].map(
+        (label) => ({
+          text: label.textContent,
+          box: label.getBoundingClientRect(),
+        }),
+      );
+      return boxes.flatMap((a, i) =>
+        boxes
+          .slice(i + 1)
+          .filter(
+            (b) =>
+              a.box.left < b.box.right - 1 &&
+              b.box.left < a.box.right - 1 &&
+              a.box.top < b.box.bottom - 1 &&
+              b.box.top < a.box.bottom - 1,
+          )
+          .map((b) => `${a.text} / ${b.text}`),
+      );
+    });
+    expect(overlaps).toEqual([]);
   }
 });
 
