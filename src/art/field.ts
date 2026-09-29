@@ -39,9 +39,8 @@ export function labelHtml(
 export const labelsHtml = (art: Art, labels: readonly LabelContent[]) =>
   labels.map((label) => labelHtml(art, label)).join("");
 
-/** The artwork alone: its prints and its parts in painting order. */
-export const artInner = (art: Art) =>
-  `<defs>${art.defs}</defs><g class="art">${art.parts}</g>`;
+/** The artwork alone: its parts in painting order. */
+export const artInner = (art: Art) => `<g class="art">${art.parts}</g>`;
 
 export function fieldHtml(
   art: Art,
@@ -60,12 +59,3 @@ export function fieldHtml(
     "</div>"
   );
 }
-
-/**
- * Pattern ids must be unique in the document. Prerendered drawings and live
- * ones are numbered from different counters so a live rebuild can never take
- * an id a still drawing elsewhere on the page is using.
- */
-let count = 0;
-export const drawingId = (name: string) =>
-  `${typeof window === "undefined" ? "s" : "l"}${(count += 1)}-${name}`;

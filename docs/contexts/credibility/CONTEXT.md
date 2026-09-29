@@ -25,3 +25,7 @@ _Avoid_: Client case study, customer success story
 
 **Brand asset**:
 An identity element such as the Found42 logo, C-Level AI graphic, or founder portrait, distinct from a documented brand standard or usage license.
+
+**Organization mark**:
+A third party's own logo, shown on the site with the owner's confirmation of the relationship and of the mark's use. It is distinct from a testimonial, a documented case study or an endorsement by that organization.
+_Avoid_: Client case study, endorsement

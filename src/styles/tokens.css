@@ -9,6 +9,8 @@
   /* ── Ink, paper, signal ── */
   --red: #b70611;
   --red-deep: #8d040d;
+  /* The owner's strand red for the role ribbons, beside charcoal and white. */
+  --red-strand: #c42323;
   /* Red is unreadable on the ink bands, so those carry their own tint. */
   --red-on-ink: #ff5347;
   --ink: #20201f;

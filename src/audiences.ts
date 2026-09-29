@@ -1,20 +1,21 @@
 /**
  * The audience scenes: three ways the same method lands, drawn three ways.
  *
- * A scene is made in the same hand as the working-system drawings — printed
- * paper in the site's inks, red for what is human — but each one is its own
+ * A scene is made in the same hand as the working-system drawings — paper
+ * in the site's inks, red for what is human — but each one is its own
  * object rather than the plait with new words on it:
  *
  * - **Executives** feed a crumpled operating problem through a tailored skill,
- *   which presses it into an illustrative decision brief; the brief goes onto
- *   an operating view that executive direction holds, and back to the problem.
- *   The operating view is hypothetical, not a client artifact.
- * - **Contributors** each run a ribbon of their own role through a skill cut
- *   for it — four roles in one company — and all four are gathered by one red
- *   loop: the human in the loop.
+ *   which presses it into an illustrative Claude-style Daily Brief; the brief
+ *   is read by an executive, who directs what happens next, and its
+ *   recommendations feed back to the problem. The brief is hypothetical, not
+ *   a client artifact or a live integration.
+ * - **Teams and individual contributors** each run a ribbon of their own role
+ *   through a skill cut for it — four roles in one company — and the four
+ *   ribbons braid together through one gate: the human in the loop.
  * - **Builders** climb a stair folded from card, from a work problem to a
- *   workflow in use, with a reviewer's seal on each step: test, troubleshoot,
- *   anticipate failures.
+ *   workflow in use, with a reviewer's seal on each step: design, test,
+ *   troubleshoot, anticipate failures.
  *
  * A fourth scene, **review**, is the failure-mode gate the playbook explains.
  *
@@ -23,7 +24,7 @@
  * `art/`, once for a wide field and once for a narrow one.
  */
 import { artFor } from "./art";
-import { drawingId, fieldHtml } from "./art/field";
+import { fieldHtml } from "./art/field";
 import type { Art, Orientation } from "./art/kit";
 import { sitePath } from "./paths";
 
@@ -90,14 +91,30 @@ const mark = (
 
 type SceneContent = Pick<Scene, "labels" | "marks" | "links">;
 
-/* ── Executives: install a system, then use it ── */
+/* ── Executives: a problem in, a Daily Brief out, a decision made ── */
+
+export const briefSections: readonly string[] = [
+  "Critical",
+  "Needle Movers",
+  "Calendar Intelligence",
+  "Pipeline & Revenue",
+  "Recommended Actions",
+];
 
 const executiveScene: SceneContent = {
   labels: [
     label("problem", "Your operating problem", "source", 0),
     label("skill", "Tailored executive skill", "control", 1),
-    label("brief", "A decision brief you use", "result", 2),
-    label("view", "Illustrative executive operating view", "caption", 3),
+    label("brief", "Claude Daily Brief", "result", 2),
+    ...briefSections.map((section, index) =>
+      label(`section${index + 1}`, section, "card", 3),
+    ),
+    label(
+      "illustrative",
+      "Illustrative example · no live integrations",
+      "caption",
+      3,
+    ),
     label("direction", "Executive direction", "human", 5),
   ],
   marks: [
@@ -105,14 +122,9 @@ const executiveScene: SceneContent = {
     mark("brief", "result", 2),
     mark("direction", "human", 5),
   ],
-  // The view feeds back into the problem it answers, under executive direction.
-  links: [
-    "problem>skill",
-    "skill>brief",
-    "brief>view",
-    "direction>view",
-    "view>problem",
-  ],
+  // The brief's recommendations feed back into the problem they answer, and
+  // the executive's direction decides what is done with the brief.
+  links: ["problem>skill", "skill>brief", "direction>brief", "brief>problem"],
 };
 
 /* ── Contributors: the same method, a different skill for each role ── */
@@ -146,6 +158,7 @@ const rosterScene: SceneContent = {
 /* ── Builders: from a work problem to a workflow in use ── */
 
 export const steps: readonly string[] = [
+  "Design",
   "Test",
   "Troubleshoot",
   "Anticipate failures",
@@ -154,21 +167,24 @@ export const steps: readonly string[] = [
 const builderScene: SceneContent = {
   labels: [
     label("learner", "A learner with a work problem", "source", 0),
-    label("test", steps[0], "caption", 1),
-    label("troubleshoot", steps[1], "caption", 2),
-    label("anticipate", steps[2], "caption", 3),
-    label("workflow", "Workflow in use", "result", 4),
+    label("design", steps[0], "caption", 1),
+    label("test", steps[1], "caption", 2),
+    label("troubleshoot", steps[2], "caption", 3),
+    label("anticipate", steps[3], "caption", 4),
+    label("workflow", "Workflow in use", "result", 5),
   ],
   marks: [
     mark("learner", "person", 0),
-    mark("test", "check", 1),
-    mark("troubleshoot", "check", 2),
-    mark("anticipate", "check", 3),
-    mark("workflow", "result", 4),
+    mark("design", "check", 1),
+    mark("test", "check", 2),
+    mark("troubleshoot", "check", 3),
+    mark("anticipate", "check", 4),
+    mark("workflow", "result", 5),
   ],
   // The workflow in use is three linked parts, joined to the climb that made it.
   links: [
-    "learner>test",
+    "learner>design",
+    "design>test",
     "test>troubleshoot",
     "troubleshoot>anticipate",
     "anticipate>workflow",
@@ -232,7 +248,7 @@ export const audiences: readonly Audience[] = [
       "Judgment stays with your people",
     ],
     caption:
-      "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result.",
+      "Illustrative Claude Daily Brief: real work enters a tailored skill, produces a brief of what matters and what to do next, and the decision stays with the executive. This is a hypothetical example, not a client result and not a live email, calendar or CRM integration.",
     link: {
       label: "For executives",
       href: sitePath("services/#track-c-level-ai"),
@@ -240,16 +256,16 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "executives",
       description:
-        "Executive illustration: an operating problem enters a tailored skill and produces an illustrative decision brief, with human direction deciding how it is used.",
+        "Executive illustration: an operating problem enters a tailored skill and produces an illustrative Claude Daily Brief — critical items, needle movers, calendar intelligence, pipeline and revenue, recommended actions — with the executive deciding what to do.",
       ...executiveScene,
     },
   },
   {
     id: "contributors",
-    choice: "Individual contributors",
+    choice: "Teams and individual contributors",
     proposition:
       "Training built around your role, industry and company, so skills take on recurring work and free you for judgment.",
-    kicker: "For individual contributors",
+    kicker: "For teams and individual contributors",
     title: "Automate the repetitive,<br>keep the craft.",
     body: "Training is built around your role, industry and company: your recurring decisions, documents, terminology and review standards. Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop.",
     points: [
@@ -260,13 +276,13 @@ export const audiences: readonly Audience[] = [
     caption:
       "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality.",
     link: {
-      label: "For individual contributors",
+      label: "For teams and individual contributors",
       href: sitePath("services/#track-role-based"),
     },
     scene: {
       id: "contributors",
       description:
-        "Contributor illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, all ending with the human in the loop.",
+        "Teams and individual contributors illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate.",
       ...rosterScene,
     },
   },
@@ -284,7 +300,7 @@ export const audiences: readonly Audience[] = [
       "Keep people reviewing the work",
     ],
     caption:
-      "From a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step.",
+      "From a work problem to a workflow in use: design, test, troubleshoot, anticipate failures, with a person reviewing each step.",
     link: {
       label: "For AI builders",
       href: sitePath("services/#track-ai-builders"),
@@ -292,7 +308,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "builders",
       description:
-        "Builder illustration: a learner with a work problem climbs three reviewed steps — test, troubleshoot, anticipate failures — to a workflow in use.",
+        "Builder illustration: a learner with a work problem climbs four reviewed steps — design, test, troubleshoot, anticipate failures — to a workflow in use.",
       ...builderScene,
     },
   },
@@ -307,20 +323,16 @@ export const sceneById = (id: string): Scene =>
 /* ── Markup ── */
 
 /** One scene's artwork for one shape of field. */
-export const sceneArt = (
-  scene: Scene,
-  orientation: SceneOrientation,
-  uid = drawingId(scene.id),
-): Art => artFor(scene.id, orientation, uid);
+export const sceneArt = (scene: Scene, orientation: SceneOrientation): Art =>
+  artFor(scene.id, orientation);
 
 /** One complete still scene, which the live drawing starts from and returns to. */
 export function sceneFieldMarkup(
   scene: Scene,
   orientation: SceneOrientation = "landscape",
-  uid?: string,
 ): string {
   return fieldHtml(
-    sceneArt(scene, orientation, uid),
+    sceneArt(scene, orientation),
     scene.labels,
     scene.description,
     "system-field scene-field",

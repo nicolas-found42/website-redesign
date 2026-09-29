@@ -10,13 +10,8 @@ import { sitePath } from "../paths";
  * the full resource page. The attributed
  * workshop account sits under the actions, in the same column.
  *
- * The words and the drawing are two columns that never share ground: the
- * headline, lead and quote on one side, the plait on the other. Nothing is set
- * over the drawing, so nothing covers it at any width; on a narrow screen the
- * drawing follows the words.
- *
- * The drawing mounts into the element this reserves; nothing in the headline,
- * the actions or the lead waits on it.
+ * The opening is text alone: the headline, lead, actions and quote share the
+ * whole width, with no drawing and no space held back for one.
  */
 export function hero() {
   return `<section id="hero" class="hero" aria-labelledby="hero-title">
@@ -24,7 +19,7 @@ export function hero() {
   <div class="hero-copy">
    <p class="note section-label hero-eyebrow">Claude skills and training for business</p>
    <h1 id="hero-title" class="display" data-reveal-lines><span class="sentence">Train teams.</span> <span class="sentence">Build useful skills.</span> <span class="sentence"><span class="signal">Automate the work.</span></span></h1>
-   <p class="lead hero-lead" data-reveal>Found42 helps non-technical teams use AI in the work they already own. We train people in their roles, build tailored Claude skills, and automate repeatable work while judgment stays with your team.</p>
+   <p class="lead hero-lead" data-reveal>Found42 helps non-technical teams use AI in the work they already own. We train people how to create and use Claude Skills tailored to their roles, and automate repeatable work while judgment stays with your team.</p>
    <p class="note--plain hero-gloss" data-reveal>${claudeGloss}</p>
    <div class="hero-actions" data-reveal>
     <a class="action" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to us ${icon("right")}</a>
@@ -36,7 +31,6 @@ export function hero() {
    <blockquote><p>“What stood out in the C-Level AI workshop was how practical it was.”</p></blockquote>
    <figcaption>Paul Keely · Co-founder and Managing Director, Palladium Security LLC</figcaption>
   </figure>
-  <div class="hero-art" data-system-host></div>
  </div>
 </section>`;
 }

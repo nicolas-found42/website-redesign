@@ -73,3 +73,24 @@ and training for your business."), the course dialog's "no fluff" line is
 replaced with what the course provides, and the audience scenes draw only
 roles, skills and steps already present in the site's content. The manifest
 keeps the original strings (`home-002`, `course-7`) as provenance.
+
+## Organization marks (September 29)
+
+The homepage row "Teams we have worked with" shows five marks under
+`public/assets/logos/`, retrieved September 29, 2026 from each organization's
+own site. The owner confirmed the five relationships and, in chat on September
+29, that every mark's use is approved with the organizations concerned. The site
+does not verify that approval; it is recorded here as the owner's attestation.
+
+| Mark                                     | File                   | Official source                                                                                | Notes                                                                                                                                                                                                                          |
+| ---------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Google                                   | `google.svg`           | Google's hosted logo, `gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg`  | [Google brand guidance](https://about.google/brand-resource-center/guidance/) asks partners to request internal review before using the logo to imply a business relationship; that approval is the owner's attestation above. |
+| Edgescale AI                             | `edgescale-ai.svg`     | `edgescaleai.com/wp-content/uploads/2025/12/EdgescaleAI-Logo.svg`, the mark in the site header | The company publishes only this mark, in off-white for its dark ground, so it is shown unaltered on a charcoal tile. No wordmark lockup was found; the accessible name carries the name.                                       |
+| Millsapps, Ballinger & Associates (MB&A) | `mba.jpg`              | `mbaoutcome.com/wp-content/uploads/2023/04/MBA-Logo-color.jpg`, the site's own logo image      | A 400 × 215 JPEG on white, so it is shown on the row's white cell. A vector or larger file would sharpen it.                                                                                                                   |
+| Scottish Equity Partners (SEP)           | `sep.svg`              | The header mark on `sep.co.uk`, copied from the page markup                                    | The site draws it in `currentColor`; it is filled with the site's own charcoal, `#1e1e1e`.                                                                                                                                     |
+| PeakSpan Capital                         | `peakspan-capital.svg` | The header mark on `peakspancapital.com`, copied from the page markup                          | The site draws it in `currentColor`; it is filled with the color the header renders it in, `#05304a`.                                                                                                                          |
+
+No brand-use terms were found for Edgescale AI, MB&A, SEP or PeakSpan Capital
+beyond their public sites; the search was not exhaustive. Richard's further
+logos are pending, and no placeholder stands in for them. Marks are never
+recolored, cropped or stretched; each keeps its own proportions.

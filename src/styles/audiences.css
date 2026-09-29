@@ -5,7 +5,8 @@
  * a gallery: one shown at a time, chosen from the rail, the arrows or the arrow
  * keys. Without them the three panels read one after another. Nothing here
  * depends on hover, on motion or on colour alone: the selected choice carries
- * a rule as well as its red index, and every panel restates its audience.
+ * a rule along its top as well as its red index, and every panel restates its
+ * audience.
  */
 
 /* ── The stage: the rail across the top, the chosen panel beneath ── */
@@ -255,28 +256,10 @@
     display: none;
   }
 }
-/* Very narrow: the rail is a list, and the leading edge is its side. */
+/* Very narrow: the rail is a list; selection keeps its rule along the top. */
 @media (max-width: 480px) {
   .audience-rail {
     grid-template-columns: 1fr;
-    border-top: 1px solid var(--line-strong);
-  }
-  .audience-choice {
-    padding: 14px 0 14px 16px;
-    border-top: 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .audience-choice::before {
-    top: -1px;
-    right: auto;
-    bottom: -1px;
-    width: 2px;
-    height: auto;
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  .audience-choice[aria-pressed="true"]::before {
-    transform: scaleY(1);
   }
   .audience-choice-note {
     display: block;

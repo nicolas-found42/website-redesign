@@ -41,7 +41,7 @@ export function audiencesSection() {
    <p class="note section-label">Who we help</p>
    <h2 id="audiences-title" class="display" data-reveal-lines>Find the work that sounds like yours</h2>
   </div>
-  <p class="lead" data-reveal>Whether you lead the company, own a role, or build for your team, we start from your real work.</p>
+  <p class="lead" data-reveal>Whether you are an executive, an individual contributor, or an AI builder, we have workshops tailored to your role that will put Claude to work and save you 4-8 hours every week.</p>
  </div>
  <div class="audience-stage">
   <div class="audience-rail" role="group" aria-label="Choose an audience">${rail}</div>

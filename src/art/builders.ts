@@ -1,9 +1,7 @@
 import {
   figure,
-  paint,
   part,
   place,
-  prints,
   r,
   seal,
   type Art,
@@ -16,7 +14,7 @@ import {
  * AI builders: the stair.
  *
  * A learner with a work problem stands at the foot of a stair built from card.
- * Each step is one of the three things a builder learns to do — test,
+ * Each step is one of the four things a builder learns to do — design, test,
  * troubleshoot, anticipate failures — and each carries a reviewer's red seal,
  * because a person reviews every step. At the top is the workflow in use: a
  * paper chain of three links, the parts joined and working.
@@ -25,7 +23,7 @@ import {
 /** Depth of every top face: the stair is seen a little from above and the left. */
 const DEPTH: Pt = [26, -22];
 
-/** A block of card: its printed face and the top a step is stood on. */
+/** A block of card: its face and the top a step is stood on. */
 function block(
   x: number,
   y: number,
@@ -61,16 +59,14 @@ function chain(at: Pt, link: number): string {
 type Step = { key: string; x: number; top: number; width: number };
 
 function stair(
-  uid: string,
   field: { width: number; height: number },
   ground: number,
   steps: readonly Step[],
   learner: { at: Pt; label: LabelPlace },
   plates: { height: number; front?: boolean },
 ): Art {
-  const face = paint(uid, "stripes");
+  const face = "var(--paper-warm)";
   const labels: Record<string, LabelPlace> = { learner: learner.label };
-  const climb = ["test", "troubleshoot", "anticipate", "workflow"];
   const parts: string[] = [
     part(
       { name: "ground", beat: 0, enter: "fade" },
@@ -84,7 +80,7 @@ function stair(
         origin: learner.at,
         nodes: ["learner"],
         marks: ["person:learner"],
-        links: ["learner>test"],
+        links: ["learner>design"],
       },
       figure(learner.at, 1.5, "ink"),
     ),
@@ -116,7 +112,7 @@ function stair(
           enter: "unfold-y",
           origin: [step.x, ground],
           nodes: [step.key],
-          links: index > 0 ? [`${climb[index - 1]}>${step.key}`] : [],
+          links: index > 0 ? [`${steps[index - 1].key}>${step.key}`] : [],
           marks: last ? ["result:workflow"] : [],
         },
         block(
@@ -134,7 +130,7 @@ function stair(
   parts.push(...(plates.front ? blocks.reverse() : blocks));
 
   // The seals go on after the blocks, so no later block covers an earlier seal.
-  steps.slice(0, 3).forEach((step, index) => {
+  steps.slice(0, -1).forEach((step, index) => {
     parts.push(
       part(
         {
@@ -155,7 +151,7 @@ function stair(
     part(
       {
         name: "chain",
-        beat: 5,
+        beat: steps.length + 1,
         enter: "drop",
         origin: [top.x + top.width / 2, top.top - 60],
         links: ["workflow>blocks"],
@@ -167,43 +163,42 @@ function stair(
   return {
     width: field.width,
     height: field.height,
-    defs: prints(uid),
     parts: parts.join(""),
     labels,
   };
 }
 
-function landscape(uid: string): Art {
-  const ground = 560;
+function landscape(): Art {
+  const ground = 490;
   return stair(
-    uid,
-    { width: 1000, height: 660 },
+    { width: 1000, height: 590 },
     ground,
     [
-      { key: "test", x: 146, top: 452, width: 210 },
-      { key: "troubleshoot", x: 356, top: 352, width: 210 },
-      { key: "anticipate", x: 566, top: 252, width: 210 },
-      { key: "workflow", x: 776, top: 252, width: 196 },
+      { key: "design", x: 130, top: 400, width: 168 },
+      { key: "test", x: 298, top: 330, width: 168 },
+      { key: "troubleshoot", x: 466, top: 260, width: 168 },
+      { key: "anticipate", x: 634, top: 190, width: 168 },
+      { key: "workflow", x: 802, top: 190, width: 168 },
     ],
     {
-      at: [72, ground - 34],
-      label: place([34, ground + 24], "start", "below", { width: 420 }),
+      at: [68, ground - 34],
+      label: place([30, ground + 24], "start", "below", { width: 420 }),
     },
-    { height: 70 },
+    { height: 62 },
   );
 }
 
-function portrait(uid: string): Art {
-  const ground = 650;
+function portrait(): Art {
+  const ground = 690;
   return stair(
-    uid,
-    { width: 620, height: 750 },
+    { width: 620, height: 790 },
     ground,
     [
-      { key: "test", x: 150, top: 550, width: 440 },
-      { key: "troubleshoot", x: 230, top: 410, width: 360 },
-      { key: "anticipate", x: 310, top: 270, width: 280 },
-      { key: "workflow", x: 390, top: 130, width: 200 },
+      { key: "design", x: 150, top: 590, width: 440 },
+      { key: "test", x: 200, top: 480, width: 390 },
+      { key: "troubleshoot", x: 250, top: 370, width: 340 },
+      { key: "anticipate", x: 300, top: 260, width: 290 },
+      { key: "workflow", x: 350, top: 150, width: 240 },
     ],
     {
       at: [96, ground - 34],
@@ -213,5 +208,5 @@ function portrait(uid: string): Art {
   );
 }
 
-export const buildersArt = (orientation: Orientation, uid: string): Art =>
-  orientation === "portrait" ? portrait(uid) : landscape(uid);
+export const buildersArt = (orientation: Orientation): Art =>
+  orientation === "portrait" ? portrait() : landscape();

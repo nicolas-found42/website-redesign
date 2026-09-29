@@ -1,5 +1,5 @@
 import { animate, type AnimationPlaybackControls } from "motion";
-import { artInner, drawingId, labelsHtml } from "./art/field";
+import { artInner, labelsHtml } from "./art/field";
 import type { Art } from "./art/kit";
 import { assemble, BEAT, cancelAll, clear, whenDone } from "./art/motion";
 import {
@@ -75,7 +75,6 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
     drawIn = true,
   } = options;
   const portrait = matchMedia(options.portrait ?? PORTRAIT);
-  const uid = drawingId("system");
 
   let active = initial;
   let orientation = options.orientation ?? orientationOf(portrait.matches);
@@ -93,9 +92,9 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
   const schematic = () => compositions[active];
   const still = () => motionPreference.matches;
   const artOf = (index: number): Art =>
-    schematicArt(compositions[index], orientation, uid);
+    schematicArt(compositions[index], orientation);
 
-  host.innerHTML = `<div class="system" data-system>${fieldMarkup(schematic(), orientation, uid)}</div>`;
+  host.innerHTML = `<div class="system" data-system>${fieldMarkup(schematic(), orientation)}</div>`;
 
   const frameEl = host.querySelector<HTMLElement>(".system-field")!;
   const svg = host.querySelector<SVGSVGElement>(".system-svg")!;

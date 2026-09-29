@@ -1,11 +1,9 @@
 import {
   easeX,
-  identityPrint,
-  paint,
+  identityFill,
   part,
   place,
   plait,
-  prints,
   solidStrip,
   strip,
   tag,
@@ -14,10 +12,11 @@ import {
 } from "./kit";
 
 /**
- * The opening drawing: the plait.
+ * The Found42 drawing: the plait. It sits beside the industry pages' copy; the
+ * homepage opening no longer carries a drawing.
  *
  * The three things a business already has arrive as three strands of their
- * own print — your people, your workflows, what your business knows. They are
+ * own tone — your people, your workflows, what your business knows. They are
  * plaited into one, and the plait holds only because a red band is tied round
  * it: human direction. Past the band the work leaves as one solid piece with
  * a tag on it, practical AI at work; on the wide sheet two more tails leave
@@ -27,13 +26,9 @@ import {
 const WIDTH = 40;
 const LANE = 46;
 
-function landscape(uid: string): Art {
+function landscape(): Art {
   const lanes = [310 - LANE, 310, 310 + LANE] as const;
-  const fills = [
-    paint(uid, identityPrint.n1),
-    paint(uid, identityPrint.n2),
-    paint(uid, identityPrint.n3),
-  ] as const;
+  const fills = [identityFill.n1, identityFill.n2, identityFill.n3] as const;
   const start = 330;
   const step = 58;
   const crossings = 5;
@@ -63,8 +58,7 @@ function landscape(uid: string): Art {
   const binding =
     `<rect class="f-red-deep" x="${band.x + 6}" y="${band.y + 6}" width="${band.w}" height="${band.h}" rx="7" opacity="0.28"/>` +
     `<rect class="f-red" x="${band.x}" y="${band.y}" width="${band.w}" height="${band.h}" rx="7"/>` +
-    `<rect class="f-red-deep" x="${band.x + band.w - 16}" y="${band.y}" width="16" height="${band.h}" rx="5"/>` +
-    `<path class="s-paper" d="M${band.x + 12} ${band.y + 14} L${band.x + 12} ${band.y + band.h - 14}" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round" fill="none"/>`;
+    `<rect class="f-red-deep" x="${band.x + band.w - 16}" y="${band.y}" width="16" height="${band.h}" rx="5"/>`;
 
   const cordX = band.x + band.w / 2;
   const plate = { x: cordX - 130, y: 452, w: 260, h: 56 };
@@ -162,7 +156,6 @@ function landscape(uid: string): Art {
   return {
     width: 1000,
     height: 620,
-    defs: prints(uid),
     parts: parts.join(""),
     labels: {
       n1: place([40, 80], "start", "above", { beat: 0 }),
@@ -182,14 +175,10 @@ function landscape(uid: string): Art {
   };
 }
 
-function portrait(uid: string): Art {
+function portrait(): Art {
   // Lanes left to right take the strands in reverse, so their corners nest.
   const lanes = [492 - LANE * 2, 492 - LANE, 492] as const;
-  const fills = [
-    paint(uid, identityPrint.n3),
-    paint(uid, identityPrint.n2),
-    paint(uid, identityPrint.n1),
-  ] as const;
+  const fills = [identityFill.n3, identityFill.n2, identityFill.n1] as const;
   const start = 330;
   const step = 52;
   const crossings = 5;
@@ -220,8 +209,7 @@ function portrait(uid: string): Art {
   const binding =
     `<rect class="f-red-deep" x="${band.x + 6}" y="${band.y + 6}" width="${band.w}" height="${band.h}" rx="7" opacity="0.28"/>` +
     `<rect class="f-red" x="${band.x}" y="${band.y}" width="${band.w}" height="${band.h}" rx="7"/>` +
-    `<rect class="f-red-deep" x="${band.x}" y="${band.y + band.h - 15}" width="${band.w}" height="15" rx="5"/>` +
-    `<path class="s-paper" d="M${band.x + 14} ${band.y + 12} L${band.x + band.w - 14} ${band.y + 12}" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round" fill="none"/>`;
+    `<rect class="f-red-deep" x="${band.x}" y="${band.y + band.h - 15}" width="${band.w}" height="15" rx="5"/>`;
 
   const cordY = band.y + band.h / 2;
   const plate = { x: 40, y: cordY - 30, w: 296, h: 60 };
@@ -293,7 +281,6 @@ function portrait(uid: string): Art {
   return {
     width: 620,
     height: 870,
-    defs: prints(uid),
     parts: parts.join(""),
     labels: {
       n1: place([40, rows[0] - 30], "start", "above", { width: 400, beat: 0 }),
@@ -318,5 +305,5 @@ function portrait(uid: string): Art {
   };
 }
 
-export const masterArt = (orientation: Orientation, uid: string): Art =>
-  orientation === "portrait" ? portrait(uid) : landscape(uid);
+export const masterArt = (orientation: Orientation): Art =>
+  orientation === "portrait" ? portrait() : landscape();

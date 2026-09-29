@@ -1,14 +1,4 @@
-import {
-  part,
-  place,
-  prints,
-  r,
-  seal,
-  strip,
-  tag,
-  type Art,
-  type Orientation,
-} from "./kit";
+import { part, place, r, seal, strip, tag, type Art } from "./kit";
 
 /**
  * The failure-mode review: the gates.
@@ -44,7 +34,7 @@ function draft(): string {
   );
 }
 
-function composition(uid: string): Art {
+function composition(): Art {
   const gates = [210, 290, 370];
   const keys = ["weak", "missing", "false"];
   const parts = [
@@ -113,7 +103,6 @@ function composition(uid: string): Art {
   return {
     width: 620,
     height: 590,
-    defs: prints(uid),
     parts: parts.join(""),
     labels: {
       draft: place([X + 90, 86], "start", "middle", { width: 380 }),
@@ -132,5 +121,4 @@ function composition(uid: string): Art {
   };
 }
 
-export const reviewArt = (_orientation: Orientation, uid: string): Art =>
-  composition(uid);
+export const reviewArt = (): Art => composition();

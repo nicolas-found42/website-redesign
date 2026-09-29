@@ -142,7 +142,7 @@ html[data-motion="on"] [data-draw].is-in {
   .menu-toggle {
     border: 1px solid;
   }
-  /* The drawings are pictures: their prints and red keep their meaning. */
+  /* The drawings are pictures: their fills and red keep their meaning. */
   .system-svg {
     forced-color-adjust: none;
   }

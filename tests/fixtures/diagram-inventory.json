@@ -1,5 +1,5 @@
 {
-  "source": "40e42eb",
+  "source": "40e42eb, revised for the September 29 review (issue #74)",
   "schematics": [
     {
       "id": "master",
@@ -93,17 +93,17 @@
     {
       "id": "training",
       "choice": "Workshops",
-      "detail": "Real work → live practice → review → a takeaway the team applies.",
-      "description": "Workshop illustration: a team brings real work into live guided practice, reviews the result together, and leaves with a reusable skill and an applicable takeaway.",
+      "detail": "Real work on the whiteboard → hands-on practice → group review → a takeaway the team applies.",
+      "description": "Workshop illustration: people gather at a whiteboard with sticky notes and a diagram to design around the team's real work, move to hands-on keyboard practice, review the result together as a group, and leave with a reusable skill they apply afterwards.",
       "nodes": [
         {
           "id": "n1",
-          "label": "Team's real work",
+          "label": "Team's real work, designed at the whiteboard",
           "kind": "source"
         },
         {
           "id": "n2",
-          "label": "Live guided practice",
+          "label": "Live guided practice at the keyboard",
           "kind": "source"
         },
         {
@@ -371,7 +371,7 @@
   "scenes": [
     {
       "id": "executives",
-      "description": "Executive illustration: an operating problem enters a tailored skill and produces an illustrative decision brief, with human direction deciding how it is used.",
+      "description": "Executive illustration: an operating problem enters a tailored skill and produces an illustrative Claude Daily Brief — critical items, needle movers, calendar intelligence, pipeline and revenue, recommended actions — with the executive deciding what to do.",
       "landscape": {
         "labels": [
           {
@@ -385,12 +385,37 @@
             "beat": 1
           },
           {
-            "text": "A decision brief you use",
+            "text": "Claude Daily Brief",
             "kind": "result",
             "beat": 2
           },
           {
-            "text": "Illustrative executive operating view",
+            "text": "Critical",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Needle Movers",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Calendar Intelligence",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Pipeline & Revenue",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Recommended Actions",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Illustrative example · no live integrations",
             "kind": "caption",
             "beat": 3
           },
@@ -479,12 +504,37 @@
             "beat": 1
           },
           {
-            "text": "A decision brief you use",
+            "text": "Claude Daily Brief",
             "kind": "result",
             "beat": 2
           },
           {
-            "text": "Illustrative executive operating view",
+            "text": "Critical",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Needle Movers",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Calendar Intelligence",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Pipeline & Revenue",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Recommended Actions",
+            "kind": "card",
+            "beat": 3
+          },
+          {
+            "text": "Illustrative example · no live integrations",
             "kind": "caption",
             "beat": 3
           },
@@ -563,7 +613,7 @@
     },
     {
       "id": "contributors",
-      "description": "Contributor illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, all ending with the human in the loop.",
+      "description": "Teams and individual contributors illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate.",
       "landscape": {
         "labels": [
           {
@@ -841,7 +891,7 @@
     },
     {
       "id": "builders",
-      "description": "Builder illustration: a learner with a work problem climbs three reviewed steps — test, troubleshoot, anticipate failures — to a workflow in use.",
+      "description": "Builder illustration: a learner with a work problem climbs four reviewed steps — design, test, troubleshoot, anticipate failures — to a workflow in use.",
       "landscape": {
         "labels": [
           {
@@ -850,24 +900,29 @@
             "beat": 0
           },
           {
-            "text": "Test",
+            "text": "Design",
             "kind": "caption",
             "beat": 1
           },
           {
-            "text": "Troubleshoot",
+            "text": "Test",
             "kind": "caption",
             "beat": 2
           },
           {
-            "text": "Anticipate failures",
+            "text": "Troubleshoot",
             "kind": "caption",
             "beat": 3
           },
           {
+            "text": "Anticipate failures",
+            "kind": "caption",
+            "beat": 4
+          },
+          {
             "text": "Workflow in use",
             "kind": "result",
-            "beat": 4
+            "beat": 5
           }
         ],
         "marks": [
@@ -888,8 +943,12 @@
             "beat": 3
           },
           {
-            "kind": "result",
+            "kind": "check",
             "beat": 4
+          },
+          {
+            "kind": "result",
+            "beat": 5
           }
         ],
         "frames": [
@@ -950,24 +1009,29 @@
             "beat": 0
           },
           {
-            "text": "Test",
+            "text": "Design",
             "kind": "caption",
             "beat": 1
           },
           {
-            "text": "Troubleshoot",
+            "text": "Test",
             "kind": "caption",
             "beat": 2
           },
           {
-            "text": "Anticipate failures",
+            "text": "Troubleshoot",
             "kind": "caption",
             "beat": 3
           },
           {
+            "text": "Anticipate failures",
+            "kind": "caption",
+            "beat": 4
+          },
+          {
             "text": "Workflow in use",
             "kind": "result",
-            "beat": 4
+            "beat": 5
           }
         ],
         "marks": [
@@ -988,8 +1052,12 @@
             "beat": 3
           },
           {
-            "kind": "result",
+            "kind": "check",
             "beat": 4
+          },
+          {
+            "kind": "result",
+            "beat": 5
           }
         ],
         "frames": [
@@ -1195,7 +1263,7 @@
   "captions": [
     {
       "id": "executives",
-      "caption": "Illustrative executive operating view: real work enters a tailored skill, produces a decision brief, and remains subject to executive direction. This is a hypothetical example, not a client result."
+      "caption": "Illustrative Claude Daily Brief: real work enters a tailored skill, produces a brief of what matters and what to do next, and the decision stays with the executive. This is a hypothetical example, not a client result and not a live email, calendar or CRM integration."
     },
     {
       "id": "contributors",
@@ -1203,7 +1271,7 @@
     },
     {
       "id": "builders",
-      "caption": "From a work problem to a workflow in use: test, troubleshoot, anticipate failures, with a person reviewing each step."
+      "caption": "From a work problem to a workflow in use: design, test, troubleshoot, anticipate failures, with a person reviewing each step."
     }
   ]
 }

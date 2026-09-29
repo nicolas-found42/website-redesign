@@ -1,6 +1,6 @@
 # The approachable business-site visual voice
 
-**Status:** accepted (2026-09-23); the drawings' visual language is superseded by [ADR 0006](0006-drawings-made-of-material.md)
+**Status:** accepted (2026-09-23); the drawings' visual language is superseded by [ADR 0006](0006-drawings-made-of-material.md), and the rejection of a daily-brief visual by [ADR 0008](0008-text-led-opening-and-solid-drawings.md)
 
 The website now presents a calm, approachable business-site voice while retaining
 the drawing systems accepted in [ADR 0002](0002-working-system-drawing.md),
@@ -28,7 +28,10 @@ This revision changes presentation rather than the drawing architecture:
   work, human review or participation, and usable result.
 - The executive audience illustration is a hypothetical executive operating
   view, explicitly labelled as illustrative, rather than a daily-planner
-  metaphor or an implied client implementation.
+  metaphor or an implied client implementation. _Superseded by
+  [ADR 0008](0008-text-led-opening-and-solid-drawings.md): the executive scene
+  is now an illustrative Claude Daily Brief, still labelled illustrative and
+  still not an implied client implementation or live integration._
 
 The active routes and offering destinations are maintained in
 `src/content.ts`. Unavailable offerings remain visibly unavailable; a local

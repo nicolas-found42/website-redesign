@@ -63,12 +63,14 @@ test("all three audiences link to their catalog tracks", async ({ page }) => {
       .getByRole("link", { name: "For executives" }),
   ).toHaveAttribute("href", "/services/#track-c-level-ai");
 
-  await rail.getByRole("button", { name: /Individual contributors/ }).click();
+  await rail
+    .getByRole("button", { name: /Teams and individual contributors/ })
+    .click();
   await expect(
     page
       .locator(".audience-card")
       .nth(1)
-      .getByRole("link", { name: "For individual contributors" }),
+      .getByRole("link", { name: "For teams and individual contributors" }),
   ).toHaveAttribute("href", "/services/#track-role-based");
 
   await rail.getByRole("button", { name: /AI builders/ }).click();
@@ -105,4 +107,80 @@ test("published workshop quotes remain attributed and inquiries use the live rou
   await expect(
     dialog.getByRole("link", { name: "Open the live inquiry form" }),
   ).toHaveAttribute("href", "https://www.found42.com/contact");
+});
+
+test("the opening is text-led with the approved lead and no proof numbers", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".hero-lead")).toHaveText(
+    "Found42 helps non-technical teams use AI in the work they already own. We train people how to create and use Claude Skills tailored to their roles, and automate repeatable work while judgment stays with your team.",
+  );
+  await expect(page.locator(".hero")).toContainText(
+    "Claude is Anthropic’s AI assistant.",
+  );
+  await expect(page.locator(".hero .system, .hero svg[role=img]")).toHaveCount(
+    0,
+  );
+  await expect(page.locator(".hero-proof")).toContainText("Paul Keely");
+  const main = page.locator("main");
+  await expect(main).not.toContainText("Found42 in numbers");
+  for (const claim of [/\b20\+/, /\b500\+/, /\b50\+/, /workshops delivered/])
+    await expect(main).not.toContainText(claim);
+});
+
+test("the companies row shows five bundled logos, named, in the approved order", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const row = page.locator("#companies");
+  await expect(row).toContainText("Teams we have worked with");
+  const logos = row.getByRole("img");
+  await expect(logos).toHaveCount(5);
+  const names = [
+    "Google",
+    "Edgescale AI",
+    "Millsapps, Ballinger & Associates (MB&A)",
+    "Scottish Equity Partners (SEP)",
+    "PeakSpan Capital",
+  ];
+  for (const [index, name] of names.entries())
+    await expect(logos.nth(index)).toHaveAccessibleName(name);
+  for (const logo of await logos.all()) {
+    await expect(logo).toHaveJSProperty("complete", true);
+    await expect(logo).not.toHaveJSProperty("naturalWidth", 0);
+    const src = await logo.getAttribute("src");
+    expect(src).toMatch(/^\/assets\/logos\//);
+  }
+});
+
+test("the companies row keeps proportions and fits without scrolling at any width", async ({
+  page,
+}) => {
+  for (const width of [1440, 1024, 768, 430, 384, 320]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/");
+    const logos = page.locator("#companies").getByRole("img");
+    for (const logo of await logos.all()) {
+      await expect(logo).toHaveJSProperty("complete", true);
+      const fit = await logo.evaluate((img: HTMLImageElement) => {
+        const box = img.getBoundingClientRect();
+        return {
+          ratio: box.width / box.height,
+          natural: img.naturalWidth / img.naturalHeight,
+          right: box.right,
+        };
+      });
+      expect(fit.right, `${width}px`).toBeLessThanOrEqual(width);
+      expect(Math.abs(fit.ratio - fit.natural), `${width}px`).toBeLessThan(
+        0.05,
+      );
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+      `${width}px`,
+    ).toBe(true);
+  }
 });

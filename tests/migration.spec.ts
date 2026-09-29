@@ -9,12 +9,10 @@ const routes = [
   "blog",
 ];
 for (const width of [390, 768, 1440])
-  test(`all supporting pages accessible and reflow at ${width}`, async ({
-    page,
-  }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width, height: 900 });
-    for (const route of routes) {
+  for (const route of routes)
+    test(`${route} is accessible and reflows at ${width}`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.setViewportSize({ width, height: 900 });
       await page.goto(`/${route}/`);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
       const result = await new AxeBuilder({ page })
@@ -27,8 +25,7 @@ for (const width of [390, 768, 1440])
         ),
         route,
       ).toBe(true);
-    }
-  });
+    });
 test("all pages reflow at 360px with doubled text", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 360, height: 844 });

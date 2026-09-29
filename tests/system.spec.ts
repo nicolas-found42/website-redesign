@@ -42,8 +42,8 @@ test("the service diagrams make each customer stage visible", async ({
     page.locator(`#service-${service} .system-label`).allTextContents();
 
   expect(await visibleLabels("training")).toEqual([
-    "Team's real work",
-    "Live guided practice",
+    "Team's real work, designed at the whiteboard",
+    "Live guided practice at the keyboard",
     "Group review",
     "Reusable skill",
     "Apply afterwards",
@@ -205,30 +205,6 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
   );
 });
 
-test("the opening drawing is complete and labelled without any interaction", async ({
-  page,
-}) => {
-  await page.goto("/");
-  await page.evaluate(() => document.fonts.ready);
-  const opening = page.locator(".hero-art .system-field");
-  await expect(opening).toHaveAttribute("aria-label", /Found42 illustration:/);
-  await expect
-    .poll(() => opening.locator(".system-label").count())
-    .toBeGreaterThan(3);
-  await expect(
-    opening.getByText("Human direction", { exact: true }),
-  ).toBeVisible();
-  // Once assembled, every piece and every word is at rest and nothing is
-  // left running on the drawing.
-  await expect
-    .poll(async () => {
-      const state = await opening.evaluate(readField);
-      return { ...state.unsettled, animating: state.animating };
-    })
-    .toEqual({ parts: 0, words: 0, animating: 0 });
-  expect((await opening.evaluate(readField)).parts.length).toBeGreaterThan(5);
-});
-
 test("a visitor on a phone gets each service's own drawing and can jump between them", async ({
   browser,
 }) => {
@@ -249,9 +225,11 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
     await expect(page.getByRole("img", { name })).toHaveCount(1);
   }
   await expect(
-    page.locator("#service-training").getByText("Live guided practice", {
-      exact: true,
-    }),
+    page
+      .locator("#service-training")
+      .getByText("Live guided practice at the keyboard", {
+        exact: true,
+      }),
   ).toBeVisible();
   await expect(
     page.locator("#service-automation").getByText("Brief / operating problem", {
@@ -297,9 +275,8 @@ test("every route removes the manual motion toggle while keeping drawing content
   }
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(
-    page.locator(".hero-art .system-field .system-label").first(),
-  ).toBeVisible();
+  // The opening is text alone: no drawing on the homepage before Audiences.
+  await expect(page.locator("#hero .system-field")).toHaveCount(0);
 });
 
 test("a slow font does not hold the opening headline back", async ({
@@ -441,7 +418,7 @@ test("the drawing's CSS geometry resolves the same in every engine", async ({
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
   const bodies = await page
-    .locator(".hero-art .system-field .part-body")
+    .locator(".services-art .system-field .part-body")
     .evaluateAll((all) =>
       all.map((body) => {
         const style = getComputedStyle(body);
@@ -469,7 +446,7 @@ test("the drawing's CSS geometry resolves the same in every engine", async ({
   }
   // And each word resolves to real, readable type in every engine.
   const sizes = await page
-    .locator(".hero-art .system-label-text")
+    .locator(".services-art .system-label-text")
     .evaluateAll((all) =>
       all.map((text) => parseFloat(getComputedStyle(text).fontSize)),
     );

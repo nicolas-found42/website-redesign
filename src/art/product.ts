@@ -1,9 +1,7 @@
 import {
-  identityPrint,
-  paint,
+  identityFill,
   part,
   place,
-  prints,
   pt,
   r,
   strip,
@@ -22,7 +20,7 @@ import {
  * the same work reaching a customer more than one way.
  */
 
-/** A sheet of paper turned about its centre, with a flat print beneath it. */
+/** A sheet of paper turned about its centre, with a flat sheet beneath it. */
 function sheet(
   at: Pt,
   width: number,
@@ -42,7 +40,7 @@ function sheet(
     : "";
   // The stamp's impression: a ring and its tick, in the human's red.
   const impression = mark
-    ? `<g transform="translate(${r(x + width - 42)} ${r(y + height - 38)}) rotate(-14)" opacity="0.92"><circle class="s-red" r="21" fill="none" stroke-width="4"/><circle class="s-red" r="14" fill="none" stroke-width="1.6" stroke-dasharray="2 3"/><path class="s-red" d="M-8 1 L-2 7 L9 -6" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>`
+    ? `<g transform="translate(${r(x + width - 42)} ${r(y + height - 38)}) rotate(-14)" opacity="0.92"><circle class="s-red" r="21" fill="none" stroke-width="4"/><circle class="s-red" r="14" fill="none" stroke-width="1.6"/><path class="s-red" d="M-8 1 L-2 7 L9 -6" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>`
     : "";
   return (
     `<g transform="translate(${pt(at)}) rotate(${r(turn)})">` +
@@ -89,10 +87,10 @@ const slotsAcross = (ys: readonly number[], x: number, width: number) =>
     )
     .join("");
 
-function landscape(uid: string): Art {
-  const repetitive = paint(uid, identityPrint.n1);
-  const handoffs = paint(uid, identityPrint.n2);
-  const review = paint(uid, identityPrint.n3);
+function landscape(): Art {
+  const repetitive = identityFill.n1;
+  const handoffs = identityFill.n2;
+  const review = identityFill.n3;
   // Everything that goes in reaches under the stamp, and everything that comes
   // out starts from under it.
   const press: Pt = [500, 334];
@@ -189,7 +187,6 @@ function landscape(uid: string): Art {
   return {
     width: 1000,
     height: 620,
-    defs: prints(uid),
     parts: parts.join(""),
     labels: {
       n1: place([150, 76], "start", "above", { width: 330, beat: 0 }),
@@ -209,10 +206,10 @@ function landscape(uid: string): Art {
   };
 }
 
-function portrait(uid: string): Art {
-  const repetitive = paint(uid, identityPrint.n1);
-  const handoffs = paint(uid, identityPrint.n2);
-  const review = paint(uid, identityPrint.n3);
+function portrait(): Art {
+  const repetitive = identityFill.n1;
+  const handoffs = identityFill.n2;
+  const review = identityFill.n3;
   const press: Pt = [310, 560];
 
   const stack = [0, 1, 2, 3, 4]
@@ -307,7 +304,6 @@ function portrait(uid: string): Art {
   return {
     width: 620,
     height: 740,
-    defs: prints(uid),
     parts: parts.join(""),
     labels: {
       n1: place([40, 282], "start", "above", { width: 240, beat: 0 }),
@@ -327,5 +323,5 @@ function portrait(uid: string): Art {
   };
 }
 
-export const productArt = (orientation: Orientation, uid: string): Art =>
-  orientation === "portrait" ? portrait(uid) : landscape(uid);
+export const productArt = (orientation: Orientation): Art =>
+  orientation === "portrait" ? portrait() : landscape();

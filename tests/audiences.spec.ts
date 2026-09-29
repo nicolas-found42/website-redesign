@@ -11,20 +11,24 @@ import { readField } from "./drawing";
  * motion; and all three panels readable without a script.
  */
 
-const names = [/C-level executives/, /Individual contributors/, /AI builders/];
+const names = [
+  /C-level executives/,
+  /Teams and individual contributors/,
+  /AI builders/,
+];
 const kickers = [
   "C-level executives",
-  "Individual contributors",
+  "Teams and individual contributors",
   "AI builders",
 ];
 const links = [
   ["For executives", /services\/#track-c-level-ai$/],
-  ["For individual contributors", /services\/#track-role-based$/],
+  ["For teams and individual contributors", /services\/#track-role-based$/],
   ["For AI builders", /services\/#track-ai-builders$/],
 ] as const;
 const drawings = [
   /Executive illustration:/,
-  /Contributor illustration:/,
+  /Teams and individual contributors illustration:/,
   /Builder illustration:/,
 ];
 
@@ -94,7 +98,7 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   const previous = page.getByRole("button", { name: "Previous audience" });
   await next.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    "Individual contributors",
+    "Teams and individual contributors",
   );
   // Focus is not moved into the panel by the choice. WebKit does not focus a
   // clicked button at all, so what is asserted is where focus did not go.
@@ -274,5 +278,123 @@ test("public copy no longer says “no fluff” on any route", async ({ page }) 
     await page.goto(`/${route}`);
     const text = await page.evaluate(() => document.documentElement.outerHTML);
     expect(text, route).not.toMatch(/no[\s-]*fluff/i);
+  }
+});
+
+const INTRO =
+  "Whether you are an executive, an individual contributor, or an AI builder, we have workshops tailored to your role that will put Claude to work and save you 4-8 hours every week.";
+
+test("the approved audience introduction appears wherever the audiences do", async ({
+  page,
+}) => {
+  for (const route of ["/", "/services/"]) {
+    await page.goto(route);
+    await expect(page.locator("#audiences .section-head .lead")).toHaveText(
+      INTRO,
+    );
+  }
+});
+
+test("teams and individual contributors is named the same everywhere it appears", async ({
+  page,
+}) => {
+  await page.goto("/#audiences");
+  const card = page.locator(".audience-card").nth(1);
+  await expect(card.getByRole("button")).toContainText(
+    "Teams and individual contributors",
+  );
+  await expect(card.getByRole("button")).toContainText(
+    "Training built around your role, industry and company, so skills take on recurring work and free you for judgment.",
+  );
+  await card.getByRole("button").click();
+  await expect(
+    page.locator(".audience-panel:not([hidden]) .audience-scene-title"),
+  ).toHaveText("Teams and individual contributors");
+  await expect(page.locator("#audiences")).not.toContainText(
+    /^Individual contributors$/m,
+  );
+  await expect(
+    card.getByRole("link", { name: "For teams and individual contributors" }),
+  ).toHaveAttribute("href", "/services/#track-role-based");
+});
+
+/** How much of a picture is red, and the tallest unbroken vertical run of it: a bar. */
+async function redIn(page: Page, png: Buffer) {
+  return page.evaluate(async (b64) => {
+    const image = new Image();
+    image.src = `data:image/png;base64,${b64}`;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext("2d")!;
+    context.drawImage(image, 0, 0);
+    const { data, width, height } = context.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
+    const red = (x: number, y: number) => {
+      const at = (y * width + x) * 4;
+      return data[at] > 140 && data[at + 1] < 80 && data[at + 2] < 80;
+    };
+    let anywhere = 0;
+    let tallest = 0;
+    for (let x = 0; x < width; x += 1) {
+      let run = 0;
+      for (let y = 0; y < height; y += 1) {
+        if (red(x, y)) {
+          anywhere += 1;
+          run += 1;
+          tallest = Math.max(tallest, run);
+        } else run = 0;
+      }
+    }
+    return { tallest, anywhere };
+  }, png.toString("base64"));
+}
+
+test("a selected audience shows selection without a red vertical bar", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [1440, 1024, 768, 480, 384, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/#audiences");
+    await page.evaluate(() => document.fonts.ready);
+    const cards = page.locator(".audience-card");
+    for (const index of [1, 0, 2]) {
+      await cards.nth(index).getByRole("button").click();
+      await expect(cards.nth(index).getByRole("button")).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+      const red = await redIn(page, await cards.nth(index).screenshot());
+      // A bar is a tall unbroken run; red text and a rule are not.
+      expect(red.tallest, `${width}px, choice ${index + 1}`).toBeLessThan(24);
+      // Selection is still unmistakable: something in the card is red.
+      expect(red.anywhere, `${width}px, choice ${index + 1}`).toBeGreaterThan(
+        20,
+      );
+    }
+  }
+});
+
+test("all three audience choices stay operable and visibly focused on a phone", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 384, height: 742 });
+  await page.goto("/#audiences");
+  const rail = page.getByRole("group", { name: "Choose an audience" });
+  for (const name of names) {
+    const choice = rail.getByRole("button", { name });
+    await choice.focus();
+    await page.keyboard.press("Enter");
+    await expect(choice).toHaveAttribute("aria-pressed", "true");
+    const outline = await choice.evaluate(
+      (el) => getComputedStyle(el).outlineStyle,
+    );
+    expect(outline).not.toBe("none");
   }
 });

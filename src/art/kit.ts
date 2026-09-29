@@ -6,10 +6,10 @@
  * folded from card — so the work is shown by how its pieces are joined rather
  * than by lines drawn between points. The kit keeps those pieces in one hand:
  *
- * - **Materials.** Printed paper in the site's own inks. Each of the five node
- *   identities has its own print — dots, stripes, rules — so a strand of "your
- *   people" is recognisably the same material wherever it appears, and red is
- *   only ever the human's part.
+ * - **Materials.** Solid paper and card in the site's own inks, each with a
+ *   charcoal outline. Each of the five node identities has its own tone, so a
+ *   strand of "your people" is recognisably the same material wherever it
+ *   appears, and red is only ever the human's part.
  * - **Parts.** Every piece a drawing assembles is a part: an outer group that
  *   is never transformed and an inner body that an entrance may move. A part
  *   declares when it arrives (its beat) and how (its entrance), and nothing
@@ -91,36 +91,21 @@ export function part(spec: PartSpec, body: string): string {
 /* ── Materials ── */
 
 /**
- * The prints. Pattern ids are scoped to one drawing: a pattern referenced from
- * another drawing's definitions stops painting when that drawing is hidden.
+ * The fills. Every strip is a solid surface with a charcoal outline — no dots,
+ * stripes or rules. Each of the five node identities keeps its own solid tone,
+ * so a strand of "your people" is recognisably the same material wherever it
+ * appears, and red is only ever the human's part.
  */
-export type Print = "dots" | "stripes" | "rules" | "checks" | "weave" | "grid";
-
-export function prints(uid: string): string {
-  const id = (print: Print) => `${uid}-${print}`;
-  return (
-    `<pattern id="${id("dots")}" width="12" height="12" patternUnits="userSpaceOnUse"><rect class="f-warm" width="12" height="12"/><circle class="f-ink" cx="6" cy="6" r="2.2"/></pattern>` +
-    `<pattern id="${id("stripes")}" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="f-warm" width="11" height="11"/><rect class="f-ink" width="3.6" height="11"/></pattern>` +
-    `<pattern id="${id("rules")}" width="10" height="10" patternUnits="userSpaceOnUse"><rect class="f-ink" width="10" height="10"/><rect class="f-warm" y="3.9" width="10" height="2.2"/></pattern>` +
-    `<pattern id="${id("checks")}" width="14" height="14" patternUnits="userSpaceOnUse"><rect class="f-warm" width="14" height="14"/><rect class="f-ink" width="7" height="7"/><rect class="f-ink" x="7" y="7" width="7" height="7"/></pattern>` +
-    `<pattern id="${id("weave")}" width="16" height="16" patternUnits="userSpaceOnUse"><rect class="f-ink" width="16" height="16"/><rect class="f-warm" x="1.5" y="1.5" width="5" height="5"/><rect class="f-warm" x="9.5" y="9.5" width="5" height="5"/></pattern>` +
-    `<pattern id="${id("grid")}" width="18" height="18" patternUnits="userSpaceOnUse"><rect class="f-warm" width="18" height="18"/><rect class="f-line" width="18" height="1.4"/><rect class="f-line" width="1.4" height="18"/></pattern>`
-  );
-}
-
-/** The print each recurring identity is made of. */
-export const identityPrint: Record<string, Print> = {
-  n1: "dots",
-  n2: "stripes",
-  n3: "rules",
-};
-
-export const paint = (uid: string, print: Print) => `url(#${uid}-${print})`;
+export const identityFill = {
+  n1: "var(--paper)",
+  n2: "var(--ink)",
+  n3: "var(--paper-sunk)",
+} as const;
 
 /* ── Pieces ── */
 
 /**
- * A strip of printed paper along a path: an ink edge, then the print. Butt
+ * A strip of paper along a path: an ink edge, then its fill. Butt
  * ends, so a strip can be cut and continued without a seam.
  */
 export function strip(
@@ -250,13 +235,51 @@ export function tag(
 export function figure(
   at: Pt,
   scale = 1,
-  tone: "ink" | "red" | "paper" = "ink",
+  tone: "ink" | "red" | "strand" | "paper" = "ink",
 ): string {
-  const fill = tone === "ink" ? "f-ink" : tone === "red" ? "f-red" : "f-paper";
+  const fill =
+    tone === "ink"
+      ? "f-ink"
+      : tone === "red"
+        ? "f-red"
+        : tone === "strand"
+          ? "f-strand s-ink"
+          : "f-paper s-ink";
   return (
-    `<g transform="translate(${pt(at)}) scale(${r(scale * 100) / 100})">` +
+    `<g transform="translate(${pt(at)}) scale(${r(scale * 100) / 100})" stroke-width="2.5">` +
     `<circle class="${fill}" cx="0" cy="-15" r="10.5"/>` +
     `<path class="${fill}" d="M-19 22 C-19 4 -11 -1 0 -1 C11 -1 19 4 19 22 Z"/>` +
+    `</g>`
+  );
+}
+
+/**
+ * A cut-paper person, standing: head, body and legs, set with their feet at
+ * `at`. A raised arm points at the work when `point` is given. Tones alternate
+ * charcoal, the strand red and white, and white ones carry a charcoal outline.
+ */
+export function stander(
+  at: Pt,
+  scale = 1,
+  tone: "ink" | "strand" | "paper" = "ink",
+  point?: "left" | "right",
+): string {
+  const fill =
+    tone === "ink"
+      ? "f-ink"
+      : tone === "strand"
+        ? "f-strand s-ink"
+        : "f-paper s-ink";
+  const arm = point
+    ? `<path class="s-${tone === "paper" ? "ink" : tone}" d="M${point === "right" ? 14 : -14} -84 L${point === "right" ? 44 : -44} -104" fill="none" stroke-width="9" stroke-linecap="round"/>`
+    : "";
+  return (
+    `<g transform="translate(${pt(at)}) scale(${r(scale * 100) / 100})" stroke-width="2.5">` +
+    `<rect class="${fill}" x="-14" y="-46" width="12" height="46" rx="4"/>` +
+    `<rect class="${fill}" x="2" y="-46" width="12" height="46" rx="4"/>` +
+    arm +
+    `<rect class="${fill}" x="-19" y="-94" width="38" height="56" rx="12"/>` +
+    `<circle class="${fill}" cx="0" cy="-110" r="13"/>` +
     `</g>`
   );
 }
@@ -267,7 +290,7 @@ export function seal(at: Pt, radius = 22, turn = -8): string {
   return (
     `<g transform="translate(${pt(at)}) rotate(${r(turn)})">` +
     `<circle class="f-red" r="${r(radius)}"/>` +
-    `<circle class="s-paper" r="${r(radius - 5 * s)}" fill="none" stroke-width="${r(1.6 * s)}" stroke-dasharray="${r(2 * s)} ${r(3.2 * s)}"/>` +
+    `<circle class="s-paper" r="${r(radius - 5 * s)}" fill="none" stroke-width="${r(1.6 * s)}" />` +
     `<path class="s-paper" d="M${r(-9 * s)} ${r(1 * s)} L${r(-2.5 * s)} ${r(7.5 * s)} L${r(10 * s)} ${r(-6.5 * s)}" fill="none" stroke-width="${r(4.6 * s)}" stroke-linecap="round" stroke-linejoin="round"/>` +
     `</g>`
   );
@@ -293,13 +316,12 @@ export type LabelPlace = {
 };
 
 /**
- * One drawing, ready to mount: the field it is drawn in, its print
- * definitions, its parts in painting order, and a place for every label.
+ * One drawing, ready to mount: the field it is drawn in, its parts in
+ * painting order, and a place for every label.
  */
 export type Art = {
   readonly width: number;
   readonly height: number;
-  readonly defs: string;
   readonly parts: string;
   readonly labels: Readonly<Record<string, LabelPlace>>;
 };
@@ -330,8 +352,8 @@ export const easeY = (a: Pt, b: Pt, pull = 0.5) => {
  * Strands start in lanes 0, 1 and 2. At each crossing one outer strand passes
  * *over* the middle one and takes its lane, alternating sides — which is all a
  * plait is. Each strand is drawn whole, then every crossing's upper piece is
- * drawn again on top; the prints are laid in the field's own coordinates, so
- * the repeated piece meets the strand under it without a seam.
+ * drawn again on top; the fills are solid, so the repeated piece meets
+ * the strand under it without a seam.
  */
 /** How far a piece's paper runs past its ink edge to hide a join. */
 const SEAM = 1.5;
