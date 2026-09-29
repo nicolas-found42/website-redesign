@@ -5,6 +5,18 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      benchmark:
+        description: Optional CI runtime comparison on the same commit
+        type: choice
+        default: none
+        options:
+          - none
+          - direct-install
+          - single-browser
+          - two-workers
+          - two-shards
+          - shared-build
 permissions:
   contents: read
 concurrency:
@@ -76,6 +88,152 @@ jobs:
         if: github.ref == 'refs/heads/main' && matrix.shard == 1
         with:
           path: dist
+  benchmark-direct-install:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'direct-install' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
+      - name: Upload benchmark timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-timings-${{ github.run_id }}-${{ matrix.shard }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
+  benchmark-single-browser:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'single-browser' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [unit, chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.project }}
+        if: matrix.project != 'unit'
+      - run: npm test -- --workers=4 --project=${{ matrix.project }}
+      - name: Upload benchmark timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-timings-${{ github.run_id }}-${{ matrix.project }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
+  benchmark-two-workers:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'two-workers' }}
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - run: chown "$(id -u):$(id -g)" /github/home
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --workers=2 --shard=${{ matrix.shard }}/4
+      - name: Upload benchmark timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-timings-${{ github.run_id }}-${{ matrix.shard }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
+  benchmark-two-shards:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'two-shards' }}
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - uses: actions/checkout@v4
+      - run: chown "$(id -u):$(id -g)" /github/home
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/2
+      - name: Upload benchmark timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-timings-${{ github.run_id }}-${{ matrix.shard }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
+  benchmark-build:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'shared-build' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-dist-${{ github.run_id }}
+          path: dist/
+          retention-days: 1
+  benchmark-shared-build:
+    needs: benchmark-build
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - run: chown "$(id -u):$(id -g)" /github/home
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: benchmark-dist-${{ github.run_id }}
+          path: dist/
+      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
+        env:
+          PW_PREBUILT_DIST: "1"
+      - name: Upload benchmark timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-timings-${{ github.run_id }}-${{ matrix.shard }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
   verify:
     if: ${{ always() }}
     needs: [browser-tests, lint]
