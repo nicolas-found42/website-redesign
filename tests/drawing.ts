@@ -77,6 +77,7 @@ export function readTextFit(field: Element) {
     skill: "rect.f-paper",
     result: "rect.f-ink",
     human: "rect.f-red",
+    direction: "rect.f-red",
   };
   const tolerance = 1;
   return [...field.querySelectorAll<HTMLElement>(".system-label")].map(

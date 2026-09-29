@@ -12,7 +12,7 @@ const cards = ["brief", "meeting", "debrief", "actions"] as const;
 function timeline(orientation: Orientation): Art {
   const wide = orientation === "landscape";
   const width = wide ? 1000 : 600;
-  const height = wide ? 700 : 1200;
+  const height = wide ? 760 : 1260;
   const cardWidth = wide ? 440 : 520;
   const cardHeight = wide ? 250 : 248;
   const labels: Record<string, LabelPlace> = {};
@@ -22,7 +22,7 @@ function timeline(orientation: Orientation): Art {
     const x = wide ? 30 + (index % 2) * 500 : 40;
     const y = wide ? 24 + Math.floor(index / 2) * 332 : 24 + index * 288;
     labels[key] = place(
-      [x + cardWidth / 2, y + (wide ? 100 : 80)],
+      [x + cardWidth / 2, y + (wide && index !== 3 ? 100 : 80)],
       "center",
       "middle",
       {
@@ -66,11 +66,12 @@ function timeline(orientation: Orientation): Art {
         ),
       );
     } else {
-      const markWidth = wide ? 176 : 220;
+      const markWidth = wide ? 368 : 330;
+      const markHeight = wide ? 88 : 72;
       const mx = x + (cardWidth - markWidth) / 2;
-      const my = y + cardHeight - 80;
+      const my = y + cardHeight - markHeight - 14;
       labels.direction = place(
-        [x + cardWidth / 2, my + 28],
+        [x + cardWidth / 2, my + markHeight / 2],
         "center",
         "middle",
         { width: markWidth - 16, ground: "red" },
@@ -86,12 +87,12 @@ function timeline(orientation: Orientation): Art {
             marks: ["human:direction"],
             links: ["direction>actions"],
           },
-          `<rect class="f-red s-ink" x="${mx}" y="${my}" width="${markWidth}" height="56" rx="5" stroke-width="2"/>`,
+          `<rect class="f-red s-ink" x="${mx}" y="${my}" width="${markWidth}" height="${markHeight}" rx="5" stroke-width="2"/>`,
         ),
       );
     }
   });
-  labels.illustrative = place([width / 2, height - 26], "center", "middle", {
+  labels.illustrative = place([width / 2, height - 72], "center", "middle", {
     width: width - 70,
   });
   return { width, height, parts: parts.join(""), labels };

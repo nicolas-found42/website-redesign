@@ -470,16 +470,51 @@ test("executive timeline words stay whole and separate with enlarged text", asyn
   for (const width of [384, 1024, 1440]) {
     await page.setViewportSize({ width, height: 742 });
     await page.goto("/");
-    await page.addStyleTag({ content: "html { font-size: 200%; }" });
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    expect(
+      await page
+        .locator("html")
+        .evaluate((html) => getComputedStyle(html).fontSize),
+    ).toBe("32px");
     await page.evaluate(() => document.fonts.ready);
     await page.getByRole("button", { name: /C-level executives/ }).click();
     const fields = page.locator(
       '.audience-art [data-audience-scene="0"] .scene-field:visible, #audience-executives .scene-field:visible',
     );
     await expect(fields).toHaveCount(1);
-    expect(wordProblems(await fields.first().evaluate(readTextFit))).toEqual(
-      [],
-    );
+    await fields.first().scrollIntoViewIfNeeded();
+    await expect
+      .poll(async () => {
+        const field = fields.first();
+        const state = await field.evaluate(readField);
+        const fit = await field.evaluate(readTextFit);
+        return {
+          animating: state.animating,
+          unsettled: state.unsettled,
+          problems: wordProblems(fit),
+          decisionOnCard: fit.find((label) => label.text === "You decide")
+            ?.onCard,
+        };
+      })
+      .toEqual({
+        animating: 0,
+        unsettled: { parts: 0, words: 0 },
+        problems: [],
+        decisionOnCard: true,
+      });
+    await expect
+      .poll(() =>
+        fields.first().evaluate((field) => {
+          const caption = field
+            .querySelector('[data-node="illustrative"] .system-label-text')!
+            .getBoundingClientRect();
+          const box = field.getBoundingClientRect();
+          return caption.top >= box.top && caption.bottom <= box.bottom;
+        }),
+      )
+      .toBe(true);
     const overlaps = await fields.first().evaluate((field) => {
       const boxes = [...field.querySelectorAll(".system-label-text")].map(
         (label) => ({
