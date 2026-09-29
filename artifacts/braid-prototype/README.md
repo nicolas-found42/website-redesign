@@ -9,7 +9,7 @@ Run `npm run dev`, then open:
 - `http://127.0.0.1:5173/industries/private-equity/?variant=broad` — A, the current broad plait.
 - `http://127.0.0.1:5173/industries/private-equity/?variant=thin` — B, a thin pipeline braid.
 
-The bottom switcher and left/right arrow keys change variants and update the URL. The same switch works on the B2B SaaS industry page. The four PNGs in this directory capture both versions at 1440px and 390px.
+The bottom switcher and left/right arrow keys change variants and update the URL. The same switch works on the B2B SaaS industry page. The four PNGs in this directory capture both versions at 1440px and 390px with the project's bundled fonts loaded.
 
 The thin treatment is deliberately a visual question, not production art. Once a direction is chosen, rebuild it in the site's drawing system with separate wide and narrow compositions and remove this prototype from the implementation branch.
 
