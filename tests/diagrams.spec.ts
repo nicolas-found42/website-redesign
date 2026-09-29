@@ -472,9 +472,7 @@ test("executive timeline words stay whole and separate with enlarged text", asyn
     await page.goto("/");
     await page.addStyleTag({ content: "html { font-size: 200%; }" });
     await page.evaluate(() => document.fonts.ready);
-    await page
-      .getByRole("button", { name: "C-level executives", exact: true })
-      .click();
+    await page.getByRole("button", { name: /C-level executives/ }).click();
     const fields = page.locator(
       '.audience-art [data-audience-scene="0"] .scene-field:visible, #audience-executives .scene-field:visible',
     );
