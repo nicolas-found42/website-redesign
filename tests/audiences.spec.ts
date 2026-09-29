@@ -61,7 +61,7 @@ test("reading an audience changes the pinned scene and the announced selection",
     ).toHaveAccessibleName(
       new RegExp(
         index === 0
-          ? "Executive illustration"
+          ? "Executive day"
           : index === 1
             ? "Individual Contributors and Teams illustration"
             : "Builder illustration",
