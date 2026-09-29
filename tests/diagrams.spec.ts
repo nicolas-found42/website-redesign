@@ -568,6 +568,14 @@ for (const [width, height] of [
     expect(wordProblems(fit)).toEqual([]);
     for (const label of fit)
       expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    expect(
+      await field.evaluate((element) => element.getBoundingClientRect().width),
+    ).toBeGreaterThan(300);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
     await context.close();
   });
 }

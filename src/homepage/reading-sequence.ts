@@ -162,6 +162,8 @@ export function mountReadingSequence({
     )
       onManualScroll();
   };
+  // Mouse-driven scrolling (including a scrollbar drag) has no wheel event.
+  addEventListener("mousedown", onManualScroll, { passive: true });
   addEventListener("wheel", onManualScroll, { passive: true });
   addEventListener("touchstart", onManualScroll, { passive: true });
   addEventListener("keydown", onManualKey);
@@ -231,6 +233,7 @@ export function mountReadingSequence({
     removeEventListener("scrollend", onScrollEnd);
     removeEventListener("scroll", onScroll);
     clearTimeout(scrollIdle);
+    removeEventListener("mousedown", onManualScroll);
     removeEventListener("wheel", onManualScroll);
     removeEventListener("touchstart", onManualScroll);
     removeEventListener("keydown", onManualKey);

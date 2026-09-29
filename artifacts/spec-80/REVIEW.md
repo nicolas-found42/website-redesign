@@ -49,3 +49,23 @@ the corrected test checks actual root size, settled rendering, mark containment,
 caption containment and nonoverlapping labels. It failed before the artwork
 change, then passed twice in every engine at 384, 1024 and 1440px.
 The refreshed enlarged-text screenshots were visually reviewed after the fix.
+
+## Cubic follow-up
+
+Cubic's review of `4a0fbbe` raised three comments. The scrollbar-selection
+finding is fixed: a mouse press releases the shared reading sequence's pill
+landing lock, and disposal removes the added listener. A browser regression
+first failed with the old controller and then passed with the fix, covering
+Home and Services audience and service sequences without wheel, touch or key
+input. The executive no-script tests now also assert a field wider than 300px
+and no horizontal page overflow at both phone heights.
+
+The strip-pause suggestion conflicts with issue 80's explicit owner decision
+and ADR 0009. The continuous strip therefore keeps the approved behavior;
+reduced motion still shows all fifteen marks in a static wrapped list.
+The review thread receives this context rather than changing the agreed scope.
+
+The focused mouse, keyboard and no-script checks passed in Chromium, Firefox
+and WebKit (12 cases). Full lint and production build also passed, as did
+all 66 audience and system browser cases in the three engines. A full Cubic review is requested after the follow-up
+commit is pushed, using its documented full-review command.

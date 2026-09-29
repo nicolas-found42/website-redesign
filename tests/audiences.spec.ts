@@ -250,3 +250,38 @@ test("phone audience choices keep the hidden pinned drawings still", async ({
     ),
   ).toBe(0);
 });
+
+test("mouse scrolling releases a narrow audience or service pill selection", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 800, height: 742 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const route of ["/", "/services/"]) {
+    for (const [section, firstName, articleId, nextName] of [
+      ["audiences", names[0], "audience-builders", names[2]],
+      ["services", "Workshops", "service-product", "Automations"],
+    ]) {
+      await page.goto(route + "#" + section);
+      const region = page.locator("#" + section);
+      const first = region.getByRole("button", {
+        name: firstName,
+        exact: true,
+      });
+      await first.click();
+      await expect(first).toHaveAttribute("aria-pressed", "true");
+      // A scrollbar drag produces a mouse press and scrolling, without wheel,
+      // touch or a navigation key. Keep the scroll separate from those inputs.
+      await page.mouse.move(799, 400);
+      await page.mouse.down();
+      await page
+        .locator("#" + articleId)
+        .evaluate((article) =>
+          article.scrollIntoView({ block: "center", behavior: "instant" }),
+        );
+      await page.mouse.up();
+      await expect(
+        region.getByRole("button", { name: nextName, exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
+    }
+  }
+});
