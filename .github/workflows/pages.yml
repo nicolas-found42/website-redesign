@@ -17,6 +17,7 @@ on:
           - two-workers
           - two-shards
           - shared-build
+          - fully-parallel
 permissions:
   contents: read
 concurrency:
@@ -103,6 +104,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run typecheck
       - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
       - name: Upload benchmark timings
         if: ${{ !cancelled() }}
@@ -126,8 +128,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps ${{ matrix.project }}
-        if: matrix.project != 'unit'
+      - run: npx playwright install --with-deps ${{ matrix.project == 'unit' && 'chromium' || matrix.project }}
+      - run: npm run typecheck
       - run: npm test -- --workers=4 --project=${{ matrix.project }}
       - name: Upload benchmark timings
         if: ${{ !cancelled() }}
@@ -153,6 +155,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run typecheck
       - run: npm test -- --workers=2 --shard=${{ matrix.shard }}/4
       - name: Upload benchmark timings
         if: ${{ !cancelled() }}
@@ -178,6 +181,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run typecheck
       - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/2
       - name: Upload benchmark timings
         if: ${{ !cancelled() }}
@@ -226,6 +230,32 @@ jobs:
       - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
         env:
           PW_PREBUILT_DIST: "1"
+      - name: Upload benchmark timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-timings-${{ github.run_id }}-${{ matrix.shard }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
+  benchmark-fully-parallel:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'fully-parallel' }}
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - run: chown "$(id -u):$(id -g)" /github/home
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test -- --workers=4 --fully-parallel --shard=${{ matrix.shard }}/4
       - name: Upload benchmark timings
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
