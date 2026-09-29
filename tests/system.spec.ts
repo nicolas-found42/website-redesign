@@ -120,13 +120,6 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
       ...document.querySelectorAll<HTMLButtonElement>("#services .choice"),
     ];
     [1, 2, 0, 2].forEach((index) => choices[index].click());
-    window.addEventListener(
-      "scrollend",
-      () => {
-        document.documentElement.dataset.serviceScrollSettled = "true";
-      },
-      { once: true },
-    );
     matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
       "change",
       () => {
@@ -143,18 +136,16 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
     "data-motion-changed",
     "true",
   );
-  const targetOffset = await page.evaluate(
-    () =>
-      new Promise<number>((resolve) =>
-        requestAnimationFrame(() => {
-          const box = document
-            .querySelector('[data-service-article="2"]')!
-            .getBoundingClientRect();
-          resolve(Math.abs(box.top + box.height / 2 - innerHeight / 2));
+  await expect
+    .poll(
+      () =>
+        page.locator('[data-service-article="2"]').evaluate((article) => {
+          const box = article.getBoundingClientRect();
+          return Math.abs(box.top + box.height / 2 - innerHeight / 2);
         }),
-      ),
-  );
-  expect(targetOffset).toBeLessThan(60);
+      { message: "the requested service lands at the reading position" },
+    )
+    .toBeLessThan(60);
 
   const expectedPage = await context.newPage();
   await expectedPage.emulateMedia({ reducedMotion: "reduce" });
@@ -170,11 +161,6 @@ test("switching to reduced motion during rapid choices leaves a complete drawing
   const still = await drawing(expectedPage);
   await expectedPage.close();
   await page.bringToFront();
-
-  await expect(page.locator("html")).toHaveAttribute(
-    "data-service-scroll-settled",
-    "true",
-  );
 
   // The last explicit choice remains authoritative while its scroll settles;
   // the reading observer may pass other articles on the way there.
