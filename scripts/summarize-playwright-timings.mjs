@@ -54,6 +54,31 @@ for (const project of projects) {
   );
 }
 
+const files = new Map();
+for (const test of tests) {
+  const key = `${test.project}\0${test.file}`;
+  const entry = files.get(key) ?? {
+    project: test.project,
+    file: test.file,
+    count: 0,
+    duration: 0,
+  };
+  entry.count++;
+  entry.duration += test.duration;
+  files.set(key, entry);
+}
+
+console.log("\n### Slowest files by cumulative test time\n");
+console.log("| Project | File | Tests | Sum of test durations |");
+console.log("| --- | --- | ---: | ---: |");
+for (const file of [...files.values()]
+  .sort((a, b) => b.duration - a.duration)
+  .slice(0, 10)) {
+  console.log(
+    `| ${clean(file.project)} | ${clean(file.file)} | ${file.count} | ${seconds(file.duration)} s |`,
+  );
+}
+
 console.log("\n### Slowest tests\n");
 console.log("| Project | Test | Duration | Outcome | Retries |");
 console.log("| --- | --- | ---: | --- | ---: |");
