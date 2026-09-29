@@ -10,7 +10,7 @@
  *   is read by an executive, who directs what happens next, and its
  *   recommendations feed back to the problem. The brief is hypothetical, not
  *   a client artifact or a live integration.
- * - **Teams and individual contributors** each run a ribbon of their own role
+ * - **Individual Contributors and Teams** each run a ribbon of their own role
  *   through a skill cut for it — four roles in one company — and the four
  *   ribbons braid together through one gate: the human in the loop.
  * - **Builders** climb a stair folded from card, from a work problem to a
@@ -262,10 +262,10 @@ export const audiences: readonly Audience[] = [
   },
   {
     id: "contributors",
-    choice: "Teams and individual contributors",
+    choice: "Individual Contributors and Teams",
     proposition:
       "Training built around your role, industry and company, so skills take on recurring work and free you for judgment.",
-    kicker: "For teams and individual contributors",
+    kicker: "For Individual Contributors and Teams",
     title: "Automate the repetitive,<br>keep the craft.",
     body: "Training is built around your role, industry and company: your recurring decisions, documents, terminology and review standards. Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop.",
     points: [
@@ -276,13 +276,13 @@ export const audiences: readonly Audience[] = [
     caption:
       "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality.",
     link: {
-      label: "For teams and individual contributors",
+      label: "For Individual Contributors and Teams",
       href: sitePath("services/#track-role-based"),
     },
     scene: {
       id: "contributors",
       description:
-        "Teams and individual contributors illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate.",
+        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate.",
       ...rosterScene,
     },
   },

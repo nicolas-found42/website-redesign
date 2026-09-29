@@ -14,7 +14,7 @@ import {
 } from "./kit";
 
 /**
- * Teams and individual contributors: the gate.
+ * Individual Contributors and Teams: the gate.
  *
  * Four people in one company, each with a ribbon of their own role. Each
  * ribbon runs through a skill cut for that role — its buckle — and the four
