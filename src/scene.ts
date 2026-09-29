@@ -70,6 +70,23 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
   /** Tells the scene from its first beat. Under reduced motion it is simply shown. */
   function play() {
     if (disposed) return;
+    // An explicit choice can precede its observer notification, or select a
+    // desktop host hidden by the stacked/reduced-motion layout. Defer its
+    // entrance until the drawing itself is actually on screen.
+    const box = frameEl.getBoundingClientRect();
+    if (
+      !box.width ||
+      !box.height ||
+      box.bottom <= 0 ||
+      box.top >= innerHeight ||
+      box.right <= 0 ||
+      box.left >= innerWidth
+    ) {
+      cancelAll(animations);
+      build();
+      told = false;
+      return;
+    }
     if (still()) {
       settle();
       return;
@@ -85,6 +102,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
       for (const entry of entries) {
         visible = entry.isIntersecting;
         if (visible && !told) play();
+        else if (!visible && animations.length) settle();
       }
     },
     { threshold: 0.12 },

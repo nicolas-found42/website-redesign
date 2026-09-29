@@ -201,3 +201,52 @@ test("Services names the people Customized Role-Based Training serves", async ({
     "Customized Role-Based Training",
   );
 });
+
+test("phone keyboard reading moves the pressed audience beyond a chosen pill", async ({
+  page,
+  browserName,
+}) => {
+  await page.setViewportSize({ width: 384, height: 742 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const nextFocus = browserName === "webkit" ? "Alt+Tab" : "Tab";
+  for (const route of ["/", "/services/"]) {
+    await page.goto(route + "#audiences");
+    const first = page.getByRole("button", { name: names[0], exact: true });
+    await first.focus();
+    await page.keyboard.press("Enter");
+    await expect(first).toHaveAttribute("aria-pressed", "true");
+    for (let step = 0; step < 4; step++) await page.keyboard.press(nextFocus);
+    const contributors = page.getByRole("article", {
+      name: names[1],
+      exact: true,
+    });
+    await expect(contributors.getByRole("link")).toBeFocused();
+    await expect(
+      page.getByRole("button", { name: names[1], exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await page.keyboard.press(nextFocus);
+    await expect(
+      page.getByRole("button", { name: names[2], exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+  }
+});
+
+test("phone audience choices keep the hidden pinned drawings still", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 384, height: 742 });
+  await page.goto("/#audiences");
+  const choice = page.getByRole("button", { name: names[1], exact: true });
+  await choice.focus();
+  await page.keyboard.press("Enter");
+  await expect(choice).toHaveAttribute("aria-pressed", "true");
+  expect(
+    await page.locator(".audience-art").evaluate(
+      (pane) =>
+        document.getAnimations().filter((animation) => {
+          const target = (animation.effect as KeyframeEffect).target;
+          return target instanceof Element && pane.contains(target);
+        }).length,
+    ),
+  ).toBe(0);
+});
