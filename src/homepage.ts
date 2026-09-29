@@ -12,8 +12,6 @@ import {
   testimonialsSection,
 } from "./homepage/testimonials";
 import { inquirySection } from "./homepage/inquiry";
-import { mountSystem } from "./system";
-import { masterSchematic } from "./schematic";
 import { mountServices } from "./homepage/services-behaviour";
 import { mountAudiences } from "./homepage/audiences-behaviour";
 import { mountReveals } from "./reveal";
@@ -240,21 +238,6 @@ export function mountPage(
     removeEventListener("scroll", readGround);
     removeEventListener("resize", readGround);
   });
-
-  /* ── The opening drawing ── */
-  const heroHost = root.querySelector<HTMLElement>(".hero-art")!;
-  const heroSystem = heroHost
-    ? mountSystem(heroHost, {
-        motionPreference,
-        compositions: [masterSchematic],
-        live: true,
-        // Beside the words at a middle width the drawing's column is narrow
-        // and tall, so it takes its portrait composition sooner than the
-        // drawings that span their section.
-        portrait: "(max-width: 1179px)",
-      })
-    : null;
-  if (heroSystem) disposers.push(() => heroSystem.dispose());
 
   /* ── The scroll-linked services sequence ── */
   if (root.querySelector(".services-art"))

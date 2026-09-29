@@ -1,11 +1,9 @@
 /**
  * The opening spread.
  *
- * Two columns that never share ground: the headline, lead, actions and the
- * participant's words on one side, the drawing on the other. Nothing is set over
- * the drawing, so no word can cover it and it can cover none — at a middle width
- * the drawing takes its portrait composition beside the words rather than
- * spreading under them, and on a narrow screen it follows them.
+ * Text alone. The headline, lead and actions take the wide column and the
+ * participant's words sit beside them; on a narrow screen the words follow the
+ * actions in one column. No space is held for a drawing.
  */
 .hero {
   position: relative;
@@ -19,11 +17,8 @@
 .hero-inner {
   display: grid;
   flex: 1;
-  grid-template-areas:
-    "copy art"
-    "proof art";
-  grid-template-rows: auto auto;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.14fr);
+  grid-template-areas: "copy proof";
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   gap: 0 clamp(36px, 4.4vw, 84px);
   align-content: center;
   align-items: center;
@@ -31,7 +26,6 @@
 }
 .hero-copy {
   grid-area: copy;
-  align-self: end;
   min-width: 0;
 }
 
@@ -50,7 +44,7 @@
   text-wrap: wrap;
 }
 .hero-lead {
-  max-width: 40ch;
+  max-width: 52ch;
   margin-bottom: clamp(24px, 2.6vw, 38px);
 }
 /* What Claude is sits under the lead as its footnote, before the action. */
@@ -71,13 +65,13 @@
   gap: 14px;
 }
 
-/* ── The participant's words: under the actions, in the words' own column ── */
+/* ── The participant's words: beside the copy, below it on a narrow screen ── */
 .hero-proof {
   grid-area: proof;
-  align-self: start;
+  align-self: center;
   max-width: 46ch;
   padding-top: 18px;
-  margin-top: clamp(28px, 3.4vw, 48px);
+  margin-top: 0;
   border-top: 1px solid var(--line);
 }
 .hero-proof .note {
@@ -92,15 +86,6 @@
 .hero-proof figcaption {
   font-size: var(--size-small);
   color: var(--muted);
-}
-
-/* ── The drawing ── */
-.hero-art {
-  position: relative;
-  grid-area: art;
-  align-self: center;
-  width: 100%;
-  min-width: 0;
 }
 
 /* ── The rail ── */
@@ -185,18 +170,7 @@
   transform: translateY(4px);
 }
 
-/* ── Middle widths: the portrait drawing, beside the words ── */
-@media (max-width: 1179px) {
-  .hero-inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
-  }
-  .hero-art {
-    max-width: 440px;
-    justify-self: end;
-  }
-}
-
-/* ── Narrow: one column, the drawing after the words ── */
+/* ── Narrow: one column ── */
 @media (max-width: 860px) {
   .hero {
     min-height: 0;
@@ -206,18 +180,15 @@
   .hero-inner {
     grid-template-areas:
       "copy"
-      "proof"
-      "art";
+      "proof";
     grid-template-columns: minmax(0, 1fr);
     padding-block: clamp(24px, 5vh, 56px) 0;
   }
+  .hero-proof {
+    margin-top: clamp(28px, 3.4vw, 48px);
+  }
   .hero h1 {
     max-width: 18ch;
-  }
-  .hero-art {
-    justify-self: stretch;
-    max-width: 480px;
-    margin-block: clamp(32px, 7vw, 56px) clamp(8px, 2vw, 20px);
   }
   .hero-rail {
     flex-wrap: wrap;

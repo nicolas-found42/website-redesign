@@ -165,21 +165,9 @@ test("the fixture is the deployed drawings' inventory", () => {
   ]);
 });
 
-test("the opening drawing keeps its words and connections in both shapes", async ({
+test("the industry pages' drawing keeps its words and connections", async ({
   page,
 }) => {
-  await open(page, "/", 1440);
-  expectSchematic(
-    await page.locator(".hero-art .system-field").evaluate(readField),
-    "master",
-    "landscape",
-  );
-  await open(page, "/", 1024);
-  expectSchematic(
-    await page.locator(".hero-art .system-field").evaluate(readField),
-    "master",
-    "portrait",
-  );
   await open(page, "/industries/private-equity/", 1440);
   expectSchematic(
     await page.locator(".page-drawing .system-field").evaluate(readField),
@@ -357,7 +345,7 @@ test("an assembled drawing rests exactly where a still one does", async ({
   await still.evaluate(() => document.fonts.ready);
 
   const read = (target: Page) =>
-    target.locator(".hero-art .system-field").evaluate(readField);
+    target.locator(".services-art .system-field").evaluate(readField);
   await expect
     .poll(async () => {
       const state = await read(page);
@@ -366,49 +354,4 @@ test("an assembled drawing rests exactly where a still one does", async ({
     .toEqual({ parts: 0, words: 0, animating: 0 });
   expect(await read(page)).toEqual(await read(still));
   await still.close();
-});
-
-test("the opening words never cover the drawing, at any width", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  for (const width of [
-    1920, 1440, 1280, 1180, 1179, 1100, 1024, 961, 900, 861, 860, 768, 430, 390,
-    320,
-  ]) {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto("/");
-    await page.evaluate(() => document.fonts.ready);
-    const overlaps = await page.evaluate(() => {
-      const art = document
-        .querySelector(".hero-art .system-field")!
-        .getBoundingClientRect();
-      const meet = (a: DOMRect, b: DOMRect) =>
-        a.left < b.right - 0.5 &&
-        b.left < a.right - 0.5 &&
-        a.top < b.bottom - 0.5 &&
-        b.top < a.bottom - 0.5;
-      const words = [
-        ...document.querySelectorAll(
-          ".hero-copy h1, .hero-copy p, .hero-actions .action, .hero-proof p, .hero-proof blockquote, .hero-proof figcaption",
-        ),
-      ];
-      return {
-        covered: words
-          .filter((word) => meet(word.getBoundingClientRect(), art))
-          .map((word) => word.textContent?.trim().slice(0, 40)),
-        art: { width: art.width, height: art.height },
-        // The drawing's own words stay inside the page.
-        outside: [
-          ...document.querySelectorAll(".hero-art .system-label-text"),
-        ].filter((label) => {
-          const box = label.getBoundingClientRect();
-          return box.left < 0 || box.right > innerWidth;
-        }).length,
-      };
-    });
-    expect(overlaps.covered, `${width}px`).toEqual([]);
-    expect(overlaps.outside, `${width}px`).toBe(0);
-    expect(overlaps.art.width, `${width}px`).toBeGreaterThan(200);
-  }
 });

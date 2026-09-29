@@ -4,7 +4,7 @@ test("the homepage follows the approved story around the deployed drawings", asy
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator("main > section")).toHaveCount(10);
+  await expect(page.locator("main > section")).toHaveCount(9);
   await expect(
     page
       .locator("main > section")
@@ -12,7 +12,6 @@ test("the homepage follows the approved story around the deployed drawings", asy
   ).resolves.toEqual([
     "hero",
     "companies",
-    "counts",
     "audiences",
     "services",
     "briefing",
@@ -24,14 +23,8 @@ test("the homepage follows the approved story around the deployed drawings", asy
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Train teams. Build useful skills. Automate the work.",
   );
-  await expect(page.getByText("Google", { exact: true })).toBeVisible();
-  await expect(page.getByText("PeakSpan", { exact: true })).toBeVisible();
-  await expect(page.getByText("SEP", { exact: true })).toBeVisible();
-  await expect(page.getByText("20+", { exact: true })).toBeVisible();
-  await expect(page.getByText("500+", { exact: true })).toBeVisible();
-  await expect(page.getByText("50+", { exact: true })).toBeVisible();
-  await expect(page.locator(".hero-art [data-system-host]")).toHaveCount(0);
-  await expect(page.locator(".hero-art .system")).toHaveCount(1);
+  await expect(page.locator("#companies")).toBeVisible();
+  await expect(page.locator(".hero-art")).toHaveCount(0);
 });
 
 test("audience cards select the original scene and link to catalog tracks", async ({

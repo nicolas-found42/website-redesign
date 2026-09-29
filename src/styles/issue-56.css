@@ -14,7 +14,7 @@
   padding: 0 0 clamp(64px, 5vw, 88px);
 }
 .hero-inner {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   column-gap: clamp(36px, 4.45vw, 64px);
   padding-block: clamp(48px, 6.12vw, 88px) 0;
 }
@@ -27,59 +27,73 @@
   line-height: 1.02;
 }
 .hero-lead {
-  max-width: 42ch;
+  max-width: 52ch;
   font-size: clamp(1.125rem, 1.39vw, 1.25rem);
   line-height: 1.55;
 }
 .hero-proof {
   margin-top: 32px;
 }
-.companies,
-.counts {
-  display: grid;
-  align-items: center;
-  border-top: 1px solid var(--line);
-}
 .companies {
+  display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
   gap: 24px;
-  padding-block: 28px;
-}
-.companies ul {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
   align-items: center;
+  padding-block: 32px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+/* Five equal cells on one white ground, so the marks read as one size and the
+   JPEG's white sits in its own ground. Each mark is set by its own height and
+   never stretched, so its proportions stay its own. */
+.company-logos {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
   padding: 0;
   margin: 0;
   list-style: none;
 }
-.companies li {
-  font: 600 clamp(1.25rem, 2vw, 2rem)/1.2 var(--font-display);
-}
-.companies small {
-  display: block;
-  margin-top: 4px;
-  font: 500 var(--size-note)/1.3 var(--font-text);
-  color: var(--muted);
-}
-.counts {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  padding-block: 36px;
-  border-bottom: 1px solid var(--line);
-}
-.counts > div {
+.company-logo {
   display: grid;
-  gap: 4px;
+  min-height: 92px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  place-items: center;
 }
-.counts strong {
-  font: 600 clamp(2.5rem, 4vw, 4rem)/1 var(--font-display);
-  color: var(--red);
+.company-logo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: var(--logo-height, 32px);
 }
-.counts span {
-  font-size: var(--size-small);
-  color: var(--muted);
+.company-logo--google {
+  --logo-height: 30px;
+}
+.company-logo--mba {
+  --logo-height: 60px;
+}
+.company-logo--sep {
+  --logo-height: 46px;
+}
+.company-logo--peakspan-capital {
+  --logo-height: auto;
+}
+.company-logo--peakspan-capital img {
+  width: min(100%, 150px);
+  height: auto;
+}
+/* Edgescale's mark is off-white for its own dark ground, so it keeps that ground. */
+.company-logo-tile {
+  display: grid;
+  padding: 8px 14px;
+  background: #222;
+  border-radius: 10px;
+  place-items: center;
+}
+.company-logo--edgescale-ai img {
+  --logo-height: 44px;
 }
 .audiences .section-head,
 .resources .section-head,
@@ -368,12 +382,10 @@
   gap: 20px;
   justify-content: space-between;
 }
-@media (max-width: 1179px) {
-  .hero-inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
-  }
-}
 @media (max-width: 960px) {
+  .company-logos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .briefing-grid {
     grid-template-columns: 1fr;
   }
@@ -390,7 +402,7 @@
 }
 @media (max-width: 860px) {
   .hero-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .companies {
     grid-template-columns: 1fr;
@@ -407,23 +419,16 @@
   }
 }
 @media (max-width: 700px) {
-  .companies ul,
-  .counts,
   .audience-rail,
   .resource-grid--preview,
   .testimonial-track {
     grid-template-columns: 1fr;
   }
-  .companies ul {
-    gap: 20px;
+  .company-logos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .counts {
-    gap: 24px;
-  }
-  .counts > div {
-    grid-template-columns: minmax(80px, auto) 1fr;
-    gap: 20px;
-    align-items: center;
+  .company-logo:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
   .audience-card {
     padding: 24px;

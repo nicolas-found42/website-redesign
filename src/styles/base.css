@@ -167,7 +167,7 @@ html {
   text-transform: none;
 }
 
-  /* Section labels, not numbered document furniture. */
+/* Section labels, not numbered document furniture. */
 .section-label {
   margin-bottom: 14px;
   color: var(--red);

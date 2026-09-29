@@ -8,12 +8,7 @@ test("meeting journey reads in order and separates audiences from delivery", asy
   const bands = await page
     .locator("main > section")
     .evaluateAll((nodes) => nodes.map((n) => n.id || n.className));
-  expect(bands.slice(1, 5)).toEqual([
-    "companies",
-    "counts",
-    "audiences",
-    "services",
-  ]);
+  expect(bands.slice(1, 4)).toEqual(["companies", "audiences", "services"]);
   await expect(page.locator(".hero-actions .action")).toHaveCount(2);
   await expect(page.locator(".audience-panel")).toHaveCount(3);
   await expect(page.locator("#audiences")).toContainText(

@@ -149,7 +149,7 @@ test("#47: the approved opening and illustrative briefing explain the work", asy
 }) => {
   await page.goto("/");
   await expect(page.locator(".hero-lead")).toContainText(
-    "build tailored Claude skills, and automate repeatable work while judgment stays with your team",
+    "create and use Claude Skills tailored to their roles, and automate repeatable work while judgment stays with your team",
   );
   const example = page.locator("#briefing");
   await expect(example.locator(".briefing-steps strong")).toHaveText([
