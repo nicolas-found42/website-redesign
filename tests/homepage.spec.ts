@@ -189,7 +189,10 @@ test("the companies heading reads at section-heading scale and wraps above the l
   ] as const) {
     await page.setViewportSize({ width, height });
     await page.goto("/");
-    await page.addStyleTag({ content: `html { font-size: ${text}; }` });
+    await page.evaluate(
+      (size) => (document.documentElement.style.fontSize = size),
+      text,
+    );
     const fit = await page.locator("#companies").evaluate((row) => {
       const heading = row.querySelector("h2");
       const list = row.querySelector("ul");
