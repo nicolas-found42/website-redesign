@@ -159,16 +159,17 @@ export const services = [
     inquiryContext: "workflows",
     label: "Make your expertise repeatable.",
     description:
-      "Custom Claude skills and plugins built around one high-value job your team does often. Your source material, examples and quality bar shape the result.",
+      "Custom Claude skills and plugins built around high-value, time-consuming tasks your team does every day. Your source material, examples and quality bar shape the result.",
     details: [
       "Your brief and quality bar",
       "Tailored design, build and testing",
-      "A workflow the team can deploy",
+      "Skills and plugins the team can deploy",
     ],
     context:
       "Your source material, examples and quality bar shape a system your team can use. Executives bring the operating problem; they do not need to become developers.",
     engagement: {
-      startsWith: "Discovery around one high-value job to be done.",
+      startsWith:
+        "Discovery around the high-value, time-consuming tasks your team does every day.",
       youProvide:
         "The operating problem, your source material, examples and quality bar. No development work.",
       youGet:
@@ -181,21 +182,21 @@ export const services = [
     inquiryContext: "automations",
     label: "Return attention to expert work.",
     description:
-      "End-to-end workflows for repetitive work that should not consume expert attention, with people in control wherever judgment is needed.",
+      "End-to-end automations tied directly to your CRM, productivity apps and systems of record to take repetitive work off your team, with people in control wherever judgment is needed.",
     details: [
       "Repetitive work and handoffs mapped",
       "Human review at key points",
       "An output the team can rely on",
     ],
     context:
-      "Map the repetitive process, keep people in control at the handoffs that need judgment, and give the team an output they can use. The scope and expected time depend on the workflow.",
+      "Map the repetitive process, keep people in control at the handoffs that need judgment, and give the team an output they can use. The scope and expected time depend on the process.",
     engagement: {
       startsWith:
         "The repetitive work that should not consume expert attention, mapped before any build is recommended.",
       youProvide:
-        "The workflow, the systems it passes between, and the people who review its results.",
+        "The process, the systems it passes between, and the people who review its results.",
       youGet:
-        "An end-to-end workflow with human review points and system handoffs.",
+        "An end-to-end automation connected to your systems, with human review points.",
     },
   },
 ];
