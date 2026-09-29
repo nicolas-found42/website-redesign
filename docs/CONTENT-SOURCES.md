@@ -76,9 +76,9 @@ keeps the original strings (`home-002`, `course-7`) as provenance.
 
 ## Organization marks (September 29)
 
-The homepage row "Teams we have worked with" shows five marks under
+The homepage row "Teams we have worked with" shows 15 marks under
 `public/assets/logos/`, retrieved September 29, 2026 from each organization's
-own site. The owner confirmed the five relationships and, in chat on September
+own site or official LinkedIn company page. The owner confirmed the 15 relationships and, in chat on September
 29, that every mark's use is approved with the organizations concerned. The site
 does not verify that approval; it is recorded here as the owner's attestation.
 
@@ -91,6 +91,29 @@ does not verify that approval; it is recorded here as the owner's attestation.
 | PeakSpan Capital                         | `peakspan-capital.svg`        | The header mark on `peakspancapital.com`, copied from the page markup                          | The site draws it in `currentColor`; it is filled with the color the header renders it in, `#05304a`.                                                                                                                          |
 
 No brand-use terms were found for Edgescale AI, MB&A, SEP or PeakSpan Capital
-beyond their public sites; the search was not exhaustive. Richard's further
-logos are pending, and no placeholder stands in for them. Marks are never
+beyond their public sites; the search was not exhaustive. The ten additions in #80 were fetched again from the chosen files on September 29. Marajá, Ruruka and MINDSi Sports Performance are the official anonymous
+LinkedIn 200 × 200 JPEGs, so their resolution is limited. ParaVet.live's header
+SVG is extracted intact; the XML namespace is added so it is a standalone SVG
+image document. No paths, colours or proportions are changed. Marks are never
 recolored, cropped or stretched; each keeps its own proportions.
+
+### Additional official files for #80
+
+| File                             | Source                                                                                                                                                                                           | Notes                                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `palladium-security.png`         | https://cdn.prod.website-files.com/66d33e9163dc6e8af2d2c1a9/66e16873d430486db926f74a_logo.png                                                                                                    | Official shield symbol; no wordmark supplied.                                   |
+| `crown-point-advisory-group.svg` | https://crownpointadvisorygroup.com/favicon.svg                                                                                                                                                  | Official favicon mark on its own navy square; the site wordmark is live text.   |
+| `idc.png`                        | https://cdn.prod.website-files.com/608074cd49c3ef489d9d98b4/654288cdaa31333aead63621_IDC_LogoType_Horizontal_FullColor_Red%20website%20bottom.png                                                | Original official file, bundled unchanged.                                      |
+| `mobile-club.svg`                | https://www.mobile.club/images/logo/logo-default.svg                                                                                                                                             | Original official file, bundled unchanged.                                      |
+| `minds-i-education.jpg`          | https://mindsieducation.com/cdn/shop/t/3/assets/fb-hd-logo.jpg                                                                                                                                   | 225 × 62 opaque black-ground wordmark on a charcoal tile.                       |
+| `prelude-solutions.avif`         | https://preludesolutions.com/wp-content/uploads/2025/05/Prelude-Solutions-Logo_Tagline-2025.avif                                                                                                 | Official 2025 wordmark with tagline, avoiding the dated anniversary lockup.     |
+| `maraja.jpg`                     | https://media.licdn.com/dms/image/v2/D4D0BAQGwaq-XvMH2pg/company-logo_200_200/company-logo_200_200/0/1720753753570?e=2147483647&v=beta&t=lyONwMwlDaucSJKpqc_qtJXB_pBK5wzJnLnMjfXqxdk             | Original official file, bundled unchanged.                                      |
+| `ruruka.jpg`                     | https://media.licdn.com/dms/image/v2/D4D0BAQGhUafJtcMh3A/company-logo_200_200/company-logo_200_200/0/1720753589394/ruruka_logo?e=2147483647&v=beta&t=iv04FCyWedjS9zduFhS3d4oBA6e0pocxEwx2HjTxpNU | Original official file, bundled unchanged.                                      |
+| `mindsi-sports-performance.jpg`  | https://media.licdn.com/dms/image/v2/C4E0BAQHjhqU5OFV0RA/company-logo_200_200/company-logo_200_200/0/1631303694175?e=2147483647&v=beta&t=zbqMaZQPWIgbKqX9lDkT-08uI94yRLf-cPDShJChERI             | Original official file, bundled unchanged.                                      |
+| `paravet-live.svg`               | https://paravet.live/ (unaltered header inline SVG)                                                                                                                                              | White/orange header artwork on a charcoal tile; standalone XML namespace added. |
+
+The official company pages were checked again on September 29, 2026:
+[Marajá](https://www.linkedin.com/company/maraja/),
+[Ruruka](https://www.linkedin.com/company/ruruka/) and
+[MINDSi Sports Performance](https://www.linkedin.com/company/mindsi/).
+The source URLs above identify their published 200px LinkedIn files.

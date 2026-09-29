@@ -50,20 +50,30 @@
   overflow-wrap: break-word;
   text-wrap: balance;
 }
-/* Five equal cells on one white ground, so the marks read as one size and the
-   JPEG's white sits in its own ground. Each mark is set by its own width and
-   never stretched, so its proportions stay its own. */
+/* Two equal groups share one track. Their trailing space makes the loop's
+   midpoint exactly the start of the next group, with no empty interval. */
+.company-strip {
+  min-width: 0;
+  overflow: hidden;
+}
+.company-track {
+  display: flex;
+  width: max-content;
+  animation: organization-strip 105s linear infinite;
+}
 .company-logos {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
+  flex-shrink: 0;
   gap: 12px;
-  padding: 0;
+  padding: 0 12px 0 0;
   margin: 0;
   list-style: none;
 }
 .company-logo {
   display: grid;
-  min-height: 92px;
+  flex: 0 0 168px;
+  width: 168px;
+  min-height: 108px;
   padding: 14px 16px;
   background: #fff;
   border: 1px solid var(--line);
@@ -72,7 +82,9 @@
 .company-logo img {
   display: block;
   width: min(var(--logo-width, 96px), 100%);
+  max-height: 76px;
   height: auto;
+  object-fit: contain;
 }
 .company-logo--google {
   --logo-width: 92px;
@@ -81,21 +93,63 @@
   --logo-width: 112px;
 }
 .company-logo--seidler-equity-partners {
-  --logo-width: 96px;
+  --logo-width: 116px;
 }
 .company-logo--peakspan-capital {
-  --logo-width: 150px;
+  --logo-width: 136px;
 }
-/* Edgescale's mark is off-white for its own dark ground, so it keeps that ground. */
+.company-logo--palladium-security {
+  --logo-width: 62px;
+}
+.company-logo--maraja,
+.company-logo--ruruka,
+.company-logo--crown-point-advisory-group,
+.company-logo--mindsi-sports-performance {
+  --logo-width: 70px;
+}
+.company-logo--idc {
+  --logo-width: 116px;
+}
+.company-logo--paravet-live,
+.company-logo--minds-i-education {
+  --logo-width: 112px;
+}
+.company-logo--mobile-club,
+.company-logo--prelude-solutions {
+  --logo-width: 136px;
+}
 .company-logo-tile {
   display: grid;
-  padding: 8px 14px;
+  padding: 8px 10px;
   background: #222;
   border-radius: 10px;
   place-items: center;
 }
 .company-logo--edgescale-ai {
   --logo-width: 16px;
+}
+@keyframes organization-strip {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .company-track {
+    width: 100%;
+    animation: none;
+  }
+  .company-logos {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(min(144px, 100%), 1fr));
+    padding: 0;
+  }
+  .company-logos[aria-hidden="true"] {
+    display: none;
+  }
+  .company-logo {
+    width: 100%;
+  }
 }
 .audiences .section-head,
 .resources .section-head,
@@ -390,9 +444,6 @@
   justify-content: space-between;
 }
 @media (max-width: 960px) {
-  .company-logos {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
   .briefing-grid {
     grid-template-columns: 1fr;
   }
@@ -439,12 +490,6 @@
   .resource-grid--preview,
   .testimonial-track {
     grid-template-columns: 1fr;
-  }
-  .company-logos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .company-logo:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
   }
   .audience-card {
     padding: 24px;
