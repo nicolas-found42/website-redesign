@@ -26,3 +26,7 @@ The Audit → Build & Deploy → Validate engagement described in Found42's intr
 
 **Found42 AI Framework**:
 The named approach associated with workflow prioritization in Found42's introductory article; the name alone does not specify its methodology.
+
+**Teams and individual contributors**:
+The audience for Customized Role-Based Training on the homepage and Services choices: people who own recurring work in a role, and the teams they work in. Formerly named "Individual contributors".
+_Avoid_: Individual contributors alone

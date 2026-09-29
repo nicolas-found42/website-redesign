@@ -13,7 +13,10 @@
  * a branch joining it, so it is recorded as reaching where that route goes.
  *
  * `tests/fixtures/diagram-inventory.json` was written by this script from the
- * deployed commit 40e42eb.
+ * deployed commit 40e42eb, then revised by hand for the September 29 review
+ * (issue #74 and ADR 0008): the Design step, the Claude Daily Brief, the
+ * Workshops words and the teams-and-individual-contributors name. Do not
+ * regenerate it from later code; it records what each drawing should say.
  */
 import { createServer } from "vite";
 import { execFileSync } from "node:child_process";

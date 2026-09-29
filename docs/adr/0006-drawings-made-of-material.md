@@ -1,6 +1,13 @@
 # Drawings made of material, placed by hand
 
-**Status:** accepted (2026-09-28)
+**Status:** accepted (2026-09-28); its opening, Workshops, Executives, Contributors and Builders drawings, and its print and colour prescriptions, are superseded by [ADR 0008](0008-text-led-opening-and-solid-drawings.md)
+
+> The September 29 review changed several of these drawings; see
+> [ADR 0008](0008-text-led-opening-and-solid-drawings.md). The homepage opening
+> no longer carries the plait; Workshops, Executives, Contributors and Builders
+> are redrawn as it describes; and the dots, stripes and rules below, with every
+> dashed detail, are gone from all drawings. Workflows, Automations and the
+> review scene keep the objects described here, without patterns.
 
 Every drawing on the site — the opening drawing, the three service drawings, the
 three audience scenes, the playbook's review scene and the industry pages'
