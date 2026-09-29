@@ -31,9 +31,6 @@
   font-size: clamp(1.125rem, 1.39vw, 1.25rem);
   line-height: 1.55;
 }
-.hero-proof {
-  margin-top: 32px;
-}
 .companies {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
@@ -408,6 +405,9 @@
 @media (max-width: 860px) {
   .hero-inner {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .hero-proof {
+    margin-top: 32px;
   }
   .founder-strip {
     grid-template-columns: 80px minmax(0, 1fr);

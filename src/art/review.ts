@@ -103,7 +103,6 @@ function composition(): Art {
   return {
     width: 620,
     height: 590,
-    defs: "",
     parts: parts.join(""),
     labels: {
       draft: place([X + 90, 86], "start", "middle", { width: 380 }),

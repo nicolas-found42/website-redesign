@@ -39,9 +39,8 @@ export function labelHtml(
 export const labelsHtml = (art: Art, labels: readonly LabelContent[]) =>
   labels.map((label) => labelHtml(art, label)).join("");
 
-/** The artwork alone: its definitions and its parts in painting order. */
-export const artInner = (art: Art) =>
-  `<defs>${art.defs}</defs><g class="art">${art.parts}</g>`;
+/** The artwork alone: its parts in painting order. */
+export const artInner = (art: Art) => `<g class="art">${art.parts}</g>`;
 
 export function fieldHtml(
   art: Art,

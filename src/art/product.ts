@@ -187,7 +187,6 @@ function landscape(): Art {
   return {
     width: 1000,
     height: 620,
-    defs: "",
     parts: parts.join(""),
     labels: {
       n1: place([150, 76], "start", "above", { width: 330, beat: 0 }),
@@ -305,7 +304,6 @@ function portrait(): Art {
   return {
     width: 620,
     height: 740,
-    defs: "",
     parts: parts.join(""),
     labels: {
       n1: place([40, 282], "start", "above", { width: 240, beat: 0 }),

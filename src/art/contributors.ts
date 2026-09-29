@@ -137,25 +137,16 @@ function braid({
   };
 }
 
-/** The gate: two charcoal posts and a lintel with a reviewer's seal, the bundle between. */
-function gate(
-  frame: { x: number; y: number; w: number; h: number },
-  axis: "x" | "y",
-): string {
+/** The gate: four charcoal posts framing the bundle, with a reviewer's seal on it. */
+function gate(frame: { x: number; y: number; w: number; h: number }): string {
   const { x, y, w, h } = frame;
   const post = 16;
-  const body =
-    axis === "x"
-      ? // Upright: a post above and below the bundle, a lintel across the top.
-        `<rect class="f-ink" x="${x}" y="${y}" width="${w}" height="${post}" rx="4"/>` +
-        `<rect class="f-ink" x="${x}" y="${y + h - post}" width="${w}" height="${post}" rx="4"/>` +
-        `<rect class="f-ink" x="${x}" y="${y}" width="${post}" height="${h}" rx="4"/>` +
-        `<rect class="f-ink" x="${x + w - post}" y="${y}" width="${post}" height="${h}" rx="4"/>`
-      : `<rect class="f-ink" x="${x}" y="${y}" width="${post}" height="${h}" rx="4"/>` +
-        `<rect class="f-ink" x="${x + w - post}" y="${y}" width="${post}" height="${h}" rx="4"/>` +
-        `<rect class="f-ink" x="${x}" y="${y}" width="${w}" height="${post}" rx="4"/>` +
-        `<rect class="f-ink" x="${x}" y="${y + h - post}" width="${w}" height="${post}" rx="4"/>`;
-  return body;
+  return (
+    `<rect class="f-ink" x="${x}" y="${y}" width="${post}" height="${h}" rx="4"/>` +
+    `<rect class="f-ink" x="${x + w - post}" y="${y}" width="${post}" height="${h}" rx="4"/>` +
+    `<rect class="f-ink" x="${x}" y="${y}" width="${w}" height="${post}" rx="4"/>` +
+    `<rect class="f-ink" x="${x}" y="${y + h - post}" width="${w}" height="${post}" rx="4"/>`
+  );
 }
 
 const plate = (x: number, y: number, width: number, height: number) =>
@@ -225,7 +216,7 @@ function landscape(): Art {
         nodes: ["human"],
         marks: ["human:human"],
       },
-      gate(frame, "x") +
+      gate(frame) +
         seal([frame.x + frame.w / 2, frame.y - 4], 20, -8) +
         `<path class="s-red" d="M${frame.x + frame.w / 2} ${frame.y + frame.h} L${frame.x + frame.w / 2} 500" stroke-width="4"/>` +
         plate(frame.x + frame.w / 2 - 124, 500, 248, 62),
@@ -236,7 +227,7 @@ function landscape(): Art {
       braided.overs,
     ),
   ];
-  return { width: 1000, height: 620, defs: "", parts: parts.join(""), labels };
+  return { width: 1000, height: 620, parts: parts.join(""), labels };
 }
 
 function portrait(): Art {
@@ -301,7 +292,7 @@ function portrait(): Art {
         nodes: ["human"],
         marks: ["human:human"],
       },
-      gate(frame, "y") +
+      gate(frame) +
         seal([frame.x - 4, frame.y + 4], 18, -8) +
         `<path class="s-red" d="M${frame.x} ${frame.y + frame.h / 2} L440 ${frame.y + frame.h / 2}" stroke-width="4"/>` +
         plate(172, frame.y + frame.h / 2 - 32, 268, 64),
@@ -312,7 +303,7 @@ function portrait(): Art {
       braided.overs,
     ),
   ];
-  return { width: 620, height: 900, defs: "", parts: parts.join(""), labels };
+  return { width: 620, height: 900, parts: parts.join(""), labels };
 }
 
 export const contributorsArt = (orientation: Orientation): Art =>

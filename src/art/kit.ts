@@ -244,9 +244,9 @@ export function figure(
         ? "f-red"
         : tone === "strand"
           ? "f-strand s-ink"
-          : "f-paper";
+          : "f-paper s-ink";
   return (
-    `<g transform="translate(${pt(at)}) scale(${r(scale * 100) / 100})">` +
+    `<g transform="translate(${pt(at)}) scale(${r(scale * 100) / 100})" stroke-width="2.5">` +
     `<circle class="${fill}" cx="0" cy="-15" r="10.5"/>` +
     `<path class="${fill}" d="M-19 22 C-19 4 -11 -1 0 -1 C11 -1 19 4 19 22 Z"/>` +
     `</g>`
@@ -316,13 +316,12 @@ export type LabelPlace = {
 };
 
 /**
- * One drawing, ready to mount: the field it is drawn in, its
- * definitions, its parts in painting order, and a place for every label.
+ * One drawing, ready to mount: the field it is drawn in, its parts in
+ * painting order, and a place for every label.
  */
 export type Art = {
   readonly width: number;
   readonly height: number;
-  readonly defs: string;
   readonly parts: string;
   readonly labels: Readonly<Record<string, LabelPlace>>;
 };

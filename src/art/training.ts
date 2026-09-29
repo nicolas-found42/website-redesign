@@ -191,7 +191,7 @@ function landscape(): Art {
       ),
     ),
   ];
-  return { width: 1000, height: 620, defs: "", parts: parts.join(""), labels };
+  return { width: 1000, height: 620, parts: parts.join(""), labels };
 }
 
 function portrait(): Art {
@@ -300,7 +300,7 @@ function portrait(): Art {
       ),
     ),
   ];
-  return { width: 620, height: 840, defs: "", parts: parts.join(""), labels };
+  return { width: 620, height: 840, parts: parts.join(""), labels };
 }
 
 export const trainingArt = (orientation: Orientation): Art =>

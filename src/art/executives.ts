@@ -164,9 +164,6 @@ function dailyBrief(
   );
 }
 
-/** The recommended actions' row, with the executive's decision stamped on it. */
-const decision = (at: Pt) => seal(at, 17, -8);
-
 function landscape(): Art {
   const ball: Pt = [118, 158];
   const doc = { x: 262, y: 280, w: 640, h: 316 };
@@ -196,13 +193,7 @@ function landscape(): Art {
       width: 150,
     }),
   };
-  [
-    "Critical",
-    "Needle Movers",
-    "Calendar Intelligence",
-    "Pipeline & Revenue",
-    "Recommended Actions",
-  ].forEach((_, i) => {
+  rows.forEach((_, i) => {
     labels[`section${i + 1}`] = place(
       [doc.x + 64, rows[i] + rowHeight / 2],
       "start",
@@ -299,10 +290,10 @@ function landscape(): Art {
         links: ["direction>brief"],
       },
       clip([doc.x + 2, rows[4] + rowHeight / 2], "left") +
-        decision([doc.x + doc.w - 78, rows[4] + rowHeight / 2]),
+        seal([doc.x + doc.w - 78, rows[4] + rowHeight / 2], 17, -8),
     ),
   ];
-  return { width: 1000, height: 650, defs: "", parts: parts.join(""), labels };
+  return { width: 1000, height: 650, parts: parts.join(""), labels };
 }
 
 function portrait(): Art {
@@ -331,13 +322,7 @@ function portrait(): Art {
       width: 400,
     }),
   };
-  [
-    "Critical",
-    "Needle Movers",
-    "Calendar Intelligence",
-    "Pipeline & Revenue",
-    "Recommended Actions",
-  ].forEach((_, i) => {
+  rows.forEach((_, i) => {
     labels[`section${i + 1}`] = place(
       [doc.x + 66, rows[i] + rowHeight / 2],
       "start",
@@ -434,10 +419,10 @@ function portrait(): Art {
         links: ["direction>brief"],
       },
       clip([doc.x + 70, doc.y + doc.h - 2], "bottom") +
-        decision([doc.x + doc.w - 70, rows[4] + rowHeight / 2]),
+        seal([doc.x + doc.w - 70, rows[4] + rowHeight / 2], 17, -8),
     ),
   ];
-  return { width: 620, height: 860, defs: "", parts: parts.join(""), labels };
+  return { width: 620, height: 860, parts: parts.join(""), labels };
 }
 
 export const executivesArt = (orientation: Orientation): Art =>

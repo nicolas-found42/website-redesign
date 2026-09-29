@@ -163,7 +163,6 @@ function stair(
   return {
     width: field.width,
     height: field.height,
-    defs: "",
     parts: parts.join(""),
     labels,
   };
