@@ -24,6 +24,17 @@ const disposeHomepage = route
   ? mountPage(app, renderPage(route), { motionPreference })
   : mountHomepage(app, { motionPreference });
 
+// Prototype only: compare two braid treatments in the real industry-page layout.
+let disposeBraidPrototype: (() => void) | undefined;
+if (
+  import.meta.env.DEV &&
+  route?.startsWith("industries/") &&
+  new URLSearchParams(location.search).has("variant")
+)
+  void import("./art/master-prototype").then(({ mountBraidPrototype }) => {
+    disposeBraidPrototype = mountBraidPrototype();
+  });
+
 // The team's review tools load only from a review link; visitors never fetch them.
 let disposeReview: (() => void) | undefined;
 if (reviewRequested())
@@ -34,6 +45,7 @@ if (reviewRequested())
 if (import.meta.hot)
   import.meta.hot.dispose(() => {
     disposeHomepage();
+    disposeBraidPrototype?.();
     disposeReview?.();
     motionPreference.dispose();
   });
