@@ -1,10 +1,8 @@
 import {
-  identityPrint,
-  paint,
+  identityFill,
   part,
   place,
   mitre,
-  prints,
   pt,
   r,
   run as runStrip,
@@ -68,7 +66,6 @@ const plate = (at: Pt, width: number, height: number) => {
 };
 
 function leaflet(
-  uid: string,
   field: { width: number; height: number },
   geometry: {
     origin: Pt;
@@ -88,9 +85,9 @@ function leaflet(
     geometry.lean,
   );
   const fills = [
-    paint(uid, identityPrint.n1),
-    paint(uid, identityPrint.n2),
-    paint(uid, identityPrint.n3),
+    identityFill.n1,
+    identityFill.n2,
+    identityFill.n3,
     "var(--red)",
     "var(--ink)",
   ];
@@ -133,15 +130,13 @@ function leaflet(
   const turnIn: Pt = [outX, entry[1]];
   const start: Pt = [exit[0] - 60, turnUp[1]];
   const cut: Pt = [farSide[0] - 46, entry[1]];
-  const stitch = `M${pt(start)} L${pt(turnUp)} L${pt(turnIn)} L${pt([cut[0] + 22, cut[1]])}`;
   const ribbon =
     runStrip(start, turnUp, ink, w, { from: 0 }) +
     runStrip(turnUp, turnIn, ink, w) +
     runStrip(turnIn, [cut[0] + 50, cut[1]], ink, w, { to: 0 }) +
     cutEnd(cut, ink, w, 60) +
     mitre(turnUp, [1, 0], [0, -1], ink, ink, w, { crease: "s-muted" }) +
-    mitre(turnIn, [0, -1], [-1, 0], ink, ink, w, { crease: "s-muted" }) +
-    `<path class="s-paper" d="${stitch}" stroke-width="1.6" stroke-dasharray="1 7" stroke-linecap="round" fill="none"/>`;
+    mitre(turnIn, [0, -1], [-1, 0], ink, ink, w, { crease: "s-muted" });
 
   const parts = [
     part(
@@ -188,23 +183,21 @@ function leaflet(
   return {
     width: field.width,
     height: field.height,
-    defs: prints(uid),
+    defs: "",
     parts: parts.join(""),
     labels,
   };
 }
 
-export const automationArt = (orientation: Orientation, uid: string): Art =>
+export const automationArt = (orientation: Orientation): Art =>
   orientation === "portrait"
     ? leaflet(
-        uid,
         { width: 620, height: 820 },
         { origin: [70, 40], width: 400, height: 136, drift: 40, lean: 5 },
         { into: 0, reach: 44 },
         330,
       )
     : leaflet(
-        uid,
         { width: 1000, height: 620 },
         { origin: [100, 34], width: 520, height: 108, drift: 50, lean: 16 },
         { into: 1, reach: 110 },

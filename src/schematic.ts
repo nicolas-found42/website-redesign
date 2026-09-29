@@ -15,7 +15,7 @@
  * a customer system or a measured result.
  */
 import { artFor } from "./art";
-import { drawingId, fieldHtml, type LabelContent } from "./art/field";
+import { fieldHtml, type LabelContent } from "./art/field";
 import type { Art, Orientation } from "./art/kit";
 
 export type { Orientation } from "./art/kit";
@@ -73,8 +73,9 @@ const cast = (
 ];
 
 /**
- * Training: real work moves through live guided practice and review, then
- * returns as something the team can use — and is applied back to the work.
+ * Training: real work is designed together at a whiteboard, moves through live
+ * guided practice and review, then returns as something the team can use — and
+ * is applied back to the work.
  */
 const trainingFlow: readonly Link[] = [
   link("n1", "human", "trunk"),
@@ -88,12 +89,13 @@ export const schematics: readonly Schematic[] = [
   {
     id: "training",
     choice: "Workshops",
-    detail: "Real work → live practice → review → a takeaway the team applies.",
+    detail:
+      "Real work on the whiteboard → hands-on practice → group review → a takeaway the team applies.",
     description:
-      "Workshop illustration: a team brings real work into live guided practice, reviews the result together, and leaves with a reusable skill and an applicable takeaway.",
+      "Workshop illustration: people gather at a whiteboard with sticky notes and a diagram to design around the team's real work, move to hands-on keyboard practice, review the result together as a group, and leave with a reusable skill they apply afterwards.",
     nodes: cast(
-      "Team's real work",
-      "Live guided practice",
+      "Team's real work, designed at the whiteboard",
+      "Live guided practice at the keyboard",
       "Reusable skill",
       "Apply afterwards",
       "Group review",
@@ -215,8 +217,7 @@ export const masterSchematic: Schematic = {
 export const schematicArt = (
   schematic: Schematic,
   orientation: Orientation,
-  uid = drawingId(schematic.id),
-): Art => artFor(schematic.id, orientation, uid);
+): Art => artFor(schematic.id, orientation);
 
 /** A composition's words, each told in the beat its piece arrives in. */
 export const schematicLabels = (
@@ -238,9 +239,8 @@ export const schematicLabels = (
 export function fieldMarkup(
   schematic: Schematic,
   orientation: Orientation = "landscape",
-  uid?: string,
 ): string {
-  const art = schematicArt(schematic, orientation, uid);
+  const art = schematicArt(schematic, orientation);
   return fieldHtml(art, schematicLabels(schematic, art), schematic.description);
 }
 
@@ -253,9 +253,8 @@ export const schematicFigure = (
   `<div class="${className}">${fieldMarkup(schematic, orientation)}</div>`;
 
 /**
- * A single strip of the same material, used where a whole composition would
- * be too much: the closing invitation carries a cut strip of the drawing rather
- * than an unrelated ornament.
+ * A single plain strip, used where a whole composition would be too much: the
+ * closing invitation carries one solid strip rather than an unrelated ornament.
  */
 const accents = {
   invitation: {
@@ -274,7 +273,6 @@ export function accentSvg(variant: AccentVariant, className: string): string {
     ` viewBox="0 0 ${accent.width} ${accent.height}" fill="none"` +
     ' preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
     `<path class="accent-strip" d="${accent.d}"/>` +
-    `<path class="accent-stitch" d="${accent.d}"/>` +
     "</svg>"
   );
 }

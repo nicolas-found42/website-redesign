@@ -1,8 +1,8 @@
 /**
  * The drawings.
  *
- * Every drawing is a made object — printed strips, bands, sheets and seals —
- * in the site's own inks. Red is only ever the human's part of the work: the
+ * Every drawing is a made object — strips, bands, sheets and seals — in solid
+ * fills with charcoal outlines, in the site's own inks. Red is only ever the human's part of the work: the
  * band that binds, the seal that approves, the ring that holds. That
  * discipline is what keeps the red meaningful when it reappears on a button.
  */
@@ -48,6 +48,9 @@
 .system-svg .f-red-deep {
   fill: var(--red-deep);
 }
+.system-svg .f-strand {
+  fill: var(--red-strand);
+}
 .system-svg .s-ink {
   stroke: var(--ink);
 }
@@ -71,6 +74,9 @@
 }
 .system-svg .s-red-deep {
   stroke: var(--red-deep);
+}
+.system-svg .s-strand {
+  stroke: var(--red-strand);
 }
 .system-svg path {
   stroke-linejoin: round;

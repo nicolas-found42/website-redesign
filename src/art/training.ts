@@ -1,241 +1,307 @@
 import {
-  identityPrint,
-  mitre,
-  paint,
+  figure,
   part,
   place,
-  prints,
   r,
-  run as runStrip,
+  seal,
+  stander,
   strip,
-  swallowtail as cutEnd,
+  tag,
   type Art,
-  type Dir,
+  type LabelPlace,
   type Orientation,
   type Pt,
 } from "./kit";
 
 /**
- * Workshops: the loop.
+ * Workshops: people designing, practising and reviewing together.
  *
- * One strip, folded at its corners into a loop, because a workshop is a loop:
- * the team's real work goes round through group review — the red side of the
- * loop, where live guided practice is tucked in — comes back as a reusable
- * skill, is applied afterwards, and is tucked back under the real work it
- * started from. The strip starts with a cut end, so it is clear where the
- * loop begins and which way it runs.
+ * A team stands at a whiteboard with sticky notes and a diagram of its real
+ * work — the design-thinking half of a workshop. The same people then sit at a
+ * keyboard for live guided practice, gather under the red banner for group
+ * review, and leave with a reusable skill they apply afterwards, back at the
+ * work they started from. People are charcoal, red and white cut paper with
+ * charcoal outlines; the ribbon that joins the stages is solid.
  */
 
-const W = 56;
+const RIBBON = "var(--paper-warm)";
 
-/** A fold, a run and a cut end of this loop's strip. */
-const fold = (
-  at: Pt,
-  into: Dir,
-  out: Dir,
-  incoming: string,
-  outgoing: string,
-) => mitre(at, into, out, incoming, outgoing, W);
-const run = (
-  a: Pt,
-  b: Pt,
-  fill: string,
-  ends: { from?: number; to?: number } = {},
-) => runStrip(a, b, fill, W, ends);
-const swallowtail = (at: Pt, fill: string, width = W) =>
-  cutEnd(at, fill, width);
-
-/** The red side's name plate: the loop's buckle. */
-const plate = (at: Pt, width: number, height: number) => {
-  const [x, y] = at;
-  const x0 = x - width / 2;
-  const y0 = y - height / 2;
+/** A whiteboard with a small diagram and sticky notes, on a tray. */
+function whiteboard(x: number, y: number, w: number, h: number): string {
+  const box = (bx: number, by: number) =>
+    `<rect class="f-warm s-ink" x="${r(bx)}" y="${r(by)}" width="${r(w * 0.17)}" height="${r(h * 0.19)}" rx="4" stroke-width="2.2"/>`;
+  const arrow = (ax: number, ay: number, bx: number) =>
+    `<path class="s-ink" d="M${r(ax)} ${r(ay)} L${r(bx)} ${r(ay)} M${r(bx - 7)} ${r(ay - 5)} L${r(bx)} ${r(ay)} L${r(bx - 7)} ${r(ay + 5)}" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const note = (nx: number, ny: number, tone: string, turn: number) =>
+    `<rect class="${tone} s-ink" x="${r(nx)}" y="${r(ny)}" width="${r(w * 0.14)}" height="${r(w * 0.14)}" rx="2" stroke-width="2" transform="rotate(${turn} ${r(nx + w * 0.07)} ${r(ny + w * 0.07)})"/>`;
+  const dy = y + h * 0.3;
   return (
-    `<rect class="f-red-deep" x="${r(x0 + 5)}" y="${r(y0 + 6)}" width="${width}" height="${height}" rx="7" opacity="0.28"/>` +
-    `<rect class="f-red" x="${r(x0)}" y="${r(y0)}" width="${width}" height="${height}" rx="7"/>` +
-    `<rect class="s-paper" x="${r(x0 + 7)}" y="${r(y0 + 7)}" width="${width - 14}" height="${height - 14}" rx="4" fill="none" stroke-width="1.6" stroke-dasharray="1 6" stroke-linecap="round"/>`
+    `<rect class="f-sunk" x="${x + 6}" y="${y + 7}" width="${w}" height="${h}" rx="6"/>` +
+    `<rect class="f-paper s-ink" x="${x}" y="${y}" width="${w}" height="${h}" rx="6" stroke-width="4"/>` +
+    box(x + w * 0.08, dy) +
+    arrow(x + w * 0.27, dy + h * 0.095, x + w * 0.37) +
+    box(x + w * 0.38, dy) +
+    arrow(x + w * 0.57, dy + h * 0.095, x + w * 0.67) +
+    box(x + w * 0.68, dy) +
+    note(x + w * 0.1, y + h * 0.62, "f-warm", -6) +
+    note(x + w * 0.3, y + h * 0.66, "f-sunk", 5) +
+    note(x + w * 0.5, y + h * 0.6, "f-paper", -3) +
+    note(x + w * 0.7, y + h * 0.65, "f-warm", 7) +
+    `<rect class="f-ink" x="${x + 10}" y="${y + h}" width="${w - 20}" height="9" rx="3"/>`
   );
-};
+}
 
-function loop(
-  uid: string,
-  box: { left: number; right: number; top: number; bottom: number },
-  practice: { from: number; y: number },
-  platesAt: { human: Pt; width: number; height: number },
-  field: { width: number; height: number },
-  labels: Art["labels"],
-): Art {
-  const { left, right, top, bottom } = box;
-  const real = paint(uid, identityPrint.n1);
-  const guided = paint(uid, identityPrint.n2);
-  const skill = paint(uid, identityPrint.n3);
-  const red = "var(--red)";
-  const applied = "var(--ink)";
-  const tl: Pt = [left, top];
-  const tr: Pt = [right, top];
-  const br: Pt = [right, bottom];
-  const bl: Pt = [left, bottom];
+/** A desk with a laptop, and two people seated at it. */
+function desk(x: number, y: number, w: number): string {
+  const top = y + 66;
+  return (
+    `<rect class="f-ink" x="${x + 14}" y="${top + 12}" width="10" height="70" rx="3"/>` +
+    `<rect class="f-ink" x="${x + w - 24}" y="${top + 12}" width="10" height="70" rx="3"/>` +
+    figure([x + 40, top - 16], 1.5, "ink") +
+    figure([x + w - 44, top - 12], 1.35, "strand") +
+    // The laptop: a screen with a cursor block, on a base, hands on the keys.
+    `<rect class="f-sunk" x="${x + w / 2 - 44 + 5}" y="${y + 6 + 5}" width="96" height="62" rx="5"/>` +
+    `<rect class="f-paper s-ink" x="${x + w / 2 - 44}" y="${y + 6}" width="96" height="62" rx="5" stroke-width="3"/>` +
+    `<rect class="f-ink" x="${x + w / 2 - 30}" y="${y + 20}" width="34" height="6" rx="2"/>` +
+    `<rect class="f-ink" x="${x + w / 2 - 30}" y="${y + 34}" width="60" height="6" rx="2"/>` +
+    `<rect class="f-ink" x="${x + w / 2 - 56}" y="${top - 6}" width="120" height="9" rx="4"/>` +
+    `<rect class="f-ink" x="${x}" y="${top + 2}" width="${w}" height="14" rx="4"/>`
+  );
+}
 
+/** A red banner on two posts, over the people gathered under it. */
+function banner(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  drop: number,
+): string {
+  return (
+    `<rect class="f-ink" x="${x + 12}" y="${y + h}" width="7" height="${drop}"/>` +
+    `<rect class="f-ink" x="${x + w - 19}" y="${y + h}" width="7" height="${drop}"/>` +
+    `<rect class="f-red-deep" x="${x + 5}" y="${y + 6}" width="${w}" height="${h}" rx="6" opacity="0.28"/>` +
+    `<rect class="f-red" x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/>`
+  );
+}
+
+/** A tag, sealed by a reviewer: the reusable skill the team leaves with. */
+const takeaway = (at: Pt, width: number, height: number) =>
+  tag(at, width, height, { tone: "ink" }) +
+  seal([at[0] + width - 28, at[1]], 17, -8);
+
+function landscape(): Art {
+  const labels: Record<string, LabelPlace> = {
+    n1: place([50, 126], "start", "above", { width: 400, beat: 0 }),
+    n2: place([380, 246], "start", "above", { width: 270, beat: 1 }),
+    human: place([758, 222], "center", "middle", {
+      width: 196,
+      ground: "red",
+      beat: 1,
+    }),
+    n3: place([924, 396], "center", "below", { width: 130, beat: 2 }),
+    n4: place([500, 594], "center", "middle", { width: 380, beat: 3 }),
+  };
   const parts = [
-    // Applied afterwards, travelling back up to the work it came from, and
-    // tucked under the start of the strip.
     part(
       {
-        name: "applied",
-        beat: 3,
+        name: "whiteboard",
+        beat: 0,
         enter: "unfold-y",
-        origin: bl,
-        nodes: ["n4"],
-        links: ["n3>n4", "n4>n1"],
+        origin: [50, 150],
+        nodes: ["n1"],
       },
-      run(bl, tl, applied, { to: 0 }) +
-        fold(bl, [-1, 0], [0, -1], skill, applied),
+      whiteboard(50, 150, 270, 170),
     ),
     part(
       {
-        name: "skill",
-        beat: 2,
-        enter: "unfold-x",
-        origin: br,
-        nodes: ["n3"],
-        links: ["human>n3"],
+        name: "designers",
+        beat: 0,
+        order: 1,
+        enter: "rise",
+        origin: [180, 440],
       },
-      run(br, bl, skill) + fold(br, [0, 1], [-1, 0], red, skill),
+      stander([110, 440], 1, "ink", "right") +
+        stander([260, 440], 1, "paper", "left"),
     ),
     part(
       {
-        name: "practice",
+        name: "desk",
         beat: 1,
         enter: "slide-right",
-        origin: [practice.from, practice.y],
+        origin: [370, 300],
         nodes: ["n2"],
         links: ["n2>human"],
       },
-      strip(
-        `M${r(practice.from + 60)} ${practice.y} L${right} ${practice.y}`,
-        W - 14,
-        guided,
-      ) + swallowtail([practice.from, practice.y], guided, W - 14),
+      desk(370, 270, 250),
+    ),
+    part(
+      {
+        name: "flow",
+        beat: 1,
+        order: 1,
+        enter: "slide-right",
+        origin: [40, 470],
+        links: ["n1>human"],
+      },
+      strip("M40 470 L860 470", 16, RIBBON, { edge: 2.5 }),
     ),
     part(
       {
         name: "review",
         beat: 1,
-        enter: "unfold-y",
-        order: 1,
-        origin: tr,
-        nodes: ["human"],
-        links: ["n1>human"],
-      },
-      run(tr, br, red) + fold(tr, [1, 0], [0, 1], real, red),
-    ),
-    part(
-      {
-        name: "plate",
-        beat: 1,
-        enter: "swing",
         order: 2,
-        origin: [platesAt.human[0], platesAt.human[1] - platesAt.height / 2],
+        enter: "swing",
+        origin: [758, 200],
+        nodes: ["human"],
+        links: ["human>n3"],
       },
-      plate(platesAt.human, platesAt.width, platesAt.height),
+      banner(646, 200, 224, 44, 200) +
+        stander([715, 440], 0.96, "strand") +
+        stander([765, 440], 1, "paper") +
+        stander([815, 440], 0.96, "ink") +
+        seal([866, 204], 18, -8),
     ),
     part(
       {
-        name: "work",
-        beat: 0,
-        enter: "slide-right",
-        origin: [left - W / 2 - 70, top],
-        nodes: ["n1"],
+        name: "takeaway",
+        beat: 2,
+        enter: "swing",
+        origin: [866, 350],
+        nodes: ["n3"],
+        links: ["n3>n4"],
       },
-      run([left - W / 2 - 6, top], tr, real, { from: 0 }) +
-        swallowtail([left - W / 2 - 70, top], real),
+      strip("M860 470 L880 470", 16, RIBBON, { edge: 2.5 }) +
+        takeaway([868, 350], 112, 64),
+    ),
+    part(
+      {
+        name: "return",
+        beat: 3,
+        enter: "unfold-y",
+        origin: [900, 480],
+        nodes: ["n4"],
+        links: ["n4>n1"],
+      },
+      strip(
+        "M900 490 L900 540 C900 556 890 566 870 566 L110 566 C90 566 80 556 80 540 L80 490",
+        16,
+        RIBBON,
+        { edge: 2.5 },
+      ),
     ),
   ];
+  return { width: 1000, height: 620, defs: "", parts: parts.join(""), labels };
+}
 
-  return {
-    width: field.width,
-    height: field.height,
-    defs: prints(uid),
-    parts: parts.join(""),
-    labels,
+function portrait(): Art {
+  const labels: Record<string, LabelPlace> = {
+    n1: place([30, 132], "start", "above", { width: 290, beat: 0 }),
+    n2: place([340, 190], "start", "above", { width: 260, beat: 1 }),
+    human: place([160, 562], "center", "middle", {
+      width: 210,
+      ground: "red",
+      beat: 1,
+    }),
+    n3: place([470, 596], "center", "above", { width: 220, beat: 2 }),
+    n4: place([310, 824], "center", "middle", { width: 400, beat: 3 }),
   };
-}
-
-function landscape(uid: string): Art {
-  const box = { left: 150, right: 760, top: 150, bottom: 452 };
-  return loop(
-    uid,
-    box,
-    { from: 214, y: 301 },
-    { human: [760, 301], width: 256, height: 70 },
-    { width: 1000, height: 620 },
-    {
-      n1: place(
-        [box.left - W / 2 - 70, box.top - W / 2 - 16],
-        "start",
-        "above",
-        { width: 420, beat: 0 },
+  const parts = [
+    part(
+      {
+        name: "whiteboard",
+        beat: 0,
+        enter: "unfold-y",
+        origin: [30, 150],
+        nodes: ["n1"],
+      },
+      whiteboard(30, 150, 270, 150),
+    ),
+    part(
+      {
+        name: "designers",
+        beat: 0,
+        order: 1,
+        enter: "rise",
+        origin: [150, 420],
+      },
+      stander([84, 420], 0.9, "ink", "right") +
+        stander([230, 420], 0.9, "paper", "left"),
+    ),
+    part(
+      {
+        name: "desk",
+        beat: 1,
+        enter: "slide-left",
+        origin: [340, 260],
+        nodes: ["n2"],
+        links: ["n2>human"],
+      },
+      desk(340, 232, 250),
+    ),
+    part(
+      {
+        name: "flow",
+        beat: 1,
+        order: 1,
+        enter: "slide-right",
+        origin: [30, 446],
+        links: ["n1>human"],
+      },
+      strip(
+        "M30 446 L572 446 C596 446 606 460 606 478 C606 496 596 510 572 510 L60 510",
+        16,
+        RIBBON,
+        { edge: 2.5 },
       ),
-      n2: place([214, 301 - W / 2 - 10], "start", "above", {
-        width: 330,
+    ),
+    part(
+      {
+        name: "review",
         beat: 1,
-      }),
-      human: place([760, 303], "center", "middle", {
-        width: 224,
-        ground: "red",
-        beat: 1,
-      }),
-      n3: place([455, box.bottom + W / 2 + 16], "center", "below", {
-        width: 420,
+        order: 2,
+        enter: "swing",
+        origin: [160, 534],
+        nodes: ["human"],
+        links: ["human>n3"],
+      },
+      banner(30, 540, 260, 44, 160) +
+        stander([80, 744], 0.96, "strand") +
+        stander([160, 744], 1, "paper") +
+        stander([240, 744], 0.96, "ink") +
+        seal([286, 544], 18, -8),
+    ),
+    part(
+      {
+        name: "takeaway",
         beat: 2,
-      }),
-      n4: place(
-        [box.left + W / 2 + 18, box.bottom - W / 2 - 16],
-        "start",
-        "above",
-        { width: 300, beat: 3 },
+        enter: "swing",
+        origin: [370, 640],
+        nodes: ["n3"],
+        links: ["n3>n4"],
+      },
+      strip("M330 510 L330 640 L360 640", 16, RIBBON, { edge: 2.5 }) +
+        takeaway([370, 640], 200, 64),
+    ),
+    part(
+      {
+        name: "return",
+        beat: 3,
+        enter: "unfold-y",
+        origin: [560, 700],
+        nodes: ["n4"],
+        links: ["n4>n1"],
+      },
+      strip(
+        "M520 690 L520 770 C520 786 510 796 494 796 L50 796 C32 796 22 786 22 770 L22 320",
+        16,
+        RIBBON,
+        { edge: 2.5 },
       ),
-    },
-  );
+    ),
+  ];
+  return { width: 620, height: 840, defs: "", parts: parts.join(""), labels };
 }
 
-function portrait(uid: string): Art {
-  const box = { left: 104, right: 452, top: 170, bottom: 690 };
-  return loop(
-    uid,
-    box,
-    { from: 150, y: 430 },
-    { human: [452, 430], width: 250, height: 76 },
-    { width: 620, height: 860 },
-    {
-      n1: place(
-        [box.left - W / 2 - 70 + 4, box.top - W / 2 - 16],
-        "start",
-        "above",
-        { width: 520, beat: 0 },
-      ),
-      n2: place([150, 430 - W / 2 - 10], "start", "above", {
-        width: 250,
-        beat: 1,
-      }),
-      human: place([452, 432], "center", "middle", {
-        width: 220,
-        ground: "red",
-        beat: 1,
-      }),
-      n3: place([278, box.bottom + W / 2 + 16], "center", "below", {
-        width: 520,
-        beat: 2,
-      }),
-      n4: place(
-        [box.left + W / 2 + 18, box.bottom - W / 2 - 16],
-        "start",
-        "above",
-        { width: 260, beat: 3 },
-      ),
-    },
-  );
-}
-
-export const trainingArt = (orientation: Orientation, uid: string): Art =>
-  orientation === "portrait" ? portrait(uid) : landscape(uid);
+export const trainingArt = (orientation: Orientation): Art =>
+  orientation === "portrait" ? portrait() : landscape();

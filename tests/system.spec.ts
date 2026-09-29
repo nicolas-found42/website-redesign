@@ -42,8 +42,8 @@ test("the service diagrams make each customer stage visible", async ({
     page.locator(`#service-${service} .system-label`).allTextContents();
 
   expect(await visibleLabels("training")).toEqual([
-    "Team's real work",
-    "Live guided practice",
+    "Team's real work, designed at the whiteboard",
+    "Live guided practice at the keyboard",
     "Group review",
     "Reusable skill",
     "Apply afterwards",
@@ -225,9 +225,11 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
     await expect(page.getByRole("img", { name })).toHaveCount(1);
   }
   await expect(
-    page.locator("#service-training").getByText("Live guided practice", {
-      exact: true,
-    }),
+    page
+      .locator("#service-training")
+      .getByText("Live guided practice at the keyboard", {
+        exact: true,
+      }),
   ).toBeVisible();
   await expect(
     page.locator("#service-automation").getByText("Brief / operating problem", {

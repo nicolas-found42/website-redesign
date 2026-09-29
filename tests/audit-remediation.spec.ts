@@ -203,55 +203,51 @@ test("F07: a control reached by tabbing backwards is not left under the sticky h
   }
 });
 
-test("F08: executive scene annotations are not covered by the drawing", async ({
+test("F08: executive scene annotations never overlap one another or leave the drawing", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  /**
-   * Both boxes are read in one pass, relative to the scene's own field, once
-   * the fonts are in: measured separately, a late font moves the section
-   * between the two readings.
-   */
+  /** Every annotation's box, read in one pass once the fonts are in. */
   const measure = () =>
     page.evaluate(async () => {
       await document.fonts.ready;
       const panel = document.querySelector("#audience-executives")!;
-      const svg = panel.querySelector<SVGSVGElement>(".scene-field svg")!;
-      const field = svg.getBoundingClientRect();
-      const text = (label: string) =>
-        [...panel.querySelectorAll(".system-label")]
-          .find((el) => el.textContent?.includes(label))!
-          .querySelector(".system-label-text")!
-          .getBoundingClientRect();
-      const pill = [...panel.querySelectorAll(".system-label")]
-        .find((el) => el.textContent?.includes("Tailored executive skill"))!
+      const field = panel
+        .querySelector<SVGSVGElement>(".scene-field svg")!
         .getBoundingClientRect();
-      // The operating view's header rule, which the caption must stay above.
-      const scale = field.height / svg.viewBox.baseVal.height;
-      const ruleEl = svg.querySelector<SVGRectElement>("[data-rule]");
-      if (!ruleEl) throw new Error("No operating-view rule found in the scene");
-      const rule = ruleEl.y.baseVal.value;
+      const boxes = [...panel.querySelectorAll(".system-label")].map((el) => ({
+        text: el.textContent?.trim() ?? "",
+        box: el.querySelector(".system-label-text")!.getBoundingClientRect(),
+      }));
+      const meet = (a: DOMRect, b: DOMRect) =>
+        a.left < b.right - 1 &&
+        b.left < a.right - 1 &&
+        a.top < b.bottom - 1 &&
+        b.top < a.bottom - 1;
       return {
-        problemRight: text("Your operating problem").right - field.left,
-        pillLeft: pill.left - field.left,
-        captionBottom:
-          text("Illustrative executive operating view").bottom - field.top,
-        ruleTop: rule * scale,
+        count: boxes.length,
+        overlaps: boxes.flatMap((a, i) =>
+          boxes
+            .slice(i + 1)
+            .filter((b) => meet(a.box, b.box))
+            .map((b) => `${a.text} / ${b.text}`),
+        ),
+        outside: boxes
+          .filter(
+            ({ box }) =>
+              box.left < field.left - 1 || box.right > field.right + 1,
+          )
+          .map(({ text }) => text),
       };
     });
 
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
-  const wide = await measure();
-  expect(wide.problemRight).toBeLessThanOrEqual(wide.pillLeft);
-
-  for (const width of [320, 390, 430]) {
+  for (const width of [1440, 430, 390, 320]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/");
-    const narrow = await measure();
-    expect(narrow.captionBottom, `${width}px`).toBeLessThanOrEqual(
-      narrow.ruleTop,
-    );
+    const state = await measure();
+    expect(state.count, `${width}px`).toBe(10);
+    expect(state.overlaps, `${width}px`).toEqual([]);
+    expect(state.outside, `${width}px`).toEqual([]);
   }
 });
 

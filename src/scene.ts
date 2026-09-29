@@ -1,4 +1,4 @@
-import { artInner, drawingId, labelsHtml } from "./art/field";
+import { artInner, labelsHtml } from "./art/field";
 import { assemble, BEAT, cancelAll } from "./art/motion";
 import {
   sceneArt,
@@ -34,7 +34,6 @@ const orientationOf = (matches: boolean): SceneOrientation =>
 export function mountScene(host: HTMLElement, options: SceneOptions) {
   const { motionPreference, scene } = options;
   const portrait = matchMedia(PORTRAIT);
-  const uid = drawingId(scene.id);
 
   let orientation = orientationOf(portrait.matches);
   let animations: Animation[] = [];
@@ -44,7 +43,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
 
   const still = () => motionPreference.matches;
 
-  host.innerHTML = sceneFieldMarkup(scene, orientation, uid);
+  host.innerHTML = sceneFieldMarkup(scene, orientation);
 
   const frameEl = host.querySelector<HTMLElement>(".system-field")!;
   const svg = host.querySelector<SVGSVGElement>(".system-svg")!;
@@ -52,7 +51,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
 
   /** Rebuilds every layer from the current layout, with nothing running. */
   function build() {
-    const art = sceneArt(scene, orientation, uid);
+    const art = sceneArt(scene, orientation);
     svg.setAttribute("viewBox", `0 0 ${art.width} ${art.height}`);
     frameEl.style.setProperty("--ratio", `${art.width} / ${art.height}`);
     svg.innerHTML = artInner(art);
