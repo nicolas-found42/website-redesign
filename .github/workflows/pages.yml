@@ -45,6 +45,21 @@ jobs:
         run: test "$(node -p 'require("playwright/package.json").version')" = '1.63.0'
       - run: npm run typecheck
       - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
+      - name: Summarize browser timings
+        if: ${{ !cancelled() }}
+        run: |
+          if test -f playwright-timings/results.json; then
+            node scripts/summarize-playwright-timings.mjs playwright-timings/results.json | tee playwright-timings/summary.md
+            cat playwright-timings/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload browser timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-timings-${{ github.run_id }}-${{ matrix.shard }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@v4
