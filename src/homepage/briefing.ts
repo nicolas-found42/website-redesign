@@ -9,7 +9,7 @@ export function briefingSection() {
    </ol><div class="briefing-picture" role="img" aria-label="Illustrative weekly briefing and Slack message">
     <div class="briefing-sources"><span>Calendar</span><span>Email</span><span>Drive</span><span>Notion</span></div>
     <div class="briefing-paper"><small>Weekly briefing</small><h3>Decision call</h3><ul><li>Call at a glance</li><li>Where things stand</li><li>Open action items</li><li>Advisor notes</li></ul></div>
-    <div class="briefing-slack"><small>Slack message</small><p>Your briefing is ready</p><div class="briefing-faux-controls"><span>Open briefing</span><span>Reply</span></div></div>
+    <div class="briefing-slack"><small>Slack message</small><p>Ready for your review</p><div class="briefing-faux-controls"><span>Review briefing</span><span>Reply</span></div></div>
    </div></div>
    <p class="note--plain briefing-disclosure">Illustrative example. No live Calendar, Email, Drive, Notion or Slack integration.</p>
   </div></section>`;
