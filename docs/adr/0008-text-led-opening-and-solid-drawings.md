@@ -25,17 +25,21 @@ history.
   and issue #56's preservation of them.
 - **Organizations are shown by their own marks.** "Teams we have worked with"
   shows five logos in the owner's order — Google, Edgescale AI, Millsapps,
-  Ballinger & Associates (MB&A), Scottish Equity Partners (SEP) and PeakSpan
+  Ballinger & Associates (MB&A), Seidler Equity Partners (SEP) and PeakSpan
   Capital. Each is the organization's own mark from its official site, bundled
-  locally and shown unaltered. The owner confirmed the relationships and that
-  each mark's use is approved; the site does not verify that approval.
+  locally and shown unaltered. Seidler's mark is its own artwork from
+  sepfunds.com (`seidler-equity-partners.svg`), which replaced the earlier
+  `sep.svg` that had been copied from Scottish Equity Partners (#78). The
+  owner confirmed the relationships and that each mark's use is approved; the
+  site does not verify that approval.
 - **No decorative textures in any drawing.** The dots, stripes and rules that
   ADR 0006 gave the first three node identities, and every dashed or stitched
   detail, are removed from every visualization on every route. Strips and
   surfaces are solid fills with charcoal outlines; functional outlines and
   connections remain. This supersedes ADR 0006's print prescription.
-- **The audience name is "Teams and individual contributors"** in the choice,
-  the selected scene, its accessible names and its Services link. The shared
+- **The audience name is "Individual Contributors and Teams"** (superseding
+  "Teams and individual contributors") in the choice, the selected scene, its
+  accessible names, its Services link and the Services audience field. The shared
   introduction promises role-tailored workshops that "save you 4-8 hours every
   week"; the owner approved that numeric wording for display, and it is not to
   be extended into other measured-result claims.
@@ -45,17 +49,28 @@ history.
 
 ## Scenes
 
-- **Teams and individual contributors** replaces the ring with a gate. Four
+- **Individual Contributors and Teams** replaces the ring with a gate. Four
   role ribbons — alternating #c42323 red, charcoal and white — run through
   their skills, braid together and pass through a gate labelled "Human in the
-  loop". This supersedes ADR 0006's ribbons through a ring.
+  loop". Past the gate the four ribbons part into four separate paths that end
+  together at one shared result caption, "Reviewed work returns to each role."
+  The result is one statement for all four roles; it adds no role-specific
+  outcome claims. Without script, its prerendered still carries both the wide
+  and the narrow composition and a media query shows the narrow one at 860px
+  and below, where the live scene takes it. This supersedes ADR 0006's ribbons
+  through a ring.
 - **Executives** shows an illustrative Claude Daily Brief in place of the
   operating view: Critical, Needle Movers, Calendar Intelligence, Pipeline &
   Revenue and Recommended Actions, with the executive's decision stamped on the
   recommendations. It is fictional and does not imply a live Claude, email,
   calendar or CRM integration. This supersedes ADR 0005's rejection of a
-  daily-brief visual and ADR 0006's roller onto an operating view. The
-  weekly-briefing band is unchanged.
+  daily-brief visual and ADR 0006's roller onto an operating view.
+- **Weekly briefing** band keeps its document and Slack-style message mockup
+  and its illustrative disclosure. Revised by #78: the message reads "Ready
+  for your review" and its faux control reads "Review briefing", so the
+  mockup shows the moment before a person reviews and decides rather than a
+  recorded decision. Nothing in the band is interactive or implies a live
+  integration.
 - **AI builders** begins the stair at Design: Design → Test → Troubleshoot →
   Anticipate failures → Workflow in use, each reviewed. This supersedes ADR
   0006's three-step stair.

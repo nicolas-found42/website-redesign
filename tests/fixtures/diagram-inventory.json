@@ -613,7 +613,7 @@
     },
     {
       "id": "contributors",
-      "description": "Teams and individual contributors illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate.",
+      "description": "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
       "landscape": {
         "labels": [
           {
@@ -665,6 +665,11 @@
             "text": "Human in the loop",
             "kind": "human",
             "beat": 5
+          },
+          {
+            "text": "Reviewed work returns to each role.",
+            "kind": "result",
+            "beat": 6
           }
         ],
         "marks": [
@@ -687,6 +692,10 @@
           {
             "kind": "human",
             "beat": 5
+          },
+          {
+            "kind": "result",
+            "beat": 6
           }
         ],
         "frames": [
@@ -802,6 +811,11 @@
             "text": "Human in the loop",
             "kind": "human",
             "beat": 5
+          },
+          {
+            "text": "Reviewed work returns to each role.",
+            "kind": "result",
+            "beat": 6
           }
         ],
         "marks": [
@@ -824,6 +838,10 @@
           {
             "kind": "human",
             "beat": 5
+          },
+          {
+            "kind": "result",
+            "beat": 6
           }
         ],
         "frames": [

@@ -1,6 +1,11 @@
 import { readFileSync } from "node:fs";
 import { test, expect, type Page } from "@playwright/test";
-import { readField, type FieldState } from "./drawing";
+import {
+  readField,
+  readTextFit,
+  type FieldState,
+  type TextFit,
+} from "./drawing";
 
 /**
  * The redesigned drawings keep everything the deployed ones said, except
@@ -61,10 +66,10 @@ const sceneLinks: Record<string, string[]> = {
     "direction>brief",
     "brief>problem",
   ],
-  contributors: [1, 2, 3, 4].flatMap((n) => [
-    `role${n}>skill${n}`,
-    `skill${n}>human`,
-  ]),
+  contributors: [
+    ...[1, 2, 3, 4].flatMap((n) => [`role${n}>skill${n}`, `skill${n}>human`]),
+    "human>result",
+  ],
   builders: [
     "learner>design",
     "design>test",
@@ -494,6 +499,39 @@ test("the teams scene braids four role ribbons through a labelled human-review g
   );
 });
 
+test("the teams scene carries four separate paths past the gate to one shared result caption", async ({
+  page,
+}) => {
+  const caption = "Reviewed work returns to each role.";
+  for (const [path, width] of [
+    ["/", 1440],
+    ["/", 384],
+    ["/services/", 1440],
+  ] as const) {
+    const where = `${path} at ${width}`;
+    await open(page, path, width);
+    await page
+      .getByRole("button", { name: /Individual Contributors and Teams/ })
+      .first()
+      .click();
+    const field = page.locator("#audience-contributors .scene-field");
+    const state = await field.evaluate(readField);
+    expect(
+      state.labels.filter((label) => label.text === caption),
+      `${where}: one caption`,
+    ).toHaveLength(1);
+    expect(
+      state.parts.filter((piece) => piece.links.includes("human>result")),
+      `${where}: four paths continue past the gate`,
+    ).toHaveLength(4);
+    await expect(field, where).toHaveAttribute(
+      "aria-label",
+      /reviewed work returns to each role/,
+    );
+    await expect(field.getByText(caption), where).toBeVisible();
+  }
+});
+
 for (const [route, text] of [
   ["/", "100%"],
   ["/", "150%"],
@@ -552,5 +590,116 @@ for (const [route, text] of [
         expect(state.scrolls, where).toBe(false);
       }
     }
+  });
+}
+
+/**
+ * What a person reads in the contributors scene: no word is broken inside
+ * itself, and every skill, role, the gate's plate and the shared result sit
+ * within the card, tab, plate or panel the drawing puts them on. The review of
+ * issue #78 found both failing while the overlap test above passed.
+ */
+const wordProblems = (fit: TextFit) =>
+  fit.flatMap((label) => [
+    ...label.splitWords.map((word) => `"${word}" is split in "${label.text}"`),
+    ...(label.outsideCard ? [`"${label.text}" overflows its card`] : []),
+    ...(label.onCard === false ? [`"${label.text}" has no card`] : []),
+    ...(label.outsideViewport ? [`"${label.text}" is off screen`] : []),
+  ]);
+
+for (const [route, width, text] of [
+  ["/", 384, "150%"],
+  ["/", 384, "100%"],
+  ["/", 768, "150%"],
+  ["/", 860, "150%"],
+  ["/", 861, "150%"],
+  ["/", 900, "150%"],
+  ["/", 1024, "150%"],
+  ["/", 320, "100%"],
+  ["/", 1440, "150%"],
+  ["/services/", 384, "150%"],
+] as const) {
+  test(`teams scene words stay whole and on their cards on ${route} at ${width}px with ${text} text applied at load`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    // The setting is in place before the scene is first drawn.
+    await page.addInitScript((size) => {
+      const apply = () => {
+        if (!document.documentElement) return false;
+        document.documentElement.style.fontSize = size;
+        return true;
+      };
+      if (!apply())
+        new MutationObserver((_, watch) => {
+          if (apply()) watch.disconnect();
+        }).observe(document, { childList: true });
+    }, text);
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    await page
+      .getByRole("button", { name: /Individual Contributors and Teams/ })
+      .first()
+      .click();
+    const field = page.locator("#audience-contributors .scene-field");
+    await expect(
+      field.getByText("Reviewed work returns to each role."),
+    ).toBeVisible();
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.map((label) => label.text)).toEqual(
+      expect.arrayContaining([
+        "Feedback triage",
+        "Account planning",
+        "Human in the loop",
+        "Reviewed work returns to each role.",
+      ]),
+    );
+    expect(wordProblems(fit)).toEqual([]);
+  });
+}
+
+for (const [width, height] of [
+  [384, 686],
+  [384, 742],
+] as const) {
+  test(`with scripting disabled the teams scene stays readable at ${width}×${height}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width, height },
+    });
+    const page = await context.newPage();
+    // The production preview serves the prerendered pages as built.
+    await page.goto("http://127.0.0.1:4179/website-redesign/");
+    const panel = page.locator("#audience-contributors");
+    const field = panel.locator(".scene-field:visible");
+    await expect(field).toHaveCount(1);
+    await expect(
+      field.getByText("Reviewed work returns to each role."),
+    ).toBeVisible();
+    await expect(field.getByText("Human in the loop")).toBeVisible();
+    // Measure in the webfont, not the fallback it shows while loading. Without
+    // script the page cannot resolve `document.fonts.ready` (Firefox never
+    // settles it), so poll the plain `status` from here instead.
+    await expect
+      .poll(() => page.evaluate(() => document.fonts.status))
+      .toBe("loaded");
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.length).toBeGreaterThan(0);
+    expect(wordProblems(fit)).toEqual([]);
+    // Large enough to read on a narrow screen (docs/DESIGN.md: 13px).
+    for (const label of fit)
+      expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    // The words are set on a drawing large enough to hold them.
+    const size = await field.evaluate((el) => el.getBoundingClientRect().width);
+    expect(size).toBeGreaterThan(300);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await context.close();
   });
 }

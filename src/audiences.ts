@@ -10,7 +10,7 @@
  *   is read by an executive, who directs what happens next, and its
  *   recommendations feed back to the problem. The brief is hypothetical, not
  *   a client artifact or a live integration.
- * - **Teams and individual contributors** each run a ribbon of their own role
+ * - **Individual Contributors and Teams** each run a ribbon of their own role
  *   through a skill cut for it — four roles in one company — and the four
  *   ribbons braid together through one gate: the human in the loop.
  * - **Builders** climb a stair folded from card, from a work problem to a
@@ -144,15 +144,20 @@ const rosterScene: SceneContent = {
       label(`skill${index + 1}`, skill, "card", index + 1),
     ]),
     label("human", "Human in the loop", "human", 5),
+    label("result", "Reviewed work returns to each role.", "result", 6),
   ],
   marks: [
     ...roles.map((_, index) => mark(`role${index + 1}`, "person", index + 1)),
     mark("human", "human", 5),
+    mark("result", "result", 6),
   ],
-  links: roles.flatMap((_, index) => [
-    `role${index + 1}>skill${index + 1}`,
-    `skill${index + 1}>human`,
-  ]),
+  links: [
+    ...roles.flatMap((_, index) => [
+      `role${index + 1}>skill${index + 1}`,
+      `skill${index + 1}>human`,
+    ]),
+    "human>result",
+  ],
 };
 
 /* ── Builders: from a work problem to a workflow in use ── */
@@ -262,10 +267,10 @@ export const audiences: readonly Audience[] = [
   },
   {
     id: "contributors",
-    choice: "Teams and individual contributors",
+    choice: "Individual Contributors and Teams",
     proposition:
       "Training built around your role, industry and company, so skills take on recurring work and free you for judgment.",
-    kicker: "For teams and individual contributors",
+    kicker: "For Individual Contributors and Teams",
     title: "Automate the repetitive,<br>keep the craft.",
     body: "Training is built around your role, industry and company: your recurring decisions, documents, terminology and review standards. Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop.",
     points: [
@@ -276,13 +281,13 @@ export const audiences: readonly Audience[] = [
     caption:
       "One approach supports different roles: each person gets a skill for their own recurring work, with a person still responsible for judgment and quality.",
     link: {
-      label: "For teams and individual contributors",
+      label: "For Individual Contributors and Teams",
       href: sitePath("services/#track-role-based"),
     },
     scene: {
       id: "contributors",
       description:
-        "Teams and individual contributors illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate.",
+        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
       ...rosterScene,
     },
   },
@@ -330,19 +335,38 @@ export const sceneArt = (scene: Scene, orientation: SceneOrientation): Art =>
 export function sceneFieldMarkup(
   scene: Scene,
   orientation: SceneOrientation = "landscape",
+  className = "",
 ): string {
   return fieldHtml(
     sceneArt(scene, orientation),
     scene.labels,
     scene.description,
-    "system-field scene-field",
+    `system-field scene-field${className ? ` ${className}` : ""}`,
   );
 }
 
+/**
+ * The scenes whose script-free still also carries the narrow composition, so
+ * a narrow screen without scripts is shown the drawing authored for it, as
+ * the live scene is (ADR 0006). The other scenes are unchanged: their
+ * script-free still is the wide composition at every width.
+ */
+const narrowStills: ReadonlySet<string> = new Set(["contributors"]);
+
 /** A still scene in a host the live drawing can later take over. */
-export const sceneFigure = (
+export function sceneFigure(
   scene: Scene,
   orientation: SceneOrientation,
   className = "system system--quiet",
-): string =>
-  `<div class="${className}" data-scene-host data-scene="${scene.id}">${sceneFieldMarkup(scene, orientation)}</div>`;
+): string {
+  // Both compositions are set and a media query shows the one that fits
+  // (`.scene-field--wide` / `--narrow` in system.css, switching where
+  // `mountScene` does). The live drawing replaces the host's contents, so it
+  // only ever sees one.
+  const still =
+    orientation === "landscape" && narrowStills.has(scene.id)
+      ? sceneFieldMarkup(scene, "landscape", "scene-field--wide") +
+        sceneFieldMarkup(scene, "portrait", "scene-field--narrow")
+      : sceneFieldMarkup(scene, orientation);
+  return `<div class="${className}" data-scene-host data-scene="${scene.id}">${still}</div>`;
+}

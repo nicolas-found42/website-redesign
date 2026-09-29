@@ -15,6 +15,22 @@
   aspect-ratio: var(--ratio, 1000 / 620);
   width: 100%;
 }
+/**
+ * A script-free scene may carry both of its authored compositions. A live
+ * scene replaces them with the one it draws, and takes the narrow one at the
+ * width below (`PORTRAIT` in scene.ts): keep the two together.
+ */
+.scene-field--narrow {
+  display: none;
+}
+@media (max-width: 860px) {
+  .scene-field--wide {
+    display: none;
+  }
+  .scene-field--narrow {
+    display: block;
+  }
+}
 .system-svg {
   position: absolute;
   width: 100%;
