@@ -44,7 +44,7 @@
   border-bottom: 1px solid var(--line);
 }
 /* Five equal cells on one white ground, so the marks read as one size and the
-   JPEG's white sits in its own ground. Each mark is set by its own height and
+   JPEG's white sits in its own ground. Each mark is set by its own width and
    never stretched, so its proportions stay its own. */
 .company-logos {
   display: grid;
@@ -64,25 +64,20 @@
 }
 .company-logo img {
   display: block;
-  width: auto;
-  max-width: 100%;
-  height: var(--logo-height, 32px);
+  width: min(var(--logo-width, 96px), 100%);
+  height: auto;
 }
 .company-logo--google {
-  --logo-height: 30px;
+  --logo-width: 92px;
 }
 .company-logo--mba {
-  --logo-height: 60px;
+  --logo-width: 112px;
 }
 .company-logo--sep {
-  --logo-height: 46px;
+  --logo-width: 70px;
 }
 .company-logo--peakspan-capital {
-  --logo-height: auto;
-}
-.company-logo--peakspan-capital img {
-  width: min(100%, 150px);
-  height: auto;
+  --logo-width: 150px;
 }
 /* Edgescale's mark is off-white for its own dark ground, so it keeps that ground. */
 .company-logo-tile {
@@ -92,8 +87,8 @@
   border-radius: 10px;
   place-items: center;
 }
-.company-logo--edgescale-ai img {
-  --logo-height: 44px;
+.company-logo--edgescale-ai {
+  --logo-width: 16px;
 }
 .audiences .section-head,
 .resources .section-head,
@@ -116,6 +111,11 @@
 }
 .audience-index {
   color: var(--red);
+}
+/* The chosen card is also set apart by its ground and edge, at every width. */
+.audience-card:has(.audience-choice[aria-pressed="true"]) {
+  background: var(--paper-warm);
+  border-color: var(--ink);
 }
 .audience-choice {
   display: flex;
@@ -400,12 +400,14 @@
     flex-basis: calc((100% - 24px) / 2);
   }
 }
+@media (max-width: 1100px) {
+  .companies {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 860px) {
   .hero-inner {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .companies {
-    grid-template-columns: 1fr;
   }
   .founder-strip {
     grid-template-columns: 80px minmax(0, 1fr);

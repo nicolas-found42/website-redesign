@@ -63,12 +63,14 @@ test("all three audiences link to their catalog tracks", async ({ page }) => {
       .getByRole("link", { name: "For executives" }),
   ).toHaveAttribute("href", "/services/#track-c-level-ai");
 
-  await rail.getByRole("button", { name: /Individual contributors/ }).click();
+  await rail
+    .getByRole("button", { name: /Teams and individual contributors/ })
+    .click();
   await expect(
     page
       .locator(".audience-card")
       .nth(1)
-      .getByRole("link", { name: "For individual contributors" }),
+      .getByRole("link", { name: "For teams and individual contributors" }),
   ).toHaveAttribute("href", "/services/#track-role-based");
 
   await rail.getByRole("button", { name: /AI builders/ }).click();
