@@ -35,16 +35,65 @@ const companies = [
     width: 169,
     height: 23,
   },
+  {
+    file: "palladium-security.png",
+    name: "Palladium Security",
+    width: 512,
+    height: 564,
+  },
+  { file: "maraja.jpg", name: "Marajá", width: 200, height: 200 },
+  { file: "ruruka.jpg", name: "Ruruka", width: 200, height: 200 },
+  {
+    file: "crown-point-advisory-group.svg",
+    name: "Crown Point Advisory Group",
+    width: 60,
+    height: 60,
+  },
+  { file: "idc.png", name: "IDC", width: 1200, height: 602 },
+  {
+    file: "paravet-live.svg",
+    name: "ParaVet.live",
+    width: 213,
+    height: 47,
+    tile: true,
+  },
+  { file: "mobile-club.svg", name: "mobile.club", width: 240, height: 26 },
+  {
+    file: "mindsi-sports-performance.jpg",
+    name: "MINDSi Sports Performance",
+    width: 200,
+    height: 200,
+  },
+  {
+    file: "minds-i-education.jpg",
+    name: "MINDS-i Education",
+    width: 225,
+    height: 62,
+    tile: true,
+  },
+  {
+    file: "prelude-solutions.avif",
+    name: "Prelude Solutions",
+    width: 2298,
+    height: 556,
+  },
 ] as const;
+
+function companyMarks(duplicate = false) {
+  return companies
+    .map((company) => {
+      const image = `<img src="${sitePath(`assets/logos/${company.file}`)}" alt="${duplicate ? "" : company.name}" width="${company.width}" height="${company.height}" decoding="async">`;
+      return `<li class="company-logo company-logo--${company.file.replace(/\.\w+$/, "")}">${"tile" in company ? `<span class="company-logo-tile">${image}</span>` : image}</li>`;
+    })
+    .join("");
+}
 
 export function companiesSection() {
   return `<section id="companies" class="companies wrap" aria-labelledby="companies-title">
    <h2 id="companies-title" class="companies-title">Teams we have worked with</h2>
-   <ul class="company-logos">${companies
-     .map((company) => {
-       const image = `<img src="${sitePath(`assets/logos/${company.file}`)}" alt="${company.name}" width="${company.width}" height="${company.height}" loading="lazy" decoding="async">`;
-       return `<li class="company-logo company-logo--${company.file.replace(/\.\w+$/, "")}">${"tile" in company ? `<span class="company-logo-tile">${image}</span>` : image}</li>`;
-     })
-     .join("")}</ul>
+   <div class="company-strip"><div class="company-track">
+    <ul class="company-logos">${companyMarks()}</ul>
+    <ul class="company-logos" aria-hidden="true">${companyMarks(true)}</ul>
+   </div></div>
   </section>`;
 }

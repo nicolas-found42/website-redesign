@@ -129,7 +129,7 @@ test("the opening is text-led with the approved lead and no proof numbers", asyn
     await expect(main).not.toContainText(claim);
 });
 
-test("the companies row shows five bundled logos, named, in the approved order", async ({
+test("the companies strip announces 15 locally bundled marks once in the approved order", async ({
   page,
 }) => {
   await page.goto("/");
@@ -143,13 +143,23 @@ test("the companies row shows five bundled logos, named, in the approved order",
   await expect(
     row.getByRole("heading", { name: "Teams we have worked with" }),
   ).toBeVisible();
-  await expect(logos).toHaveCount(5);
+  await expect(logos).toHaveCount(15);
   const names = [
     "Google",
     "Edgescale AI",
     "Millsapps, Ballinger & Associates (MB&A)",
     "Seidler Equity Partners (SEP)",
     "PeakSpan Capital",
+    "Palladium Security",
+    "Marajá",
+    "Ruruka",
+    "Crown Point Advisory Group",
+    "IDC",
+    "ParaVet.live",
+    "mobile.club",
+    "MINDSi Sports Performance",
+    "MINDS-i Education",
+    "Prelude Solutions",
   ];
   for (const [index, name] of names.entries())
     await expect(logos.nth(index)).toHaveAccessibleName(name);
@@ -247,6 +257,7 @@ test("the weekly briefing message invites a review and stays an illustrative moc
 test("the companies row keeps proportions and fits without scrolling at any width", async ({
   page,
 }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [1440, 1024, 768, 430, 384, 320]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto("/");
@@ -271,6 +282,62 @@ test("the companies row keeps proportions and fits without scrolling at any widt
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
       `${width}px`,
+    ).toBe(true);
+  }
+});
+
+test("the companies strip moves without script at phone and desktop widths", async ({
+  browser,
+}) => {
+  for (const width of [384, 1440]) {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      reducedMotion: "no-preference",
+      viewport: { width, height: 742 },
+    });
+    const page = await context.newPage();
+    await page.goto("http://127.0.0.1:4179/website-redesign/");
+    const region = page.getByRole("region", {
+      name: "Teams we have worked with",
+    });
+    await expect(region.getByRole("list")).toHaveCount(1);
+    await expect(region.getByRole("listitem")).toHaveCount(15);
+    const mark = region.getByRole("img", { name: "Google", exact: true });
+    const first = await mark.boundingBox();
+    await expect
+      .poll(async () => (await mark.boundingBox())?.x)
+      .toBeLessThan(first!.x - 2);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await context.close();
+  }
+});
+
+test("the companies strip is still and shows every mark in wrapped rows with reduced motion", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [384, 1440]) {
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto("/");
+    const region = page.getByRole("region", {
+      name: "Teams we have worked with",
+    });
+    const marks = region.getByRole("img");
+    await expect(marks).toHaveCount(15);
+    for (const mark of await marks.all()) await expect(mark).toBeVisible();
+    const first = await marks.first().boundingBox();
+    const last = await marks.last().boundingBox();
+    expect(last!.y).toBeGreaterThan(first!.y);
+    await page.waitForTimeout(150);
+    expect((await marks.first().boundingBox())!.x).toBe(first!.x);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
     ).toBe(true);
   }
 });
