@@ -494,50 +494,48 @@ test("the teams scene braids four role ribbons through a labelled human-review g
   );
 });
 
-test("every drawing's words stay clear of each other and inside the page, at every size", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  const measure = () =>
-    page.evaluate(async () => {
-      await document.fonts.ready;
-      const meet = (a: DOMRect, b: DOMRect) =>
-        a.left < b.right - 1 &&
-        b.left < a.right - 1 &&
-        a.top < b.bottom - 1 &&
-        b.top < a.bottom - 1;
-      const problems: string[] = [];
-      let drawings = 0;
-      for (const field of document.querySelectorAll(".system-field")) {
-        if (!(field as HTMLElement).offsetParent) continue;
-        drawings += 1;
-        const words = [...field.querySelectorAll(".system-label-text")].map(
-          (el) => ({
-            text: el.textContent?.trim() ?? "",
-            box: el.getBoundingClientRect(),
-          }),
-        );
-        words.forEach((a, i) => {
-          if (a.box.left < -1 || a.box.right > innerWidth + 1)
-            problems.push(`outside: ${a.text}`);
-          for (const b of words.slice(i + 1))
-            if (meet(a.box, b.box)) problems.push(`${a.text} / ${b.text}`);
-        });
-      }
-      return {
-        drawings,
-        problems,
-        scrolls: document.documentElement.scrollWidth > innerWidth,
-      };
-    });
+for (const [route, text] of [
+  ["/", "100%"],
+  ["/", "150%"],
+  ["/services/", "100%"],
+  ["/resources/", "100%"],
+  ["/industries/private-equity/", "100%"],
+] as const) {
+  test(`drawing words fit on ${route} at ${text} text`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const measure = () =>
+      page.evaluate(async () => {
+        await document.fonts.ready;
+        const meet = (a: DOMRect, b: DOMRect) =>
+          a.left < b.right - 1 &&
+          b.left < a.right - 1 &&
+          a.top < b.bottom - 1 &&
+          b.top < a.bottom - 1;
+        const problems: string[] = [];
+        let drawings = 0;
+        for (const field of document.querySelectorAll(".system-field")) {
+          if (!(field as HTMLElement).offsetParent) continue;
+          drawings += 1;
+          const words = [...field.querySelectorAll(".system-label-text")].map(
+            (el) => ({
+              text: el.textContent?.trim() ?? "",
+              box: el.getBoundingClientRect(),
+            }),
+          );
+          words.forEach((a, i) => {
+            if (a.box.left < -1 || a.box.right > innerWidth + 1)
+              problems.push(`outside: ${a.text}`);
+            for (const b of words.slice(i + 1))
+              if (meet(a.box, b.box)) problems.push(`${a.text} / ${b.text}`);
+          });
+        }
+        return {
+          drawings,
+          problems,
+          scrolls: document.documentElement.scrollWidth > innerWidth,
+        };
+      });
 
-  for (const [route, text] of [
-    ["/", "100%"],
-    ["/", "150%"],
-    ["/services/", "100%"],
-    ["/resources/", "100%"],
-    ["/industries/private-equity/", "100%"],
-  ] as const)
     for (const width of [320, 384, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 800 });
       await page.goto(route);
@@ -554,4 +552,5 @@ test("every drawing's words stay clear of each other and inside the page, at eve
         expect(state.scrolls, where).toBe(false);
       }
     }
-});
+  });
+}
