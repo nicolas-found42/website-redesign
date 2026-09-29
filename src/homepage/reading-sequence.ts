@@ -78,7 +78,8 @@ export function mountReadingSequence({
   const atRequestedArticle = (index: number) => {
     const box = articles[index].getBoundingClientRect();
     const middle = innerHeight / 2;
-    if (box.top <= middle && box.bottom >= middle) return true;
+    if (!narrow.matches && box.top <= middle && box.bottom >= middle)
+      return true;
     if (!narrow.matches) return false;
     const margin = Number.parseFloat(
       getComputedStyle(articles[index]).scrollMarginTop,

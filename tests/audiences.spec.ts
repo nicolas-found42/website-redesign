@@ -231,6 +231,60 @@ test("phone keyboard reading moves the pressed audience beyond a chosen pill", a
   }
 });
 
+test("narrow audience jumps retry when an interrupted article only crosses the viewport midpoint", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 384, height: 742 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript(() => {
+    Element.prototype.scrollIntoView = function () {
+      const count = Number(
+        document.documentElement.dataset.testScrollIntoViewCalls ?? 0,
+      );
+      document.documentElement.dataset.testScrollIntoViewCalls = String(
+        count + 1,
+      );
+      if (count !== 0) return;
+
+      const box = this.getBoundingClientRect();
+      const middle = innerHeight / 2;
+      const targetTop = middle - 10;
+      window.scrollTo({
+        top: scrollY + box.top - targetTop,
+        behavior: "instant",
+      });
+      const landed = this.getBoundingClientRect();
+      const landing =
+        Number.parseFloat(getComputedStyle(this).scrollMarginTop) +
+        Number.parseFloat(
+          getComputedStyle(document.documentElement).scrollPaddingTop,
+        );
+      document.documentElement.dataset.testInterruptWasMidpointOnly = String(
+        landed.top < landing && landed.top < middle && landed.bottom > middle,
+      );
+      window.dispatchEvent(new Event("scrollend"));
+    };
+  });
+
+  for (const route of ["/", "/services/"]) {
+    await page.goto(route + "#audiences");
+    const choice = page.getByRole("button", {
+      name: names[2],
+      exact: true,
+    });
+    await choice.click();
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-test-interrupt-was-midpoint-only",
+      "true",
+    );
+    await expect
+      .poll(() =>
+        page.locator("html").getAttribute("data-test-scroll-into-view-calls"),
+      )
+      .toBe("2");
+  }
+});
+
 test("phone audience choices keep the hidden pinned drawings still", async ({
   page,
 }) => {
