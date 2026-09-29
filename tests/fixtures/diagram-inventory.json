@@ -183,7 +183,7 @@
       "id": "automation",
       "choice": "Workflows",
       "detail": "Operating problem → tailored design → testing and review → team deployment.",
-      "description": "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and a workflow the team deploys and uses.",
+      "description": "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and skills and plugins the team deploys and uses.",
       "nodes": [
         {
           "id": "n1",
@@ -371,58 +371,38 @@
   "scenes": [
     {
       "id": "executives",
-      "description": "Executive illustration: an operating problem enters a tailored skill and produces an illustrative Claude Daily Brief — critical items, needle movers, calendar intelligence, pipeline and revenue, recommended actions — with the executive deciding what to do.",
+      "description": "Executive day: Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts, with a red You decide mark on the last card. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
       "landscape": {
         "labels": [
           {
-            "text": "Your operating problem",
+            "text": "Claude Daily Brief",
             "kind": "source",
             "beat": 0
           },
           {
-            "text": "Tailored executive skill",
-            "kind": "control",
+            "text": "Meeting Brief",
+            "kind": "card",
             "beat": 1
           },
           {
-            "text": "Claude Daily Brief",
-            "kind": "result",
+            "text": "Meeting Debrief",
+            "kind": "card",
             "beat": 2
           },
           {
-            "text": "Critical",
-            "kind": "card",
+            "text": "Actions from Transcripts",
+            "kind": "result",
             "beat": 3
           },
           {
-            "text": "Needle Movers",
-            "kind": "card",
-            "beat": 3
-          },
-          {
-            "text": "Calendar Intelligence",
-            "kind": "card",
-            "beat": 3
-          },
-          {
-            "text": "Pipeline & Revenue",
-            "kind": "card",
-            "beat": 3
-          },
-          {
-            "text": "Recommended Actions",
-            "kind": "card",
-            "beat": 3
+            "text": "You decide",
+            "kind": "human",
+            "beat": 4
           },
           {
             "text": "Illustrative example · no live integrations",
             "kind": "caption",
-            "beat": 3
-          },
-          {
-            "text": "Executive direction",
-            "kind": "human",
-            "beat": 5
+            "beat": 4
           }
         ],
         "marks": [
@@ -432,116 +412,53 @@
           },
           {
             "kind": "result",
+            "beat": 1
+          },
+          {
+            "kind": "result",
             "beat": 2
+          },
+          {
+            "kind": "result",
+            "beat": 3
           },
           {
             "kind": "human",
-            "beat": 5
-          }
-        ],
-        "frames": [
-          {
-            "kind": "control",
-            "beat": 1
-          },
-          {
-            "kind": "panel",
-            "beat": 3
-          }
-        ],
-        "routes": [
-          {
-            "weight": "trunk",
-            "beat": 1
-          },
-          {
-            "weight": "trunk",
-            "beat": 2
-          },
-          {
-            "weight": "trunk",
-            "beat": 3,
-            "carry": true
-          },
-          {
-            "weight": "branch",
-            "beat": 3
-          },
-          {
-            "weight": "branch",
-            "beat": 4,
-            "carry": true
-          },
-          {
-            "weight": "branch",
             "beat": 4
-          },
-          {
-            "weight": "branch",
-            "beat": 4,
-            "carry": true
-          },
-          {
-            "weight": "branch",
-            "beat": 4
-          },
-          {
-            "weight": "return",
-            "beat": 5
           }
         ]
       },
       "portrait": {
         "labels": [
           {
-            "text": "Your operating problem",
+            "text": "Claude Daily Brief",
             "kind": "source",
             "beat": 0
           },
           {
-            "text": "Tailored executive skill",
-            "kind": "control",
+            "text": "Meeting Brief",
+            "kind": "card",
             "beat": 1
           },
           {
-            "text": "Claude Daily Brief",
-            "kind": "result",
+            "text": "Meeting Debrief",
+            "kind": "card",
             "beat": 2
           },
           {
-            "text": "Critical",
-            "kind": "card",
+            "text": "Actions from Transcripts",
+            "kind": "result",
             "beat": 3
           },
           {
-            "text": "Needle Movers",
-            "kind": "card",
-            "beat": 3
-          },
-          {
-            "text": "Calendar Intelligence",
-            "kind": "card",
-            "beat": 3
-          },
-          {
-            "text": "Pipeline & Revenue",
-            "kind": "card",
-            "beat": 3
-          },
-          {
-            "text": "Recommended Actions",
-            "kind": "card",
-            "beat": 3
+            "text": "You decide",
+            "kind": "human",
+            "beat": 4
           },
           {
             "text": "Illustrative example · no live integrations",
             "kind": "caption",
-            "beat": 3
-          },
-          {
-            "text": "Executive direction",
-            "kind": "human",
-            "beat": 5
+            "beat": 4
           }
         ],
         "marks": [
@@ -551,62 +468,19 @@
           },
           {
             "kind": "result",
+            "beat": 1
+          },
+          {
+            "kind": "result",
             "beat": 2
+          },
+          {
+            "kind": "result",
+            "beat": 3
           },
           {
             "kind": "human",
-            "beat": 5
-          }
-        ],
-        "frames": [
-          {
-            "kind": "control",
-            "beat": 1
-          },
-          {
-            "kind": "panel",
-            "beat": 3
-          }
-        ],
-        "routes": [
-          {
-            "weight": "trunk",
-            "beat": 1
-          },
-          {
-            "weight": "trunk",
-            "beat": 2
-          },
-          {
-            "weight": "trunk",
-            "beat": 3,
-            "carry": true
-          },
-          {
-            "weight": "branch",
-            "beat": 3
-          },
-          {
-            "weight": "branch",
-            "beat": 4,
-            "carry": true
-          },
-          {
-            "weight": "branch",
             "beat": 4
-          },
-          {
-            "weight": "branch",
-            "beat": 4,
-            "carry": true
-          },
-          {
-            "weight": "branch",
-            "beat": 4
-          },
-          {
-            "weight": "return",
-            "beat": 5
           }
         ]
       }
@@ -1281,7 +1155,7 @@
   "captions": [
     {
       "id": "executives",
-      "caption": "Illustrative Claude Daily Brief: real work enters a tailored skill, produces a brief of what matters and what to do next, and the decision stays with the executive. This is a hypothetical example, not a client result and not a live email, calendar or CRM integration."
+      "caption": "Illustrative Claude example: Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts. You decide what happens next. This is a hypothetical example, not a client result, with no live calendar, email, CRM or transcript integration."
     },
     {
       "id": "contributors",

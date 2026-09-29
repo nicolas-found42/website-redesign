@@ -245,7 +245,7 @@ test("F08: executive scene annotations never overlap one another or leave the dr
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/");
     const state = await measure();
-    expect(state.count, `${width}px`).toBe(10);
+    expect(state.count, `${width}px`).toBe(6);
     expect(state.overlaps, `${width}px`).toEqual([]);
     expect(state.outside, `${width}px`).toEqual([]);
   }
