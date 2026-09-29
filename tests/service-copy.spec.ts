@@ -21,3 +21,22 @@ for (const path of ["/", "/services/"]) {
     await expect(services).not.toContainText("A workflow the team can deploy");
   });
 }
+
+test("Services explains the input and result for each distinct engagement", async ({
+  page,
+}) => {
+  await page.goto("/services/");
+  const engagements = page.locator("#engagements");
+  await expect(engagements).toContainText(
+    "Discovery around the high-value, time-consuming tasks your team does every day.",
+  );
+  await expect(engagements).toContainText(
+    "An end-to-end automation connected to your systems, with human review points.",
+  );
+  await expect(engagements).toContainText(
+    "The process, the systems it passes between, and the people who review its results.",
+  );
+  await expect(engagements).not.toContainText(
+    "An end-to-end workflow with human review points and system handoffs.",
+  );
+});
