@@ -680,6 +680,12 @@ for (const [width, height] of [
       field.getByText("Reviewed work returns to each role."),
     ).toBeVisible();
     await expect(field.getByText("Human in the loop")).toBeVisible();
+    // Measure in the webfont, not the fallback it shows while loading. Without
+    // script the page cannot resolve `document.fonts.ready` (Firefox never
+    // settles it), so poll the plain `status` from here instead.
+    await expect
+      .poll(() => page.evaluate(() => document.fonts.status))
+      .toBe("loaded");
     const fit = await field.evaluate(readTextFit);
     expect(fit.length).toBeGreaterThan(0);
     expect(wordProblems(fit)).toEqual([]);
