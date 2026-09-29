@@ -25,7 +25,7 @@ history.
   and issue #56's preservation of them.
 - **Organizations are shown by their own marks.** "Teams we have worked with"
   shows five logos in the owner's order — Google, Edgescale AI, Millsapps,
-  Ballinger & Associates (MB&A), Scottish Equity Partners (SEP) and PeakSpan
+  Ballinger & Associates (MB&A), Seidler Equity Partners (SEP) and PeakSpan
   Capital. Each is the organization's own mark from its official site, bundled
   locally and shown unaltered. The owner confirmed the relationships and that
   each mark's use is approved; the site does not verify that approval.
@@ -34,8 +34,9 @@ history.
   detail, are removed from every visualization on every route. Strips and
   surfaces are solid fills with charcoal outlines; functional outlines and
   connections remain. This supersedes ADR 0006's print prescription.
-- **The audience name is "Teams and individual contributors"** in the choice,
-  the selected scene, its accessible names and its Services link. The shared
+- **The audience name is "Individual Contributors and Teams"** (superseding
+  "Teams and individual contributors") in the choice, the selected scene, its
+  accessible names, its Services link and the Services audience field. The shared
   introduction promises role-tailored workshops that "save you 4-8 hours every
   week"; the owner approved that numeric wording for display, and it is not to
   be extended into other measured-result claims.
@@ -45,7 +46,7 @@ history.
 
 ## Scenes
 
-- **Teams and individual contributors** replaces the ring with a gate. Four
+- **Individual Contributors and Teams** replaces the ring with a gate. Four
   role ribbons — alternating #c42323 red, charcoal and white — run through
   their skills, braid together and pass through a gate labelled "Human in the
   loop". This supersedes ADR 0006's ribbons through a ring.

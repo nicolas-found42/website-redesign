@@ -40,6 +40,16 @@
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
+/* The row's own heading: section-heading scale, 30px on desktop and 24px on
+   phones, in rem so enlarged text scales it and long lines wrap above the logos. */
+.companies-title {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: 1.875rem;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
 /* Five equal cells on one white ground, so the marks read as one size and the
    JPEG's white sits in its own ground. Each mark is set by its own width and
    never stretched, so its proportions stay its own. */
@@ -70,8 +80,8 @@
 .company-logo--mba {
   --logo-width: 112px;
 }
-.company-logo--sep {
-  --logo-width: 70px;
+.company-logo--seidler-equity-partners {
+  --logo-width: 96px;
 }
 .company-logo--peakspan-capital {
   --logo-width: 150px;
@@ -421,6 +431,10 @@
   }
 }
 @media (max-width: 700px) {
+  .companies-title {
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
   .audience-rail,
   .resource-grid--preview,
   .testimonial-track {

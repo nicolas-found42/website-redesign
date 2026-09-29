@@ -254,7 +254,8 @@ export const serviceCatalog = {
     {
       id: "role-based",
       name: "Customized Role-Based Training",
-      audience: "Any function the other tracks don’t cover.",
+      audience:
+        "Individual Contributors and Teams who own recurring work in a role.",
       assets: [
         "A personalized set of 10 role-specific Claude Skills and plugins tailored to the job function",
       ],

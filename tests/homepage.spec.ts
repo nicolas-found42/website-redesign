@@ -64,13 +64,13 @@ test("all three audiences link to their catalog tracks", async ({ page }) => {
   ).toHaveAttribute("href", "/services/#track-c-level-ai");
 
   await rail
-    .getByRole("button", { name: /Teams and individual contributors/ })
+    .getByRole("button", { name: /Individual Contributors and Teams/ })
     .click();
   await expect(
     page
       .locator(".audience-card")
       .nth(1)
-      .getByRole("link", { name: "For teams and individual contributors" }),
+      .getByRole("link", { name: "For Individual Contributors and Teams" }),
   ).toHaveAttribute("href", "/services/#track-role-based");
 
   await rail.getByRole("button", { name: /AI builders/ }).click();
@@ -136,12 +136,19 @@ test("the companies row shows five bundled logos, named, in the approved order",
   const row = page.locator("#companies");
   await expect(row).toContainText("Teams we have worked with");
   const logos = row.getByRole("img");
+  // The heading names the row, so the logos read as the answer to it.
+  await expect(
+    page.getByRole("region", { name: "Teams we have worked with" }),
+  ).toHaveAttribute("id", "companies");
+  await expect(
+    row.getByRole("heading", { name: "Teams we have worked with" }),
+  ).toBeVisible();
   await expect(logos).toHaveCount(5);
   const names = [
     "Google",
     "Edgescale AI",
     "Millsapps, Ballinger & Associates (MB&A)",
-    "Scottish Equity Partners (SEP)",
+    "Seidler Equity Partners (SEP)",
     "PeakSpan Capital",
   ];
   for (const [index, name] of names.entries())
@@ -151,6 +158,62 @@ test("the companies row shows five bundled logos, named, in the approved order",
     await expect(logo).not.toHaveJSProperty("naturalWidth", 0);
     const src = await logo.getAttribute("src");
     expect(src).toMatch(/^\/assets\/logos\//);
+  }
+});
+
+test("the companies heading reads at section-heading scale and wraps above the logos", async ({
+  page,
+}) => {
+  const sizes = [
+    { width: 1440, height: 900, min: 28, max: 32 },
+    { width: 384, height: 686, min: 24, max: 24 },
+    { width: 384, height: 742, min: 24, max: 24 },
+  ];
+  for (const { width, height, min, max } of sizes) {
+    await page.setViewportSize({ width, height });
+    await page.goto("/");
+    const heading = page
+      .locator("#companies")
+      .getByRole("heading", { name: "Teams we have worked with" });
+    const size = await heading.evaluate((el) =>
+      parseFloat(getComputedStyle(el).fontSize),
+    );
+    expect(size, `${width}px`).toBeGreaterThanOrEqual(min);
+    expect(size, `${width}px`).toBeLessThanOrEqual(max);
+  }
+  for (const [width, height, text] of [
+    [384, 686, "100%"],
+    [384, 742, "100%"],
+    [384, 742, "200%"],
+    [320, 700, "200%"],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto("/");
+    await page.evaluate(
+      (size) => (document.documentElement.style.fontSize = size),
+      text,
+    );
+    const fit = await page.locator("#companies").evaluate((row) => {
+      const heading = row.querySelector("h2");
+      const list = row.querySelector("ul");
+      if (!heading || !list) throw new Error("row is missing its parts");
+      const head = heading.getBoundingClientRect();
+      const first = list.getBoundingClientRect();
+      return {
+        bottom: head.bottom,
+        listTop: first.top,
+        left: head.left,
+        right: head.right,
+        clipped: heading.scrollWidth > heading.clientWidth,
+        pageFits: document.documentElement.scrollWidth <= innerWidth,
+      };
+    });
+    const label = `${width}px at ${text} text`;
+    expect(fit.bottom, label).toBeLessThanOrEqual(fit.listTop);
+    expect(fit.left, label).toBeGreaterThanOrEqual(0);
+    expect(fit.right, label).toBeLessThanOrEqual(width);
+    expect(fit.clipped, label).toBe(false);
+    expect(fit.pageFits, label).toBe(true);
   }
 });
 

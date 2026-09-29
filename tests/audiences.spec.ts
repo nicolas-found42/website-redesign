@@ -13,22 +13,22 @@ import { readField } from "./drawing";
 
 const names = [
   /C-level executives/,
-  /Teams and individual contributors/,
+  /Individual Contributors and Teams/,
   /AI builders/,
 ];
 const kickers = [
   "C-level executives",
-  "Teams and individual contributors",
+  "Individual Contributors and Teams",
   "AI builders",
 ];
 const links = [
   ["For executives", /services\/#track-c-level-ai$/],
-  ["For teams and individual contributors", /services\/#track-role-based$/],
+  ["For Individual Contributors and Teams", /services\/#track-role-based$/],
   ["For AI builders", /services\/#track-ai-builders$/],
 ] as const;
 const drawings = [
   /Executive illustration:/,
-  /Teams and individual contributors illustration:/,
+  /Individual Contributors and Teams illustration:/,
   /Builder illustration:/,
 ];
 
@@ -98,7 +98,7 @@ test("the arrows and the arrow keys move the choice, and focus stays where it wa
   const previous = page.getByRole("button", { name: "Previous audience" });
   await next.click();
   await expect(page.locator(".audience-panel:not([hidden]) h3")).toHaveText(
-    "Teams and individual contributors",
+    "Individual Contributors and Teams",
   );
   // Focus is not moved into the panel by the choice. WebKit does not focus a
   // clicked button at all, so what is asserted is where focus did not go.
@@ -295,13 +295,13 @@ test("the approved audience introduction appears wherever the audiences do", asy
   }
 });
 
-test("teams and individual contributors is named the same everywhere it appears", async ({
+test("Individual Contributors and Teams is named the same everywhere it appears", async ({
   page,
 }) => {
   await page.goto("/#audiences");
   const card = page.locator(".audience-card").nth(1);
   await expect(card.getByRole("button")).toContainText(
-    "Teams and individual contributors",
+    "Individual Contributors and Teams",
   );
   await expect(card.getByRole("button")).toContainText(
     "Training built around your role, industry and company, so skills take on recurring work and free you for judgment.",
@@ -309,13 +309,26 @@ test("teams and individual contributors is named the same everywhere it appears"
   await card.getByRole("button").click();
   await expect(
     page.locator(".audience-panel:not([hidden]) .audience-scene-title"),
-  ).toHaveText("Teams and individual contributors");
+  ).toHaveText("Individual Contributors and Teams");
   await expect(page.locator("#audiences")).not.toContainText(
-    /^Individual contributors$/m,
+    /Teams and individual contributors|^Individual contributors$/im,
   );
   await expect(
-    card.getByRole("link", { name: "For teams and individual contributors" }),
+    card.getByRole("link", { name: "For Individual Contributors and Teams" }),
   ).toHaveAttribute("href", "/services/#track-role-based");
+});
+
+test("Services names the people Customized Role-Based Training serves", async ({
+  page,
+}) => {
+  await page.goto("/services/#track-role-based");
+  const audience = page.locator("#track-role-based .track-audience");
+  await expect(audience.locator(".track-term")).toHaveText("For");
+  await expect(audience).toContainText("Individual Contributors and Teams");
+  await expect(audience).not.toContainText(/any function|don.t cover/i);
+  await expect(page.locator("#track-role-based-title")).toHaveText(
+    "Customized Role-Based Training",
+  );
 });
 
 /** How much of a picture is red, and the tallest unbroken vertical run of it: a bar. */
