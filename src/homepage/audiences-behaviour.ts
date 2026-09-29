@@ -1,116 +1,264 @@
-import { sceneById } from "../audiences";
+import { audiences, sceneById } from "../audiences";
 import { mountScene, type SceneDrawing } from "../scene";
 import type { MotionPreference } from "../motion-preference";
 
-/**
- * The audience gallery, and any scene drawn on its own.
- *
- * Choosing is the control. The rail, the arrows and the arrow keys all set the
- * same selection; the chosen panel is shown, the others are hidden, and the
- * chosen scene tells its story from its first beat. Focus never moves on its
- * own: a choice from the rail keeps the rail, and a choice from the arrows
- * keeps the arrows, so a keyboard visitor is never dropped somewhere new.
- *
- * Each panel keeps its own scene, mounted once. A hidden panel's scene has
- * nothing on screen to animate and its loop stays paused, so only the visible
- * one ever runs. Scenes outside the gallery — the failure-mode review figure —
- * mount the same way and tell their story when they come into view.
- */
+const NARROW = "(max-width: 960px)";
+
+/** The audience drawing and rail accompany reading; nothing hides an article. */
 export function mountAudiences(
   root: ParentNode,
   { motionPreference }: { motionPreference: MotionPreference },
 ) {
-  const disposers: (() => void)[] = [];
   const drawings = new Map<HTMLElement, SceneDrawing>();
-
   for (const host of root.querySelectorAll<HTMLElement>("[data-scene-host]")) {
-    const scene = sceneById(host.dataset.scene ?? "");
-    drawings.set(host, mountScene(host, { motionPreference, scene }));
+    const orientation = host.closest(".audience-figure")
+      ? "portrait"
+      : host.closest(".audience-art")
+        ? "landscape"
+        : undefined;
+    drawings.set(
+      host,
+      mountScene(host, {
+        motionPreference,
+        scene: sceneById(host.dataset.scene ?? ""),
+        orientation,
+      }),
+    );
   }
-  disposers.push(() => drawings.forEach((drawing) => drawing.dispose()));
-
-  const stage = root.querySelector<HTMLElement>(".audience-stage");
-  if (!stage) return () => disposers.forEach((dispose) => dispose());
-
+  const section = root.querySelector<HTMLElement>("#audiences");
+  if (!section) return () => drawings.forEach((drawing) => drawing.dispose());
+  const stage = section.querySelector<HTMLElement>(".audience-stage")!;
+  stage.classList.add("is-sequence");
+  const articles = [
+    ...section.querySelectorAll<HTMLElement>("[data-audience-panel]"),
+  ];
   const choices = [
-    ...stage.querySelectorAll<HTMLButtonElement>("[data-audience]"),
+    ...section.querySelectorAll<HTMLButtonElement>("[data-audience]"),
   ];
-  const panels = [
-    ...stage.querySelectorAll<HTMLElement>("[data-audience-panel]"),
+  const scenes = [
+    ...section.querySelectorAll<HTMLElement>("[data-audience-scene]"),
   ];
-  const nav = stage.querySelector<HTMLElement>(".audience-nav");
-  const count = stage.querySelector<HTMLElement>("[data-audience-count]");
-  const total = panels.length;
+  const caption = section.querySelector<HTMLElement>(
+    ".audience-pinned-caption",
+  )!;
+  const aside = section.querySelector<HTMLElement>(".audience-aside")!;
+  const narrow = matchMedia(NARROW);
+  const updateRail = () =>
+    section.style.setProperty("--audience-rail", `${aside.offsetHeight}px`);
+  let current = 0;
+  /** The latest rail choice stays authoritative until its jump finishes. */
+  let expecting: number | undefined;
+  /** A narrow explicit choice remains selected until the visitor navigates on. */
+  let chosen = false;
+  let jumpRetried = false;
+  let jumpStarted = false;
 
-  let current = -1;
-
-  function show(index: number, options: { play?: boolean } = {}) {
-    const next = (index + total) % total;
-    if (next === current) return;
-    current = next;
-    choices.forEach((choice, i) =>
-      choice.setAttribute("aria-pressed", String(i === next)),
-    );
-    panels.forEach((panel, i) => {
-      panel.hidden = i !== next;
-    });
-    if (count) count.textContent = String(next + 1);
-    if (!options.play) return;
-    const host = panels[next].querySelector<HTMLElement>("[data-scene-host]");
-    // Told again on every choice: the sequence is the point of the picture.
-    // The first panel is left to tell its story when it comes into view.
-    if (host) drawings.get(host)?.play();
+  /**
+   * Makes `index` the audience being read: the drawing, caption, rail and rule
+   * follow it. With `scroll`, the visitor asked for it, so it is brought into
+   * view too.
+   */
+  function show(index: number, options: { scroll?: boolean } = {}) {
+    if (index !== current) {
+      current = index;
+      scenes.forEach((scene, i) => {
+        scene.hidden = i !== index;
+      });
+      const host =
+        scenes[index]?.querySelector<HTMLElement>("[data-scene-host]");
+      if (host) drawings.get(host)?.play();
+      caption.textContent = audiences[index].caption;
+      choices.forEach((choice, i) =>
+        choice.setAttribute("aria-pressed", String(i === index)),
+      );
+      articles.forEach((article, i) =>
+        article.classList.toggle("is-current", i === index),
+      );
+    }
+    if (options.scroll) {
+      // Stacked, an article is taller than the screen: its start, under the
+      // rail, is where reading it begins.
+      articles[index].scrollIntoView({
+        behavior: motionPreference.matches ? "auto" : "smooth",
+        block: narrow.matches ? "start" : "center",
+      });
+    }
   }
 
-  /** A choice from the rail, or a step from the arrows. */
-  const onClick = (event: Event) => {
-    const target = event.target as HTMLElement;
-    const choice = target.closest<HTMLElement>("[data-audience]");
-    const step = target.closest<HTMLElement>("[data-audience-step]");
-    if (choice) show(Number(choice.dataset.audience), { play: true });
-    else if (step)
-      show(current + Number(step.dataset.audienceStep), { play: true });
-  };
-  /** Arrow keys move the choice and the focus together along the rail. */
-  const onKey = (event: KeyboardEvent) => {
-    const onRail = (event.target as HTMLElement).closest<HTMLElement>(
-      "[data-audience]",
-    );
-    if (!onRail) return;
-    const from = Number(onRail.dataset.audience);
-    const to: Record<string, number> = {
-      ArrowRight: from + 1,
-      ArrowDown: from + 1,
-      ArrowLeft: from - 1,
-      ArrowUp: from - 1,
-      Home: 0,
-      End: total - 1,
-    };
-    const next = to[event.key];
-    if (next === undefined) return;
-    event.preventDefault();
-    show(next, { play: true });
-    choices[current]?.focus();
-  };
-
-  stage.classList.add("is-gallery");
-  if (nav) nav.hidden = false;
-  stage.addEventListener("click", onClick);
-  stage.addEventListener("keydown", onKey);
-  const initial = panels.findIndex(
-    (panel) => `#${panel.id}` === window.location.hash,
+  /**
+   * Only the article crossing the middle band of the viewport counts as being
+   * read, so the drawing changes once per article rather than twice.
+   */
+  const reader = new IntersectionObserver(
+    (entries) => {
+      if (expecting !== undefined || (narrow.matches && chosen)) return;
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const index = Number(
+          (entry.target as HTMLElement).dataset.audiencePanel,
+        );
+        show(index);
+      }
+    },
+    { rootMargin: "-46% 0px -46% 0px", threshold: 0 },
   );
-  show(initial >= 0 ? initial : 0);
+  articles.forEach((article) => reader.observe(article));
 
-  disposers.push(() => {
-    stage.removeEventListener("click", onClick);
-    stage.removeEventListener("keydown", onKey);
-    stage.classList.remove("is-gallery");
-    panels.forEach((panel) => {
-      panel.hidden = false;
+  /** A narrow jump lands at its CSS scroll margin plus page scroll padding. */
+  const atRequestedArticle = (index: number) => {
+    const box = articles[index].getBoundingClientRect();
+    const middle = innerHeight / 2;
+    if (box.top <= middle && box.bottom >= middle) return true;
+    if (!narrow.matches) return false;
+    const margin = Number.parseFloat(
+      getComputedStyle(articles[index]).scrollMarginTop,
+    );
+    const padding = Number.parseFloat(
+      getComputedStyle(document.documentElement).scrollPaddingTop,
+    );
+    const landing = margin + padding;
+    const atPageEnd =
+      scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+    return (
+      Math.abs(box.top - landing) <= 4 ||
+      (atPageEnd && box.top <= landing && box.bottom > 0)
+    );
+  };
+
+  const articleAtMiddle = () => {
+    const middle = innerHeight / 2;
+    return articles.findIndex((article) => {
+      const box = article.getBoundingClientRect();
+      return box.top <= middle && box.bottom >= middle;
     });
-    if (nav) nav.hidden = true;
+  };
+
+  /** A settled scroll also catches an article the observer crossed while locked. */
+  const onScrollEnd = () => {
+    if (expecting === undefined) {
+      if (narrow.matches && chosen) return;
+      const index = articleAtMiddle();
+      if (index >= 0) show(index);
+      return;
+    }
+    // Rapid jumps can emit scrollend for an interrupted earlier target. The
+    // latest choice is still in flight until its article reaches the reader.
+    if (!jumpStarted) return;
+    if (!atRequestedArticle(expecting)) {
+      if (!jumpRetried) {
+        jumpRetried = true;
+        updateRail();
+        show(expecting, { scroll: true });
+      } else {
+        expecting = undefined;
+        chosen = false;
+      }
+      return;
+    }
+    const requested = expecting;
+    expecting = undefined;
+    if (narrow.matches) {
+      show(requested);
+      return;
+    }
+    const index = articleAtMiddle();
+    if (index >= 0) show(index);
+  };
+  addEventListener("scrollend", onScrollEnd);
+  // A late anchor landing can interrupt a smooth jump without a scrollend.
+  // Treat an idle scroll as settled too, so the latest pill remains authoritative.
+  let scrollIdle = 0;
+  const onScroll = () => {
+    clearTimeout(scrollIdle);
+    scrollIdle = window.setTimeout(onScrollEnd, 160);
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  const onManualScroll = () => {
+    expecting = undefined;
+    chosen = false;
+    jumpStarted = false;
+  };
+  const onManualKey = (event: KeyboardEvent) => {
+    if (
+      [
+        "ArrowDown",
+        "ArrowUp",
+        "PageDown",
+        "PageUp",
+        "Home",
+        "End",
+        " ",
+      ].includes(event.key)
+    )
+      onManualScroll();
+  };
+  addEventListener("wheel", onManualScroll, { passive: true });
+  addEventListener("touchstart", onManualScroll, { passive: true });
+  addEventListener("keydown", onManualKey);
+  let previousHash = location.hash;
+  const onHashChange = () => {
+    if (location.hash === previousHash) return;
+    previousHash = location.hash;
+    onManualScroll();
+  };
+  addEventListener("hashchange", onHashChange);
+
+  let jumpFrame = 0;
+  const handlers = choices.map((choice, index) => {
+    const onClick = () => {
+      expecting = index;
+      chosen = true;
+      jumpRetried = false;
+      jumpStarted = false;
+      show(index);
+      updateRail();
+      cancelAnimationFrame(jumpFrame);
+      // A touch browser may scroll the focused rail button after `click`.
+      // Jump on the next frame so that default action cannot pull it back.
+      jumpFrame = requestAnimationFrame(() => {
+        if (expecting === index) {
+          jumpStarted = true;
+          show(index, { scroll: true });
+        }
+      });
+    };
+    choice.addEventListener("click", onClick);
+    return onClick;
   });
 
-  return () => disposers.forEach((dispose) => dispose());
+  articles[0]?.classList.add("is-current");
+
+  const measureRail = new ResizeObserver(updateRail);
+  measureRail.observe(aside);
+  updateRail();
+  const holdLanding = new ResizeObserver(() => {
+    if (!narrow.matches || !chosen || !jumpStarted) return;
+    if (expecting !== undefined || atRequestedArticle(current)) return;
+    articles[current].scrollIntoView({ behavior: "auto", block: "start" });
+  });
+  holdLanding.observe(document.body);
+  const onPreference = () => {
+    if (motionPreference.matches && expecting !== undefined)
+      show(expecting, { scroll: true });
+  };
+  motionPreference.addEventListener("change", onPreference);
+  return () => {
+    cancelAnimationFrame(jumpFrame);
+    removeEventListener("scrollend", onScrollEnd);
+    removeEventListener("scroll", onScroll);
+    clearTimeout(scrollIdle);
+    removeEventListener("wheel", onManualScroll);
+    removeEventListener("touchstart", onManualScroll);
+    removeEventListener("keydown", onManualKey);
+    removeEventListener("hashchange", onHashChange);
+    reader.disconnect();
+    measureRail.disconnect();
+    holdLanding.disconnect();
+    motionPreference.removeEventListener("change", onPreference);
+    choices.forEach((choice, index) =>
+      choice.removeEventListener("click", handlers[index]),
+    );
+    drawings.forEach((drawing) => drawing.dispose());
+    stage.classList.remove("is-sequence");
+  };
 }

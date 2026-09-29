@@ -58,7 +58,7 @@ test("all three audiences link to their catalog tracks", async ({ page }) => {
   await rail.getByRole("button", { name: /C-level executives/ }).click();
   await expect(
     page
-      .locator(".audience-card")
+      .locator(".audience-panel")
       .first()
       .getByRole("link", { name: "For executives" }),
   ).toHaveAttribute("href", "/services/#track-c-level-ai");
@@ -68,7 +68,7 @@ test("all three audiences link to their catalog tracks", async ({ page }) => {
     .click();
   await expect(
     page
-      .locator(".audience-card")
+      .locator(".audience-panel")
       .nth(1)
       .getByRole("link", { name: "For Individual Contributors and Teams" }),
   ).toHaveAttribute("href", "/services/#track-role-based");
@@ -76,13 +76,13 @@ test("all three audiences link to their catalog tracks", async ({ page }) => {
   await rail.getByRole("button", { name: /AI builders/ }).click();
   await expect(
     page
-      .locator(".audience-card")
+      .locator(".audience-panel")
       .nth(2)
       .getByRole("link", { name: "For AI builders" }),
   ).toHaveAttribute("href", "/services/#track-ai-builders");
 
   await expect(
-    page.locator(".audience-panel:not([hidden]) .audience-scene"),
+    page.locator(".audience-pinned-scene:not([hidden]) .audience-scene"),
   ).toHaveCount(1);
   await expect(page.locator("#audiences h2")).toHaveText(
     "Find the work that sounds like yours",
