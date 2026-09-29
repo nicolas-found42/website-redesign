@@ -46,7 +46,8 @@ all eight `unit` cases as browser-free.
   reports found an exhaustive scorecard test taking 80–133 seconds across
   observed CI runs. Its 4,096 combinations and all checks remain in place;
   collecting mismatches before one final assertion reduced the local eight-test
-  run from 15.1 to 1.1 seconds. The final CI result will validate this change.
+  run from 15.1 to 1.1 seconds. In the [final PR gate](https://github.com/nicolas-found42/website-redesign/actions/runs/36533429323),
+  all 422 cases passed and that scorecard case took 0.464 seconds.
 - Keep four shards and four workers for now. Two-worker results reversed on
   repeat and did not eliminate the existing WebKit drawing-state flake.
 - Keep the current build and typecheck path. The shared artifact path was
