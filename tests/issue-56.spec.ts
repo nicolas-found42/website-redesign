@@ -27,35 +27,28 @@ test("the homepage follows the approved story around the deployed drawings", asy
   await expect(page.locator(".hero-art")).toHaveCount(0);
 });
 
-test("audience cards select the original scene and link to catalog tracks", async ({
+test("audience pills jump to complete articles linked to catalog tracks", async ({
   page,
 }) => {
   await page.goto("/#audiences");
-  const cards = page.locator(".audience-card");
-  await expect(cards).toHaveCount(3);
+  const articles = page.locator(".audience-panel");
+  const choices = page
+    .getByRole("group", { name: "Choose an audience" })
+    .getByRole("button");
+  await expect(articles).toHaveCount(3);
   for (const [index, anchor] of [
     "c-level-ai",
     "role-based",
     "ai-builders",
   ].entries()) {
-    await expect(cards.nth(index).getByRole("link")).toHaveAttribute(
+    await expect(articles.nth(index).getByRole("link")).toHaveAttribute(
       "href",
       `/services/#track-${anchor}`,
     );
-    await cards.nth(index).getByRole("button").click();
-    await expect(cards.nth(index).getByRole("button")).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    await expect(
-      page.locator(".audience-panel:not([hidden]) .audience-scene"),
-    ).toHaveCount(1);
+    await choices.nth(index).click();
+    await expect(choices.nth(index)).toHaveAttribute("aria-pressed", "true");
+    await expect(articles.nth(index)).toBeInViewport();
   }
-  await page.getByRole("button", { name: "Previous audience" }).click();
-  await expect(cards.nth(1).getByRole("button")).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
 });
 
 test("all five complete testimonials remain reachable with bundled portraits", async ({

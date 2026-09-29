@@ -1,40 +1,33 @@
 import { audiences, sceneFigure } from "../audiences";
 import { icon } from "../icons";
 
-/**
- * Whom we help: three audiences, one method, each drawn its own way.
- *
- * All three audiences are on the page in full: a rail of three choices that
- * says what each one gets and links to its catalog track, and a panel for each
- * with its own scene. With scripts the panels become a gallery —
- * one shown at a time, chosen from the rail, the arrows or the keyboard — and
- * the shown scene tells its story. Without them, or under reduced motion, the
- * three panels simply read one after another with their still scenes.
- *
- * The rail reports the selection with `aria-pressed`, as the services rail
- * does. Nothing depends on hover, on the motion, or on colour alone: the
- * selected choice also carries a rule, and the panel restates its audience.
- */
+/** All audience articles remain in reading order; the rail jumps to their work. */
 export function audiencesSection() {
   const rail = audiences
     .map(
       (audience, index) =>
-        `<article class="audience-card"><span class="audience-index note">0${index + 1}</span><button class="audience-choice" type="button" data-audience="${index}" aria-pressed="${index === 0}" aria-controls="audience-${audience.id}"><span class="audience-choice-name">${audience.choice}</span><span class="audience-choice-note note--plain">${audience.proposition}</span></button><a class="link" href="${audience.link.href}">${audience.link.label} ${icon("arrow")}</a></article>`,
+        `<button class="choice audience-choice" type="button" data-audience="${index}" aria-pressed="${index === 0}" aria-controls="audience-${audience.id}">${audience.choice}</button>`,
     )
     .join("");
-
-  const panels = audiences
+  const scenes = audiences
     .map(
-      (
-        audience,
-        index,
-      ) => `<article class="audience-panel" id="audience-${audience.id}" data-audience-panel="${index}" aria-labelledby="audience-${audience.id}-title">
-   <h3 id="audience-${audience.id}-title" class="audience-scene-title">${audience.choice}</h3>
-   <figure class="audience-figure">${sceneFigure(audience.scene, "landscape", "system audience-scene")}<figcaption class="note--plain audience-caption">${audience.caption}</figcaption></figure>
-  </article>`,
+      (audience, index) =>
+        `<div class="audience-pinned-scene" data-audience-scene="${index}"${index ? " hidden" : ""}>${sceneFigure(audience.scene, "landscape", "system audience-scene")}</div>`,
     )
     .join("");
-
+  const articles = audiences
+    .map(
+      (audience, index) =>
+        `<article class="audience-panel" id="audience-${audience.id}" data-audience-panel="${index}" aria-labelledby="audience-${audience.id}-title">
+      <p class="audience-kicker note">${audience.kicker}</p>
+      <h3 id="audience-${audience.id}-title" class="audience-scene-title">${audience.choice}</h3>
+      <figure class="audience-figure">${sceneFigure(audience.scene, "portrait", "system audience-scene")}<figcaption class="note--plain audience-caption">${audience.caption}</figcaption></figure>
+      <p class="body">${audience.proposition}</p>
+      <ul class="scope-list audience-points">${audience.points.map((point) => `<li>${point}</li>`).join("")}</ul>
+      <a class="link" href="${audience.link.href}">${audience.link.label} ${icon("arrow")}</a>
+    </article>`,
+    )
+    .join("");
   return `<section id="audiences" class="band wrap audiences" aria-labelledby="audiences-title">
  <div class="section-head">
   <div>
@@ -44,13 +37,12 @@ export function audiencesSection() {
   <p class="lead" data-reveal>Whether you are an executive, an individual contributor, or an AI builder, we have workshops tailored to your role that will put Claude to work and save you 4-8 hours every week.</p>
  </div>
  <div class="audience-stage">
-  <div class="audience-rail" role="group" aria-label="Choose an audience">${rail}</div>
-  <div class="audience-panels">${panels}</div>
-  <div class="audience-nav" hidden>
-   <button class="audience-step note" type="button" data-audience-step="-1" aria-label="Previous audience">${icon("left")} Previous</button>
-   <p class="audience-count note--plain" aria-hidden="true"><span data-audience-count>1</span> / ${audiences.length}</p>
-   <button class="audience-step note" type="button" data-audience-step="1" aria-label="Next audience">Next ${icon("right")}</button>
-  </div>
+   <div class="audience-aside"><div class="audience-sticky">
+     <div class="audience-art">${scenes}</div>
+     <div class="audience-rail" role="group" aria-label="Choose an audience">${rail}</div>
+     <p class="audience-pinned-caption note--plain">${audiences[0].caption}</p>
+   </div></div>
+   <div class="audience-panels">${articles}</div>
  </div>
 </section>`;
 }

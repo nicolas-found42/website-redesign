@@ -24,6 +24,8 @@ import type { MotionPreference } from "./motion-preference";
 export type SceneOptions = {
   motionPreference: MotionPreference;
   scene: Scene;
+  /** A sequence article retains its authored composition across viewport widths. */
+  orientation?: SceneOrientation;
 };
 
 const PORTRAIT = "(max-width: 860px)";
@@ -35,7 +37,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
   const { motionPreference, scene } = options;
   const portrait = matchMedia(PORTRAIT);
 
-  let orientation = orientationOf(portrait.matches);
+  let orientation = options.orientation ?? orientationOf(portrait.matches);
   let animations: Animation[] = [];
   let visible = false;
   let told = false;
@@ -93,7 +95,7 @@ export function mountScene(host: HTMLElement, options: SceneOptions) {
     if (still()) settle();
   };
   const onOrientation = () => {
-    const next = orientationOf(portrait.matches);
+    const next = options.orientation ?? orientationOf(portrait.matches);
     if (next === orientation) return;
     orientation = next;
     settle();

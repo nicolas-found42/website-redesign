@@ -157,62 +157,6 @@
 .briefing .section-head {
   align-items: end;
 }
-.audience-rail {
-  gap: 24px;
-  align-items: stretch;
-}
-.audience-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-  padding: clamp(24px, 2.8vw, 36px);
-  background: #fff;
-  border: 1px solid var(--line);
-}
-.audience-index {
-  color: var(--red);
-}
-/* The chosen card is also set apart by its ground and edge, at every width. */
-.audience-card:has(.audience-choice[aria-pressed="true"]) {
-  background: var(--paper-warm);
-  border-color: var(--ink);
-}
-.audience-choice {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 20px 0 0;
-  border-top: 1px solid var(--line-strong);
-}
-.audience-choice::before {
-  top: -1px;
-}
-.audience-choice-name {
-  font-size: clamp(1.35rem, 1.7vw, 1.7rem);
-}
-.audience-choice-note {
-  color: var(--muted);
-}
-.audience-card > .link {
-  align-self: flex-start;
-  margin-top: auto;
-}
-.audience-panel {
-  display: block;
-  padding: clamp(20px, 2vw, 32px) 0 0;
-}
-.audience-scene-title {
-  margin-bottom: 18px;
-  font-size: var(--size-h4);
-}
-.audience-figure {
-  width: min(100%, 1120px);
-  margin-inline: auto;
-}
-.audience-caption {
-  max-width: 70ch;
-}
 .services-head {
   gap: clamp(28px, 4.45vw, 64px);
   padding-bottom: clamp(40px, 4vw, 64px);
@@ -450,8 +394,7 @@
   .briefing-picture {
     width: min(100%, 660px);
   }
-  .testimonial-track,
-  .audience-rail {
+  .testimonial-track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .is-carousel .testimonial-card {
@@ -486,13 +429,9 @@
     font-size: 1.5rem;
     line-height: 1.25;
   }
-  .audience-rail,
   .resource-grid--preview,
   .testimonial-track {
     grid-template-columns: 1fr;
-  }
-  .audience-card {
-    padding: 24px;
   }
   .is-carousel .testimonial-card {
     flex-basis: 100%;
