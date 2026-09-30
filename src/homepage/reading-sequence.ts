@@ -28,6 +28,7 @@ export function mountReadingSequence({
   let expecting: number | undefined;
   /** A narrow explicit choice remains selected until the visitor navigates on. */
   let chosen = false;
+  let chosenIndex = 0;
   let jumpRetried = false;
   let jumpStarted = false;
 
@@ -194,6 +195,7 @@ export function mountReadingSequence({
     const onClick = () => {
       expecting = index;
       chosen = true;
+      chosenIndex = index;
       jumpRetried = false;
       jumpStarted = false;
       show(index);
@@ -224,11 +226,17 @@ export function mountReadingSequence({
   });
   holdLanding.observe(document.body);
   const onPreference = () => {
-    if (!motionPreference.matches || expecting === undefined) return;
+    if (!motionPreference.matches) return;
+    // A scrollend can release the pending jump while native scrolling is still
+    // moving. Keep the last explicit choice available until manual navigation.
+    const requested =
+      expecting ?? (chosen && jumpStarted ? chosenIndex : undefined);
+    if (requested === undefined) return;
     updateRail();
+    cancelAnimationFrame(jumpFrame);
     jumpStarted = true;
-    show(expecting, { scroll: true });
-    if (atRequestedArticle(expecting)) expecting = undefined;
+    show(requested, { scroll: true });
+    expecting = atRequestedArticle(requested) ? undefined : requested;
   };
   motionPreference.addEventListener("change", onPreference);
   return () => {

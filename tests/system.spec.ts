@@ -107,8 +107,8 @@ test("a completed choice rests in the same still composition as a fresh page", a
     .toEqual(still);
 });
 
-for (const interruptionDelay of [0, 150]) {
-  test(`switching to reduced motion during rapid choices leaves a complete drawing (${interruptionDelay}ms)`, async ({
+for (const interruption of ["queued", "moving"]) {
+  test(`switching to reduced motion during rapid choices leaves a complete drawing (${interruption})`, async ({
     page,
     context,
   }) => {
@@ -116,7 +116,8 @@ for (const interruptionDelay of [0, 150]) {
     await page.evaluate(() => document.fonts.ready);
     // Four choices in one task, so the last transition is genuinely in flight
     // when the motion preference changes.
-    await page.evaluate(() => {
+    const jumpOrigin = await page.evaluate(() => {
+      const origin = scrollY;
       const choices = [
         ...document.querySelectorAll<HTMLButtonElement>("#services .choice"),
       ];
@@ -128,13 +129,42 @@ for (const interruptionDelay of [0, 150]) {
         },
         { once: true },
       );
+      return origin;
     });
     const interrupted = await page
       .locator(".services-art .system-field")
       .getAttribute("aria-label");
-    // Cover both the queued jump and the browser's active native scroll. The
-    // latter needs time to advance; an immediate switch missed the WebKit race.
-    if (interruptionDelay) await page.waitForTimeout(interruptionDelay);
+    // Cover both the queued jump and demonstrated native scroll motion. A
+    // fixed delay can miss the interruption if an engine finishes sooner.
+    if (interruption === "moving") {
+      await expect
+        .poll(
+          () =>
+            page.evaluate(
+              (origin) =>
+                new Promise<number>((resolve) => {
+                  requestAnimationFrame(() => {
+                    const before = scrollY;
+                    requestAnimationFrame(() => {
+                      // Reach into the jump rather than just its first update.
+                      resolve(
+                        Math.abs(scrollY - origin) > 1000
+                          ? Math.abs(scrollY - before)
+                          : 0,
+                      );
+                    });
+                  });
+                }),
+              jumpOrigin,
+            ),
+          {
+            message: "native scrolling is still moving before the switch",
+            timeout: 2000,
+            intervals: [16],
+          },
+        )
+        .toBeGreaterThan(0);
+    }
     await page.emulateMedia({ reducedMotion: "reduce" });
     await expect(page.locator("html")).toHaveAttribute(
       "data-motion-changed",
