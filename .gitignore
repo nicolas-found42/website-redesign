@@ -15,3 +15,6 @@ feedback/
 .worker-dist/
 .dev.vars*
 .env.local
+
+# Local working notes and reconciliation logs.
+.scratch/

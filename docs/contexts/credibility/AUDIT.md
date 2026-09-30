@@ -12,19 +12,19 @@ The footer presents the legal/business name Found42 LLC and a Manhattan address.
 
 The homepage contains five attributed testimonials. Summaries below preserve their subjects without republishing full quotations. [Source for all five entries: homepage carousel](https://www.found42.com/).
 
-| Person | Published attribution | What their statement supports | Limit |
-|---|---|---|---|
-| Robb Henshaw | Former co-founder and CMO, Cameyo, acquired by Google | Positive account of the workshop → scorecard → discovery progression | Does not establish Google endorsement or a measured return |
-| Paul Keely | Co-founder/managing director, Palladium Security LLC; former co-founder, Born In The Cloud | Practical workshop exercises, tailored prompts, and coaching | Specific personal account, not quantified customer-wide productivity |
-| Carmen Paredes Ramirez | Founder/CEO of Ruruka and Maraja; MIT Innovator Under 35 LATAM 2025 | Engaging course delivery and access to materials after live sessions | Historical attendee experience does not verify present course access |
-| Andrew Miller | Former co-founder and CEO, Cameyo, acquired by Google | Advisory and role-play usefulness in a short workshop period | Time-to-value in a testimonial is not a future guarantee |
-| Neville Louison | Founder of Soulful Silverback, part time | Strategy Pivot Workshop, positioning/GTM work, and a landing page | Different named workshop; not proof of a PE acquisition engagement or all C-Level AI deliverables |
+| Person                 | Published attribution                                                                      | What their statement supports                                        | Limit                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Robb Henshaw           | Former co-founder and CMO, Cameyo, acquired by Google                                      | Positive account of the workshop → scorecard → discovery progression | Does not establish Google endorsement or a measured return                                        |
+| Paul Keely             | Co-founder/managing director, Palladium Security LLC; former co-founder, Born In The Cloud | Practical workshop exercises, tailored prompts, and coaching         | Specific personal account, not quantified customer-wide productivity                              |
+| Carmen Paredes Ramirez | Founder/CEO of Ruruka and Maraja; MIT Innovator Under 35 LATAM 2025                        | Engaging course delivery and access to materials after live sessions | Historical attendee experience does not verify present course access                              |
+| Andrew Miller          | Former co-founder and CEO, Cameyo, acquired by Google                                      | Advisory and role-play usefulness in a short workshop period         | Time-to-value in a testimonial is not a future guarantee                                          |
+| Neville Louison        | Founder of Soulful Silverback, part time                                                   | Strategy Pivot Workshop, positioning/GTM work, and a landing page    | Different named workshop; not proof of a PE acquisition engagement or all C-Level AI deliverables |
 
 ScoreApp also publishes a Paul Keely testimonial about establishing an AI adoption baseline. That is separate text about the scorecard and should not be silently substituted for his homepage workshop statement. [Source: assessment](https://found42.scoreapp.com/).
 
 ## Claims and case boundaries
 
-Detailed quantitative promises are tracked once in the [Services claim register](../services/AUDIT.md). Reuse them only with their attribution and current approval status. The negotiation article describes a named collaboration and reported result, but provides no independent sales records. The workshop acquisition case and personality profiles are explicitly instructional material, not customer proof. [Sources: negotiation article](https://www.found42.com/blog/csuite-ai-series-how-to-use-ai-for-culturally-sensitive-negotiations), [toolkit](https://www.found42.com/toolkit).
+Detailed quantitative promises were recorded in a Services claim register that has been retired. Reuse them only with their attribution and current approval status. The negotiation article describes a named collaboration and reported result, but provides no independent sales records. The workshop acquisition case and personality profiles are explicitly instructional material, not customer proof. [Sources: negotiation article](https://www.found42.com/blog/csuite-ai-series-how-to-use-ai-for-culturally-sensitive-negotiations), [toolkit](https://www.found42.com/toolkit).
 
 No inspected source establishes a PE client roster, a specialized portfolio-company product, or an endorsement by Google, Amazon, MIT, or the organizations named in personal biographies. The sources establish that those names are mentioned and how they are attributed; they do not establish a corporate endorsement relationship.
 
