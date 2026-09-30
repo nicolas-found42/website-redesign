@@ -116,12 +116,37 @@ for (const interruption of ["queued", "moving"]) {
     await page.evaluate(() => document.fonts.ready);
     // Four choices in one task, so the last transition is genuinely in flight
     // when the motion preference changes.
-    const jumpOrigin = await page.evaluate(() => {
+    const { interrupted, movement } = await page.evaluate(async (mode) => {
       const origin = scrollY;
+      // Observe every frame before clicking: driver round trips can miss a
+      // native jump entirely, especially when WebKit is under load.
+      const moving =
+        mode === "moving"
+          ? new Promise<number>((resolve) => {
+              const started = performance.now();
+              let previous = origin;
+              const sample = () => {
+                const current = scrollY;
+                const delta = Math.abs(current - previous);
+                if (previous !== origin && current !== origin && delta > 0) {
+                  resolve(delta);
+                } else if (performance.now() - started >= 2000) {
+                  resolve(0);
+                } else {
+                  previous = current;
+                  requestAnimationFrame(sample);
+                }
+              };
+              requestAnimationFrame(sample);
+            })
+          : Promise.resolve(0);
       const choices = [
         ...document.querySelectorAll<HTMLButtonElement>("#services .choice"),
       ];
       [1, 2, 0, 2].forEach((index) => choices[index].click());
+      const interrupted = document
+        .querySelector(".services-art .system-field")
+        ?.getAttribute("aria-label");
       matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
         "change",
         () => {
@@ -129,42 +154,13 @@ for (const interruption of ["queued", "moving"]) {
         },
         { once: true },
       );
-      return origin;
-    });
-    const interrupted = await page
-      .locator(".services-art .system-field")
-      .getAttribute("aria-label");
-    // Cover both the queued jump and demonstrated native scroll motion. A
-    // fixed delay can miss the interruption if an engine finishes sooner.
+      return { interrupted, movement: await moving };
+    }, interruption);
     if (interruption === "moving") {
-      await expect
-        .poll(
-          () =>
-            page.evaluate(
-              (origin) =>
-                new Promise<number>((resolve) => {
-                  requestAnimationFrame(() => {
-                    const before = scrollY;
-                    requestAnimationFrame(() => {
-                      // Confirm departure and motion across consecutive frames.
-                      // A fixed distance can miss a short or fast native jump.
-                      resolve(
-                        Math.abs(scrollY - origin) > 0
-                          ? Math.abs(scrollY - before)
-                          : 0,
-                      );
-                    });
-                  });
-                }),
-              jumpOrigin,
-            ),
-          {
-            message: "native scrolling is still moving before the switch",
-            timeout: 2000,
-            intervals: [16],
-          },
-        )
-        .toBeGreaterThan(0);
+      expect(
+        movement,
+        "native scrolling is still moving before the switch",
+      ).toBeGreaterThan(0);
     }
     await page.emulateMedia({ reducedMotion: "reduce" });
     await expect(page.locator("html")).toHaveAttribute(
@@ -220,7 +216,6 @@ for (const interruption of ["queued", "moving"]) {
     // The rapid clicks end on Automations; the drawing must settle on that
     // customer journey even if the reading observer briefly reports another.
     // This checks the label captured before the motion change, not its current value.
-    // eslint-disable-next-line playwright/prefer-web-first-assertions
     expect(interrupted).toBe(
       "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
     );
