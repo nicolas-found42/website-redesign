@@ -1,7 +1,9 @@
 # Review submission evidence
 
 Comparable Chromium captures use the same synthetic saved wording draft on the
-home page, with reduced motion, at 1440 × 1000 and 390 × 844.
+home page, with reduced motion, at 1440 × 1000 and 390 × 844. Both versions
+load the same font files; font requests were checked for successful responses
+before capture.
 
 - **Before**: main commit `c3420032fc007f5638b5c98892a3aa41d22488ee`; Send opens
   the download/copy handoff.
