@@ -68,7 +68,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run worker:check
         if: matrix.shard == 1
-      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
+      - run: npm test -- --workers=2 --shard=${{ matrix.shard }}/4
       - name: Summarize browser timings
         if: ${{ !cancelled() }}
         run: |

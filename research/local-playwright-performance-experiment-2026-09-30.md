@@ -30,11 +30,20 @@ A matched same-SHA GitHub Actions comparison then ran both the normal four-worke
 | `fullyParallel` | 157s | 167s | 277s | 276s | **277s** |
 | file-level | 221s | 204s | 184s | 209s | **221s** |
 
-In this run, full parallelism increased the critical test step by **56s (25.3%)** and summed test-step time by 59s. As a single comparison, this is evidence for keeping CI file-level, not a universal estimate. The configuration now uses `fullyParallel` locally but disables it when `CI` is set. A separate same-SHA four-versus-two-worker CI experiment remains to decide whether the CI worker count itself should change.
+In this run, full parallelism increased the critical test step by **56s (25.3%)** and summed test-step time by 59s. As a single comparison, this is evidence for keeping CI file-level, not a universal estimate. The configuration now uses `fullyParallel` locally but disables it when `CI` is set.
+
+A second same-SHA experiment at `206eb35` compared four and two workers with file-level scheduling and all three browsers:
+
+| Workers | Shard 1 | Shard 2 | Shard 3 | Shard 4 | Slowest shard | Test outcomes |
+| ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 4 | 208s | 177s | 261s | 270s | **270s** | 605 passed, 1 failed; no retries |
+| 2 | 167s | 192s | 195s | 182s | **195s** | 606 passed; no retries |
+
+Two workers finished the slowest test shard **75s (27.8%) faster** in this paired run and avoided a WebKit transition-state failure seen in the four-worker run. This is still one comparison, but it justifies setting normal CI shards to two workers and retaining the manual four-worker/file-level benchmark for repeat measurement. The PR gate should confirm the change before treating this as stable.
 
 ## Jev input
 
-Three OpenRouter System One calls used the account key already available through the user's interactive shell; no key was printed or saved. The first ranked preserving all engines while capping workers and avoiding repeated build work highest (A, probability 0.95), and flagged shard balance as a risk. The second saw the local measurements but recommended more data (probability 0.62), specifically a peak CPU/RSS comparison. After the user clarified that CI speed matters more than GitHub runner cost, a third Jev call selected a matched same-SHA CI comparison of file-level versus fully-parallel scheduling (probability 0.98) and retained two workers as the local default (probability 0.99). Jev advised measurement, not a speculative worker-count change.
+Four successful OpenRouter System One calls used the account key already available through the user's interactive shell; no key was printed or saved. The first ranked preserving all engines while capping workers and avoiding repeated build work highest (A, probability 0.95), and flagged shard balance as a risk. The second recommended more local data (probability 0.62), specifically peak CPU/RSS comparison. After the user clarified that CI speed matters more than GitHub runner cost, the third selected a matched same-SHA CI scheduling comparison (probability 0.98) and retained two workers locally (probability 0.99). With the matched CI measurements, the fourth favored two workers for normal CI (probability 0.82) and recommended repeating the comparison before treating the result as stable (probability 0.99).
 
 The decisions endpoint and TypeSafe/OpenRouter integration are documented at [OpenRouter's TypeSafe SDK guide](https://openrouter.ai/docs/guides/community/typesafe-sdk); Jev returns typed judgments, not performance measurements. Performance claims in this report come only from command output.
 
