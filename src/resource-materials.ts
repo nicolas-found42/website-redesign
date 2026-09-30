@@ -92,7 +92,7 @@ export const essays = [
       {
         title: "Audit the highest-stakes work",
         paragraphs: [
-          "Next step: The operations lead responsible for production AI systems should audit the three highest-stakes agents (those affecting customer decisions, revenue, or compliance) using the Phase 1 template by end of week. For each one, document the decision or task owned, current success measurement, named ownership, and whether outcome verification is possible within 30 days. Count how many agents fail the verification test. That number is your governance gap.",
+          "Next step: The operations lead responsible for production AI systems should audit the three highest-stakes agents (those affecting customer decisions, revenue, or compliance) using these verification questions by end of week. For each one, document the decision or task owned, current success measurement, named ownership, and whether outcome verification is possible within 30 days. Count how many agents fail the verification test. That number is your governance gap.",
           "Without verifiable outcomes, accountability becomes diffuse and failure modes stay invisible until they cost real money.",
         ],
       },
