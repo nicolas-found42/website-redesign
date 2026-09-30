@@ -1,5 +1,49 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Download } from "@playwright/test";
 import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+
+// These hashes identify the original Drive packages independently validated by
+// ZIP extraction. A truncated, corrupt or substituted download cannot match.
+const originalPackages: Record<string, { sha256: string; entry: string }> = {
+  "exec-comms-reviewer.skill": {
+    sha256: "f6a1fe0a8d9e2556bcc7cc04369c4a57490c119f997f9643315973ce48e1bfa6",
+    entry: "exec-comms-reviewer/SKILL.md",
+  },
+  "strategy-teardown.skill": {
+    sha256: "c450bd3215c68c8b7507f2d1535f2b6beb80262576c4562618fa11d03c1b8848",
+    entry: "strategy-teardown/SKILL.md",
+  },
+  "strategic-advisor.skill": {
+    sha256: "83bbe6bd7fb38ac0bdac07c89f076e0447d44f3c97b93c1209964f31252fd408",
+    entry: "executive-strategic-advisor-v2/SKILL.md",
+  },
+  "context-audit.skill": {
+    sha256: "4cc741b031a5954b7aa59e4f00d129f90795349b90fdfdef8c630bf28afd4cf5",
+    entry: "context-audit/SKILL.md",
+  },
+};
+
+async function expectOriginalPackage(download: Download, filename: string) {
+  expect(download.suggestedFilename()).toBe(filename);
+  expect(await download.failure()).toBeNull();
+  const content = await readFile((await download.path())!);
+  const original = originalPackages[filename];
+  expect(createHash("sha256").update(content).digest("hex")).toBe(
+    original.sha256,
+  );
+  // The verified source ZIPs have no comment: their final 22 bytes are EOCD.
+  const end = content.length - 22;
+  expect(content.readUInt32LE(end)).toBe(0x06054b50);
+  const centralDirectoryOffset = content.readUInt32LE(end + 16);
+  const centralDirectorySize = content.readUInt32LE(end + 12);
+  expect(centralDirectoryOffset + centralDirectorySize).toBe(end);
+  expect(content.readUInt32LE(centralDirectoryOffset)).toBe(0x02014b50);
+  expect(
+    content
+      .subarray(centralDirectoryOffset, end)
+      .includes(Buffer.from(original.entry)),
+  ).toBe(true);
+}
 
 for (const width of [384, 1455]) {
   test(`original skill packages and advisor lesson are available at ${width}px`, async ({
@@ -19,11 +63,7 @@ for (const width of [384, 1455]) {
         .getByRole("link", { name: `Download ${title} skill` })
         .click();
       const download = await downloading;
-      expect(download.suggestedFilename()).toBe(filename);
-      expect(await download.failure()).toBeNull();
-      const content = await readFile((await download.path())!);
-      expect(content.subarray(0, 4).toString("hex")).toBe("504b0304");
-      expect(content.length).toBeGreaterThan(1900);
+      await expectOriginalPackage(download, filename);
     }
     const course = page.locator("#course");
     await expect(
@@ -37,8 +77,7 @@ for (const width of [384, 1455]) {
       .getByRole("link", { name: "Download the strategic advisor skill" })
       .click();
     const download = await downloading;
-    expect(download.suggestedFilename()).toBe("strategic-advisor.skill");
-    expect(await download.failure()).toBeNull();
+    await expectOriginalPackage(download, "strategic-advisor.skill");
     await expect(course).toContainText("references/my-context-template.md");
     await expect(course).not.toContainText("five");
   });

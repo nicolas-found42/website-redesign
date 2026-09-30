@@ -190,8 +190,8 @@ test("#48: visitor-facing copy, resources, actions and annotations", async ({
 
   await page.goto("/resources/");
   const ids = await page
-    .locator("main section[id], .resources-later-head")
-    .evaluateAll((nodes) => nodes.map((n) => n.id || "later"));
+    .locator("main section[id]")
+    .evaluateAll((nodes) => nodes.map((n) => n.id));
   expect(ids).toEqual([
     "scorecard",
     "toolkit",

@@ -57,3 +57,14 @@ passed three times per engine: 9/9 in Chromium, Firefox and WebKit. Before this
 fix, the full local suite had 505 passing cases and one Firefox failure: the
 advisor download box stopped at y=85.77 while the header ended at y=88.
 Final CI status and its run link are recorded in the pull request.
+
+## Automatic review follow-up
+
+All seven initial Cubic findings were addressed: download checks now verify
+original-source SHA-256 hashes, ZIP end and central-directory records, and
+expected skill entries; dead unavailable-resource CSS and test selectors were
+removed; the course-promise guard checks text; issue traceability was restored;
+and the current site map and design documentation describe the delivered
+resources and readable excerpts. All 15 affected browser checks passed across
+Chromium, Firefox and WebKit with four workers. Lint, type checking, production
+build and prerendering passed after this cleanup.

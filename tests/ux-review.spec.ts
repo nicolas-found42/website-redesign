@@ -311,7 +311,7 @@ test("#41: unavailable resource forms and local inquiry forms are absent", async
   ).toHaveAttribute("href", "https://www.found42.com/contact");
 });
 
-test("the source-backed essay excerpts are readable, and newsletter copy stays honest", async ({
+test("#41: the source-backed essay excerpts are readable, and newsletter copy stays honest", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
