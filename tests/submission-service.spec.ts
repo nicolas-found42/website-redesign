@@ -1,6 +1,9 @@
 import { test as base, expect } from "@playwright/test";
 import { Miniflare, convertV4MiniflareOptions } from "miniflare";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { createSubmissionHandler, type Env } from "../worker/index";
 import {
   publicSite,
@@ -115,6 +118,83 @@ const test = base.extend<{ service: Service }>({
 const outcomes = async (response: Response) =>
   ((await response.json()) as { outcomes: Outcome[] }).outcomes;
 
+test("the deployed Worker runtime creates and retries through its native fetch", async () => {
+  const output = mkdtempSync(join(tmpdir(), "found42-worker-runtime-"));
+  let mf: Miniflare | undefined;
+  try {
+    execFileSync(
+      process.execPath,
+      [
+        "node_modules/wrangler/bin/wrangler.js",
+        "deploy",
+        "--dry-run",
+        "--config",
+        "worker/wrangler.jsonc",
+        "--outdir",
+        output,
+      ],
+      { stdio: "pipe" },
+    );
+    const requests: unknown[] = [];
+    mf = new Miniflare(
+      convertV4MiniflareOptions({
+        modules: true,
+        script: readFileSync(join(output, "index.js"), "utf8"),
+        compatibilityDate: "2026-09-30",
+        d1Databases: ["DB"],
+        bindings: {
+          ENABLED: "true",
+          GITHUB_TOKEN: "test-secret",
+          RATE_SALT: "test-salt",
+        },
+        outboundService: async (request) => {
+          expect(request.url).toBe(
+            `https://api.github.com/repos/${repository}/issues`,
+          );
+          requests.push(await request.json());
+          return Response.json(
+            {
+              number: 1201,
+              html_url: `https://github.com/${repository}/issues/1201`,
+            },
+            { status: 201 },
+          );
+        },
+      }),
+    );
+    const DB = await mf.getD1Database("DB");
+    await DB.batch(
+      readFileSync("worker/migrations/0001_submission.sql", "utf8")
+        .split(";")
+        .filter((sql) => sql.trim())
+        .map((sql) => DB.prepare(sql)),
+    );
+    const send = () =>
+      mf!.dispatchFetch("https://service.test/submit", {
+        method: "POST",
+        headers: {
+          Origin: new URL(publicSite).origin,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          version: 1,
+          site: publicSite,
+          items: [item("runtime-feedback")],
+        }),
+      });
+    const receipt = await outcomes(await send());
+    expect(receipt[0]).toMatchObject({
+      status: "confirmed",
+      issue: { number: 1201 },
+    });
+    expect(await outcomes(await send())).toEqual(receipt);
+    expect(requests).toHaveLength(1);
+  } finally {
+    await mf?.dispose();
+    rmSync(output, { recursive: true, force: true });
+  }
+});
+
 test("the service returns a durable receipt and creates one safe issue per item", async ({
   service,
 }) => {
@@ -123,7 +203,7 @@ test("the service returns a durable receipt and creates one safe issue per item"
     kind: "wording",
     current: "Old words",
     proposed:
-      "@nicolas-found42 <img src=x> [click](javascript:alert(1))\n```\nNew words",
+      "@nicolas-found42 <img src=x> [click](javascript:alert(1))\n```\nNew words\n===\n- list\n1. ordered\n+ list\nhttps://example.test",
   };
   const result = await outcomes(await service.send([feedback]));
   expect(result[0]).toMatchObject({
@@ -134,7 +214,13 @@ test("the service returns a durable receipt and creates one safe issue per item"
   const issue = service.requests[0].body!;
   expect(issue.labels).toEqual(["needs-triage", "review-feedback"]);
   expect(issue).not.toHaveProperty("assignees");
-  expect(issue.body).toContain("@\u200bnicolas-found42 &lt;img src=x&gt;");
+  expect(issue.body).toContain("@\u200bnicolas\\-found42 &lt;img src\\=x&gt;");
+  expect(issue.body).toContain("**Importance:** Should change");
+  expect(issue.body).toContain("> \\=\\=\\=");
+  expect(issue.body).toContain("> \\- list");
+  expect(issue.body).toContain("> 1\\. ordered");
+  expect(issue.body).toContain("> \\+ list");
+  expect(issue.body).toContain("> https\\:\\/\\/example\\.test");
   expect(issue.body).toContain("Feedback record");
   expect(issue.body).toContain('"viewport"');
   expect(issue.body).toContain('"state"');
@@ -214,6 +300,7 @@ test("an edited published ID cannot overwrite or create a second issue", async (
   const result = await outcomes(await service.send([revision]));
   expect(result[0]).toMatchObject({ status: "invalid" });
   expect(result[0].message).toContain("different content");
+  expect(result[0].reason).toBe("content-conflict");
   expect(service.requests.filter((request) => request.body)).toHaveLength(1);
 });
 

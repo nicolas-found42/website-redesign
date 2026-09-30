@@ -486,7 +486,7 @@ export function mountReview() {
       <p class="item-head">${esc(receipt.label)}</p>
       <p>${esc(receipt.message)}</p>
       ${receipt.status === "confirmed" && receipt.issue ? `<a class="chip" href="${esc(receipt.issue.url)}" target="_blank" rel="noopener noreferrer">Issue #${receipt.issue.number} on GitHub</a>` : ""}
-      ${receipt.status === "invalid" && receipt.message.includes("different content") ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
+      ${receipt.status === "invalid" && receipt.reason === "content-conflict" ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
     </li>`,
         )
         .join("");

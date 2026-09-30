@@ -1,0 +1,31 @@
+{
+  "endpoint": "https://found42-review-submission.nicolas-6d9.workers.dev/submit",
+  "first": {
+    "outcomes": [
+      {
+        "id": "synthetic-release-108-20260930",
+        "fingerprint": "5336e7433391640430f4b7d4474befa74c8de614cc7a6d67aff8d14f7d310ca6",
+        "status": "confirmed",
+        "issue": {
+          "number": 110,
+          "url": "https://github.com/nicolas-found42/website-redesign/issues/110"
+        },
+        "message": "Published on GitHub."
+      }
+    ]
+  },
+  "retry": {
+    "outcomes": [
+      {
+        "id": "synthetic-release-108-20260930",
+        "fingerprint": "5336e7433391640430f4b7d4474befa74c8de614cc7a6d67aff8d14f7d310ca6",
+        "status": "confirmed",
+        "issue": {
+          "number": 110,
+          "url": "https://github.com/nicolas-found42/website-redesign/issues/110"
+        },
+        "message": "Published on GitHub."
+      }
+    ]
+  }
+}

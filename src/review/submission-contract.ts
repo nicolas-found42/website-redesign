@@ -1,4 +1,5 @@
 import type { FeedbackItem } from "./store";
+import { elementNames } from "./elements";
 
 export const repository = "nicolas-found42/website-redesign";
 export const publicSite = "https://nicolas-found42.github.io/website-redesign/";
@@ -16,6 +17,7 @@ export interface Outcome {
   fingerprint: string;
   status: "confirmed" | "retryable" | "invalid" | "pending";
   message: string;
+  reason?: "content-conflict";
   issue?: { number: number; url: string };
 }
 
@@ -61,35 +63,6 @@ const date = (value: unknown) =>
   text(value, 40) &&
   /^\d{4}-\d{2}-\d{2}T/.test(value) &&
   Number.isFinite(Date.parse(value));
-const elements = [
-  "Heading",
-  "Paragraph",
-  "List item",
-  "Term",
-  "Description",
-  "Quote",
-  "Caption",
-  "Form heading",
-  "Form label",
-  "Link",
-  "Button",
-  "Image",
-  "Video",
-  "Illustration",
-  "Figure",
-  "Form field",
-  "Table heading",
-  "Table cell",
-  "Section",
-  "Navigation",
-  "Card",
-  "List",
-  "Form",
-  "Dialog",
-  "Area",
-  "Site header",
-  "Site footer",
-];
 const pages = [
   "/",
   "/services/",
@@ -142,7 +115,7 @@ export function validItem(value: unknown): value is FeedbackItem {
     !oneOf(target.page, pages) ||
     !text(target.pageName, 100) ||
     !text(target.section, 300) ||
-    !oneOf(target.element, elements) ||
+    !oneOf(target.element, elementNames) ||
     !text(target.selector, 1000) ||
     !text(target.text, 4000, false) ||
     !Array.isArray(target.state) ||

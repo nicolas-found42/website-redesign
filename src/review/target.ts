@@ -1,4 +1,5 @@
 import { routeFromPath } from "../paths";
+import { kindForTag, type ElementKind } from "./elements";
 
 /**
  * What a piece of feedback points at, recorded so whoever acts on it can find
@@ -11,7 +12,7 @@ export interface Target {
   pageName: string;
   section: string;
   /** What kind of thing it is: Heading, Paragraph, Image… */
-  element: string;
+  element: ElementKind;
   selector: string;
   /** The words it showed, or an image's description. */
   text: string;
@@ -67,39 +68,7 @@ export function elementKind(el: Element) {
   if (/^h[1-6]$/.test(tag)) return "Heading";
   if (el.matches(".site-header")) return "Site header";
   if (el.matches(".site-footer")) return "Site footer";
-  const kinds: Record<string, string> = {
-    p: "Paragraph",
-    li: "List item",
-    dt: "Term",
-    dd: "Description",
-    blockquote: "Quote",
-    figcaption: "Caption",
-    caption: "Caption",
-    legend: "Form heading",
-    label: "Form label",
-    a: "Link",
-    button: "Button",
-    summary: "Button",
-    img: "Image",
-    picture: "Image",
-    video: "Video",
-    svg: "Illustration",
-    figure: "Figure",
-    input: "Form field",
-    select: "Form field",
-    textarea: "Form field",
-    th: "Table heading",
-    td: "Table cell",
-    section: "Section",
-    nav: "Navigation",
-    article: "Card",
-    ul: "List",
-    ol: "List",
-    dl: "List",
-    form: "Form",
-    dialog: "Dialog",
-  };
-  return kinds[tag] ?? "Area";
+  return kindForTag(tag);
 }
 
 /** Kinds whose words are the thing a reviewer would reword. */

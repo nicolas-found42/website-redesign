@@ -144,7 +144,11 @@ This one live check is owner-approved release verification, not CI.
 On September 30, 2026, the owner account's Workers plans page showed
 **Free, $0, Current plan**. The receipt database was created and the disabled
 Worker was deployed at
-`https://found42-review-submission.nicolas-6d9.workers.dev`. `RATE_SALT` is
-configured. Delivery activation and the synthetic check are awaiting the
-repository-restricted GitHub secret; the Pages build also needs its public
-endpoint variable. The implementation PR records final release evidence.
+`https://found42-review-submission.nicolas-6d9.workers.dev`. Both server secrets
+are configured, migrations are applied, delivery is enabled, and the repository
+Actions variable points to its `/submit` endpoint. The live API check created
+[synthetic issue #110](https://github.com/nicolas-found42/website-redesign/issues/110),
+returned the identical receipt on retry, and preserved every feedback field,
+literal formatting, attribution, importance, both labels and no assignee.
+The test issue is closed. The production Pages UI still requires this PR's
+merge and deployment; API verification does not claim that UI is deployed.

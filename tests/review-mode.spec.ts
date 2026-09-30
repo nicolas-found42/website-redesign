@@ -383,6 +383,46 @@ async function confirmedResponse(request: {
   };
 }
 
+test("a content conflict offers an explicit new draft independently of message wording", async ({
+  page,
+}) => {
+  let attempts = 0;
+  await page.route("https://review-submission.test/submit", async (route) => {
+    const result = await confirmedResponse(route.request().postDataJSON());
+    attempts++;
+    await route.fulfill({
+      json:
+        attempts === 1
+          ? {
+              outcomes: result.outcomes.map((outcome) => ({
+                id: outcome.id,
+                fingerprint: outcome.fingerprint,
+                status: "invalid",
+                reason: "content-conflict",
+                message: "The original version already has its own issue.",
+              })),
+            }
+          : result,
+    });
+  });
+  await page.goto("/?review");
+  await saveWording(page, "Publish this revision as separate feedback.");
+  const original = (await saved(page)).items[0];
+  await sendButton(page).click();
+  await panel(page)
+    .getByRole("button", { name: "Save as new feedback" })
+    .click();
+  const revised = (await saved(page)).items[0];
+  expect(revised.id).not.toBe(original.id);
+  expect({ ...revised, id: original.id }).toEqual(original);
+  await panel(page)
+    .getByRole("button", { name: "Send 1 feedback item" })
+    .click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "1 item published. 0 drafts remain",
+  );
+});
+
 test("a mixed receipt retains the failed draft across pages and reloads", async ({
   page,
 }) => {

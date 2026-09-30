@@ -103,7 +103,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
   async function github(env: Env, path: string, init: RequestInit = {}) {
     return githubFetch(`https://api.github.com/repos/${repository}/${path}`, {
       ...init,
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(12_000),
       headers: {
         Accept: "application/vnd.github+json",
@@ -191,10 +191,13 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
       .first<Receipt>();
     if (!receipt) return result("retryable", messages.unavailable);
     if (receipt.fingerprint !== hash)
-      return result(
-        "invalid",
-        "This feedback ID was already submitted with different content. Keep this draft and save it as new feedback to publish the revision.",
-      );
+      return {
+        ...result(
+          "invalid",
+          "This feedback ID was already submitted with different content. Keep this draft and save it as new feedback to publish the revision.",
+        ),
+        reason: "content-conflict",
+      };
     if (receipt.state === "confirmed") return resultWithIssue(receipt);
     if (receipt.state === "creating") return reconcile(env, receipt);
     const claim = crypto.randomUUID();

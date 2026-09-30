@@ -1,5 +1,5 @@
 import type { FeedbackItem } from "./store";
-import { itemMarkdown, kindNames } from "./export";
+import { itemMarkdown, kindNames, priorityNames } from "./export";
 import { targetLabel } from "./target";
 
 export const issueLabels = ["needs-triage", "review-feedback"];
@@ -7,13 +7,17 @@ export const issueMarker = (id: string, hash: string) =>
   `<!-- found42-feedback:${id}:${hash} -->`;
 
 /** User text stays literal, with mentions and active Markdown disabled. */
+const literalEntities: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  "@": "@\u200b",
+};
 const literal = (text: string) =>
-  text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/@/g, "@\u200b")
-    .replace(/[\\`*_{}[\]()#!|~]/g, "\\$&");
+  text.replace(
+    /[!-/:-@[-`{-~]/g,
+    (character) => literalEntities[character] ?? `\\${character}`,
+  );
 function escaped(value: unknown): unknown {
   if (typeof value === "string") return literal(value);
   if (Array.isArray(value)) return value.map(escaped);
@@ -53,6 +57,8 @@ export function feedbackIssue(item: FeedbackItem, site: string, hash: string) {
       `Reported by **${safe.reviewer}** (self-reported name) on ${item.created.slice(0, 10)} through review mode.`,
       "",
       `Page: ${site}${item.target.page.replace(/^\//, "")}`,
+      "",
+      `**Importance:** ${priorityNames[item.priority]}`,
       "",
       readable,
       "",
