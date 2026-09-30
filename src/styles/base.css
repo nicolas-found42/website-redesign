@@ -107,7 +107,10 @@ body {
  * once on the scroller, so focus movement gets the same clearance as anchors.
  */
 html {
-  scroll-padding-top: clamp(88px, 6vw, 116px);
+  scroll-padding-top: max(
+    calc(var(--header-height, 88px) + 16px),
+    clamp(88px, 6vw, 116px)
+  );
 }
 
 /* ── Layout ── */

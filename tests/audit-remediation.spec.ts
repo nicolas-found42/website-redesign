@@ -188,9 +188,10 @@ test("F07: a control reached by tabbing backwards is not left under the sticky h
       const box = document.activeElement!.getBoundingClientRect();
       return box.bottom > 0 && box.top < innerHeight;
     });
-    const { top, header, inHeader, skip } = await page.evaluate(() => {
+    const { top, header, inHeader, skip, label } = await page.evaluate(() => {
       const active = document.activeElement as HTMLElement;
       return {
+        label: active.textContent,
         top: active.getBoundingClientRect().top,
         header: document.querySelector(".site-header")!.getBoundingClientRect()
           .bottom,
@@ -199,7 +200,7 @@ test("F07: a control reached by tabbing backwards is not left under the sticky h
       };
     });
     if (inHeader || skip) break;
-    expect(top, `step ${step}`).toBeGreaterThanOrEqual(header - 1);
+    expect(top, `step ${step}: ${label}`).toBeGreaterThanOrEqual(header - 1);
   }
 });
 
