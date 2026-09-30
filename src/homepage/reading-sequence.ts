@@ -235,6 +235,7 @@ export function mountReadingSequence({
     updateRail();
     cancelAnimationFrame(jumpFrame);
     chosen = true;
+    jumpRetried = false;
     jumpStarted = true;
     show(requested, { scroll: true });
     expecting = atRequestedArticle(requested) ? undefined : requested;
