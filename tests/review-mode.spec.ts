@@ -629,6 +629,9 @@ test("concurrent tab sends preserve the confirmed receipt after reload", async (
   page,
   context,
 }) => {
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, "locks", { value: undefined });
+  });
   let release!: () => void;
   let arrived!: () => void;
   const wait = new Promise<void>((resolve) => {

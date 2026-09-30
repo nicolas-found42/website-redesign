@@ -14,6 +14,83 @@ export const sendLabel = (count: number) =>
   `Send ${count} feedback ${count === 1 ? "item" : "items"}`;
 const pending =
   "We could not confirm delivery. Your draft is saved. Retry later to check whether its issue was created.";
+const storageLock = "found42-review:submission-lock";
+
+async function withSubmissionLock<T>(run: () => Promise<T>): Promise<T> {
+  if (navigator.locks)
+    return navigator.locks.request("found42-review:submission", run);
+
+  // Web Locks is not available in every supported browser. localStorage writes
+  // are synchronous across same-origin tabs, so a short renewable lease keeps
+  // those browsers from starting duplicate sends at the same time.
+  const owner = `${Date.now()}-${Math.random()}`;
+  const leaseMs = 30_000;
+  const lockValue = () =>
+    JSON.stringify({ owner, expires: Date.now() + leaseMs });
+  const acquire = (): boolean | undefined => {
+    try {
+      const current: unknown = JSON.parse(
+        localStorage.getItem(storageLock) ?? "null",
+      );
+      if (
+        current &&
+        typeof current === "object" &&
+        "expires" in current &&
+        typeof current.expires === "number" &&
+        current.expires > Date.now()
+      )
+        return false;
+      const value = lockValue();
+      localStorage.setItem(storageLock, value);
+      return localStorage.getItem(storageLock) === value;
+    } catch {
+      return undefined;
+    }
+  };
+
+  while (true) {
+    const acquired = acquire();
+    if (acquired === undefined) return run();
+    if (acquired) break;
+    await new Promise((resolve) => window.setTimeout(resolve, 50));
+  }
+
+  const renew = window.setInterval(() => {
+    try {
+      const current: unknown = JSON.parse(
+        localStorage.getItem(storageLock) ?? "null",
+      );
+      if (
+        current &&
+        typeof current === "object" &&
+        "owner" in current &&
+        current.owner === owner
+      )
+        localStorage.setItem(storageLock, lockValue());
+    } catch {
+      /* The lease will expire if storage stops being available. */
+    }
+  }, leaseMs / 3);
+  try {
+    return await run();
+  } finally {
+    window.clearInterval(renew);
+    try {
+      const current: unknown = JSON.parse(
+        localStorage.getItem(storageLock) ?? "null",
+      );
+      if (
+        current &&
+        typeof current === "object" &&
+        "owner" in current &&
+        current.owner === owner
+      )
+        localStorage.removeItem(storageLock);
+    } catch {
+      /* A future send can take over when the lease expires. */
+    }
+  }
+}
 
 /** Sends the captured versions in bounded chunks, retaining every uncertain item. */
 export async function submitDrafts(
@@ -21,11 +98,7 @@ export async function submitDrafts(
   site: string,
   progress: (done: number, total: number) => void,
 ) {
-  if (navigator.locks)
-    return navigator.locks.request("found42-review:submission", () =>
-      sendSnapshot(store, site, progress),
-    );
-  return sendSnapshot(store, site, progress);
+  return withSubmissionLock(() => sendSnapshot(store, site, progress));
 }
 
 async function sendSnapshot(
