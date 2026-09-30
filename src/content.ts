@@ -12,9 +12,8 @@ export const destinationRegister = {
 } as const;
 
 /**
- * The direct channels found42.com/contact already publishes (recorded in
- * `docs/contexts/inquiries/AUDIT.md`), so a visitor ready to talk can reach a
- * person without going through the form.
+ * The direct channels found42.com/contact already publishes, so a visitor
+ * ready to talk can reach a person without going through the form.
  */
 export const directContact = {
   email: "richard@found42.com",
@@ -613,7 +612,7 @@ export const biography = [
 /**
  * The founder biography lines an industry page quotes: the published
  * experience closest to that reader's work. They stay biography, not a client
- * record or an employer's endorsement (see the Credibility audit).
+ * record or an employer's endorsement.
  */
 export const industryFounder: Partial<
   Record<keyof typeof industries, readonly string[]>

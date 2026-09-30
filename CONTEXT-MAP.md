@@ -4,11 +4,11 @@ This map organizes the Found42 website's domain vocabulary. The contexts describ
 
 ## Contexts
 
-- [Resources](docs/contexts/resources/CONTEXT.md): free materials, public reading, assessments, requests, and fulfillment. [Inventory and access audit](docs/contexts/resources/AUDIT.md).
-- [Learning](docs/contexts/learning/CONTEXT.md): C-Level AI workshops, toolkit, advisory tools, and fictional practice exercises. [Learning audit](docs/contexts/learning/AUDIT.md).
+- [Resources](docs/contexts/resources/CONTEXT.md): free materials, public reading, assessments, requests, and fulfillment.
+- [Learning](docs/contexts/learning/CONTEXT.md): C-Level AI workshops, toolkit, advisory tools, and fictional practice exercises.
 - [Services](docs/contexts/services/CONTEXT.md): tailored training, workflow automation, product differentiation, and growth platforms.
-- [Inquiries](docs/contexts/inquiries/CONTEXT.md): consultation requests, discovery, service interests, and communication choices. [Journey audit](docs/contexts/inquiries/AUDIT.md).
-- [Credibility](docs/contexts/credibility/CONTEXT.md): founder identity, testimonials, reported outcomes, and brand assets. [Evidence audit](docs/contexts/credibility/AUDIT.md).
+- [Inquiries](docs/contexts/inquiries/CONTEXT.md): consultation requests, discovery, service interests, and communication choices.
+- [Credibility](docs/contexts/credibility/CONTEXT.md): founder identity, testimonials, reported outcomes, and brand assets.
 
 ## Relationships
 
@@ -31,6 +31,4 @@ remain historical context. See [site map](docs/SITE-MAP.md) for current routes.
 ## Supporting documents
 
 - [Found42 website prototype map](https://github.com/nicolas-found42/website-redesign/issues/9) (issue tracker): destination, settled direction, open decisions and scope. Supersedes the removed `SPEC-PLAN.md`.
-- [Source register](research/deep-audit-sources-2026-09-09.json): requested and final URLs, response status, and page titles for 28 retrieved sources.
-- [Earlier site audit](research/site-audit-2026-09-09.md): historical baseline.
 - [Domain documentation rules](docs/agents/domain.md): glossary consumption and ADR locations.
