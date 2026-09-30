@@ -236,9 +236,18 @@ export function mountReadingSequence({
     cancelAnimationFrame(jumpFrame);
     chosen = true;
     jumpRetried = false;
-    jumpStarted = true;
-    show(requested, { scroll: true });
-    expecting = atRequestedArticle(requested) ? undefined : requested;
+    jumpStarted = false;
+    expecting = requested;
+    show(requested);
+    // Later motion subscribers restore headings and stop smooth scrolling.
+    // Land after those layout changes, rather than releasing a stale target.
+    jumpFrame = requestAnimationFrame(() => {
+      if (expecting !== requested) return;
+      updateRail();
+      jumpStarted = true;
+      show(requested, { scroll: true });
+      expecting = atRequestedArticle(requested) ? undefined : requested;
+    });
   };
   motionPreference.addEventListener("change", onPreference);
   return () => {

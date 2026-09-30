@@ -123,21 +123,24 @@ for (const interruption of ["queued", "moving"]) {
       const moving =
         mode === "moving"
           ? new Promise<number>((resolve) => {
-              const started = performance.now();
+              let frame = 0;
               let previous = origin;
+              const timeout = window.setTimeout(() => {
+                cancelAnimationFrame(frame);
+                resolve(0);
+              }, 2000);
               const sample = () => {
                 const current = scrollY;
                 const delta = Math.abs(current - previous);
                 if (previous !== origin && current !== origin && delta > 0) {
+                  clearTimeout(timeout);
                   resolve(delta);
-                } else if (performance.now() - started >= 2000) {
-                  resolve(0);
                 } else {
                   previous = current;
-                  requestAnimationFrame(sample);
+                  frame = requestAnimationFrame(sample);
                 }
               };
-              requestAnimationFrame(sample);
+              frame = requestAnimationFrame(sample);
             })
           : Promise.resolve(0);
       const choices = [
@@ -221,6 +224,39 @@ for (const interruption of ["queued", "moving"]) {
     );
   });
 }
+
+test("a reduced-motion service jump lands after later preference handlers change layout", async ({
+  page,
+}) => {
+  await page.goto("/#services");
+  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => {
+    // Native smooth scrolling can suppress scroll anchoring. Model a later
+    // motion subscriber restoring content after the reading handler runs.
+    document.documentElement.style.overflowAnchor = "none";
+    matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
+      "change",
+      () => {
+        document.querySelector<HTMLElement>("#services")!.style.paddingTop =
+          "1200px";
+      },
+      { once: true },
+    );
+    document.querySelector<HTMLButtonElement>('[data-service="2"]')!.click();
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect
+    .poll(() =>
+      page.locator('[data-service-article="2"]').evaluate((article) => {
+        const box = article.getBoundingClientRect();
+        return Math.abs(box.top + box.height / 2 - innerHeight / 2);
+      }),
+    )
+    .toBeLessThan(60);
+  await expect(
+    page.getByRole("button", { name: "Automations", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+});
 
 test("a visitor on a phone gets each service's own drawing and can jump between them", async ({
   browser,
