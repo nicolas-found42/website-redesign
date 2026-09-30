@@ -28,6 +28,7 @@ export function mountReadingSequence({
   let expecting: number | undefined;
   /** A narrow explicit choice remains selected until the visitor navigates on. */
   let chosen = false;
+  let chosenIndex = 0;
   let jumpRetried = false;
   let jumpStarted = false;
 
@@ -51,7 +52,9 @@ export function mountReadingSequence({
       // Stacked, an article is taller than the screen: its start, under the
       // rail, is where reading it begins.
       articles[index].scrollIntoView({
-        behavior: motionPreference.matches ? "auto" : "smooth",
+        // Explicitly cancel a native smooth scroll when motion is reduced.
+        // WebKit can leave an interrupted jump short of its target with auto.
+        behavior: motionPreference.matches ? "instant" : "smooth",
         block: narrow.matches ? "start" : "center",
       });
     }
@@ -192,6 +195,7 @@ export function mountReadingSequence({
     const onClick = () => {
       expecting = index;
       chosen = true;
+      chosenIndex = index;
       jumpRetried = false;
       jumpStarted = false;
       show(index);
@@ -222,11 +226,18 @@ export function mountReadingSequence({
   });
   holdLanding.observe(document.body);
   const onPreference = () => {
-    if (!motionPreference.matches || expecting === undefined) return;
+    if (!motionPreference.matches) return;
+    // A scrollend can release or give up on the pending jump while native
+    // scrolling is still moving. Keep the last explicit choice available until
+    // manual navigation, and hold it again once it is re-requested.
+    const requested = expecting ?? (jumpStarted ? chosenIndex : undefined);
+    if (requested === undefined) return;
     updateRail();
+    cancelAnimationFrame(jumpFrame);
+    chosen = true;
     jumpStarted = true;
-    show(expecting, { scroll: true });
-    if (atRequestedArticle(expecting)) expecting = undefined;
+    show(requested, { scroll: true });
+    expecting = atRequestedArticle(requested) ? undefined : requested;
   };
   motionPreference.addEventListener("change", onPreference);
   return () => {

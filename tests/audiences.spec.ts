@@ -290,6 +290,73 @@ test("narrow audience jumps retry when an interrupted article only crosses the v
   }
 });
 
+test("reduced motion corrects a narrow audience jump released short of its target", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 384, height: 742 });
+  await page.addInitScript(() => {
+    const original = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = function (options) {
+      if (!this.matches("[data-audience-panel]"))
+        return original.call(this, options);
+
+      const calls = (document.documentElement.dataset.testScrollBehaviors ?? "")
+        .split(",")
+        .filter(Boolean);
+      calls.push(
+        typeof options === "object" ? (options.behavior ?? "auto") : "auto",
+      );
+      document.documentElement.dataset.testScrollBehaviors = calls.join(",");
+      if (calls.length > 2) return original.call(this, options);
+
+      const box = this.getBoundingClientRect();
+      window.scrollTo({
+        top: scrollY + box.top - innerHeight * 0.75,
+        behavior: "instant",
+      });
+      window.dispatchEvent(new Event("scrollend"));
+    };
+  });
+
+  for (const route of ["/", "/services/"]) {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto(route + "#audiences");
+    const choice = page.getByRole("button", { name: names[2], exact: true });
+    await choice.click();
+    await expect
+      .poll(() =>
+        page.locator("html").getAttribute("data-test-scroll-behaviors"),
+      )
+      .toBe("smooth,smooth");
+
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect
+      .poll(() =>
+        page.locator("html").getAttribute("data-test-scroll-behaviors"),
+      )
+      .toBe("smooth,smooth,instant");
+    const article = page.getByRole("article", {
+      name: names[2],
+      exact: true,
+    });
+    await expect
+      .poll(() =>
+        article.evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          const margin = Number.parseFloat(
+            getComputedStyle(element).scrollMarginTop,
+          );
+          const padding = Number.parseFloat(
+            getComputedStyle(document.documentElement).scrollPaddingTop,
+          );
+          return Math.abs(box.top - (margin + padding));
+        }),
+      )
+      .toBeLessThanOrEqual(4);
+    await expect(choice).toHaveAttribute("aria-pressed", "true");
+  }
+});
+
 test("phone audience choices keep the hidden pinned drawings still", async ({
   page,
 }) => {
