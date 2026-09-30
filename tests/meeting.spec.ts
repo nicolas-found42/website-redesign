@@ -32,7 +32,10 @@ test("meeting journey reads in order and separates audiences from delivery", asy
     "contact",
   ]);
   await expect(
-    page.getByText("Executive Communications", { exact: false }),
+    page.getByRole("heading", {
+      name: "Executive Communications Mini-Course",
+      exact: true,
+    }),
   ).toHaveCount(0);
 });
 

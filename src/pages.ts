@@ -17,6 +17,7 @@ import { reviewScene, sceneFigure } from "./audiences";
 import { schematicFigure, masterSchematic } from "./schematic";
 import { sitePath } from "./paths";
 import { catalogSections } from "./catalog";
+import { starterSkills } from "./resource-materials";
 export const pageMeta: Record<string, { title: string; description: string }> =
   {
     "": {
@@ -52,7 +53,7 @@ export const pageMeta: Record<string, { title: string; description: string }> =
     blog: {
       title: "Operator Notes | Found42",
       description:
-        "Forthcoming essays on role-specific Claude skills, workflow design and human review.",
+        "Preview essays on role-specific Claude skills, workflow design and human review.",
     },
   };
 const sectionLabel = (label: string) =>
@@ -62,49 +63,34 @@ const lead = (body: string) =>
   `<p class="lead">${body}</p>${body.includes("Claude") ? `<p class="note--plain gloss">${claudeGloss}</p>` : ""}`;
 const opening = (label: string, title: string, body: string, aside: string) =>
   `<section class="page-opening wrap"><div>${sectionLabel(label)}<h1 class="display" data-reveal-lines>${title}</h1>${lead(body)}<a class="action" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to our team&nbsp;→</a></div><aside class="page-aside">${aside}</aside></section>`;
-/**
- * Planned resources stay visibly unavailable (ADR 0005), grouped after the ones
- * a visitor can use today so they read as what is coming rather than as dead
- * ends among the working links. Each states its status once.
- */
-function laterResources() {
-  const later = resources.filter(
-    (resource) => resource.status === "unavailable",
-  );
-  return `<div class="wrap resources-later-head"><p class="note section-label">Coming later</p><p class="lead">Planned, not available yet. Each says what you can use today instead.</p></div>${later
-    .map((resource) => {
-      const action =
-        "href" in resource
-          ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`
-          : `<a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-interest="${resource.title}">${resource.action}&nbsp;→</a>`;
-      return `<section id="${resource.id}" class="resource-detail resource-later"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${action}</div></div></section>`;
-    })
-    .join("")}`;
+/** Deliver the original skill archives without requiring an email or Drive access. */
+function resourceMaterials(id: string) {
+  if (id === "library")
+    return `<div id="starter-files" class="wrap resource-materials"><div class="starter-grid">${starterSkills.map((skill) => `<article><h3>${skill.title}</h3><p>${skill.description}</p><a class="link" href="${sitePath(`resources/skills/${skill.file}`)}" download="${skill.file}">Download ${skill.title.toLowerCase()} skill&nbsp;→</a></article>`).join("")}</div><p class="note--plain">These are Claude custom skill packages. Upload the .skill file using Claude’s custom skill settings, then configure it for your work and review its outputs. A Claude account with custom skills enabled is required. See <a class="link" href="https://support.claude.com/en/articles/12512198-how-to-create-custom-skills">Claude’s custom skill instructions</a>.</p></div>`;
+  if (id === "course")
+    return `<div class="wrap resource-materials"><h3>Set up your advisor</h3><p>The package includes a context template and scenario prompts. Fill in references/my-context-template.md and save it as references/my-context.md to calibrate the advisor to your role, organization and priorities. Keep confidential context in your own copy.</p><a class="link" href="${sitePath("resources/skills/strategic-advisor.skill")}" download="strategic-advisor.skill">Download the strategic advisor skill&nbsp;→</a></div>`;
+  return "";
 }
 function resourcesPage() {
   return (
     opening(
       "Free resources",
       "Start with the work.",
-      "Three free resources you can use today, and two more that are coming later. Choose better use cases, build stronger skills, and catch weak outputs.",
+      "Five free resources to explore: a readiness check, workshop materials, a published playbook request, four Claude skill packages and a Strategic Advisor lesson.",
       '<p class="note page-aside-label">No abstract AI curriculum.</p>',
     ) +
     `<section id="scorecard" class="wrap band"><div class="content-split scorecard-split"><div class="scorecard-intro"><p class="note section-label">AI Readiness Scorecard</p><h2 class="display">AI Readiness Scorecard</h2><p>${resources[0].description}</p><p>Twelve yes-or-no questions about your current AI use, data practices, workflows, team readiness and automation goals, then one open question. It takes about five minutes.</p><p>Your result is a readiness stage, a status for each area and where to start.</p><p class="note--plain">No email required. Your answers stay in this browser and are not sent or stored.</p></div><div id="scorecard-app" class="assessment scorecard" role="group" aria-label="AI Readiness Scorecard"><noscript><p class="assessment-body">The scorecard needs JavaScript. The original assessment on ScoreApp is linked on this page.</p></noscript></div><div class="scorecard-original"><p class="note--plain">Prefer an emailed PDF report? The original assessment on ScoreApp asks for your first and last name, email, company and country before the questions. Its privacy and communications terms apply.</p><a class="link" href="${destinationRegister.scoreApp}">Take the original assessment on ScoreApp&nbsp;→</a></div></div><details class="workflow-preview"><summary>Try the four-question workflow preview · No email required</summary><p>From the redesign prototype: test one workflow against repetition, output clarity, review safety and frequency. It is separate from the AI Readiness Scorecard above, which looks at the business rather than one workflow.</p><div id="assessment" class="assessment" aria-label="Workflow discussion preview"></div></details></section>` +
     resources
-      .filter(
-        (resource) =>
-          resource.id !== "scorecard" && resource.status === "available",
-      )
+      .filter((resource) => resource.id !== "scorecard")
       .map((resource) => {
         const access =
           resource.id === "playbook"
             ? `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a><p class="note--plain">The published playbook is requested on found42.com. Its form asks for your email, LinkedIn profile and a human check.</p>`
             : `<a class="link" href="${resource.href}">${resource.action}&nbsp;→</a>`;
-        return `<section id="${resource.id}" class="resource-detail"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</a></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div></section>`;
+        return `<section id="${resource.id}" class="resource-detail"><div class="wrap content-split"><div><h2 class="display">${resource.title}</h2><p>${resource.description}</p>${resource.id === "playbook" ? `<figure class="review-figure">${sceneFigure(reviewScene, "landscape", "system review-scene")}<figcaption class="note--plain review-caption">Three failure modes the published playbook is built to catch, and the human review a result passes before it reaches the business. The complete check list is not reproduced here.</figcaption></figure>` : ""}<a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact" data-interest="${resource.title}">Want this tailored? Talk to us&nbsp;→</a></div><div class="resource-access"><h3>${resource.outcome}</h3><p class="note--plain">${resource.gate}</p>${access}</div></div>${resourceMaterials(resource.id)}</section>`;
       })
       .join("") +
-    laterResources() +
-    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="${destinationRegister.toolkit}">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. This is separate from the unavailable Strategic Advisor mini-course and Skills Starter Library.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#tracks")}">Explore training and services&nbsp;→</a></section>` +
+    `<section class="wrap band closing-band"><h2 class="display">A pattern is a starting point.</h2><p>For publicly available workshop materials, explore the <a class="link" href="${destinationRegister.toolkit}">C-Level AI Toolkit&nbsp;→</a>: video, slides, fictional practice cases and custom GPT links. Its practice advisors are custom GPTs, so they need a ChatGPT account. The toolkit’s custom GPT exercises are separate from the Claude skill packages above.</p><p class="lead">Bespoke work adapts it to your responsibilities, source documents and company’s quality standard. Your expertise supplies the context.</p><a class="link" href="${sitePath("services/#tracks")}">Explore training and services&nbsp;→</a></section>` +
     inquirySection()
   );
 }
@@ -182,9 +168,9 @@ function blogPage() {
       "Operator notes",
       'Useful thinking,<br><span class="signal">plainly written.</span>',
       "Field notes on training teams, designing Claude skills, and deciding what should, and should not, be automated.",
-      '<p class="note">New essays are coming.</p><p>No newsletter subscription is available yet.</p>',
+      '<p class="note">Three method excerpts from Found42’s existing essay drafts.</p><p>No newsletter subscription is available yet.</p>',
     ) +
-    `<section class="wrap band essay-list" aria-label="Forthcoming essays">${essays.map((e) => `<article><p class="note">Forthcoming essay${e.href ? ` <span>${e.minutes} min</span>` : ""}</p><div><h2>${e.title}</h2><p>${e.description}</p></div><p class="note">Coming soon</p></article>`).join("")}<p class="lead">The focus: useful practice shaped around a specific role, industry and company.</p><a class="link" href="${sitePath("resources/#scorecard")}">Try the readiness check now&nbsp;→</a></section>`
+    `<section class="wrap band essay-list" aria-label="Essay excerpts">${essays.map((essay) => `<article><p class="note">Draft excerpt</p><div><h2>${essay.title}</h2><p>${essay.description}</p><details class="essay-body"><summary>Read ${essay.title.toLowerCase()}</summary>${essay.sections.map((section) => `<section><h3>${section.title}</h3>${section.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}</section>`).join("")}</details></div></article>`).join("")}<p class="note--plain">Selected method sections from existing Found42 drafts, edited for this preview. Full articles await editorial review.</p><a class="link" href="${sitePath("resources/#scorecard")}">Try the readiness check now&nbsp;→</a></section>`
   );
 }
 export function renderPage(route: string) {

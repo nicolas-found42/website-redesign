@@ -142,12 +142,19 @@
   .audience-pinned-caption {
     display: none;
   }
-  .audience-choice {
-    flex: 1 1 auto;
+  .audience-rail .audience-choice {
+    flex: 0 0 auto;
+    width: max-content;
     justify-content: center;
     padding-inline: 10px;
     font-size: var(--size-note);
     text-align: center;
+  }
+  .audience-rail {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 4px;
+    scrollbar-width: thin;
   }
   .is-sequence .audience-panel {
     min-height: 0;
@@ -210,5 +217,35 @@
   }
   .is-sequence .audience-figure {
     display: flex;
+  }
+}
+
+/* Complete still scenes sit beside the work they explain on a wide screen. */
+@media (min-width: 961px) {
+  .audience-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    column-gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+  .audience-panel > * {
+    grid-column: 2;
+  }
+  .audience-panel > .audience-kicker,
+  .audience-panel > h3 {
+    grid-column: 1 / -1;
+  }
+  .audience-panel > .audience-figure {
+    grid-column: 1;
+    grid-row: 3 / span 3;
+    max-width: none;
+  }
+  .is-sequence .audience-panel {
+    display: flex;
+  }
+}
+@media (min-width: 961px) and (prefers-reduced-motion: reduce) {
+  .is-sequence .audience-panel {
+    display: grid;
   }
 }

@@ -12,9 +12,7 @@ const resourceLink = (resource: PublicResource) => {
   const href =
     resource.id === "scorecard"
       ? sitePath("resources/#scorecard")
-      : "href" in resource
-        ? resource.href
-        : sitePath(`resources/#${resource.id}`);
+      : resource.href;
   return `<a class="link" href="${href}">${resource.action} <span class="signal-dot"></span>${arrow}</a>`;
 };
 

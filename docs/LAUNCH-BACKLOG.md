@@ -3,13 +3,17 @@
 The seven-page content migration is implemented as a noindex preview. These
 items remain incomplete and must not be represented as delivered:
 
-1. Supply the 12-check Failure Mode Playbook, four skill patterns and five
-   Strategic Advisor lessons, with fulfillment/enrollment integration.
+1. Supply the 12-check Failure Mode Playbook. Four original Claude skill packages
+   from Drive are now downloadable. The Strategic Advisor resource offers its
+   published lesson and original skill package; a five-day lesson sequence was
+   not found and is not advertised. See [resource sources](resource-sources.md).
 2. Connect approved inquiry and newsletter processing, consent requirements,
    error/retry behavior and delivery confirmation. The present source only
    simulates success. Existing external contact is a fallback, not proof of routing.
-3. Provide the three forthcoming essay bodies and their intended publication
-   metadata/URLs. No body content was invented.
+3. Review the three existing essay drafts before publishing complete articles.
+   Selected method excerpts are readable on the Blog page. Unverified numerical
+   claims and case studies are omitted, with no invented author, publication date
+   or reading time. See [resource sources](resource-sources.md).
 4. Workshop excerpts now have original-site attribution. Substantiate numerical
    savings before treating targets as achieved results; obtain offering-specific
    evidence for automation work.

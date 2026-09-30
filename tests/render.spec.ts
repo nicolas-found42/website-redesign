@@ -20,7 +20,7 @@ test("the complete resource page owns the current catalog and availability", asy
     page.getByRole("heading", { name: "Start with the work." }),
   ).toBeVisible();
   await expect(page.locator(".page-opening")).toContainText(
-    "Three free resources you can use today, and two more that are coming later",
+    "Five free resources to explore",
   );
   for (const item of resources) {
     const section = page.locator(`#${item.id}`);
@@ -238,8 +238,10 @@ test("every active resource and verified lesson has its published destination", 
     expect(resourcesPage).toContain(`>${label}&nbsp;→</a>`);
     expect(resourcesPage).toContain(`href="${destination}"`);
   }
-  expect(resourcesPage).toContain("The five-day mini-course is not available");
-  expect(resourcesPage).toContain("No starter files are available yet");
+  expect(resourcesPage).toContain("Four downloadable Claude skill packages");
+  expect(resourcesPage).toContain(
+    "A published lesson and downloadable advisor skill",
+  );
   expect(resourcesPage).not.toContain("data-email-form");
   expect(renderPage("blog")).not.toContain("data-email-form");
   expect(resourcesPage).not.toContain('data-dialog="course"');

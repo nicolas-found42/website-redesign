@@ -1,3 +1,5 @@
+export { essays } from "./resource-materials";
+
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
   executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
@@ -23,8 +25,8 @@ export const directContact = {
 /**
  * The public free-resource inventory. Availability and destination are owned
  * together so a homepage preview and the complete resource page cannot drift
- * into promising something different. Unfulfilled source offerings stay in the
- * register as unavailable rather than presenting an email form that sends nowhere.
+ * into promising something different. Existing starter files are delivered directly; the advisor resource links
+ * to its published lesson and original skill package.
  */
 const resourceInventory = [
   {
@@ -63,21 +65,22 @@ const resourceInventory = [
     id: "library",
     title: "Skills Starter Library",
     description:
-      "Role-specific working skills for analysis, synthesis, review and decision support.",
-    outcome: "No starter files are available yet",
-    gate: "Unavailable · The published library and delivery route are still being prepared.",
-    action: "Ask us about the library",
-    status: "unavailable",
+      "Four Claude skill packages for executive communications, strategy review, decision support and context calibration.",
+    outcome: "Four downloadable Claude skill packages",
+    gate: "Free downloads · No email required. Configure and test the skills for your work.",
+    action: "Choose a starter file",
+    status: "available",
+    href: "#starter-files",
   },
   {
     id: "course",
-    title: "Strategic Advisor Mini-Course",
+    title: "Strategic Advisor",
     description:
-      "A planned five-day mini-course for turning Claude into a disciplined thinking partner.",
-    outcome: "The five-day mini-course is not available",
-    gate: "Unavailable · A verified public lesson exists, but it is not this five-day course.",
+      "Build a strategic advisor in Claude with Richard’s published lesson and the original skill package.",
+    outcome: "A published lesson and downloadable advisor skill",
+    gate: "Published lesson · Free skill download · A Claude account with custom skills enabled is required.",
     action: "Read the verified lesson",
-    status: "unavailable",
+    status: "available",
     href: destinationRegister.strategicAdvisorLesson,
   },
 ] as const;
@@ -436,8 +439,8 @@ export const scorecard = {
       advice:
         "Pick one repetitive task and use an AI tool on it for two weeks, so the team judges from real experience.",
       link: {
-        label: "Explore the Skills Starter Library",
-        href: "resources/#library",
+        label: "Explore the C-Level AI Toolkit",
+        href: "resources/#toolkit",
       },
     },
     {
@@ -627,34 +630,4 @@ export const principles = [
     "Leave capability",
     "The people doing the work should understand, own, and improve the system.",
   ],
-];
-/**
- * Forthcoming essays. The Lovable source gives each a reading time; it shows
- * only once an essay has a published `href`, so an unwritten essay is not
- * timed. Until then each reads "Coming soon".
- */
-export const essays: {
-  title: string;
-  description: string;
-  minutes: string;
-  href?: string;
-}[] = [
-  {
-    title: "Why prompt libraries fail teams",
-    description:
-      "A folder of clever instructions is not an operating system. Skills need context, examples, and ownership.",
-    minutes: "07",
-  },
-  {
-    title: "The first workflow test",
-    description:
-      "Four questions that reveal whether a task is ready for Claude, or still too ambiguous to automate.",
-    minutes: "05",
-  },
-  {
-    title: "Design the failure review first",
-    description:
-      "How to make weak outputs visible before they become polished, plausible mistakes.",
-    minutes: "09",
-  },
 ];

@@ -196,14 +196,14 @@ test("#48: visitor-facing copy, resources, actions and annotations", async ({
     "scorecard",
     "toolkit",
     "playbook",
-    "later",
     "library",
     "course",
     "contact",
   ]);
   for (const id of ["library", "course"]) {
     const section = page.locator(`#${id}`);
-    await expect(section.getByText(/^Unavailable ·/)).toHaveCount(1);
+    await expect(section.getByText(/^Unavailable ·/)).toHaveCount(0);
+    await expect(section.locator("a[download]").first()).toBeVisible();
     await expect(section).not.toHaveClass(/on-ink/);
   }
 });
