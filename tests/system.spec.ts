@@ -117,6 +117,10 @@ for (const interruption of ["queued", "moving"]) {
     // Four choices in one task, so the last transition is genuinely in flight
     // when the motion preference changes.
     const { interrupted, movement } = await page.evaluate(async (mode) => {
+      // Start away from the final article so the moving case always has a
+      // real smooth scroll to interrupt, even in an engine that aligns the
+      // initial fragment differently.
+      window.scrollTo({ top: 0, behavior: "instant" });
       const origin = scrollY;
       // Observe every frame before clicking: driver round trips can miss a
       // native jump entirely, especially when WebKit is under load.

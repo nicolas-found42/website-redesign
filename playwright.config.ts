@@ -17,24 +17,30 @@ export default defineConfig({
   webServer: [
     {
       command: "npm run dev -- --port 4173",
+      env: {
+        VITE_REVIEW_SUBMISSION_URL: "https://review-submission.test/submit",
+      },
       url: "http://127.0.0.1:4173",
-      reuseExistingServer: true,
+      reuseExistingServer: false,
     },
     {
       command: process.env.PW_PREBUILT_DIST
         ? "npm run preview:pages"
         : "npm run build && npm run preview:pages",
       url: "http://127.0.0.1:4179/website-redesign/",
+      env: {
+        VITE_REVIEW_SUBMISSION_URL: "https://review-submission.test/submit",
+      },
       reuseExistingServer: !process.env.CI,
     },
   ],
   projects: [
     // Rendering assertions cross the homepage module's own interface and need no
     // engine, so they run once instead of once per browser.
-    { name: "unit", testMatch: /render\.spec\.ts/ },
+    { name: "unit", testMatch: /(?:render|submission-service)\.spec\.ts/ },
     ...["chromium", "firefox", "webkit"].map((name) => ({
       name,
-      testIgnore: /render\.spec\.ts/,
+      testIgnore: /(?:render|submission-service)\.spec\.ts/,
       use: { browserName: name },
     })),
   ],

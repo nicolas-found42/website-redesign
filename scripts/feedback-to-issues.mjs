@@ -21,9 +21,12 @@ if (!file) {
   process.exit(1);
 }
 
-const labels = ["needs-triage", "review-feedback"];
 const gh = (...command) =>
-  execFileSync("gh", command, { encoding: "utf8" }).trim();
+  execFileSync(
+    "gh",
+    [...command, "--repo", "nicolas-found42/website-redesign"],
+    { encoding: "utf8" },
+  ).trim();
 
 // The page's own export module formats the issue, so the two never disagree.
 const server = await createServer({
@@ -32,44 +35,32 @@ const server = await createServer({
   logLevel: "silent",
 });
 try {
-  const { parseFeedbackFile, itemMarkdown, kindNames } =
-    await server.ssrLoadModule("/src/review/export.ts");
-  const { targetLabel } = await server.ssrLoadModule("/src/review/target.ts");
+  const { parseFeedbackFile } = await server.ssrLoadModule(
+    "/src/review/export.ts",
+  );
+  const { feedbackIssue } = await server.ssrLoadModule("/src/review/issue.ts");
+  const { fingerprint } = await server.ssrLoadModule(
+    "/src/review/submission-contract.ts",
+  );
   const record = parseFeedbackFile(await readFile(file, "utf8"));
-
-  const issues = record.items.map((item, i) => {
-    const where = `${item.target.pageName} › ${targetLabel(item.target)}`;
-    const title = `${kindNames[item.change.kind]}: ${where}`;
-    const readable = itemMarkdown(item, i + 1)
-      .split("\n")
-      .slice(2)
-      .join("\n");
-    const body = [
-      `Reported by **${item.reviewer || record.reviewer}** on ${item.created.slice(0, 10)} through review mode on ${record.site}.`,
-      "",
-      readable,
-      "",
-      "<details><summary>Feedback record</summary>",
-      "",
-      "```json",
-      JSON.stringify(item, null, 2),
-      "```",
-      "",
-      "</details>",
-      "",
-      `Feedback id: \`${item.id}\``,
-    ].join("\n");
-    return {
-      id: item.id,
-      title: title.length > 120 ? `${title.slice(0, 119)}…` : title,
-      body,
-    };
-  });
+  const issues = await Promise.all(
+    record.items.map(async (raw) => {
+      const item = { ...raw, reviewer: raw.reviewer || record.reviewer };
+      return {
+        id: item.id,
+        ...feedbackIssue(
+          item,
+          record.site,
+          await fingerprint(record.site, item),
+        ),
+      };
+    }),
+  );
 
   if (!create) {
     for (const issue of issues)
       console.log(
-        `\n━━ ${issue.title}\nlabels: ${labels.join(", ")}\n\n${issue.body}\n`,
+        `\n━━ ${issue.title}\nlabels: ${issue.labels.join(", ")}\n\n${issue.body}\n`,
       );
     console.log(
       `${issues.length} ${issues.length === 1 ? "issue" : "issues"} would be opened from ${record.reviewer}'s feedback. Run again with --create to open them.`,
@@ -115,7 +106,7 @@ try {
           issue.title,
           "--body-file",
           bodyFile,
-          ...labels.flatMap((label) => ["--label", label]),
+          ...issue.labels.flatMap((label) => ["--label", label]),
         );
         console.log(`Opened ${url} (${issue.title})`);
       }

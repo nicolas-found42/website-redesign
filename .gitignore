@@ -9,3 +9,9 @@ playwright-timings/
 
 # Review-mode feedback files: they name people, and issues are public.
 feedback/
+
+# Local Worker runtime and server secrets.
+.wrangler/
+.worker-dist/
+.dev.vars*
+.env.local

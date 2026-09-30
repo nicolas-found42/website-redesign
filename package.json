@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build && node scripts/prerender.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json && tsc --noEmit -p tests/tsconfig.json",
     "lint": "npm run lint:code && npm run lint:styles && npm run lint:docs",
     "lint:code": "eslint . --max-warnings 0",
     "lint:styles": "stylelint \"src/**/*.css\"",
@@ -17,24 +17,31 @@
     "test:stress": "playwright test --repeat-each=12 --workers=2",
     "preview:pages": "node scripts/serve-pages.mjs",
     "feedback:issues": "node scripts/feedback-to-issues.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "worker:check": "wrangler deploy --config worker/wrangler.jsonc --dry-run --outdir .worker-dist",
+    "worker:deploy": "node scripts/deploy-review-service.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
+    "@cloudflare/workers-types": "^5.20260930.2",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.55.0",
+    "@types/node": "^22.20.4",
     "eslint": "^10.11.0",
     "eslint-plugin-playwright": "^2.12.0",
     "globals": "^17.12.0",
     "husky": "^9.1.7",
+    "jsonc-parser": "^3.3.1",
     "lint-staged": "^17.6.0",
     "markdownlint-cli2": "^0.23.3",
+    "miniflare": "^5.20260930.0-alpha",
     "prettier": "^3.9.9",
     "stylelint": "^17.15.0",
     "stylelint-config-recommended": "^18.0.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.71.0",
-    "vite": "^7.1.5"
+    "vite": "^7.1.5",
+    "wrangler": "^4.144.0"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",

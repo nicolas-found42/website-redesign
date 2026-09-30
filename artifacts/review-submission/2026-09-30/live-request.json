@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "site": "https://nicolas-found42.github.io/website-redesign/",
+  "items": [
+    {
+      "id": "synthetic-release-108-20260930",
+      "created": "2026-09-30T14:45:19.750Z",
+      "updated": "2026-09-30T14:45:19.751Z",
+      "reviewer": "Synthetic release check for #108",
+      "target": {
+        "page": "/",
+        "pageName": "Home (synthetic release check #108)",
+        "section": "Page opening",
+        "element": "Heading",
+        "selector": "#hero-title",
+        "text": "Train teams.\nBuild useful skills.\nAutomate the work.",
+        "state": ["Synthetic state: C-Level selected"],
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        }
+      },
+      "change": {
+        "kind": "wording",
+        "current": "Train teams.\nBuild useful skills.\nAutomate the work.",
+        "proposed": "Synthetic check: literal @nicolas-found42 <script> **Markdown** `code`."
+      },
+      "everywhere": true,
+      "why": "Owner-authorized synthetic release verification for #108. Check attribution, complete records, safe literal formatting and durable retries; no implementation requested.",
+      "priority": "nice"
+    }
+  ]
+}

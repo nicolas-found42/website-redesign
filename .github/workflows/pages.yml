@@ -33,6 +33,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Require the production submission endpoint
+        env:
+          VITE_REVIEW_SUBMISSION_URL: ${{ vars.VITE_REVIEW_SUBMISSION_URL }}
+        run: |
+          if test -z "$VITE_REVIEW_SUBMISSION_URL"; then
+            echo "::error::Set the repository Actions variable VITE_REVIEW_SUBMISSION_URL before publishing Pages."
+            exit 1
+          fi
       - run: npm run lint
       - name: Check GitHub Actions workflow
         uses: docker://rhysd/actionlint:1.7.12
@@ -57,6 +65,8 @@ jobs:
       - name: Check browser image matches the installed Playwright version
         run: test "$(node -p 'require("playwright/package.json").version')" = '1.63.0'
       - run: npm run typecheck
+      - run: npm run worker:check
+        if: matrix.shard == 1
       - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
       - name: Summarize browser timings
         if: ${{ !cancelled() }}
@@ -84,6 +94,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - run: npm run build
+        env:
+          VITE_REVIEW_SUBMISSION_URL: ${{ vars.VITE_REVIEW_SUBMISSION_URL }}
         if: github.ref == 'refs/heads/main' && matrix.shard == 1
       - uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main' && matrix.shard == 1
