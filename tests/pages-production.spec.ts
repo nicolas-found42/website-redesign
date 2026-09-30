@@ -4,7 +4,7 @@ const manifest = JSON.parse(
   readFileSync("artifacts/lovable-migration/2026-09-16/manifest.json", "utf8"),
 );
 const base = "http://127.0.0.1:4179/website-redesign";
-test("static GitHub Pages routes survive direct entry, refresh, links and missing paths", async ({
+test("static GitHub Pages routes survive direct entry, refresh, links and missing paths [production]", async ({
   page,
   request,
 }) => {
@@ -61,7 +61,7 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
   expect(failures).toEqual([]);
 });
 
-test("prerendered content survives script failure and forms cannot submit accidentally", async ({
+test("prerendered content survives script failure and forms cannot submit accidentally [production]", async ({
   browser,
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
@@ -100,7 +100,7 @@ test("prerendered content survives script failure and forms cannot submit accide
   await context.close();
 });
 
-test("a phone without script can reach the complete homepage and catalog", async ({
+test("a phone without script can reach the complete homepage and catalog [production]", async ({
   browser,
 }) => {
   const context = await browser.newContext({

@@ -4,7 +4,7 @@ Date: 2026-09-30. Scope: local Playwright test worker count and scheduling. No a
 
 ## Result
 
-`playwright.config.ts` enables `fullyParallel` only outside CI and caps the default worker count at two. This gives finer-grained local scheduling and limits local CPU concurrency. GitHub Actions keeps file-level scheduling and its explicit four workers unless a same-SHA experiment proves a faster alternative. The workflow has both `file-level` and existing `fully-parallel` benchmark modes.
+`playwright.config.ts` enables `fullyParallel` only outside CI and caps the default worker count at two. This gives finer-grained local scheduling and limits local CPU concurrency. GitHub Actions keeps file-level scheduling at two workers per shard, based on same-SHA critical-path results. The workflow has both `file-level` and existing `fully-parallel` benchmark modes.
 
 Playwright's documentation says workers are separate processes and explains that `fullyParallel` allows tests within files to run concurrently; without it, tests in a file are scheduled together. This matches the local result: the homepage spec by itself reported one worker despite a `--workers=2` setting until `--fully-parallel` was enabled. Sources: [Playwright parallelism](https://playwright.dev/docs/test-parallel), [Playwright sharding](https://playwright.dev/docs/test-sharding).
 
@@ -22,6 +22,14 @@ All commands ran sequentially in a worktree on the same checkout, with the same 
 The comparable 2-versus-4-worker pair used **31.7% less CPU time** and was **4.7% faster** at two workers. The single-run maximum-RSS figures moved in the opposite direction and are too noisy to establish a memory reduction. The result supports a conservative local worker cap for CPU load and faster feedback, but not a claim that peak memory is lower or that four workers are always slower.
 
 Then the full suite ran with `--workers=2 --fully-parallel`: **606/606 tests passed across unit, Chromium, Firefox, and WebKit in 6m36.8s**. A CI-like artifact-mode run (`PW_PREBUILT_DIST=1`, `--shard=1/4`) passed **152/152 tests in 1m18s**. The other three CI shards were not run locally, and no matched full-suite old-configuration run was done because that would duplicate a long, high-load suite run.
+
+## Follow-up local run and Jev selection
+
+With the homepage/accessibility loop refactors and video disabled, the complete two-worker suite with failure traces retained passed **606/606 in 403.67s**. A four-worker complete run also passed **606/606 in 6.7m**, with no observed wall-time improvement. A process-tree sampler recorded peak summed RSS of **3,664 MiB** and peak summed CPU of **517%** for the two-worker run, versus **5,747 MiB** and **790%** for four workers. Summed RSS may double-count shared pages; these are comparative process-tree samples, not physical-memory accounting.
+
+Disabling local traces while preserving failure screenshots, and keeping traces enabled in CI, produced a trace-off complete run of **606/606 in 318.88s** after stabilizing a timing-dependent reduced-motion test. This is **84.79s / 21.0% faster** than the trace-on run in this local comparison. Its sampled peak process-tree RSS was **3,385 MiB** and summed CPU peak **499%**. These are single local runs, not a controlled distribution; trace-off requires opting in with `PW_TRACE=on` to retain local failure traces.
+
+The isolated Chromium quick command passed 10 homepage tests in 3.3s; the no-server logic command passed 32 tests in 2.9s. Two Jev-ranked local smoke runs considered 17 eligible spec files, selected nine, and passed all 139 selected Chromium tests (50.9s and a reported 1.2m). System One request latency was 422ms and 1,409ms; one response reported a charge of **$0.000198**. The requests contained changed paths and test names only, not source contents. This is an advisory partial run, not full verification.
 
 A matched same-SHA GitHub Actions comparison then ran both the normal four-worker fully-parallel gate and the four-worker file-level benchmark at `151e293`. Each variant ran all **606 unique project/test cases**, with **zero failures and zero retries**. Playwright command-step durations by shard were:
 
@@ -49,4 +57,4 @@ The decisions endpoint and TypeSafe/OpenRouter integration are documented at [Op
 
 ## CI constraint and next validation
 
-The repository's [`ci-runtime-implementation-2026-09-29.md`](ci-runtime-implementation-2026-09-29.md) records that prior two-worker CI trials had inconsistent wall-time results and failures in paired runs; a shared-build trial did not improve the critical path, and a four-worker fully-parallel trial differed by only three seconds. This change leaves the explicit four-worker CI setting and avoids a build-artifact dependency. The new `file-level` workflow-dispatch mode provides a controlled same-SHA baseline against the normal fully-parallel gate; compare slowest-shard duration, total workflow time, test counts, retries, and failures before claiming CI speedup or changing CI workers. Keep three-browser coverage and the `verify`/Pages gates intact.
+The repository's [`ci-runtime-implementation-2026-09-29.md`](ci-runtime-implementation-2026-09-29.md) records earlier mixed results, including a shared-build trial that did not improve the critical path. The current workflow uses file-level scheduling at two workers per shard. Retain three-browser coverage and the `verify`/Pages gates; compare slowest-shard duration, total workflow time, test counts, retries, and failures before claiming any further CI speedup.

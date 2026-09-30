@@ -12,9 +12,13 @@ export default defineConfig({
     : [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: "http://127.0.0.1:4173",
-    trace: "retain-on-failure",
+    trace:
+      process.env.CI || process.env.PW_TRACE === "on"
+        ? "retain-on-failure"
+        : "off",
     screenshot: "only-on-failure",
-    video: "retain-on-failure",
+    // Avoid recording video on every run; keep failure screenshots in every mode.
+    video: "off",
   },
   webServer: [
     {

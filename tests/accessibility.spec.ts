@@ -100,8 +100,13 @@ async function settle(page: import("@playwright/test").Page) {
     await expect(target).toHaveCSS("opacity", "1");
   }
   await expect(page.locator("[data-reveal]:not(.is-in)")).toHaveCount(0);
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.waitForTimeout(400);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
 }
 
 for (const width of [390, 768, 1440])
@@ -130,7 +135,12 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
     document.documentElement.style.fontSize = "200%";
   });
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(400);
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -149,15 +159,20 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
 test("no document overflow at the narrow widths, at default and doubled text", async ({
   page,
 }) => {
+  await page.goto("/");
   for (const width of [320, 360, 390, 700, 960, 1024]) {
-    for (const scale of ["100%", "200%"]) {
+    for (const scale of ["100%", "200%"] as const) {
       await page.setViewportSize({ width, height: 844 });
-      await page.goto("/");
       await page.evaluate((size) => {
         document.documentElement.style.fontSize = size;
       }, scale);
       await page.evaluate(() => document.fonts.ready);
-      await page.waitForTimeout(300);
+      await page.evaluate(
+        () =>
+          new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+          ),
+      );
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,

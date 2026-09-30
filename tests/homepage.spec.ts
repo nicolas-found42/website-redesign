@@ -161,13 +161,22 @@ test("the companies strip announces 15 locally bundled marks once in the approve
     "MINDS-i Education",
     "Prelude Solutions",
   ];
-  for (const [index, name] of names.entries())
-    await expect(logos.nth(index)).toHaveAccessibleName(name);
-  for (const logo of await logos.all()) {
-    await expect(logo).toHaveJSProperty("complete", true);
-    await expect(logo).not.toHaveJSProperty("naturalWidth", 0);
-    const src = await logo.getAttribute("src");
-    expect(src).toMatch(/^\/assets\/logos\//);
+  await Promise.all(
+    names.map((name, index) =>
+      expect(logos.nth(index)).toHaveAccessibleName(name),
+    ),
+  );
+  const images = await logos.evaluateAll((elements) =>
+    elements.map((element) => ({
+      complete: (element as HTMLImageElement).complete,
+      naturalWidth: (element as HTMLImageElement).naturalWidth,
+      src: element.getAttribute("src"),
+    })),
+  );
+  for (const image of images) {
+    expect(image.complete).toBe(true);
+    expect(image.naturalWidth).not.toBe(0);
+    expect(image.src).toMatch(/^\/assets\/logos\//);
   }
 });
 
@@ -179,9 +188,9 @@ test("the companies heading reads at section-heading scale and wraps above the l
     { width: 384, height: 686, min: 24, max: 24 },
     { width: 384, height: 742, min: 24, max: 24 },
   ];
+  await page.goto("/");
   for (const { width, height, min, max } of sizes) {
     await page.setViewportSize({ width, height });
-    await page.goto("/");
     const heading = page
       .locator("#companies")
       .getByRole("heading", { name: "Teams we have worked with" });
@@ -198,7 +207,6 @@ test("the companies heading reads at section-heading scale and wraps above the l
     [320, 700, "200%"],
   ] as const) {
     await page.setViewportSize({ width, height });
-    await page.goto("/");
     await page.evaluate(
       (size) => (document.documentElement.style.fontSize = size),
       text,
@@ -258,35 +266,47 @@ test("the companies row keeps proportions and fits without scrolling at any widt
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const logos = page.locator("#companies").getByRole("img");
+  await expect(logos).toHaveCount(15);
+  await expect
+    .poll(() =>
+      logos.evaluateAll((images) =>
+        images.every(
+          (image) =>
+            (image as HTMLImageElement).complete &&
+            (image as HTMLImageElement).naturalWidth > 0,
+        ),
+      ),
+    )
+    .toBe(true);
   for (const width of [1440, 1024, 768, 430, 384, 320]) {
     await page.setViewportSize({ width, height: 800 });
-    await page.goto("/");
-    const logos = page.locator("#companies").getByRole("img");
-    for (const logo of await logos.all()) {
-      await expect(logo).toHaveJSProperty("complete", true);
-      const fit = await logo.evaluate((img: HTMLImageElement) => {
+    const fit = await logos.evaluateAll((images) =>
+      images.map((image) => {
+        const img = image as HTMLImageElement;
         const box = img.getBoundingClientRect();
         return {
           ratio: box.width / box.height,
           natural: img.naturalWidth / img.naturalHeight,
           right: box.right,
         };
-      });
-      expect(fit.right, `${width}px`).toBeLessThanOrEqual(width);
-      expect(Math.abs(fit.ratio - fit.natural), `${width}px`).toBeLessThan(
+      }),
+    );
+    for (const image of fit) {
+      expect(image.right, `${width}px`).toBeLessThanOrEqual(width);
+      expect(Math.abs(image.ratio - image.natural), `${width}px`).toBeLessThan(
         0.05,
       );
     }
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-      `${width}px`,
-    ).toBe(true);
+    const pageFits = await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    );
+    expect(pageFits, `${width}px`).toBe(true);
   }
 });
 
-test("the companies strip moves without script at phone and desktop widths", async ({
+test("the companies strip moves without script at phone and desktop widths [production]", async ({
   browser,
 }) => {
   for (const width of [384, 1440]) {

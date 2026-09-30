@@ -248,6 +248,12 @@ test("a reduced-motion service jump lands after later preference handlers change
     );
     document.querySelector<HTMLButtonElement>('[data-service="2"]')!.click();
   });
+  // Let the click's animation-frame jump start before the preference change
+  // interrupts it; otherwise this test depends on trace-induced scheduling.
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => requestAnimationFrame(() => resolve())),
+  );
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect
     .poll(() =>
