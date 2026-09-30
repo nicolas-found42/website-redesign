@@ -227,13 +227,14 @@ export function mountReadingSequence({
   holdLanding.observe(document.body);
   const onPreference = () => {
     if (!motionPreference.matches) return;
-    // A scrollend can release the pending jump while native scrolling is still
-    // moving. Keep the last explicit choice available until manual navigation.
-    const requested =
-      expecting ?? (chosen && jumpStarted ? chosenIndex : undefined);
+    // A scrollend can release or give up on the pending jump while native
+    // scrolling is still moving. Keep the last explicit choice available until
+    // manual navigation, and hold it again once it is re-requested.
+    const requested = expecting ?? (jumpStarted ? chosenIndex : undefined);
     if (requested === undefined) return;
     updateRail();
     cancelAnimationFrame(jumpFrame);
+    chosen = true;
     jumpStarted = true;
     show(requested, { scroll: true });
     expecting = atRequestedArticle(requested) ? undefined : requested;
