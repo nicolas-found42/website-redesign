@@ -43,7 +43,18 @@ export type Change =
       detail: string;
     };
 
+export interface Screenshot {
+  sha256: string;
+  width: number;
+  height: number;
+  source: "tab" | "file";
+  captured: string;
+  /** Local draft pixels; stripped from submission records and issue bodies. */
+  dataUrl?: string;
+}
+
 export interface FeedbackItem {
+  screenshot?: Screenshot;
   id: string;
   created: string;
   updated?: string;

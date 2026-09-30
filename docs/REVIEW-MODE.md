@@ -21,13 +21,18 @@ from a meeting.
    Every item also asks **why** and **how important** it is. Tick **Change this
    everywhere** when one example stands for a site-wide pattern.
 
-4. Choose **Save feedback** to keep a local draft. **My feedback** lets you edit
+4. Optionally attach a real PNG screenshot or choose **Capture this tab** where
+   supported. Inspect its preview, remove it or replace it before saving. Images
+   will be public when you Send. Capture/upload failures leave written feedback
+   available; the receipt offers an explicit text-only fallback. See
+   [screenshots, browser support and limits](REVIEW-SCREENSHOTS.md).
+5. Choose **Save feedback** to keep a local draft. **My feedback** lets you edit
    or delete drafts, across pages and visits.
-5. When you're ready, choose **Send N feedback items** once. Saving does not
+6. When you're ready, choose **Send N feedback items** once. Saving does not
    publish; Send posts each saved item as a separate public GitHub issue, without
-   a login or confirmation dialog. The notice explains: **Your feedback and name
+   a login or confirmation dialog. The notice explains: **Your feedback, name and any screenshots
    will be posted publicly on GitHub.** Your name is self-reported, not verified.
-6. Keep the page open while sending. The receipt shows progress, each item's
+7. Keep the page open while sending. The receipt shows progress, each item's
    result, and links to created issues. Confirmed submitted versions leave the
    draft list. Failed or uncertain items stay saved; reconnect or retry later
    when sending is temporarily limited. A revision made during sending stays

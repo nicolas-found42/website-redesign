@@ -1,4 +1,4 @@
-import { test as base, expect } from "@playwright/test";
+import { test as base, expect, chromium } from "@playwright/test";
 import { Miniflare, convertV4MiniflareOptions } from "miniflare";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -60,6 +60,12 @@ const test = base.extend<{ service: Service }>({
       await DB.batch(
         readFileSync("worker/migrations/0001_submission.sql", "utf8")
           .split(";")
+          .filter((sql) => sql.trim())
+          .map((sql) => DB.prepare(sql)),
+      );
+      await DB.batch(
+        readFileSync("worker/migrations/0002_screenshots.sql", "utf8")
+          .split(/;(?=\s*(?:CREATE|INSERT|$))/)
           .filter((sql) => sql.trim())
           .map((sql) => DB.prepare(sql)),
       );
@@ -184,6 +190,33 @@ test("the deployed Worker runtime creates and retries through its native fetch",
         .filter((sql) => sql.trim())
         .map((sql) => DB.prepare(sql)),
     );
+    await DB.batch(
+      readFileSync("worker/migrations/0002_screenshots.sql", "utf8")
+        .split(/;(?=\s*(?:CREATE|INSERT|$))/)
+        .filter((sql) => sql.trim())
+        .map((sql) => DB.prepare(sql)),
+    );
+    const png = await screenshotPng();
+    const hash = (await import("node:crypto"))
+      .createHash("sha256")
+      .update(png)
+      .digest("hex");
+    const upload = await mf.dispatchFetch(
+      `https://service.test/screenshots/${hash}`,
+      {
+        method: "POST",
+        headers: {
+          Origin: new URL(publicSite).origin,
+          "Content-Type": "image/png",
+        },
+        body: new Uint8Array(png),
+      },
+    );
+    expect(upload.status).toBe(200);
+    const publicImage = await mf.dispatchFetch(
+      `https://service.test/screenshots/${hash}`,
+    );
+    expect(Buffer.from(await publicImage.arrayBuffer())).toEqual(png);
     const send = () =>
       mf!.dispatchFetch("https://service.test/submit", {
         method: "POST",
@@ -194,7 +227,18 @@ test("the deployed Worker runtime creates and retries through its native fetch",
         body: JSON.stringify({
           version: 1,
           site: publicSite,
-          items: [item("runtime-feedback")],
+          items: [
+            {
+              ...item("runtime-feedback"),
+              screenshot: {
+                sha256: hash,
+                width: 320,
+                height: 240,
+                source: "file",
+                captured: item().created,
+              },
+            },
+          ],
         }),
       });
     const receipt = await outcomes(await send());
@@ -773,4 +817,182 @@ test("deployment reports a missing receipt database before any remote command", 
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
+});
+
+async function screenshotPng() {
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({
+      viewport: { width: 320, height: 240 },
+    });
+    await page.setContent(
+      "<h1>Review target</h1><p>Surrounding page context</p>",
+    );
+    return await page.screenshot({ type: "png" });
+  } finally {
+    await browser.close();
+  }
+}
+async function upload(service: Service, png: Buffer, digest?: string) {
+  const hash =
+    digest ??
+    (await import("node:crypto"))
+      .createHash("sha256")
+      .update(png)
+      .digest("hex");
+  const response = await service.handler(
+    new Request(`https://service.test/screenshots/${hash}`, {
+      method: "POST",
+      headers: {
+        Origin: new URL(publicSite).origin,
+        "Content-Type": "image/png",
+      },
+      body: new Uint8Array(png),
+    }),
+    service.env,
+  );
+  return { response, hash };
+}
+
+test("screenshot evidence is public, durable and reused by issue retries", async ({
+  service,
+}) => {
+  const png = await screenshotPng();
+  const { response, hash } = await upload(service, png);
+  expect(response.status).toBe(200);
+  expect((await upload(service, png)).response.status).toBe(200);
+  const publicResponse = await service.handler(
+    new Request(`https://service.test/screenshots/${hash}`),
+    service.env,
+  );
+  expect(publicResponse.headers.get("Content-Type")).toBe("image/png");
+  expect(Buffer.from(await publicResponse.arrayBuffer())).toEqual(png);
+  const feedback = {
+    ...item(),
+    screenshot: {
+      sha256: hash,
+      width: 320,
+      height: 240,
+      source: "file",
+      captured: item().created,
+    },
+  };
+  const first = await outcomes(await service.send([feedback]));
+  const second = await outcomes(await service.send([feedback]));
+  expect(first[0].status).toBe("confirmed");
+  expect(second).toEqual(first);
+  expect(service.requests.filter((request) => request.body)).toHaveLength(1);
+  const body = String(service.requests[0].body!.body);
+  expect(body).toContain(`https://service.test/screenshots/${hash}`);
+  expect(body).toContain("Screenshot of Heading");
+  expect(body).toContain("Executives selected");
+});
+
+test("invalid, corrupt, oversized and interrupted screenshot uploads never create issues", async ({
+  service,
+}) => {
+  const png = await screenshotPng();
+  const { createHash } = await import("node:crypto");
+  for (const [body, status] of [
+    [Buffer.from("<svg></svg>"), 422],
+    [png.subarray(0, png.length - 5), 422],
+    [Buffer.alloc(512 * 1024 + 1), 413],
+  ] as const) {
+    expect((await upload(service, body)).response.status).toBe(status);
+  }
+  expect((await upload(service, png, "a".repeat(64))).response.status).toBe(
+    422,
+  );
+  const interrupted = new Request(
+    `https://service.test/screenshots/${createHash("sha256").update(png).digest("hex")}`,
+    {
+      method: "POST",
+      headers: {
+        Origin: new URL(publicSite).origin,
+        "Content-Type": "image/png",
+      },
+      body: new ReadableStream({
+        start(controller) {
+          controller.error(new Error("Interrupted"));
+        },
+      }),
+      duplex: "half",
+    } as RequestInit,
+  );
+  expect((await service.handler(interrupted, service.env)).status).toBe(400);
+  const feedback = {
+    ...item(),
+    screenshot: {
+      sha256: "b".repeat(64),
+      width: 320,
+      height: 240,
+      source: "file",
+      captured: item().created,
+    },
+  };
+  expect((await outcomes(await service.send([feedback])))[0]).toMatchObject({
+    status: "retryable",
+    reason: "screenshot",
+  });
+  expect(service.requests).toHaveLength(0);
+  expect((await outcomes(await service.send([item()])))[0].status).toBe(
+    "confirmed",
+  );
+});
+
+test("screenshot quota is atomic and known images remain reusable when storage is full", async ({
+  service,
+}) => {
+  const png = await screenshotPng();
+  const first = await upload(service, png);
+  expect(first.response.status).toBe(200);
+  await service.env.DB.prepare(
+    "UPDATE screenshot_storage SET bytes=134217728 WHERE id=1",
+  ).run();
+  expect((await upload(service, png)).response.status).toBe(200);
+  const other = Buffer.from(png);
+  // A second actual page capture has different content.
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({
+      viewport: { width: 320, height: 240 },
+    });
+    await page.setContent("<h1>Different screenshot</h1>");
+    const next = await page.screenshot();
+    const responses = await Promise.all([
+      upload(service, next),
+      upload(service, next),
+    ]);
+    expect(responses.map((result) => result.response.status)).toEqual([
+      507, 507,
+    ]);
+  } finally {
+    await browser.close();
+  }
+  expect((await upload(service, other)).response.status).toBe(200);
+  const publicImage = await service.handler(
+    new Request(`https://service.test/screenshots/${first.hash}`),
+    { ...service.env, ENABLED: "false" },
+  );
+  expect(publicImage.status).toBe(200);
+});
+
+test("screenshot uploads enforce origin and free request limits", async ({
+  service,
+}) => {
+  const png = await screenshotPng();
+  const wrongOrigin = new Request(
+    `https://service.test/screenshots/${"a".repeat(64)}`,
+    {
+      method: "POST",
+      headers: { Origin: "https://other.test", "Content-Type": "image/png" },
+      body: new Uint8Array(png),
+    },
+  );
+  expect((await service.handler(wrongOrigin, service.env)).status).toBe(403);
+  const day = Math.floor(Date.now() / 86400000);
+  await service.env.DB.prepare("INSERT INTO limits VALUES (?,1000,?)")
+    .bind(`requests:${day}`, (day + 1) * 86400000)
+    .run();
+  expect((await upload(service, png)).response.status).toBe(429);
 });

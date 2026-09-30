@@ -40,7 +40,10 @@ export default defineConfig({
     { name: "unit", testMatch: /(?:render|submission-service)\.spec\.ts/ },
     ...["chromium", "firefox", "webkit"].map((name) => ({
       name,
-      testIgnore: /(?:render|submission-service)\.spec\.ts/,
+      testIgnore:
+        name === "chromium"
+          ? /(?:render|submission-service)\.spec\.ts/
+          : /(?:render|submission-service|review-capture)\.spec\.ts/,
       use: { browserName: name },
     })),
   ],

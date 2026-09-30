@@ -1,3 +1,4 @@
+import { readScreenshot, uploadScreenshot } from "./screenshots";
 import type { D1Database } from "@cloudflare/workers-types";
 import {
   fingerprint,
@@ -174,6 +175,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
     env: Env,
     item: FeedbackItem,
     hash: string,
+    imageOrigin: string,
   ): Promise<Outcome> {
     const result = (status: Outcome["status"], message: string): Outcome => ({
       id: item.id,
@@ -181,6 +183,25 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
       status,
       message,
     });
+    if (item.screenshot) {
+      const image = await env.DB.prepare(
+        "SELECT width,height FROM screenshots WHERE sha256=?",
+      )
+        .bind(item.screenshot.sha256)
+        .first<{ width: number; height: number }>();
+      if (
+        !image ||
+        image.width !== item.screenshot.width ||
+        image.height !== item.screenshot.height
+      )
+        return {
+          ...result(
+            "retryable",
+            "Screenshot has not been delivered. Your written draft is saved. Retry or send text without the image.",
+          ),
+          reason: "screenshot",
+        };
+    }
     const started = new Date().toISOString();
     await env.DB.prepare(
       "INSERT INTO submissions(id,fingerprint,state,started) VALUES (?,?,'ready',?) ON CONFLICT(id) DO NOTHING",
@@ -221,7 +242,16 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
     }
     const response = await github(env, "issues", {
       method: "POST",
-      body: JSON.stringify(feedbackIssue(item, publicSite, hash)),
+      body: JSON.stringify(
+        feedbackIssue(
+          item,
+          publicSite,
+          hash,
+          item.screenshot
+            ? `${imageOrigin}/screenshots/${item.screenshot.sha256}`
+            : undefined,
+        ),
+      ),
     });
     if (response.status === 201) {
       const data = (await response.json()) as {
@@ -259,7 +289,19 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
     };
     const reply = (body: unknown, status = 200) =>
       new Response(JSON.stringify(body), { status, headers });
-    if (new URL(request.url).pathname !== "/submit")
+    const url = new URL(request.url);
+    const image = /^\/screenshots\/([a-f0-9]{64})$/.exec(url.pathname);
+    if (image && request.method === "GET") {
+      try {
+        return await readScreenshot(env.DB, image[1]);
+      } catch {
+        return reply(
+          { message: "Image service temporarily unavailable." },
+          503,
+        );
+      }
+    }
+    if (url.pathname !== "/submit" && !image)
       return reply({ message: "Not found." }, 404);
     if (request.headers.get("Origin") !== origin)
       return reply(
@@ -299,6 +341,19 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
         return reply({ message: messages.limited }, 429);
     } catch {
       return reply({ message: messages.unavailable }, 503);
+    }
+    if (image) {
+      try {
+        return await uploadScreenshot(env.DB, request, image[1], reply);
+      } catch {
+        return reply(
+          {
+            message:
+              "Screenshot service temporarily unavailable. Your draft is saved. Retry or send text without it.",
+          },
+          503,
+        );
+      }
     }
     if (
       request.headers.get("Content-Type")?.split(";")[0] !== "application/json"
@@ -371,7 +426,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
           continue;
         }
         try {
-          outcomes.push(await deliver(env, value, hash));
+          outcomes.push(await deliver(env, value, hash, url.origin));
         } catch {
           outcomes.push({
             id,

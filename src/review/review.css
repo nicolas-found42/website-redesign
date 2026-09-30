@@ -715,3 +715,19 @@ textarea {
   font-size: 12px;
   color: #d4d3cc;
 }
+
+.screenshot-field img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #888;
+}
+
+:host([data-capturing]) .review,
+:host([data-capturing]) dialog {
+  visibility: hidden;
+}
+
+:host([data-capturing]) dialog::backdrop {
+  background: transparent;
+}

@@ -1,3 +1,4 @@
+import { submissionItem } from "./submission-contract";
 import type { FeedbackItem } from "./model";
 import { itemMarkdown, kindNames, priorityNames } from "./markdown";
 import { targetLabel } from "./target-meta";
@@ -33,7 +34,13 @@ function escaped(value: unknown): unknown {
 }
 
 /** Shared by hosted delivery and the manual backup importer. */
-export function feedbackIssue(item: FeedbackItem, site: string, hash: string) {
+export function feedbackIssue(
+  item: FeedbackItem,
+  site: string,
+  hash: string,
+  imageUrl?: string,
+) {
+  item = submissionItem(item);
   const safe = escaped(item) as FeedbackItem;
   // The export's final HTML metadata line uses code spans; quote those fields
   // separately so arbitrary selector text cannot break out of a code span.
@@ -75,6 +82,14 @@ export function feedbackIssue(item: FeedbackItem, site: string, hash: string) {
       `**Seen at:** ${item.target.viewport.width} × ${item.target.viewport.height}`,
       ...item.target.state.map((state) => quoted(state)),
       "",
+      ...(item.screenshot && imageUrl
+        ? [
+            `![${literal(`Screenshot of ${item.target.element} in ${item.target.section} on ${item.target.pageName}`)}](${imageUrl})`,
+            "",
+            `Screenshot: ${literal(item.target.page)}; ${safe.target.state.join("; ") || "no additional visible state recorded"}. ${item.screenshot.source === "tab" ? "Native review-tab capture" : "Reviewer-supplied screenshot; reviewer checked target and state"}, ${item.screenshot.width} × ${item.screenshot.height}, ${literal(item.screenshot.captured)}.`,
+            "",
+          ]
+        : []),
       "This request needs triage; publication does not approve implementation or commercial claims.",
       "",
       "<details><summary>Feedback record</summary>",

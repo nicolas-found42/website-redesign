@@ -1,3 +1,5 @@
+import { reviewTabCapture, screenshotFile } from "./screenshot";
+import type { Screenshot } from "./model";
 import css from "./review.css?inline";
 import { submitDrafts, sendLabel } from "./submission";
 import { sitePath } from "../paths";
@@ -37,6 +39,7 @@ const phone = matchMedia("(max-width: 700px)");
  */
 export function mountReview() {
   const store = createStore();
+  const capture = reviewTabCapture();
   const host = document.createElement("div");
   host.id = "found42-review";
   // Lenis leaves wheel events inside the panels to scroll the panels.
@@ -57,7 +60,7 @@ export function mountReview() {
       <p>Click the part of the page you want to change.</p>
       <button type="button" data-act="cancel-pick">Cancel</button>
     </div>
-    <p class="bar-notice">Your feedback and name will be posted publicly on GitHub.</p>
+    <p class="bar-notice">Your feedback, name and any screenshots will be posted publicly on GitHub.</p>
     <p class="bar-warning" data-warning hidden>This browser isn’t keeping feedback between pages. Send it before you leave this page.</p>
   </div>
   <div class="highlight" data-highlight hidden><span class="highlight-label" data-highlight-label></span></div>
@@ -286,6 +289,9 @@ export function mountReview() {
   let target: Target | undefined;
   let editing: FeedbackItem | undefined;
   let form: HTMLFormElement | null = null;
+  let screenshot: Screenshot | undefined;
+  let imageBusy = false;
+  let imageGeneration = 0;
 
   const pointTools = () => ({
     widen: !!selected && !!widen(selected),
@@ -312,14 +318,19 @@ export function mountReview() {
     if (!keepTrail) trail = [];
     selected = el;
     target = describe(el);
+    screenshot = undefined;
+    imageGeneration++;
     if (!form || !resume) newForm();
     resume = false;
     applyTarget(form!, target, pointTools());
+    showScreenshot();
     showForm();
   }
 
   function newForm(item?: FeedbackItem) {
     editing = item;
+    screenshot = item?.screenshot;
+    imageGeneration++;
     formPanel.innerHTML = formMarkup({
       askName: !store.reviewer(),
       sections: pageSections(),
@@ -340,6 +351,87 @@ export function mountReview() {
     form.addEventListener("input", answered);
     form.addEventListener("change", answered);
     form.addEventListener("submit", save);
+    form
+      .querySelector<HTMLInputElement>("#f-screenshot")!
+      .addEventListener("change", (event) => {
+        const file = (event.target as HTMLInputElement).files?.[0];
+        if (file) void changeScreenshot(() => screenshotFile(file));
+      });
+    form.querySelector<HTMLButtonElement>('[data-act="capture"]')!.disabled =
+      !capture.available || !selected;
+    if (!capture.available)
+      form.querySelector<HTMLElement>("[data-capture-hint]")!.textContent =
+        "Native tab capture is unavailable here. Attach a screenshot file or continue with written feedback.";
+    showScreenshot();
+  }
+
+  function showScreenshot() {
+    if (!form || !target) return;
+    const preview = form.querySelector<HTMLElement>(
+      "[data-screenshot-preview]",
+    )!;
+    preview.replaceChildren();
+    if (screenshot?.dataUrl) {
+      const image = document.createElement("img");
+      image.src = screenshot.dataUrl;
+      image.alt = `Screenshot of ${target.element} in ${target.section} on ${target.pageName}`;
+      preview.append(image);
+      const caption = document.createElement("p");
+      caption.className = "hint";
+      caption.textContent = `${screenshot.source === "tab" ? "Native tab capture" : "Attached screenshot — check that target and reviewed state match"}. ${screenshot.width} × ${screenshot.height}.`;
+      preview.append(caption);
+    }
+    form.querySelector<HTMLButtonElement>(
+      '[data-act="remove-screenshot"]',
+    )!.hidden = !screenshot;
+  }
+
+  async function changeScreenshot(load: () => Promise<Screenshot>) {
+    if (!form || imageBusy) return;
+    const current = form;
+    const generation = ++imageGeneration;
+    imageBusy = true;
+    const status = current.querySelector<HTMLElement>(
+      "[data-screenshot-status]",
+    )!;
+    status.textContent = "Preparing screenshot…";
+    current
+      .querySelectorAll<HTMLButtonElement | HTMLInputElement>(
+        "button, #f-screenshot",
+      )
+      .forEach((control) => {
+        control.dataset.wasDisabled = String(control.disabled);
+        control.disabled = true;
+      });
+    try {
+      const next = await load();
+      if (generation !== imageGeneration || form !== current) return;
+      screenshot = next;
+      if (next.source === "tab" && selected) {
+        target = describe(selected);
+        applyTarget(current, target, pointTools());
+      }
+      showScreenshot();
+      status.textContent =
+        "Screenshot ready. Inspect it before saving and sending.";
+    } catch (error) {
+      if (form === current)
+        status.textContent =
+          error instanceof Error
+            ? error.message
+            : "Screenshot failed. Your written feedback is unchanged; continue without it.";
+    } finally {
+      imageBusy = false;
+      current
+        .querySelectorAll<HTMLButtonElement | HTMLInputElement>(
+          "[data-was-disabled]",
+        )
+        .forEach((control) => {
+          control.disabled = control.dataset.wasDisabled === "true";
+          delete control.dataset.wasDisabled;
+        });
+      current.querySelector<HTMLInputElement>("#f-screenshot")!.value = "";
+    }
   }
 
   function showForm() {
@@ -379,7 +471,7 @@ export function mountReview() {
 
   function save(event: SubmitEvent) {
     event.preventDefault();
-    if (!form || !target) return;
+    if (!form || !target || imageBusy) return;
     const { errors, value } = readForm(form, target);
     const first = showErrors(form, errors);
     if (!value) return first?.focus();
@@ -392,6 +484,7 @@ export function mountReview() {
       ...(editing ? { updated: now } : {}),
       reviewer: reviewer ?? editing?.reviewer ?? store.reviewer(),
       target,
+      ...(screenshot ? { screenshot } : {}),
       ...answer,
     });
     const count = store.items().length;
@@ -412,6 +505,8 @@ export function mountReview() {
     target = undefined;
     editing = undefined;
     form = null;
+    screenshot = undefined;
+    imageGeneration++;
     formPanel.replaceChildren();
     // The native dialog restores focus. Its deferred close event must not
     // steal focus from Send or another control the reviewer has already chosen.
@@ -455,7 +550,7 @@ export function mountReview() {
 <div class="panel-foot">
   <button type="button" class="primary" data-act="send"${items.length && !submitting ? "" : " disabled"}>${submitting ? "Sending…" : sendLabel(items.length)}</button>
   <button type="button" data-act="backup"${items.length ? "" : " disabled"}>Download backup…</button>
-  <p class="hint">Your feedback and name will be posted publicly on GitHub.</p>
+  <p class="hint">Your feedback, name and any screenshots will be posted publicly on GitHub.</p>
   <button type="button" data-act="close">Close</button>
 </div>`;
   }
@@ -474,7 +569,7 @@ export function mountReview() {
         <p role="status" aria-live="polite" data-progress></p>
         <ol class="items" data-receipts></ol>
         <p class="hint">Confirmed submitted versions leave your draft list. Revisions stay saved as new feedback. Discussion and changes to published issues happen on GitHub.</p>
-        <p class="hint">Your feedback and name will be posted publicly on GitHub.</p>
+        <p class="hint">Your feedback, name and any screenshots will be posted publicly on GitHub.</p>
       </div>
       <div class="panel-foot">
         <button type="button" class="primary" data-act="send"></button>
@@ -496,6 +591,7 @@ export function mountReview() {
       <p class="item-head">${esc(receipt.label)}</p>
       <p>${esc(receipt.message)}</p>
       ${receipt.status === "confirmed" && receipt.issue ? `<a class="chip" href="${esc(receipt.issue.url)}" target="_blank" rel="noopener noreferrer">Issue #${receipt.issue.number} on GitHub</a>` : ""}
+      ${receipt.reason === "screenshot" && store.items().some((item) => item.id === receipt.id && item.screenshot) ? `<button type="button" class="chip" data-without-image="${esc(receipt.id)}"${submitting ? " disabled" : ""}>Send text without screenshot</button>` : ""}
       ${receipt.status === "invalid" && receipt.reason === "content-conflict" && store.items().some((item) => item.id === receipt.id) ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
     </li>`,
         )
@@ -590,7 +686,34 @@ export function mountReview() {
     if (!button || (button as HTMLButtonElement).disabled) return;
     const act = button.dataset.act;
     const panel = button.closest("dialog");
-    if (act === "pick") startPicking();
+    if (act === "capture" && selected)
+      void changeScreenshot(() =>
+        capture.capture(selected!, (hidden) =>
+          host.toggleAttribute("data-capturing", hidden),
+        ),
+      );
+    else if (act === "remove-screenshot") {
+      screenshot = undefined;
+      imageGeneration++;
+      showScreenshot();
+      form?.querySelector<HTMLInputElement>("#f-screenshot")?.focus();
+      const status = form?.querySelector<HTMLElement>(
+        "[data-screenshot-status]",
+      );
+      if (status)
+        status.textContent =
+          "Screenshot removed. Written feedback is ready to save.";
+    } else if (button.dataset.withoutImage) {
+      const item = store
+        .items()
+        .find((item) => item.id === button.dataset.withoutImage);
+      if (item && !submitting) {
+        const text = { ...item };
+        delete text.screenshot;
+        store.save(text);
+        void send();
+      }
+    } else if (act === "pick") startPicking();
     else if (act === "cancel-pick") cancelPicking();
     else if (act === "list") {
       renderList();
