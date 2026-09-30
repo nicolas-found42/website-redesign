@@ -5,8 +5,8 @@ import { readFileSync } from "node:fs";
 
 /**
  * Review mode: the team points at the exact thing on a page and says precisely
- * what should change, then sends a file that names the page, section, element
- * and current text for every item. Visitors never load any of it.
+ * what should change, then publishes feedback with a receipt. The backup file retains the page,
+ * section, element and current text for every item. Visitors never load any of it.
  */
 
 const production = "http://127.0.0.1:4179/website-redesign";
@@ -201,10 +201,11 @@ test("the sent file reads plainly and carries data the import script reads", asy
   await form.getByRole("button", { name: "Save feedback" }).click();
   await expect(panel(page)).toHaveCount(0);
 
-  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await page.getByRole("button", { name: /My feedback/ }).click();
+  await panel(page).getByRole("button", { name: "Download backup…" }).click();
   const send = panel(page);
   await expect(send.getByRole("heading", { level: 2 })).toHaveText(
-    "Send your feedback",
+    "Download a backup",
   );
   const [download] = await Promise.all([
     page.waitForEvent("download"),
@@ -298,4 +299,273 @@ test("review mode meets the site's accessibility bar", async ({ page }) => {
   expect((await audit()).violations).toEqual([]);
   await pick(page, page.locator("#hero-title"));
   expect((await audit()).violations).toEqual([]);
+});
+
+test("Send publishes a saved draft in one click and shows its public receipt", async ({
+  page,
+}) => {
+  let deliveries = 0;
+  await page.route("https://review-submission.test/submit", async (route) => {
+    deliveries++;
+    const request = route.request().postDataJSON();
+    const { fingerprint } = await import("../src/review/submission-contract");
+    await route.fulfill({
+      json: {
+        outcomes: await Promise.all(
+          request.items.map(
+            async (item: import("../src/review/store").FeedbackItem) => ({
+              id: item.id,
+              fingerprint: await fingerprint(request.site, item),
+              status: "confirmed",
+              issue: {
+                number: 1234,
+                url: "https://github.com/nicolas-found42/website-redesign/issues/1234",
+              },
+              message: "Published on GitHub.",
+            }),
+          ),
+        ),
+      },
+    });
+  });
+  await page.goto("/?review");
+  const send = page
+    .getByRole("region", { name: "Review mode" })
+    .getByRole("button", { name: /Send/ });
+  await expect(send).toBeDisabled();
+  const form = await pick(page, page.locator("#hero-title"));
+  await form.getByLabel("Change it to").fill("Training for your team.");
+  await answer(form);
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  await expect(send).toHaveText("Send 1 feedback item");
+  await expect(page.getByRole("region", { name: "Review mode" })).toContainText(
+    "Your feedback and name will be posted publicly on GitHub.",
+  );
+  await send.click();
+  await expect(
+    panel(page).getByRole("link", { name: /Issue #1234/ }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/nicolas-found42/website-redesign/issues/1234",
+  );
+  expect((await saved(page)).items).toEqual([]);
+  expect(deliveries).toBe(1);
+});
+
+async function saveWording(page: Page, proposed: string) {
+  const form = await pick(page, page.getByRole("heading", { level: 1 }));
+  await form.getByLabel("Change it to").fill(proposed);
+  await answer(form);
+  await form.getByRole("button", { name: "Save feedback" }).click();
+}
+const sendButton = (page: Page) =>
+  page
+    .getByRole("region", { name: "Review mode" })
+    .getByRole("button", { name: /Send/ });
+async function confirmedResponse(request: {
+  site: string;
+  items: import("../src/review/store").FeedbackItem[];
+}) {
+  const { fingerprint } = await import("../src/review/submission-contract");
+  return {
+    outcomes: await Promise.all(
+      request.items.map(async (item, i) => ({
+        id: item.id,
+        fingerprint: await fingerprint(request.site, item),
+        status: "confirmed",
+        message: "Published on GitHub.",
+        issue: {
+          number: 2000 + i,
+          url: `https://github.com/nicolas-found42/website-redesign/issues/${2000 + i}`,
+        },
+      })),
+    ),
+  };
+}
+
+test("a mixed receipt retains the failed draft across pages and reloads", async ({
+  page,
+}) => {
+  await page.route("https://review-submission.test/submit", async (route) => {
+    const result = await confirmedResponse(route.request().postDataJSON());
+    result.outcomes[1] = {
+      ...result.outcomes[1],
+      status: "retryable",
+      message: "GitHub is temporarily limited. Your draft is saved.",
+    };
+    await route.fulfill({ json: result });
+  });
+  await page.goto("/?review");
+  await saveWording(page, "A clearer opening.");
+  await page
+    .getByRole("navigation", { name: "Main navigation" })
+    .getByRole("link", { name: "Services", exact: true })
+    .click();
+  await saveWording(page, "A clearer Services heading.");
+  await sendButton(page).click();
+  await expect(panel(page)).toContainText("1 item published. 1 draft remains");
+  await expect(
+    panel(page).getByRole("link", { name: "Issue #2000 on GitHub" }),
+  ).toBeVisible();
+  expect((await saved(page)).items[0].target.page).toBe("/services/");
+  await page.reload();
+  await expect(sendButton(page)).toHaveText("Send 1 feedback item");
+  await page.getByRole("button", { name: "Last receipt" }).click();
+  await expect(panel(page)).toContainText("temporarily limited");
+  await expect(
+    panel(page).getByRole("link", { name: "Issue #2000 on GitHub" }),
+  ).toBeVisible();
+});
+
+test("sending prevents repeated presses and retains a revision made in another tab", async ({
+  page,
+  context,
+}) => {
+  let release!: () => void;
+  const wait = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let deliveries = 0;
+  await page.route("https://review-submission.test/submit", async (route) => {
+    deliveries++;
+    await wait;
+    await route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    });
+  });
+  await page.goto("/?review");
+  await saveWording(page, "Submitted version.");
+  const id = (await saved(page)).items[0].id;
+  await sendButton(page).click();
+  await expect(
+    panel(page).getByRole("button", { name: "Sending…" }),
+  ).toBeDisabled();
+  await expect(panel(page).getByRole("status")).toContainText("0 of 1");
+  await panel(page)
+    .getByRole("button", { name: "Sending…" })
+    .dispatchEvent("click");
+  const other = await context.newPage();
+  await other.goto("/?review");
+  await other.getByRole("button", { name: /My feedback/ }).click();
+  await panel(other).getByRole("button", { name: "Edit" }).click();
+  await panel(other).getByLabel("Change it to").fill("Revised during sending.");
+  await panel(other).getByRole("button", { name: "Save feedback" }).click();
+  release();
+  await expect(
+    panel(page).getByRole("link", { name: "Issue #2000 on GitHub" }),
+  ).toBeVisible();
+  const remaining = (await saved(page)).items;
+  expect(remaining).toHaveLength(1);
+  expect(remaining[0].change.proposed).toBe("Revised during sending.");
+  expect(remaining[0].id).not.toBe(id);
+  expect(deliveries).toBe(1);
+});
+
+for (const failure of [
+  "offline",
+  "lost-response",
+  "quota",
+  "validation",
+  "github",
+  "malformed-receipt",
+  "wrong-version",
+  "wrong-repository",
+]) {
+  test(`${failure} preserves the unconfirmed draft and an accessible receipt`, async ({
+    page,
+    context,
+  }) => {
+    await page.route("https://review-submission.test/submit", async (route) => {
+      if (failure === "lost-response") return route.abort("timedout");
+      if (["quota", "validation", "github"].includes(failure))
+        return route.fulfill({
+          status: { quota: 429, validation: 400, github: 503 }[
+            failure as "quota" | "validation" | "github"
+          ],
+          json: { message: "Failure" },
+        });
+      const result = await confirmedResponse(route.request().postDataJSON());
+      if (failure === "wrong-version")
+        result.outcomes[0].fingerprint = "wrong-version";
+      if (failure === "wrong-repository")
+        result.outcomes[0].issue.url =
+          "https://github.com/other/repository/issues/2000";
+      await route.fulfill({
+        json: failure === "malformed-receipt" ? {} : result,
+      });
+    });
+    await page.goto("/?review");
+    await saveWording(page, "Keep this draft.");
+    if (failure === "offline") await context.setOffline(true);
+    await sendButton(page).focus();
+    await page.keyboard.press("Enter");
+    await expect(panel(page).getByRole("status")).toContainText(
+      "1 draft remains",
+    );
+    await expect(panel(page)).toContainText("draft is saved");
+    await expect(
+      panel(page).getByRole("link", { name: /Issue #/ }),
+    ).toHaveCount(0);
+    expect((await saved(page)).items).toHaveLength(1);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include("#found42-review")
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+          .analyze()
+      ).violations,
+    ).toEqual([]);
+    await context.setOffline(false);
+    await page.reload();
+    await expect(sendButton(page)).toHaveText("Send 1 feedback item");
+  });
+}
+
+test("a lost browser receipt can be recovered by sending the same saved ID", async ({
+  page,
+}) => {
+  let first = true;
+  let submittedId = "";
+  await page.route("https://review-submission.test/submit", async (route) => {
+    const request = route.request().postDataJSON();
+    if (first) {
+      first = false;
+      submittedId = request.items[0].id;
+      return route.abort("timedout");
+    }
+    expect(request.items[0].id).toBe(submittedId);
+    await route.fulfill({ json: await confirmedResponse(request) });
+  });
+  await page.goto("/?review");
+  await saveWording(page, "Recover this issue.");
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "1 draft remains",
+  );
+  await panel(page)
+    .getByRole("button", { name: "Send 1 feedback item" })
+    .click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "1 item published. 0 drafts remain",
+  );
+});
+
+test("larger draft lists are sent in bounded chunks without losing items", async ({
+  page,
+}) => {
+  const batchSizes: number[] = [];
+  await page.route("https://review-submission.test/submit", async (route) => {
+    const request = route.request().postDataJSON();
+    batchSizes.push(request.items.length);
+    await route.fulfill({ json: await confirmedResponse(request) });
+  });
+  await page.goto("/?review");
+  for (let i = 0; i < 5; i++)
+    await saveWording(page, `Feedback version ${i + 1}.`);
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "5 items published. 0 drafts remain",
+  );
+  expect(batchSizes).toEqual([3, 2]);
+  expect((await saved(page)).items).toEqual([]);
 });

@@ -57,6 +57,8 @@ jobs:
       - name: Check browser image matches the installed Playwright version
         run: test "$(node -p 'require("playwright/package.json").version')" = '1.63.0'
       - run: npm run typecheck
+      - run: npm run worker:check
+        if: matrix.shard == 1
       - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
       - name: Summarize browser timings
         if: ${{ !cancelled() }}
@@ -84,6 +86,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - run: npm run build
+        env:
+          VITE_REVIEW_SUBMISSION_URL: ${{ vars.VITE_REVIEW_SUBMISSION_URL }}
         if: github.ref == 'refs/heads/main' && matrix.shard == 1
       - uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main' && matrix.shard == 1

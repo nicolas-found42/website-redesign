@@ -1,0 +1,22 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "found42-review-submission",
+  "main": "index.ts",
+  "compatibility_date": "2026-09-30",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": {
+    "enabled": false,
+  },
+  "vars": {
+    "ENABLED": "false",
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "found42-review-receipts",
+      "database_id": "62a33207-3b2f-4d28-ad00-edbea5611aeb",
+      "migrations_dir": "migrations",
+    },
+  ],
+}

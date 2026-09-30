@@ -1,3 +1,4 @@
+import { canonical, type Outcome } from "./submission-contract";
 import type { Target } from "./target";
 
 export type Kind = "wording" | "content" | "visual" | "layout";
@@ -36,10 +37,14 @@ export interface FeedbackItem {
   priority: Priority;
 }
 
+export type DeliveryReceipt = Outcome & { label: string };
+
 interface Saved {
   version: 1;
   reviewer: string;
   items: FeedbackItem[];
+  receipts?: DeliveryReceipt[];
+  published?: string[];
 }
 
 const key = "found42-review:feedback";
@@ -95,16 +100,46 @@ export function createStore() {
       return persistent;
     },
     items: () => read().items,
+    receipts: () => read().receipts ?? [],
+    setReceipts: (receipts: DeliveryReceipt[]) =>
+      write({ ...read(), receipts }),
     reviewer: () => read().reviewer,
     setReviewer: (reviewer: string) => write({ ...read(), reviewer }),
     save(item: FeedbackItem) {
       const saved = read();
+      if (saved.published?.includes(item.id)) item = { ...item, id: newId() };
       const at = saved.items.findIndex(({ id }) => id === item.id);
       const items =
         at < 0
           ? [...saved.items, item]
           : saved.items.map((existing, i) => (i === at ? item : existing));
       write({ ...saved, items });
+    },
+    confirmSubmitted(submitted: FeedbackItem) {
+      const saved = read();
+      const current = saved.items.find((item) => item.id === submitted.id);
+      const revised = current && canonical(current) !== canonical(submitted);
+      write({
+        ...saved,
+        published: [...new Set([...(saved.published ?? []), submitted.id])],
+        items: saved.items.flatMap((item) =>
+          item.id !== submitted.id
+            ? [item]
+            : revised
+              ? [{ ...item, id: newId() }]
+              : [],
+        ),
+      });
+      return !!revised;
+    },
+    saveAsNew(id: string) {
+      const saved = read();
+      write({
+        ...saved,
+        items: saved.items.map((item) =>
+          item.id === id ? { ...item, id: newId() } : item,
+        ),
+      });
     },
     remove(id: string) {
       const saved = read();

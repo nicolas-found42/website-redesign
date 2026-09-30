@@ -708,3 +708,10 @@ textarea {
     transition: none;
   }
 }
+
+.bar-notice {
+  max-width: 60ch;
+  padding: 6px 8px 2px;
+  font-size: 12px;
+  color: #d4d3cc;
+}

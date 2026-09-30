@@ -21,23 +21,40 @@ from a meeting.
    Every item also asks **why** and **how important** it is. Tick **Change this
    everywhere** when one example stands for a site-wide pattern.
 
-4. When you're done, choose **Send**, download the file (or copy it) and send
-   it over Slack or email. Then **Clear my feedback** so the next round starts
-   empty.
+4. Choose **Save feedback** to keep a local draft. **My feedback** lets you edit
+   or delete drafts, across pages and visits.
+5. When you're ready, choose **Send N feedback items** once. Saving does not
+   publish; Send posts each saved item as a separate public GitHub issue, without
+   a login or confirmation dialog. The notice explains: **Your feedback and name
+   will be posted publicly on GitHub.** Your name is self-reported, not verified.
+6. Keep the page open while sending. The receipt shows progress, each item's
+   result, and links to created issues. Confirmed submitted versions leave the
+   draft list. Failed or uncertain items stay saved; reconnect or retry later
+   when sending is temporarily limited. A revision made during sending stays
+   saved as new feedback. Discussion and editing published issues happen on
+   GitHub. **Last receipt** reopens the receipt after a refresh.
 
-Feedback waits in your browser until you clear it, across pages and visits.
-**Exit** turns review mode off; saved feedback stays.
+**Exit** turns review mode off; unsent feedback and receipts stay in this browser.
+If storage is refused, the tool warns that drafts only live on the current page.
+**My feedback → Download backup…** is available when hosted sending is unavailable.
 
 ## For whoever acts on it
 
-Save sent files under `feedback/`, which is ignored by git because the files
+Hosted submissions already create issues with `needs-triage` and
+`review-feedback`, and no assignee. Publication requests triage; it does not
+authorize implementation.
+
+For the manual backup fallback only, save files under `feedback/`, which is ignored by git because the files
 name reviewers.
 
 `npm run feedback:issues -- <file>` prints one issue per item: title, labels
 (`needs-triage`, `review-feedback`) and a body carrying the readable item plus
 its JSON record. Add `--create` to open them with `gh`. This repository is
 public, so its issues are too; confirm with the site owner before `--create`.
-Re-running skips items already opened, matched by their feedback id.
+Re-running checks existing feedback IDs. The manual importer does not share the
+service’s durable claim: never use `--create` for an unresolved hosted
+submission or run it concurrently with hosted sending for the same items.
+Recover the hosted receipt first; see [hosted setup and recovery](REVIEW-SUBMISSION.md).
 
 Each item's `target.selector` finds the element while the markup holds. When it
 no longer resolves, find the element by `target.page`, `target.section` and
@@ -52,4 +69,8 @@ or journeys an item touches.
 the tools. The UI lives in a shadow root, which keeps it out of the site's
 styles and the site's styles out of it. `src/review/export.ts` owns the file
 format and its parser; the import script loads that same module through Vite.
-`tests/review-mode.spec.ts` covers the journeys.
+`src/review/submission.ts` sends versioned snapshots to the Worker;
+`worker/index.ts` owns validation, limits and durable recovery.
+`src/review/issue.ts` formats hosted issues and the fallback importer consistently.
+`tests/review-mode.spec.ts` covers the browser journeys, and
+`tests/submission-service.spec.ts` covers the service boundary with local D1.

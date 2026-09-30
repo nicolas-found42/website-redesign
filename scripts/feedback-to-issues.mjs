@@ -32,39 +32,20 @@ const server = await createServer({
   logLevel: "silent",
 });
 try {
-  const { parseFeedbackFile, itemMarkdown, kindNames } =
-    await server.ssrLoadModule("/src/review/export.ts");
-  const { targetLabel } = await server.ssrLoadModule("/src/review/target.ts");
+  const { parseFeedbackFile } = await server.ssrLoadModule(
+    "/src/review/export.ts",
+  );
+  const { feedbackIssue } = await server.ssrLoadModule("/src/review/issue.ts");
+  const { fingerprint } = await server.ssrLoadModule(
+    "/src/review/submission-contract.ts",
+  );
   const record = parseFeedbackFile(await readFile(file, "utf8"));
-
-  const issues = record.items.map((item, i) => {
-    const where = `${item.target.pageName} › ${targetLabel(item.target)}`;
-    const title = `${kindNames[item.change.kind]}: ${where}`;
-    const readable = itemMarkdown(item, i + 1)
-      .split("\n")
-      .slice(2)
-      .join("\n");
-    const body = [
-      `Reported by **${item.reviewer || record.reviewer}** on ${item.created.slice(0, 10)} through review mode on ${record.site}.`,
-      "",
-      readable,
-      "",
-      "<details><summary>Feedback record</summary>",
-      "",
-      "```json",
-      JSON.stringify(item, null, 2),
-      "```",
-      "",
-      "</details>",
-      "",
-      `Feedback id: \`${item.id}\``,
-    ].join("\n");
-    return {
+  const issues = await Promise.all(
+    record.items.map(async (item) => ({
       id: item.id,
-      title: title.length > 120 ? `${title.slice(0, 119)}…` : title,
-      body,
-    };
-  });
+      ...feedbackIssue(item, record.site, await fingerprint(record.site, item)),
+    })),
+  );
 
   if (!create) {
     for (const issue of issues)

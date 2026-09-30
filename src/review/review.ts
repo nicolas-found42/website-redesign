@@ -1,4 +1,5 @@
 import css from "./review.css?inline";
+import { submitDrafts, sendLabel } from "./submission";
 import { sitePath } from "../paths";
 import { endReviewSession } from "./activation";
 import { createStore, newId, type FeedbackItem } from "./store";
@@ -47,13 +48,15 @@ export function mountReview() {
       <p class="bar-title"><span class="dot" aria-hidden="true"></span>Review mode</p>
       <button type="button" class="primary" data-act="pick">Add feedback</button>
       <button type="button" data-act="list">My feedback <span class="count" data-count>0</span></button>
-      <button type="button" data-act="send">Send</button>
+      <button type="button" data-act="send" disabled>Send 0 feedback items</button>
+      <button type="button" data-act="receipt" hidden>Last receipt</button>
       <button type="button" class="quiet" data-act="exit">Exit</button>
     </div>
     <div class="bar-picking" hidden>
       <p>Click the part of the page you want to change.</p>
       <button type="button" data-act="cancel-pick">Cancel</button>
     </div>
+    <p class="bar-notice">Your feedback and name will be posted publicly on GitHub.</p>
     <p class="bar-warning" data-warning hidden>This browser isn’t keeping feedback between pages. Send it before you leave this page.</p>
   </div>
   <div class="highlight" data-highlight hidden><span class="highlight-label" data-highlight-label></span></div>
@@ -108,10 +111,28 @@ export function mountReview() {
     placeHighlight();
   };
 
+  let submitting = false;
+  let sentCount = 0;
+  let sendTotal = 0;
+
+  const syncSendButtons = () => {
+    shadow
+      .querySelectorAll<HTMLButtonElement>('[data-act="send"]')
+      .forEach((button) => {
+        button.disabled = submitting || !store.items().length;
+        button.textContent = submitting
+          ? "Sending…"
+          : sendLabel(store.items().length);
+      });
+    $('[data-act="receipt"]').hidden = !store.receipts().length;
+    $("[data-warning]").hidden = store.persistent;
+  };
+
   /* ── Pins: where saved feedback on this page points ── */
   const drawPins = () => {
     const items = store.items();
     $("[data-count]").textContent = String(items.length);
+    syncSendButtons();
     pins.innerHTML = items
       .map((item, i) =>
         item.target.page === page
@@ -382,7 +403,8 @@ export function mountReview() {
     editing = undefined;
     form = null;
     formPanel.replaceChildren();
-    pickButton.focus();
+    // The native dialog restores focus. Its deferred close event must not
+    // steal focus from Send or another control the reviewer has already chosen.
   });
 
   /* ── Your feedback ── */
@@ -421,42 +443,101 @@ export function mountReview() {
       })
       .join("")}</div>
 <div class="panel-foot">
-  <button type="button" class="primary" data-act="send"${items.length ? "" : " disabled"}>Send…</button>
+  <button type="button" class="primary" data-act="send"${items.length && !submitting ? "" : " disabled"}>${submitting ? "Sending…" : sendLabel(items.length)}</button>
+  <button type="button" data-act="backup"${items.length ? "" : " disabled"}>Download backup…</button>
+  <p class="hint">Your feedback and name will be posted publicly on GitHub.</p>
   <button type="button" data-act="close">Close</button>
 </div>`;
   }
 
   /* ── Send ── */
   let sending: ReturnType<typeof feedbackFile> | undefined;
-  function renderSend() {
-    const items = store.items();
-    const reviewer = store.reviewer();
-    const file = items.length ? feedbackFile(items, reviewer) : undefined;
-    sending = file;
+  function renderReceipt() {
+    if (sendPanel.dataset.mode !== "receipt") {
+      sendPanel.dataset.mode = "receipt";
+      sendPanel.innerHTML = `<div class="panel-head">
+        <p class="eyebrow">Review mode</p>
+        <h2 id="send-title" tabindex="-1">Feedback receipt</h2>
+        <button type="button" class="close" data-act="close" aria-label="Close">×</button>
+      </div>
+      <div class="panel-body">
+        <p role="status" aria-live="polite" data-progress></p>
+        <ol class="items" data-receipts></ol>
+        <p class="hint">Confirmed submitted versions leave your draft list. Revisions stay saved as new feedback. Discussion and changes to published issues happen on GitHub.</p>
+        <p class="hint">Your feedback and name will be posted publicly on GitHub.</p>
+      </div>
+      <div class="panel-foot">
+        <button type="button" class="primary" data-act="send"></button>
+        <button type="button" data-act="close">Close</button>
+      </div>`;
+    }
+    const receipts = store.receipts();
+    const confirmed = receipts.filter(
+      (item) => item.status === "confirmed",
+    ).length;
+    sendPanel.querySelector<HTMLElement>("[data-progress]")!.textContent =
+      submitting
+        ? `Sending feedback: ${sentCount} of ${sendTotal} checked. Please keep this page open.`
+        : `${confirmed} ${confirmed === 1 ? "item" : "items"} published. ${store.items().length} ${store.items().length === 1 ? "draft remains" : "drafts remain"} saved in this browser.`;
+    sendPanel.querySelector<HTMLElement>("[data-receipts]")!.innerHTML =
+      receipts
+        .map(
+          (receipt) => `<li>
+      <p class="item-head">${esc(receipt.label)}</p>
+      <p>${esc(receipt.message)}</p>
+      ${receipt.status === "confirmed" && receipt.issue ? `<a class="chip" href="${esc(receipt.issue.url)}" target="_blank" rel="noopener noreferrer">Issue #${receipt.issue.number} on GitHub</a>` : ""}
+      ${receipt.status === "invalid" && receipt.message.includes("different content") ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
+    </li>`,
+        )
+        .join("");
+    syncSendButtons();
+  }
+
+  async function send() {
+    if (submitting || !store.items().length) return;
+    submitting = true;
+    sentCount = 0;
+    sendTotal = store.items().length;
+    store.setReceipts([]);
+    listPanel.close();
+    renderReceipt();
+    if (!sendPanel.open) sendPanel.showModal();
+    sendPanel.querySelector<HTMLElement>("h2")?.focus();
+    try {
+      await submitDrafts(
+        store,
+        new URL(sitePath(), location.href).href,
+        (done, total) => {
+          sentCount = done;
+          sendTotal = total;
+          if (sendPanel.open) renderReceipt();
+          drawPins();
+        },
+      );
+    } catch {
+      say(
+        "Delivery could not be confirmed. Your drafts are saved; retry later.",
+      );
+    } finally {
+      submitting = false;
+      if (sendPanel.open) renderReceipt();
+      drawPins();
+    }
+  }
+
+  function renderBackup() {
+    sendPanel.dataset.mode = "backup";
+    sending = feedbackFile(store.items(), store.reviewer());
     sendPanel.innerHTML = `<div class="panel-head">
-  <p class="eyebrow">Review mode</p>
-  <h2 id="send-title">Send your feedback</h2>
-  <p>${file ? `${items.length} ${items.length === 1 ? "item" : "items"} from ${esc(reviewer)}. Download the file and attach it, or copy it and paste it into Slack or an email.` : "Nothing to send yet."}</p>
-  <button type="button" class="close" data-act="close" aria-label="Close">×</button>
-</div>
-${
-  file
-    ? `<div class="panel-body">
-  <div class="send-actions">
-    <button type="button" class="primary" data-act="download" autofocus>Download file</button>
-    <button type="button" data-act="copy">Copy to clipboard</button>
-  </div>
-  <p class="hint">The file names the page, section and element for each item, with its current text, so nobody has to guess what you meant.</p>
-  <label class="label" for="send-preview">What gets sent</label>
-  <textarea id="send-preview" class="preview" readonly rows="12">${esc(file.text)}</textarea>
-  <div class="send-clear">
-    <p class="hint">Once it’s sent, clear this browser’s copy so the next round starts empty.</p>
-    <button type="button" class="chip danger" data-act="clear">Clear my feedback</button>
-  </div>
-</div>`
-    : ""
-}
-<div class="panel-foot"><button type="button" data-act="close">Close</button></div>`;
+      <h2 id="send-title">Download a backup</h2>
+      <p>This keeps a local copy for you or the team if hosted sending is unavailable.</p>
+      <button type="button" class="close" data-act="close" aria-label="Close">×</button>
+    </div><div class="panel-body">
+      <button type="button" class="primary" data-act="download">Download file</button>
+      <button type="button" data-act="copy">Copy to clipboard</button>
+      <label class="label" for="send-preview">Backup contents</label>
+      <textarea id="send-preview" class="preview" readonly rows="12">${esc(sending.text)}</textarea>
+    </div><div class="panel-foot"><button type="button" data-act="close">Close</button></div>`;
   }
 
   function download() {
@@ -485,7 +566,7 @@ ${
       preview.select();
       return say("It’s selected below: press ⌘C or Ctrl+C to copy it.");
     }
-    say("Copied. Paste it into Slack or an email.");
+    say("Backup copied.");
   }
 
   /** Asks once more before anything is deleted: the button says what the next press does. */
@@ -508,8 +589,13 @@ ${
       renderList();
       listPanel.showModal();
     } else if (act === "send") {
+      void send();
+    } else if (act === "receipt") {
+      renderReceipt();
+      sendPanel.showModal();
+    } else if (act === "backup") {
       listPanel.close();
-      renderSend();
+      renderBackup();
       sendPanel.showModal();
     } else if (act === "exit") exit();
     else if (act === "close") panel?.close();
@@ -538,6 +624,11 @@ ${
       drawPins();
       sendPanel.close();
       say("Cleared. This browser has no feedback saved.");
+    } else if (button.dataset.new) {
+      store.saveAsNew(button.dataset.new);
+      drawPins();
+      renderReceipt();
+      say("Revision saved as new feedback. Send it when ready.");
     } else if (button.dataset.edit) edit(button.dataset.edit);
     else if (button.dataset.pin) edit(button.dataset.pin);
     else if (button.dataset.show) {
@@ -556,6 +647,12 @@ ${
     }
   }
   shadow.addEventListener("click", onPress);
+  const onStorage = () => {
+    drawPins();
+    if (listPanel.open) renderList();
+    if (sendPanel.open && sendPanel.dataset.mode === "receipt") renderReceipt();
+  };
+  addEventListener("storage", onStorage);
 
   /** Scrolls to an element and marks it for a moment. */
   function flash(el: Element) {
@@ -582,6 +679,7 @@ ${
     removeEventListener("resize", place);
     layout.disconnect();
     shadow.removeEventListener("click", onPress);
+    removeEventListener("storage", onStorage);
     document.documentElement.classList.remove("found42-reviewing");
     pageStyle.remove();
     host.remove();
