@@ -4,7 +4,7 @@ Date: 2026-09-30. Scope: local Playwright test worker count and scheduling. No a
 
 ## Result
 
-`playwright.config.ts` now enables `fullyParallel` by default and caps default execution at two workers. This gives finer-grained work distribution and limits local CPU concurrency. GitHub's existing workflow explicitly passes `--workers=4`; this leaves its four-worker setting intact while applying `fullyParallel` to the normal CI gate. The workflow also exposes a same-SHA `file-level` benchmark mode so CI speed can be compared directly rather than inferred from the local trial.
+`playwright.config.ts` enables `fullyParallel` only outside CI and caps the default worker count at two. This gives finer-grained local scheduling and limits local CPU concurrency. GitHub Actions keeps file-level scheduling and its explicit four workers unless a same-SHA experiment proves a faster alternative. The workflow has both `file-level` and existing `fully-parallel` benchmark modes.
 
 Playwright's documentation says workers are separate processes and explains that `fullyParallel` allows tests within files to run concurrently; without it, tests in a file are scheduled together. This matches the local result: the homepage spec by itself reported one worker despite a `--workers=2` setting until `--fully-parallel` was enabled. Sources: [Playwright parallelism](https://playwright.dev/docs/test-parallel), [Playwright sharding](https://playwright.dev/docs/test-sharding).
 
@@ -22,6 +22,15 @@ All commands ran sequentially in a worktree on the same checkout, with the same 
 The comparable 2-versus-4-worker pair used **31.7% less CPU time** and was **4.7% faster** at two workers. The single-run maximum-RSS figures moved in the opposite direction and are too noisy to establish a memory reduction. The result supports a conservative local worker cap for CPU load and faster feedback, but not a claim that peak memory is lower or that four workers are always slower.
 
 Then the full suite ran with `--workers=2 --fully-parallel`: **606/606 tests passed across unit, Chromium, Firefox, and WebKit in 6m36.8s**. A CI-like artifact-mode run (`PW_PREBUILT_DIST=1`, `--shard=1/4`) passed **152/152 tests in 1m18s**. The other three CI shards were not run locally, and no matched full-suite old-configuration run was done because that would duplicate a long, high-load suite run.
+
+A matched same-SHA GitHub Actions comparison then ran both the normal four-worker fully-parallel gate and the four-worker file-level benchmark at `151e293`. Each variant ran all **606 unique project/test cases**, with **zero failures and zero retries**. Playwright command-step durations by shard were:
+
+| Scheduling | Shard 1 | Shard 2 | Shard 3 | Shard 4 | Slowest shard |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `fullyParallel` | 157s | 167s | 277s | 276s | **277s** |
+| file-level | 221s | 204s | 184s | 209s | **221s** |
+
+In this run, full parallelism increased the critical test step by **56s (25.3%)** and summed test-step time by 59s. As a single comparison, this is evidence for keeping CI file-level, not a universal estimate. The configuration now uses `fullyParallel` locally but disables it when `CI` is set. A separate same-SHA four-versus-two-worker CI experiment remains to decide whether the CI worker count itself should change.
 
 ## Jev input
 
