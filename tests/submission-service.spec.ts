@@ -1,7 +1,8 @@
 import { test as base, expect } from "@playwright/test";
 import { Miniflare, convertV4MiniflareOptions } from "miniflare";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { parse } from "jsonc-parser";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createSubmissionHandler, type Env } from "../worker/index";
@@ -39,6 +40,7 @@ interface Service {
   env: Env;
   requests: GithubRequest[];
   github: (request: GithubRequest) => Promise<Response>;
+  handler: ReturnType<typeof createSubmissionHandler>;
   send: (
     items: unknown[],
     extra?: Record<string, unknown>,
@@ -79,6 +81,7 @@ const test = base.extend<{ service: Service }>({
                 { status: 201 },
               )
             : Response.json([]),
+        handler: async () => new Response(),
         send: async () => new Response(),
       };
       const handler = createSubmissionHandler(async (url, init) => {
@@ -91,6 +94,7 @@ const test = base.extend<{ service: Service }>({
         service.requests.push(request);
         return service.github(request);
       });
+      service.handler = handler;
       service.send = (items, extra = {}) =>
         handler(
           new Request("https://service.test/submit", {
@@ -115,32 +119,43 @@ const test = base.extend<{ service: Service }>({
     }
   },
 });
-const outcomes = async (response: Response) =>
+const outcomes = async (response: { json(): Promise<unknown> }) =>
   ((await response.json()) as { outcomes: Outcome[] }).outcomes;
 
 test("the deployed Worker runtime creates and retries through its native fetch", async () => {
   const output = mkdtempSync(join(tmpdir(), "found42-worker-runtime-"));
   let mf: Miniflare | undefined;
   try {
-    execFileSync(
-      process.execPath,
-      [
-        "node_modules/wrangler/bin/wrangler.js",
-        "deploy",
-        "--dry-run",
-        "--config",
-        "worker/wrangler.jsonc",
-        "--outdir",
-        output,
-      ],
-      { stdio: "pipe" },
-    );
+    try {
+      execFileSync(
+        process.execPath,
+        [
+          "node_modules/wrangler/bin/wrangler.js",
+          "deploy",
+          "--dry-run",
+          "--config",
+          "worker/wrangler.jsonc",
+          "--outdir",
+          output,
+        ],
+        { stdio: "pipe", timeout: 20_000 },
+      );
+    } catch (error) {
+      const detail = error as Error & { stdout?: Buffer; stderr?: Buffer };
+      throw new Error(
+        `Worker dry run failed: ${detail.message}\n${detail.stdout?.toString() ?? ""}\n${detail.stderr?.toString() ?? ""}`,
+        { cause: error },
+      );
+    }
+    const config = parse(readFileSync("worker/wrangler.jsonc", "utf8")) as {
+      compatibility_date: string;
+    };
     const requests: unknown[] = [];
     mf = new Miniflare(
       convertV4MiniflareOptions({
         modules: true,
         script: readFileSync(join(output, "index.js"), "utf8"),
-        compatibilityDate: "2026-09-30",
+        compatibilityDate: config.compatibility_date,
         d1Databases: ["DB"],
         bindings: {
           ENABLED: "true",
@@ -436,4 +451,326 @@ test("a storage failure after GitHub acceptance recovers without another create"
     "confirmed",
   );
   expect(service.requests.filter((request) => request.body)).toHaveLength(1);
+});
+
+test("access guards reject foreign origins, methods and formats without GitHub calls", async ({
+  service,
+}) => {
+  const request = (
+    method: string,
+    origin = new URL(publicSite).origin,
+    type = "application/json",
+    path = "/submit",
+  ) =>
+    service.handler(
+      new Request(`https://service.test${path}`, {
+        method,
+        headers: { Origin: origin, "Content-Type": type },
+        ...(method === "POST" ? { body: "{}" } : {}),
+      }),
+      service.env,
+    );
+  expect((await request("POST", "https://other.test")).status).toBe(403);
+  expect((await request("POST", "")).status).toBe(403);
+  expect((await request("GET")).status).toBe(405);
+  expect((await request("POST", undefined, "text/plain")).status).toBe(415);
+  expect((await request("POST", undefined, undefined, "/other")).status).toBe(
+    404,
+  );
+  const preflight = await request("OPTIONS");
+  expect(preflight.status).toBe(204);
+  expect(preflight.headers.get("Access-Control-Allow-Origin")).toBe(
+    new URL(publicSite).origin,
+  );
+  expect(service.requests).toHaveLength(0);
+});
+
+test("malformed requests consume client limits but rejected clients leave the shared bucket unchanged", async ({
+  service,
+}) => {
+  const malformed = () =>
+    service.handler(
+      new Request("https://service.test/submit", {
+        method: "POST",
+        headers: {
+          Origin: new URL(publicSite).origin,
+          "Content-Type": "application/json",
+          "CF-Connecting-IP": "192.0.2.1",
+        },
+        body: "{",
+      }),
+      service.env,
+    );
+  for (let i = 0; i < 30; i++) expect((await malformed()).status).toBe(400);
+  for (let i = 0; i < 3; i++) expect((await malformed()).status).toBe(429);
+  const day = Math.floor(Date.now() / 86_400_000);
+  const sharedLimit = await Promise.resolve(
+    service.env.DB.prepare("SELECT count FROM limits WHERE key=?")
+      .bind(`requests:${day}`)
+      .first(),
+  );
+  expect(sharedLimit).toEqual({ count: 30 });
+  const response = await service.handler(
+    new Request("https://service.test/submit", {
+      method: "POST",
+      headers: {
+        Origin: new URL(publicSite).origin,
+        "Content-Type": "application/json",
+        "CF-Connecting-IP": "192.0.2.2",
+      },
+      body: JSON.stringify({ version: 1, site: publicSite, items: [item()] }),
+    }),
+    service.env,
+  );
+  expect(response.status).toBe(200);
+  expect((await outcomes(response))[0].status).toBe("confirmed");
+});
+
+test("invalid IDs and missing-page feedback have actionable correlated outcomes", async ({
+  service,
+}) => {
+  const feedback = item();
+  const result = await outcomes(
+    await service.send([
+      { ...feedback, id: undefined },
+      { ...feedback, id: "x".repeat(81) },
+      { ...feedback, target: { ...feedback.target, page: "/missing/" } },
+    ]),
+  );
+  expect(result.map((outcome) => outcome.inputIndex)).toEqual([0, 1, 2]);
+  expect(result.every((outcome) => outcome.status === "invalid")).toBe(true);
+  expect(result[2].reason).toBe("unknown-page");
+  expect(result[2].message).toContain("download a backup");
+  expect(result[2].message).not.toContain("edit it");
+  expect(service.requests).toHaveLength(0);
+});
+
+test("calendar-invalid timestamps are refused and valid leap days are accepted", async ({
+  service,
+}) => {
+  const result = await outcomes(
+    await service.send([
+      { ...item("invalid-date"), created: "2026-02-30T12:00:00.000Z" },
+      { ...item("invalid-updated"), updated: "2026-02-29T12:00:00.000Z" },
+      { ...item("valid-leap"), created: "2024-02-29T12:00:00.000Z" },
+    ]),
+  );
+  expect(result.map((outcome) => outcome.status)).toEqual([
+    "invalid",
+    "invalid",
+    "confirmed",
+  ]);
+});
+
+test("fingerprints use the same JSON representation before and after transport", async () => {
+  const { fingerprint, canonical } =
+    await import("../src/review/submission-contract");
+  const feedback = { ...item(), updated: undefined };
+  expect(await fingerprint(publicSite, feedback)).toBe(
+    await fingerprint(publicSite, JSON.parse(JSON.stringify(feedback))),
+  );
+  expect(
+    canonical({
+      optional: undefined,
+      nested: [undefined, { field: undefined }],
+    }),
+  ).toBe(canonical({ nested: [null, {}] }));
+});
+
+test("oversized formatting is invalid before a claim or GitHub attempt", async ({
+  service,
+}) => {
+  const feedback = item();
+  feedback.target.text = "&".repeat(4000);
+  feedback.why = "&".repeat(4000);
+  feedback.change = {
+    kind: "wording",
+    current: "&".repeat(4000),
+    proposed: "<".repeat(3999),
+  };
+  expect(
+    new TextEncoder().encode(JSON.stringify(feedback)).byteLength,
+  ).toBeLessThan(20_000);
+  const result = await outcomes(await service.send([feedback]));
+  expect(result[0].status).toBe("invalid");
+  expect(result[0].message).toContain("Formatted feedback is too long");
+  expect(service.requests).toHaveLength(0);
+  const submissionCount = await Promise.resolve(
+    service.env.DB.prepare("SELECT count(*) AS count FROM submissions").first(),
+  );
+  expect(submissionCount).toEqual({ count: 0 });
+});
+
+test("refused creation allowance resets the claim for safe later delivery", async ({
+  service,
+}) => {
+  const day = Math.floor(Date.now() / 86_400_000);
+  await service.env.DB.prepare(
+    "INSERT INTO limits(key,count,expires) VALUES (?,100,?)",
+  )
+    .bind(`create:${day}`, (day + 1) * 86_400_000)
+    .run();
+  expect((await outcomes(await service.send([item()])))[0].status).toBe(
+    "retryable",
+  );
+  const claimState = await Promise.resolve(
+    service.env.DB.prepare("SELECT state,claim FROM submissions WHERE id=?")
+      .bind(item().id)
+      .first(),
+  );
+  expect(claimState).toEqual({ state: "ready", claim: null });
+  expect(service.requests).toHaveLength(0);
+  await service.env.DB.prepare("DELETE FROM limits WHERE key=?")
+    .bind(`create:${day}`)
+    .run();
+  expect((await outcomes(await service.send([item()])))[0].status).toBe(
+    "confirmed",
+  );
+});
+
+test("unknown tag names always classify as an Area", async () => {
+  const { kindForTag } = await import("../src/review/elements");
+  for (const tag of ["constructor", "__proto__", "toString", "custom-element"])
+    expect(kindForTag(tag)).toBe("Area");
+  expect(kindForTag("p")).toBe("Paragraph");
+});
+
+test("the shared formatter neutralizes imported metadata and refuses unsafe markers", async () => {
+  const { feedbackIssue } = await import("../src/review/issue");
+  const { fingerprint } = await import("../src/review/submission-contract");
+  const feedback = item();
+  const site =
+    "https://example.test/@team/[click](javascript:alert(1))<img src=x>/";
+  const issue = feedbackIssue(
+    feedback,
+    site,
+    await fingerprint(site, feedback),
+  );
+  expect(issue.body).toContain("Page: https\\:");
+  expect(issue.body).toContain("@\u200bteam");
+  expect(issue.body).toContain("&lt;img");
+  expect(() =>
+    feedbackIssue({ ...feedback, id: "--><img src=x>" }, site, "a".repeat(64)),
+  ).toThrow("Invalid feedback marker");
+  expect(() => feedbackIssue(feedback, site, "--><img src=x>")).toThrow(
+    "Invalid feedback marker",
+  );
+});
+
+test("receipts merge monotonically and retiring an ID protects stale tab edits", async () => {
+  const { createStore } = await import("../src/review/store");
+  const original = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+  const data = new Map<string, string>();
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    value: {
+      getItem: (key: string) => data.get(key) ?? null,
+      setItem: (key: string, value: string) => data.set(key, value),
+      removeItem: (key: string) => data.delete(key),
+    },
+  });
+  try {
+    const first = createStore();
+    const second = createStore();
+    const feedback = item();
+    first.save(feedback);
+    const receipt = {
+      id: feedback.id,
+      fingerprint: "hash",
+      status: "confirmed" as const,
+      issue: {
+        number: 2000,
+        url: `https://github.com/${repository}/issues/2000`,
+      },
+      message: "Published",
+      label: "Test",
+    };
+    first.setReceipts([receipt]);
+    second.setReceipts([{ ...receipt, status: "pending", issue: undefined }]);
+    second.setReceipts([]);
+    expect(first.receipts()).toEqual([receipt]);
+    expect(first.saveAsNew(feedback.id)).toBe(true);
+    expect(first.saveAsNew(feedback.id)).toBe(false);
+    second.save({ ...feedback, why: "An old editor saved this." });
+    expect(first.items()).toHaveLength(2);
+    expect(first.items().every((draft) => draft.id !== feedback.id)).toBe(true);
+  } finally {
+    if (original) Object.defineProperty(globalThis, "localStorage", original);
+    else Reflect.deleteProperty(globalThis, "localStorage");
+  }
+});
+
+test("manual import uses the backup reviewer fallback and shared labels", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "found42-backup-test-"));
+  try {
+    const file = join(directory, "backup.md");
+    const items = [
+      { ...item("missing-reviewer"), reviewer: undefined },
+      { ...item("empty-reviewer"), reviewer: "" },
+    ];
+    writeFileSync(
+      file,
+      "```json\n" +
+        JSON.stringify({
+          format: "found42-review-feedback",
+          version: 1,
+          site: publicSite,
+          reviewer: "Backup reviewer",
+          items,
+        }) +
+        "\n```\n",
+    );
+    const output = execFileSync(
+      process.execPath,
+      ["scripts/feedback-to-issues.mjs", file],
+      { encoding: "utf8", timeout: 15_000 },
+    );
+    expect(output.match(/Reported by \*\*Backup reviewer\*\*/g)).toHaveLength(
+      2,
+    );
+    expect(output.match(/labels: needs-triage, review-feedback/g)).toHaveLength(
+      2,
+    );
+    expect(output).not.toContain("**undefined**");
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("deployment reports a missing receipt database before any remote command", async () => {
+  const { mkdirSync } = await import("node:fs");
+  const { resolve } = await import("node:path");
+  const directory = mkdtempSync(join(tmpdir(), "found42-deploy-test-"));
+  const script = resolve("scripts/deploy-review-service.mjs");
+  try {
+    mkdirSync(join(directory, "worker"));
+    for (const config of [{}, { d1_databases: [] }]) {
+      writeFileSync(
+        join(directory, "worker/wrangler.jsonc"),
+        JSON.stringify(config),
+      );
+      let failure = "";
+      try {
+        execFileSync(process.execPath, [script], {
+          cwd: directory,
+          timeout: 10_000,
+          stdio: "pipe",
+          env: {
+            ...process.env,
+            CLOUDFLARE_ACCOUNT_ID: "test-account",
+            WORKERS_FREE_VERIFIED_ACCOUNT: "test-account",
+            WORKERS_FREE_VERIFIED_DATE: new Date().toISOString().slice(0, 10),
+          },
+        });
+      } catch (error) {
+        failure = (error as { stderr: Buffer }).stderr.toString();
+      }
+      expect(failure).toContain(
+        "Configure the free D1 receipt database before deployment.",
+      );
+      expect(failure).not.toContain("TypeError");
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

@@ -21,7 +21,7 @@ export default defineConfig({
         VITE_REVIEW_SUBMISSION_URL: "https://review-submission.test/submit",
       },
       url: "http://127.0.0.1:4173",
-      reuseExistingServer: true,
+      reuseExistingServer: false,
     },
     {
       command: process.env.PW_PREBUILT_DIST

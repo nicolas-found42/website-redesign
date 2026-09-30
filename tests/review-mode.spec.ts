@@ -412,7 +412,11 @@ test("a content conflict offers an explicit new draft independently of message w
   await panel(page)
     .getByRole("button", { name: "Save as new feedback" })
     .click();
+  await expect(
+    panel(page).getByRole("button", { name: "Save as new feedback" }),
+  ).toHaveCount(0);
   const revised = (await saved(page)).items[0];
+  expect((await saved(page)).published).toContain(original.id);
   expect(revised.id).not.toBe(original.id);
   expect({ ...revised, id: original.id }).toEqual(original);
   await panel(page)
@@ -543,6 +547,17 @@ for (const failure of [
       "1 draft remains",
     );
     await expect(panel(page)).toContainText("draft is saved");
+    const expectedMessage =
+      failure === "offline"
+        ? "You’re offline"
+        : failure === "quota"
+          ? "temporarily limited"
+          : failure === "validation"
+            ? "could not be accepted"
+            : failure === "github"
+              ? "temporarily unavailable"
+              : "could not confirm delivery";
+    await expect(panel(page)).toContainText(expectedMessage);
     await expect(
       panel(page).getByRole("link", { name: /Issue #/ }),
     ).toHaveCount(0);
@@ -608,4 +623,267 @@ test("larger draft lists are sent in bounded chunks without losing items", async
   );
   expect(batchSizes).toEqual([3, 2]);
   expect((await saved(page)).items).toEqual([]);
+});
+
+test("concurrent tab sends preserve the confirmed receipt after reload", async ({
+  page,
+  context,
+}) => {
+  let release!: () => void;
+  let arrived!: () => void;
+  const wait = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const started = new Promise<void>((resolve) => {
+    arrived = resolve;
+  });
+  let requests = 0;
+  await context.route(
+    "https://review-submission.test/submit",
+    async (route) => {
+      requests++;
+      arrived();
+      await wait;
+      await route.fulfill({
+        json: await confirmedResponse(route.request().postDataJSON()),
+      });
+    },
+  );
+  await page.goto("/?review");
+  await saveWording(page, "Publish one copy across tabs.");
+  const other = await context.newPage();
+  await other.goto("/?review");
+  await sendButton(page).click();
+  await started;
+  await sendButton(other).click();
+  release();
+  await expect(
+    panel(page).getByRole("link", { name: "Issue #2000 on GitHub" }),
+  ).toBeVisible();
+  await expect(panel(other).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
+  expect(requests).toBe(1);
+  expect((await saved(page)).receipts[0].status).toBe("confirmed");
+  await other.reload();
+  await other.getByRole("button", { name: "Last receipt" }).click();
+  await expect(
+    panel(other).getByRole("link", { name: "Issue #2000 on GitHub" }),
+  ).toBeVisible();
+});
+
+test("a timestamp-only re-save during delivery leaves no duplicate draft", async ({
+  page,
+  context,
+}) => {
+  let release!: () => void;
+  let arrived!: () => void;
+  const wait = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const started = new Promise<void>((resolve) => {
+    arrived = resolve;
+  });
+  await page.route("https://review-submission.test/submit", async (route) => {
+    arrived();
+    await wait;
+    await route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    });
+  });
+  await page.goto("/?review");
+  await saveWording(page, "Unchanged feedback.");
+  const other = await context.newPage();
+  await other.goto("/?review");
+  await other.getByRole("button", { name: /My feedback/ }).click();
+  await panel(other).getByRole("button", { name: "Edit" }).click();
+  await sendButton(page).click();
+  await started;
+  await panel(other).getByRole("button", { name: "Save feedback" }).click();
+  release();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
+  expect((await saved(page)).items).toEqual([]);
+});
+
+test("a backup opened during delivery survives progress and completion", async ({
+  page,
+}) => {
+  let release!: () => void;
+  let arrived!: () => void;
+  const wait = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const started = new Promise<void>((resolve) => {
+    arrived = resolve;
+  });
+  await page.route("https://review-submission.test/submit", async (route) => {
+    arrived();
+    await wait;
+    await route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    });
+  });
+  await page.goto("/?review");
+  await saveWording(page, "Keep my backup open.");
+  await sendButton(page).click();
+  await started;
+  await panel(page)
+    .getByRole("button", { name: "Close", exact: true })
+    .first()
+    .click();
+  await page.getByRole("button", { name: /My feedback/ }).click();
+  await panel(page).getByRole("button", { name: "Download backup…" }).click();
+  const backup = panel(page).getByLabel("Backup contents");
+  await expect(backup).toContainText("Keep my backup open.");
+  release();
+  await expect.poll(async () => (await saved(page)).items.length).toBe(0);
+  await expect(
+    panel(page).getByRole("heading", { name: "Download a backup" }),
+  ).toBeVisible();
+  await expect(backup).toContainText("Keep my backup open.");
+});
+
+for (const status of ["retryable", "pending"]) {
+  test(`${status} item outcomes stop subsequent chunks and retain all drafts`, async ({
+    page,
+  }) => {
+    let requests = 0;
+    await page.route("https://review-submission.test/submit", async (route) => {
+      requests++;
+      const result = await confirmedResponse(route.request().postDataJSON());
+      await route.fulfill({
+        json: {
+          outcomes: result.outcomes.map((outcome) => ({
+            ...outcome,
+            issue: undefined,
+            status,
+            message: "Please retry later.",
+          })),
+        },
+      });
+    });
+    await page.goto("/?review");
+    for (let i = 0; i < 4; i++)
+      await saveWording(page, `Queued feedback ${i}.`);
+    await sendButton(page).click();
+    await expect(panel(page).getByRole("status")).toContainText(
+      "4 drafts remain",
+    );
+    expect(requests).toBe(1);
+    expect((await saved(page)).receipts).toHaveLength(4);
+    expect((await saved(page)).items).toHaveLength(4);
+  });
+}
+
+test("unrelated cross-tab storage writes preserve the open feedback list", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/?review");
+  await saveWording(page, "Keep list state.");
+  await page.getByRole("button", { name: /My feedback/ }).click();
+  await panel(page).evaluate((element) => {
+    element.querySelector(".panel-body")!.setAttribute("data-preserved", "yes");
+  });
+  const other = await context.newPage();
+  await other.goto("/?review");
+  // An acknowledgement ensures the event has been delivered without a timing sleep.
+  await page.evaluate(() => {
+    addEventListener("storage", (event) => {
+      if (event.key === "unrelated-test")
+        document.body.dataset.storageSeen = "yes";
+    });
+  });
+  await other.evaluate(() =>
+    localStorage.setItem("unrelated-test", "new value"),
+  );
+  await expect(page.locator("body")).toHaveAttribute(
+    "data-storage-seen",
+    "yes",
+  );
+  await expect(panel(page).locator(".panel-body")).toHaveAttribute(
+    "data-preserved",
+    "yes",
+  );
+});
+
+test("mobile page space follows the review bar including warning and receipt states", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    Storage.prototype.setItem = () => {
+      throw new Error("Storage unavailable");
+    };
+  });
+  await page.goto("/?review");
+  const bar = page.getByRole("region", { name: "Review mode" });
+  await expect(bar).toContainText("isn’t keeping feedback");
+  await expect
+    .poll(async () => {
+      const bounds = (await bar.boundingBox())!;
+      const reservation = await page.evaluate(() =>
+        parseFloat(getComputedStyle(document.body).paddingBottom),
+      );
+      return reservation >= bounds.height + 24;
+    })
+    .toBe(true);
+  await saveWording(page, "Phone feedback.");
+  await page.route("https://review-submission.test/submit", async (route) => {
+    await route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    });
+  });
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
+  await panel(page)
+    .getByRole("button", { name: "Close", exact: true })
+    .first()
+    .click();
+  await expect
+    .poll(async () => {
+      const bounds = (await bar.boundingBox())!;
+      return (
+        (await page.evaluate(() =>
+          parseFloat(getComputedStyle(document.body).paddingBottom),
+        )) >=
+        bounds.height + 24
+      );
+    })
+    .toBe(true);
+});
+
+test("invalid overlong IDs retain the service validation message using input index", async ({
+  page,
+}) => {
+  await page.goto("/?review");
+  await saveWording(page, "Fix this invalid record.");
+  await page.evaluate(() => {
+    const key = "found42-review:feedback";
+    const saved = JSON.parse(localStorage.getItem(key)!);
+    saved.items[0].id = "x".repeat(81);
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.route("https://review-submission.test/submit", async (route) => {
+    await route.fulfill({
+      json: {
+        outcomes: [
+          {
+            id: "x".repeat(80),
+            inputIndex: 0,
+            fingerprint: "",
+            status: "invalid",
+            message: "The record ID is invalid. Your draft is saved.",
+          },
+        ],
+      },
+    });
+  });
+  await sendButton(page).click();
+  await expect(panel(page)).toContainText("The record ID is invalid");
+  expect((await saved(page)).items).toHaveLength(1);
 });

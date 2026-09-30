@@ -46,4 +46,4 @@ export const elementNames: ElementKind[] = [
   "Area",
 ];
 export const kindForTag = (tag: string): ElementKind =>
-  kinds[tag as keyof typeof kinds] ?? "Area";
+  Object.hasOwn(kinds, tag) ? kinds[tag as keyof typeof kinds] : "Area";

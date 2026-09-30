@@ -1,41 +1,6 @@
 import { canonical, type Outcome } from "./submission-contract";
-import type { Target } from "./target";
-
-export type Kind = "wording" | "content" | "visual" | "layout";
-export type Priority = "must" | "should" | "nice";
-
-/** Each kind asks for the answer that kind of feedback is missing without it. */
-export type Change =
-  | { kind: "wording"; current: string; proposed: string }
-  | {
-      kind: "content";
-      action: "add" | "remove" | "replace";
-      /** Where an addition goes, relative to the target. */
-      position?: "before" | "after" | "inside";
-      detail: string;
-    }
-  | { kind: "visual"; problem: string; desired: string; example: string }
-  | {
-      kind: "layout";
-      action: "move" | "remove" | "combine" | "reorder" | "other";
-      position?: "above" | "below";
-      /** The band it moves next to or combines with. */
-      relativeTo?: { name: string; selector: string };
-      detail: string;
-    };
-
-export interface FeedbackItem {
-  id: string;
-  created: string;
-  updated?: string;
-  reviewer: string;
-  target: Target;
-  change: Change;
-  /** The change applies wherever the same thing appears on the site. */
-  everywhere: boolean;
-  why: string;
-  priority: Priority;
-}
+import type { FeedbackItem } from "./model";
+export type { Kind, Priority, Change, FeedbackItem } from "./model";
 
 export type DeliveryReceipt = Outcome & { label: string };
 
@@ -47,7 +12,14 @@ interface Saved {
   published?: string[];
 }
 
-const key = "found42-review:feedback";
+export const storageKey = "found42-review:feedback";
+const key = storageKey;
+const content = (item: FeedbackItem) => {
+  const fields: Partial<FeedbackItem> = { ...item };
+  delete fields.created;
+  delete fields.updated;
+  return canonical(fields);
+};
 
 /**
  * Feedback waits in this browser until the reviewer sends it, across pages and
@@ -101,8 +73,17 @@ export function createStore() {
     },
     items: () => read().items,
     receipts: () => read().receipts ?? [],
-    setReceipts: (receipts: DeliveryReceipt[]) =>
-      write({ ...read(), receipts }),
+    setReceipts(receipts: DeliveryReceipt[]) {
+      const saved = read();
+      const merged = new Map(
+        (saved.receipts ?? []).map((receipt) => [receipt.id, receipt]),
+      );
+      for (const receipt of receipts) {
+        if (merged.get(receipt.id)?.status !== "confirmed")
+          merged.set(receipt.id, receipt);
+      }
+      write({ ...saved, receipts: [...merged.values()] });
+    },
     reviewer: () => read().reviewer,
     setReviewer: (reviewer: string) => write({ ...read(), reviewer }),
     save(item: FeedbackItem) {
@@ -118,7 +99,7 @@ export function createStore() {
     confirmSubmitted(submitted: FeedbackItem) {
       const saved = read();
       const current = saved.items.find((item) => item.id === submitted.id);
-      const revised = current && canonical(current) !== canonical(submitted);
+      const revised = current && content(current) !== content(submitted);
       write({
         ...saved,
         published: [...new Set([...(saved.published ?? []), submitted.id])],
@@ -134,12 +115,15 @@ export function createStore() {
     },
     saveAsNew(id: string) {
       const saved = read();
+      if (!saved.items.some((item) => item.id === id)) return false;
       write({
         ...saved,
+        published: [...new Set([...(saved.published ?? []), id])],
         items: saved.items.map((item) =>
           item.id === id ? { ...item, id: newId() } : item,
         ),
       });
+      return true;
     },
     remove(id: string) {
       const saved = read();

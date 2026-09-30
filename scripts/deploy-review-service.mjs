@@ -23,14 +23,24 @@ const config = parse(
   },
 );
 if (configErrors.length) throw new Error("Invalid Worker configuration.");
+const database = config?.d1_databases?.find(
+  (database) => database.binding === "DB",
+);
 if (
-  config.d1_databases[0].database_id === "00000000-0000-0000-0000-000000000000"
+  !database?.database_name ||
+  !database.database_id ||
+  database.database_id === "00000000-0000-0000-0000-000000000000"
 )
   throw new Error("Configure the free D1 receipt database before deployment.");
 const wrangler = (...args) =>
   execFileSync(
-    "npx",
-    ["wrangler", ...args, "--config", "worker/wrangler.jsonc"],
+    process.execPath,
+    [
+      "node_modules/wrangler/bin/wrangler.js",
+      ...args,
+      "--config",
+      "worker/wrangler.jsonc",
+    ],
     { encoding: "utf8", stdio: ["inherit", "pipe", "pipe"] },
   );
 // This lists secret names only; it never reads or prints credential values.
@@ -44,6 +54,6 @@ if (
     "Configure GITHUB_TOKEN and RATE_SALT as Worker secrets first.",
   );
 console.log(
-  wrangler("d1", "migrations", "apply", "found42-review-receipts", "--remote"),
+  wrangler("d1", "migrations", "apply", database.database_name, "--remote"),
 );
 console.log(wrangler("deploy", "--var", "ENABLED:true"));

@@ -21,6 +21,18 @@ export async function submitDrafts(
   site: string,
   progress: (done: number, total: number) => void,
 ) {
+  if (navigator.locks)
+    return navigator.locks.request("found42-review:submission", () =>
+      sendSnapshot(store, site, progress),
+    );
+  return sendSnapshot(store, site, progress);
+}
+
+async function sendSnapshot(
+  store: Store,
+  site: string,
+  progress: (done: number, total: number) => void,
+) {
   const snapshot = structuredClone(store.items());
   const receipts: DeliveryReceipt[] = [];
   const remember = (item: FeedbackItem, outcome: Outcome) =>
@@ -96,7 +108,13 @@ export async function submitDrafts(
           value &&
           typeof value === "object" &&
           "id" in value &&
-          value.id === item.id,
+          (value.id === item.id ||
+            ("inputIndex" in value &&
+              value.inputIndex === index &&
+              "status" in value &&
+              value.status === "invalid" &&
+              "fingerprint" in value &&
+              value.fingerprint === "")),
       );
       const outcome =
         candidates.length === 1
@@ -114,11 +132,11 @@ export async function submitDrafts(
         if (outcome.status === "confirmed") {
           if (validIssue(outcome.issue)) {
             revised = store.confirmSubmitted(item) || revised;
-            remember(item, outcome as Outcome);
+            remember(item, { ...outcome, id: item.id } as Outcome);
             return;
           }
         } else {
-          remember(item, outcome as Outcome);
+          remember(item, { ...outcome, id: item.id } as Outcome);
           return;
         }
       }
@@ -133,7 +151,15 @@ export async function submitDrafts(
     progress(receipts.length, snapshot.length);
     // Stop after a transport/service failure to avoid hammering a quota-limited
     // endpoint; all remaining snapshot items still get explicit receipts.
-    if (!results.length) {
+    if (
+      !results.length ||
+      receipts
+        .slice(-items.length)
+        .some(
+          (outcome) =>
+            outcome.status === "retryable" || outcome.status === "pending",
+        )
+    ) {
       for (const item of snapshot.slice(offset))
         remember(item, {
           id: item.id,

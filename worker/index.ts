@@ -4,13 +4,14 @@ import {
   maxItemBytes,
   maxRequestBytes,
   publicSite,
+  pages,
   repository,
   validEnvelope,
   validIssue,
   validItem,
   type Outcome,
 } from "../src/review/submission-contract";
-import type { FeedbackItem } from "../src/review/store";
+import type { FeedbackItem } from "../src/review/model";
 import { feedbackIssue, issueMarker } from "../src/review/issue";
 
 export interface Env {
@@ -30,7 +31,7 @@ interface Receipt {
 }
 const messages = {
   pending:
-    "Delivery is still being checked. Your draft is saved. Retry later to recover its issue; an uncertain delivery will not be sent twice.",
+    "Delivery is still being checked. Your draft is saved. Retry later to check for its issue. If it remains pending, contact the team for recovery; an uncertain delivery will not be sent twice.",
   limited:
     "Sending is temporarily limited. Your drafts are saved. Please retry later.",
   unavailable:
@@ -277,6 +278,28 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
       );
     if (env.ENABLED !== "true" || !env.GITHUB_TOKEN || !env.RATE_SALT)
       return reply({ message: messages.unavailable }, 503);
+    try {
+      const now = Date.now();
+      const day = Math.floor(now / 86_400_000);
+      const hour = Math.floor(now / 3_600_000);
+      await env.DB.prepare(
+        "DELETE FROM limits WHERE key IN (SELECT key FROM limits WHERE expires < ? LIMIT 100)",
+      )
+        .bind(now)
+        .run();
+      if (
+        !(await allowance(
+          env,
+          `client:${await clientKey(request.headers.get("CF-Connecting-IP") ?? "unknown", env.RATE_SALT, hour)}`,
+          30,
+          (hour + 1) * 3_600_000,
+        )) ||
+        !(await allowance(env, `requests:${day}`, 1000, (day + 1) * 86_400_000))
+      )
+        return reply({ message: messages.limited }, 429);
+    } catch {
+      return reply({ message: messages.unavailable }, 503);
+    }
     if (
       request.headers.get("Content-Type")?.split(";")[0] !== "application/json"
     )
@@ -303,30 +326,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
       );
     const outcomes: Outcome[] = [];
     try {
-      const now = Date.now();
-      const day = Math.floor(now / 86_400_000);
-      const hour = Math.floor(now / 3_600_000);
-      await env.DB.prepare(
-        "DELETE FROM limits WHERE key IN (SELECT key FROM limits WHERE expires < ? LIMIT 100)",
-      )
-        .bind(now)
-        .run();
-      if (
-        !(await allowance(
-          env,
-          `requests:${day}`,
-          1000,
-          (day + 1) * 86_400_000,
-        )) ||
-        !(await allowance(
-          env,
-          `client:${await clientKey(request.headers.get("CF-Connecting-IP") ?? "unknown", env.RATE_SALT, hour)}`,
-          30,
-          (hour + 1) * 3_600_000,
-        ))
-      )
-        return reply({ message: messages.limited }, 429);
-      for (const value of payload.items) {
+      for (const [inputIndex, value] of payload.items.entries()) {
         const id =
           value &&
           typeof value === "object" &&
@@ -335,16 +335,41 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
             ? value.id.slice(0, 80)
             : "unknown";
         if (!validItem(value) || bytes(JSON.stringify(value)) > maxItemBytes) {
+          const unknownPage =
+            value &&
+            typeof value === "object" &&
+            "target" in value &&
+            value.target &&
+            typeof value.target === "object" &&
+            "page" in value.target &&
+            typeof value.target.page === "string" &&
+            !pages.includes(value.target.page);
           outcomes.push({
             id,
+            inputIndex,
             fingerprint: "",
             status: "invalid",
-            message:
-              "This feedback is incomplete or too long. Your draft is saved; edit it before sending again.",
+            ...(unknownPage ? { reason: "unknown-page" as const } : {}),
+            message: unknownPage
+              ? "This feedback points to a page outside the seven supported website pages. Your draft is saved; download a backup and contact the team to report a missing page."
+              : "This feedback is incomplete or too long. Your draft is saved; edit it before sending again.",
           });
           continue;
         }
         const hash = await fingerprint(payload.site, value);
+        try {
+          feedbackIssue(value, publicSite, hash);
+        } catch {
+          outcomes.push({
+            id,
+            inputIndex,
+            fingerprint: hash,
+            status: "invalid",
+            message:
+              "Formatted feedback is too long. Your draft is saved; shorten it before sending again.",
+          });
+          continue;
+        }
         try {
           outcomes.push(await deliver(env, value, hash));
         } catch {

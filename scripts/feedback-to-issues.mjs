@@ -21,9 +21,12 @@ if (!file) {
   process.exit(1);
 }
 
-const labels = ["needs-triage", "review-feedback"];
 const gh = (...command) =>
-  execFileSync("gh", command, { encoding: "utf8" }).trim();
+  execFileSync(
+    "gh",
+    [...command, "--repo", "nicolas-found42/website-redesign"],
+    { encoding: "utf8" },
+  ).trim();
 
 // The page's own export module formats the issue, so the two never disagree.
 const server = await createServer({
@@ -41,16 +44,23 @@ try {
   );
   const record = parseFeedbackFile(await readFile(file, "utf8"));
   const issues = await Promise.all(
-    record.items.map(async (item) => ({
-      id: item.id,
-      ...feedbackIssue(item, record.site, await fingerprint(record.site, item)),
-    })),
+    record.items.map(async (raw) => {
+      const item = { ...raw, reviewer: raw.reviewer || record.reviewer };
+      return {
+        id: item.id,
+        ...feedbackIssue(
+          item,
+          record.site,
+          await fingerprint(record.site, item),
+        ),
+      };
+    }),
   );
 
   if (!create) {
     for (const issue of issues)
       console.log(
-        `\n━━ ${issue.title}\nlabels: ${labels.join(", ")}\n\n${issue.body}\n`,
+        `\n━━ ${issue.title}\nlabels: ${issue.labels.join(", ")}\n\n${issue.body}\n`,
       );
     console.log(
       `${issues.length} ${issues.length === 1 ? "issue" : "issues"} would be opened from ${record.reviewer}'s feedback. Run again with --create to open them.`,
@@ -96,7 +106,7 @@ try {
           issue.title,
           "--body-file",
           bodyFile,
-          ...labels.flatMap((label) => ["--label", label]),
+          ...issue.labels.flatMap((label) => ["--label", label]),
         );
         console.log(`Opened ${url} (${issue.title})`);
       }

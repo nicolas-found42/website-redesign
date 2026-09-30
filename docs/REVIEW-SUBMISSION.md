@@ -42,9 +42,16 @@ worker/wrangler.jsonc`. The checked-in configuration disables delivery.
 worker/wrangler.jsonc` through its private prompt/stdin. Generate an unrelated
    random secret for `RATE_SALT` and store it the same way. Never commit either
    secret, put it in a Vite variable, print it, or copy it into issue records.
-6. Provision the labels `needs-triage` and `review-feedback` with `gh label
-create` if absent. Runtime requests cannot set labels or assignees. The
+6. Provision missing labels in the fixed destination repository:
+
+   ```sh
+   gh label create needs-triage --color FBCA04 --repo nicolas-found42/website-redesign
+   gh label create review-feedback --color C2E0C6 --repo nicolas-found42/website-redesign
+   ```
+
+   Run each command only if its label is absent. Runtime requests cannot set labels or assignees. The
    service does not need label-management calls during ordinary submission.
+
 7. Export `WORKERS_FREE_VERIFIED_ACCOUNT` equal to `CLOUDFLARE_ACCOUNT_ID`, and
    `WORKERS_FREE_VERIFIED_DATE` as today's UTC date after the dashboard check.
    Run `npm run worker:deploy`. The guard requires this fresh verification,
@@ -55,8 +62,11 @@ create` if absent. Runtime requests cannot set labels or assignees. The
    `https://found42-review-submission.<account-subdomain>.workers.dev/submit`.
    This is the only browser configuration. The main-branch Pages build reads
    it; review tools continue to load only on review links. Rebuild/redeploy Pages
-   after changing it. Local testing can use `.env.local` with this public URL,
-   but the live service accepts only the published website's site context.
+   after changing it. CI rejects a missing production endpoint on PRs and before
+   publication. Local browser tests use a stub endpoint; runtime tests use
+   Miniflare with controlled GitHub responses. Test live delivery from the
+   published site, because the Worker accepts only its origin and site context.
+   Setting `.env.local` to the live endpoint does not permit localhost origins.
 
 The Worker uses the provider's free `workers.dev` address and D1 only. It has
 no paid add-ons, background queue, custom domain or local production server.
@@ -69,14 +79,22 @@ service and never deploys it with credentials.
 
 `POST /submit` accepts version 1, the exact published site URL, and at most
 three feedback records. Bodies are streamed with a 64,000-byte cap; each
-record has a 20,000-byte cap and field-specific text limits. The schema allows
+record has a 20,000-byte cap and field-specific text limits. Formatted issue
+bodies have a 60,000-byte cap; oversized formatting is invalid before any
+creation attempt. The schema allows
 only the site's seven page routes, existing element types, kinds, priorities,
 and kind-specific fields. Additional repository, label, assignee or command
-fields are refused. Invalid records receive separate invalid outcomes.
+fields are refused. Invalid records receive separate invalid outcomes correlated by input index
+when the ID is unusable. Unsupported page paths receive a distinct
+`unknown-page` reason and backup instructions, because editing cannot change
+where an item was captured.
 
 The service fixes the repository, issue labels and issue operation. An allowed
 Origin is checked for browser use, but anyone can forge it: D1 limits also
-protect anonymous requests. Limits are 30 requests/client/hour, 1,000 total
+protect anonymous requests. POST requests consume the client allowance first,
+then the shared request allowance, before body parsing or validation. A blocked
+client cannot drain the shared bucket; malformed POSTs still consume allowances.
+Limits are 30 requests/client/hour, 1,000 total
 requests/day, and 100 issue-creation attempts/day. Limit increments and claims
 are conditional SQL writes, so concurrent requests cannot bypass the caps.
 Known rejected attempts still consume the conservative creation allowance.
@@ -105,7 +123,9 @@ using the attempt timestamp and exact ID/fingerprint marker. It does not use
 GitHub search or presume search indexing is immediate. Reconciliation reads
 at most three pages of 100 issues per attempt. If the matching marker is not
 found, delivery remains pending, with no new creation attempt. Only explicit
-GitHub rejections permit the same record to become ready again.
+GitHub rejections or refusal of the local creation allowance permit the same
+record to become ready again. Allowance refusal happens before the GitHub POST,
+so retrying that record is safe.
 
 For a persistently pending record, inspect the stored timestamp and marker
 with repository issue-list requests and the GitHub UI. If found, restore its
@@ -116,7 +136,10 @@ sent. Document that determination before manually making it ready again.
 Never delete the receipt database or rebuild it empty to restore sending.
 That destroys duplicate protection. Keep provider backups/Time Travel and
 receipts when updating Worker code. A GitHub issue deleted or with its marker
-removed may require manual recovery; the service will preserve the draft.
+removed may require manual recovery. Durable receipts contain no feedback text
+and cannot reconstruct a confirmed draft after the browser removes it. Keep a
+local or exported backup when recovery may be needed. Pending drafts stay in the
+browser; contact the team if repeated checks cannot recover an issue.
 
 The browser submits an immutable snapshot in bounded chunks. Confirmations
 must match its ID, fingerprint and the fixed repository issue URL before any

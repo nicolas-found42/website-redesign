@@ -33,6 +33,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Require the production submission endpoint
+        env:
+          VITE_REVIEW_SUBMISSION_URL: ${{ vars.VITE_REVIEW_SUBMISSION_URL }}
+        run: |
+          if test -z "$VITE_REVIEW_SUBMISSION_URL"; then
+            echo "::error::Set the repository Actions variable VITE_REVIEW_SUBMISSION_URL before publishing Pages."
+            exit 1
+          fi
       - run: npm run lint
       - name: Check GitHub Actions workflow
         uses: docker://rhysd/actionlint:1.7.12

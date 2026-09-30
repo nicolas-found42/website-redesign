@@ -1,25 +1,9 @@
 import { routeFromPath } from "../paths";
-import { kindForTag, type ElementKind } from "./elements";
+import { kindForTag } from "./elements";
 
-/**
- * What a piece of feedback points at, recorded so whoever acts on it can find
- * the exact element again: by selector while the markup holds, and by page,
- * section and text once it has moved.
- */
-export interface Target {
-  /** Path under the site, e.g. `/services/`. */
-  page: string;
-  pageName: string;
-  section: string;
-  /** What kind of thing it is: Heading, Paragraph, Image… */
-  element: ElementKind;
-  selector: string;
-  /** The words it showed, or an image's description. */
-  text: string;
-  /** Choices the page was showing, e.g. `C-Level selected`. */
-  state: string[];
-  viewport: { width: number; height: number };
-}
+import type { Target } from "./model";
+export type { Target } from "./model";
+export { targetLabel, screenName } from "./target-meta";
 
 /** Things a reviewer means when they click inside them. */
 const pointable =
@@ -217,13 +201,3 @@ export function describe(el: Element): Target {
     viewport: { width: innerWidth, height: innerHeight },
   };
 }
-
-/** `Heading “Who Found42 helps”`, short enough for a list or a label. */
-export function targetLabel(target: Pick<Target, "element" | "text">) {
-  const line = clean(target.text);
-  const text = line.length > 60 ? `${line.slice(0, 57)}…` : line;
-  return text ? `${target.element} “${text}”` : target.element;
-}
-
-export const screenName = ({ width }: Target["viewport"]) =>
-  width < 768 ? "phone" : width < 1024 ? "tablet" : "desktop";

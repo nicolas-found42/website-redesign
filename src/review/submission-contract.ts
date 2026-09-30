@@ -1,4 +1,4 @@
-import type { FeedbackItem } from "./store";
+import type { FeedbackItem } from "./model";
 import { elementNames } from "./elements";
 
 export const repository = "nicolas-found42/website-redesign";
@@ -17,7 +17,8 @@ export interface Outcome {
   fingerprint: string;
   status: "confirmed" | "retryable" | "invalid" | "pending";
   message: string;
-  reason?: "content-conflict";
+  reason?: "content-conflict" | "unknown-page";
+  inputIndex?: number;
   issue?: { number: number; url: string };
 }
 
@@ -27,6 +28,7 @@ export function canonical(value: unknown): string {
   if (value && typeof value === "object") {
     const record = value as Record<string, unknown>;
     return `{${Object.keys(record)
+      .filter((key) => record[key] !== undefined)
       .sort()
       .map((key) => `${JSON.stringify(key)}:${canonical(record[key])}`)
       .join(",")}}`;
@@ -61,9 +63,9 @@ const oneOf = (value: unknown, allowed: string[]) =>
   typeof value === "string" && allowed.includes(value);
 const date = (value: unknown) =>
   text(value, 40) &&
-  /^\d{4}-\d{2}-\d{2}T/.test(value) &&
-  Number.isFinite(Date.parse(value));
-const pages = [
+  Number.isFinite(Date.parse(value)) &&
+  new Date(value).toISOString() === value;
+export const pages = [
   "/",
   "/services/",
   "/industries/private-equity/",

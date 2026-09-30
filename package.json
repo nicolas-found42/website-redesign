@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build && node scripts/prerender.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json && tsc --noEmit -p tests/tsconfig.json",
     "lint": "npm run lint:code && npm run lint:styles && npm run lint:docs",
     "lint:code": "eslint . --max-warnings 0",
     "lint:styles": "stylelint \"src/**/*.css\"",
@@ -18,7 +18,7 @@
     "preview:pages": "node scripts/serve-pages.mjs",
     "feedback:issues": "node scripts/feedback-to-issues.mjs",
     "prepare": "husky",
-    "worker:check": "wrangler deploy --config worker/wrangler.jsonc --dry-run --outdir ../.worker-dist",
+    "worker:check": "wrangler deploy --config worker/wrangler.jsonc --dry-run --outdir .worker-dist",
     "worker:deploy": "node scripts/deploy-review-service.mjs"
   },
   "devDependencies": {
@@ -26,6 +26,7 @@
     "@cloudflare/workers-types": "^5.20260930.2",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.55.0",
+    "@types/node": "^22.20.4",
     "eslint": "^10.11.0",
     "eslint-plugin-playwright": "^2.12.0",
     "globals": "^17.12.0",

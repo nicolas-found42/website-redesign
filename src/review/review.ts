@@ -2,7 +2,8 @@ import css from "./review.css?inline";
 import { submitDrafts, sendLabel } from "./submission";
 import { sitePath } from "../paths";
 import { endReviewSession } from "./activation";
-import { createStore, newId, type FeedbackItem } from "./store";
+import { publicSite } from "./submission-contract";
+import { createStore, storageKey, newId, type FeedbackItem } from "./store";
 import {
   currentPage,
   describe,
@@ -69,7 +70,7 @@ export function mountReview() {
   document.body.append(host);
   const pageStyle = document.createElement("style");
   pageStyle.textContent =
-    "html.found42-reviewing body{padding-bottom:112px}html.found42-picking,html.found42-picking *{cursor:crosshair!important}";
+    "html.found42-reviewing body{padding-bottom:var(--found42-review-space,112px)}html.found42-picking,html.found42-picking *{cursor:crosshair!important}";
   document.head.append(pageStyle);
   document.documentElement.classList.add("found42-reviewing");
 
@@ -85,6 +86,15 @@ export function mountReview() {
   const pickButton = $<HTMLButtonElement>('[data-act="pick"]');
   $("[data-warning]").hidden = store.persistent;
   const page = currentPage();
+  const bar = $(".bar");
+  const reserveBar = () =>
+    document.documentElement.style.setProperty(
+      "--found42-review-space",
+      `${Math.ceil(bar.getBoundingClientRect().height + 48)}px`,
+    );
+  const barLayout = new ResizeObserver(reserveBar);
+  barLayout.observe(bar);
+  reserveBar();
 
   /* ── Highlight ── */
   let highlighted: Element | null = null;
@@ -486,7 +496,7 @@ export function mountReview() {
       <p class="item-head">${esc(receipt.label)}</p>
       <p>${esc(receipt.message)}</p>
       ${receipt.status === "confirmed" && receipt.issue ? `<a class="chip" href="${esc(receipt.issue.url)}" target="_blank" rel="noopener noreferrer">Issue #${receipt.issue.number} on GitHub</a>` : ""}
-      ${receipt.status === "invalid" && receipt.reason === "content-conflict" ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
+      ${receipt.status === "invalid" && receipt.reason === "content-conflict" && store.items().some((item) => item.id === receipt.id) ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
     </li>`,
         )
         .join("");
@@ -498,29 +508,26 @@ export function mountReview() {
     submitting = true;
     sentCount = 0;
     sendTotal = store.items().length;
-    store.setReceipts([]);
     listPanel.close();
     renderReceipt();
     if (!sendPanel.open) sendPanel.showModal();
     sendPanel.querySelector<HTMLElement>("h2")?.focus();
     try {
-      await submitDrafts(
-        store,
-        new URL(sitePath(), location.href).href,
-        (done, total) => {
-          sentCount = done;
-          sendTotal = total;
-          if (sendPanel.open) renderReceipt();
-          drawPins();
-        },
-      );
+      await submitDrafts(store, publicSite, (done, total) => {
+        sentCount = done;
+        sendTotal = total;
+        if (sendPanel.open && sendPanel.dataset.mode === "receipt")
+          renderReceipt();
+        drawPins();
+      });
     } catch {
       say(
         "Delivery could not be confirmed. Your drafts are saved; retry later.",
       );
     } finally {
       submitting = false;
-      if (sendPanel.open) renderReceipt();
+      if (sendPanel.open && sendPanel.dataset.mode === "receipt")
+        renderReceipt();
       drawPins();
     }
   }
@@ -625,10 +632,10 @@ export function mountReview() {
       sendPanel.close();
       say("Cleared. This browser has no feedback saved.");
     } else if (button.dataset.new) {
-      store.saveAsNew(button.dataset.new);
+      const renamed = store.saveAsNew(button.dataset.new);
       drawPins();
       renderReceipt();
-      say("Revision saved as new feedback. Send it when ready.");
+      if (renamed) say("Revision saved as new feedback. Send it when ready.");
     } else if (button.dataset.edit) edit(button.dataset.edit);
     else if (button.dataset.pin) edit(button.dataset.pin);
     else if (button.dataset.show) {
@@ -647,7 +654,8 @@ export function mountReview() {
     }
   }
   shadow.addEventListener("click", onPress);
-  const onStorage = () => {
+  const onStorage = (event: StorageEvent) => {
+    if (event.key !== null && event.key !== storageKey) return;
     drawPins();
     if (listPanel.open) renderList();
     if (sendPanel.open && sendPanel.dataset.mode === "receipt") renderReceipt();
@@ -678,6 +686,8 @@ export function mountReview() {
     removeEventListener("scroll", place);
     removeEventListener("resize", place);
     layout.disconnect();
+    barLayout.disconnect();
+    document.documentElement.style.removeProperty("--found42-review-space");
     shadow.removeEventListener("click", onPress);
     removeEventListener("storage", onStorage);
     document.documentElement.classList.remove("found42-reviewing");

@@ -1,10 +1,14 @@
-import type { FeedbackItem } from "./store";
-import { itemMarkdown, kindNames, priorityNames } from "./export";
-import { targetLabel } from "./target";
+import type { FeedbackItem } from "./model";
+import { itemMarkdown, kindNames, priorityNames } from "./markdown";
+import { targetLabel } from "./target-meta";
 
 export const issueLabels = ["needs-triage", "review-feedback"];
-export const issueMarker = (id: string, hash: string) =>
-  `<!-- found42-feedback:${id}:${hash} -->`;
+export const maxIssueBodyBytes = 60_000;
+export const issueMarker = (id: string, hash: string) => {
+  if (!/^[a-zA-Z0-9-]{1,80}$/.test(id) || !/^[a-f0-9]{64}$/.test(hash))
+    throw new Error("Invalid feedback marker.");
+  return `<!-- found42-feedback:${id}:${hash} -->`;
+};
 
 /** User text stays literal, with mentions and active Markdown disabled. */
 const literalEntities: Record<string, string> = {
@@ -50,13 +54,13 @@ export function feedbackIssue(item: FeedbackItem, site: string, hash: string) {
       .split("\n")
       .map((line) => `> ${line}`)
       .join("\n");
-  return {
+  const issue = {
     title,
     labels: issueLabels,
     body: [
-      `Reported by **${safe.reviewer}** (self-reported name) on ${item.created.slice(0, 10)} through review mode.`,
+      `Reported by **${safe.reviewer}** (self-reported name) on ${literal(item.created.slice(0, 10))} through review mode.`,
       "",
-      `Page: ${site}${item.target.page.replace(/^\//, "")}`,
+      `Page: ${literal(site + item.target.page.replace(/^\//, ""))}`,
       "",
       `**Importance:** ${priorityNames[item.priority]}`,
       "",
@@ -81,8 +85,13 @@ export function feedbackIssue(item: FeedbackItem, site: string, hash: string) {
       "",
       "</details>",
       "",
-      `Feedback id: ${item.id}`,
+      `Feedback id: ${literal(item.id)}`,
       issueMarker(item.id, hash),
     ].join("\n"),
   };
+  if (new TextEncoder().encode(issue.body).byteLength > maxIssueBodyBytes)
+    throw new Error(
+      "Formatted feedback is too long; shorten the draft before sending.",
+    );
+  return issue;
 }
