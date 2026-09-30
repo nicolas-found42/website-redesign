@@ -50,3 +50,10 @@ existing sources. A focused Chromium check confirmed selected audience names
 remain visible and keyboard-operable at 320px with 200% text.
 
 Standards: zero outstanding findings. Spec: zero outstanding findings.
+
+The follow-up focus fix uses measured header height plus 16px scroller clearance.
+A focused review found no standards or spec regressions. The regression check
+passed three times per engine: 9/9 in Chromium, Firefox and WebKit. Before this
+fix, the full local suite had 505 passing cases and one Firefox failure: the
+advisor download box stopped at y=85.77 while the header ended at y=88.
+Final CI status and its run link are recorded in the pull request.
