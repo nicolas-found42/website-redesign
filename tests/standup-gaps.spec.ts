@@ -258,6 +258,9 @@ test("the scorecard walks forward and back, keeps what was typed, and never send
   await app.getByRole("button", { name: /See my result/ }).click();
 
   await expect(app.locator("h3")).toHaveText("Early days");
+  await expect(
+    app.getByRole("link", { name: "Explore the C-Level AI Toolkit" }),
+  ).toHaveAttribute("href", "/resources/#toolkit");
   await expect(app.locator("h3")).toBeFocused();
   await expect(app.locator(".scorecard-areas li")).toHaveCount(5);
   await expect(app.locator(".scorecard-next > li")).toHaveCount(3);

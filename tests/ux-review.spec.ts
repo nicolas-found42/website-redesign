@@ -154,6 +154,7 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
   }
   expect(named).toEqual([
     "/",
+    "/resources/",
     "/industries/private-equity/",
     "/industries/b2b-saas/",
     "/about/",
@@ -310,14 +311,21 @@ test("#41: unavailable resource forms and local inquiry forms are absent", async
   ).toHaveAttribute("href", "https://www.found42.com/contact");
 });
 
-test("#41: unwritten essays are not timed, and unavailable newsletter copy is honest", async ({
+test("#41: the source-backed essay excerpts are readable, and newsletter copy stays honest", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/blog/");
   const essays = page.locator(".essay-list article");
   await expect(essays).toHaveCount(3);
-  await expect(essays.getByText("Coming soon")).toHaveCount(3);
+  await expect(essays.getByText("Draft excerpt", { exact: true })).toHaveCount(
+    3,
+  );
+  for (const essay of await essays.all()) {
+    await essay.locator("summary").click();
+    await expect(essay.locator("details")).toHaveAttribute("open", "");
+    await expect(essay.getByRole("heading", { level: 3 })).toHaveCount(4);
+  }
   expect(await page.locator(".essay-list").innerText()).not.toMatch(
     /\d+\s*min/i,
   );

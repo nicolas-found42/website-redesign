@@ -56,20 +56,7 @@
   border-top: 1px solid var(--line);
   position: relative;
 }
-.resources-later-head {
-  padding-block: 64px 8px;
-  border-top: 1px solid var(--line);
-}
-.resources-later-head .lead {
-  max-width: 44ch;
-  margin: 0;
-}
-.resource-later {
-  padding-block: 40px;
-}
-.resource-later h2 {
-  font-size: var(--size-h3);
-}
+
 .resource-access {
   border-left: 1px solid var(--red);
   padding-left: 32px;
@@ -152,7 +139,7 @@
 }
 .essay-list article {
   display: grid;
-  grid-template-columns: minmax(100px, 0.4fr) minmax(0, 1.4fr) auto;
+  grid-template-columns: minmax(100px, 0.4fr) minmax(0, 1.6fr);
   gap: 40px;
   padding-block: 45px;
   border-top: 1px solid var(--line-strong);
@@ -175,6 +162,46 @@
 .essay-list > .lead {
   margin-top: 50px;
   max-width: 55ch;
+}
+.resource-materials {
+  margin-top: 40px;
+  overflow-wrap: anywhere;
+}
+.starter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+.starter-grid article {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.resource-materials > .note--plain {
+  max-width: 72ch;
+  margin-top: 32px;
+}
+.essay-body summary {
+  min-height: 48px;
+  padding-block: 18px;
+  cursor: pointer;
+}
+.essay-body section {
+  max-width: 68ch;
+  padding-block: 12px 24px;
+}
+.essay-body p {
+  margin-block: 18px;
+}
+.essay-body h3 {
+  margin-top: 24px;
+}
+@media (max-width: 700px) {
+  .starter-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .assessment {
   border: 1px solid var(--line-strong);

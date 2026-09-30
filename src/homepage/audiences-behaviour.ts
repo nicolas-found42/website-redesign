@@ -41,6 +41,7 @@ export function mountAudiences(
     ".audience-pinned-caption",
   )!;
   const aside = section.querySelector<HTMLElement>(".audience-aside")!;
+  const rail = section.querySelector<HTMLElement>(".audience-rail")!;
   const disposeReading = mountReadingSequence({
     section,
     articles,
@@ -49,6 +50,13 @@ export function mountAudiences(
     railProperty: "--audience-rail",
     motionPreference,
     onSelect(index) {
+      // Keep a reading selection visible without scrolling the document.
+      const choice = choices[index];
+      const railBox = rail.getBoundingClientRect();
+      const choiceBox = choice.getBoundingClientRect();
+      if (choiceBox.left < railBox.left || choiceBox.right > railBox.right)
+        rail.scrollLeft +=
+          choiceBox.left - railBox.left - (railBox.width - choiceBox.width) / 2;
       scenes.forEach((scene, i) => {
         scene.hidden = i !== index;
       });

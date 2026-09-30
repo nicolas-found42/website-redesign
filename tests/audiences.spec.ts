@@ -73,18 +73,23 @@ test("reading an audience changes the pinned scene and the announced selection",
   );
 });
 
-test("phone visitors read each audience beside its own scene and operate the wrapping pills", async ({
+test("phone visitors read each audience beside its own scene and operate a compact scrolling rail", async ({
   page,
 }) => {
   for (const height of [686, 742]) {
     await page.setViewportSize({ width: 384, height });
     await page.goto("/#audiences");
+    const rail = page.getByRole("group", { name: "Choose an audience" });
+    expect((await rail.boundingBox())!.height).toBeLessThanOrEqual(72);
     for (const [index, name] of names.entries()) {
       const choice = page.getByRole("button", { name, exact: true });
       await choice.focus();
       await page.keyboard.press("Enter");
       await expect(choice).toHaveAttribute("aria-pressed", "true");
       await expect(choice).toBeFocused();
+      const bounds = await choice.boundingBox();
+      expect(bounds!.x).toBeGreaterThanOrEqual(0);
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(384);
       expect(
         await choice.evaluate(
           (button) => getComputedStyle(button).outlineStyle,
@@ -248,17 +253,17 @@ test("narrow audience jumps retry when an interrupted article only crosses the v
 
       const box = this.getBoundingClientRect();
       const middle = innerHeight / 2;
-      const targetTop = middle - 10;
-      window.scrollTo({
-        top: scrollY + box.top - targetTop,
-        behavior: "instant",
-      });
-      const landed = this.getBoundingClientRect();
       const landing =
         Number.parseFloat(getComputedStyle(this).scrollMarginTop) +
         Number.parseFloat(
           getComputedStyle(document.documentElement).scrollPaddingTop,
         );
+      const targetTop = Math.min(middle, landing) - 10;
+      window.scrollTo({
+        top: scrollY + box.top - targetTop,
+        behavior: "instant",
+      });
+      const landed = this.getBoundingClientRect();
       document.documentElement.dataset.testInterruptWasMidpointOnly = String(
         landed.top < landing && landed.top < middle && landed.bottom > middle,
       );
