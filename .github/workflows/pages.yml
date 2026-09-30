@@ -18,6 +18,7 @@ on:
           - two-shards
           - shared-build
           - fully-parallel
+          - file-level
 permissions:
   contents: read
 concurrency:
@@ -273,6 +274,34 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: benchmark-timings-${{ github.run_id }}-${{ matrix.shard }}
+          path: playwright-timings/
+          if-no-files-found: ignore
+          retention-days: 14
+  benchmark-file-level:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'file-level' }}
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - run: chown "$(id -u):$(id -g)" /github/home
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
+        env:
+          PW_FILE_LEVEL: "1"
+      - name: Upload benchmark timings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-file-level-${{ github.run_id }}-${{ matrix.shard }}
           path: playwright-timings/
           if-no-files-found: ignore
           retention-days: 14
