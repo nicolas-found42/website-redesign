@@ -146,9 +146,10 @@ for (const interruption of ["queued", "moving"]) {
                   requestAnimationFrame(() => {
                     const before = scrollY;
                     requestAnimationFrame(() => {
-                      // Reach into the jump rather than just its first update.
+                      // Confirm departure and motion across consecutive frames.
+                      // A fixed distance can miss a short or fast native jump.
                       resolve(
-                        Math.abs(scrollY - origin) > 1000
+                        Math.abs(scrollY - origin) > 0
                           ? Math.abs(scrollY - before)
                           : 0,
                       );
