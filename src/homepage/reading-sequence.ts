@@ -51,7 +51,9 @@ export function mountReadingSequence({
       // Stacked, an article is taller than the screen: its start, under the
       // rail, is where reading it begins.
       articles[index].scrollIntoView({
-        behavior: motionPreference.matches ? "auto" : "smooth",
+        // Explicitly cancel a native smooth scroll when motion is reduced.
+        // WebKit can leave an interrupted jump short of its target with auto.
+        behavior: motionPreference.matches ? "instant" : "smooth",
         block: narrow.matches ? "start" : "center",
       });
     }

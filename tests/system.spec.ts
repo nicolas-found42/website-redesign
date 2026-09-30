@@ -107,89 +107,94 @@ test("a completed choice rests in the same still composition as a fresh page", a
     .toEqual(still);
 });
 
-test("switching to reduced motion during rapid choices leaves a complete drawing", async ({
-  page,
-  context,
-}) => {
-  await page.goto("/#services");
-  await page.evaluate(() => document.fonts.ready);
-  // Four choices in one task, so the last transition is genuinely in flight
-  // when the motion preference changes.
-  await page.evaluate(() => {
-    const choices = [
-      ...document.querySelectorAll<HTMLButtonElement>("#services .choice"),
-    ];
-    [1, 2, 0, 2].forEach((index) => choices[index].click());
-    matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
-      "change",
-      () => {
-        document.documentElement.dataset.motionChanged = "true";
-      },
-      { once: true },
+for (const interruptionDelay of [0, 150]) {
+  test(`switching to reduced motion during rapid choices leaves a complete drawing (${interruptionDelay}ms)`, async ({
+    page,
+    context,
+  }) => {
+    await page.goto("/#services");
+    await page.evaluate(() => document.fonts.ready);
+    // Four choices in one task, so the last transition is genuinely in flight
+    // when the motion preference changes.
+    await page.evaluate(() => {
+      const choices = [
+        ...document.querySelectorAll<HTMLButtonElement>("#services .choice"),
+      ];
+      [1, 2, 0, 2].forEach((index) => choices[index].click());
+      matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
+        "change",
+        () => {
+          document.documentElement.dataset.motionChanged = "true";
+        },
+        { once: true },
+      );
+    });
+    const interrupted = await page
+      .locator(".services-art .system-field")
+      .getAttribute("aria-label");
+    // Cover both the queued jump and the browser's active native scroll. The
+    // latter needs time to advance; an immediate switch missed the WebKit race.
+    if (interruptionDelay) await page.waitForTimeout(interruptionDelay);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-motion-changed",
+      "true",
+    );
+    await expect
+      .poll(
+        () =>
+          page.locator('[data-service-article="2"]').evaluate((article) => {
+            const box = article.getBoundingClientRect();
+            return Math.abs(box.top + box.height / 2 - innerHeight / 2);
+          }),
+        { message: "the requested service lands at the reading position" },
+      )
+      .toBeLessThan(60);
+
+    const expectedPage = await context.newPage();
+    await expectedPage.emulateMedia({ reducedMotion: "reduce" });
+    await expectedPage.goto("/#services");
+    await expectedPage.evaluate(() => document.fonts.ready);
+    await expectedPage
+      .getByRole("button", { name: "Automations", exact: true })
+      .click();
+    await expectedPage.waitForTimeout(500);
+    await expect
+      .poll(async () => (await drawing(expectedPage)).field.animating)
+      .toBe(0);
+    const still = await drawing(expectedPage);
+    await expectedPage.close();
+    await page.bringToFront();
+
+    // The last explicit choice remains authoritative while its scroll settles;
+    // the reading observer may pass other articles on the way there.
+    await expect
+      .poll(
+        () =>
+          page
+            .getByRole("button", { name: "Automations", exact: true })
+            .getAttribute("aria-pressed"),
+        { timeout: 8000 },
+      )
+      .toBe("true");
+    await expect(page.locator('[data-service-article="2"]')).toHaveClass(
+      /is-current/,
+    );
+    await expect
+      .poll(async () => drawing(page), {
+        message: "an interrupted drawing should finish as the motionless one",
+        timeout: 8000,
+      })
+      .toEqual(still);
+    // The rapid clicks end on Automations; the drawing must settle on that
+    // customer journey even if the reading observer briefly reports another.
+    // This checks the label captured before the motion change, not its current value.
+    // eslint-disable-next-line playwright/prefer-web-first-assertions
+    expect(interrupted).toBe(
+      "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
     );
   });
-  const interrupted = await page
-    .locator(".services-art .system-field")
-    .getAttribute("aria-label");
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(page.locator("html")).toHaveAttribute(
-    "data-motion-changed",
-    "true",
-  );
-  await expect
-    .poll(
-      () =>
-        page.locator('[data-service-article="2"]').evaluate((article) => {
-          const box = article.getBoundingClientRect();
-          return Math.abs(box.top + box.height / 2 - innerHeight / 2);
-        }),
-      { message: "the requested service lands at the reading position" },
-    )
-    .toBeLessThan(60);
-
-  const expectedPage = await context.newPage();
-  await expectedPage.emulateMedia({ reducedMotion: "reduce" });
-  await expectedPage.goto("/#services");
-  await expectedPage.evaluate(() => document.fonts.ready);
-  await expectedPage
-    .getByRole("button", { name: "Automations", exact: true })
-    .click();
-  await expectedPage.waitForTimeout(500);
-  await expect
-    .poll(async () => (await drawing(expectedPage)).field.animating)
-    .toBe(0);
-  const still = await drawing(expectedPage);
-  await expectedPage.close();
-  await page.bringToFront();
-
-  // The last explicit choice remains authoritative while its scroll settles;
-  // the reading observer may pass other articles on the way there.
-  await expect
-    .poll(
-      () =>
-        page
-          .getByRole("button", { name: "Automations", exact: true })
-          .getAttribute("aria-pressed"),
-      { timeout: 8000 },
-    )
-    .toBe("true");
-  await expect(page.locator('[data-service-article="2"]')).toHaveClass(
-    /is-current/,
-  );
-  await expect
-    .poll(async () => drawing(page), {
-      message: "an interrupted drawing should finish as the motionless one",
-      timeout: 8000,
-    })
-    .toEqual(still);
-  // The rapid clicks end on Automations; the drawing must settle on that
-  // customer journey even if the reading observer briefly reports another.
-  // This checks the label captured before the motion change, not its current value.
-  // eslint-disable-next-line playwright/prefer-web-first-assertions
-  expect(interrupted).toBe(
-    "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
-  );
-});
+}
 
 test("a visitor on a phone gets each service's own drawing and can jump between them", async ({
   browser,
