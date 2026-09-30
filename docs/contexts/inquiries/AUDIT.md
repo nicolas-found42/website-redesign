@@ -12,21 +12,21 @@ The C-Level AI Discovery Session is described as using the workshop and scorecar
 
 The embedded form was inspected after it loaded. Required markers and defaults below describe the UI, not submission validation. [Source: contact form](https://www.found42.com/contact).
 
-| Control | Observed state |
-|---|---|
-| First name, last name, organization name | Present; not marked required |
-| Email | Marked required |
-| News and updates | Yes/No radio choice; **Yes initially selected** |
-| Service interests | Multiple checkboxes: Training, Automation, Growth Platform |
-| Message | Text area; not marked required |
-| Further communications | Separate unchecked agreement, marked required |
-| Storage and processing | Separate unchecked agreement, marked required |
-| Human verification | reCAPTCHA present |
-| Submission | Submit button; success, error, routing, and delivery not tested |
+| Control                                  | Observed state                                                  |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| First name, last name, organization name | Present; not marked required                                    |
+| Email                                    | Marked required                                                 |
+| News and updates                         | Yes/No radio choice; **Yes initially selected**                 |
+| Service interests                        | Multiple checkboxes: Training, Automation, Growth Platform      |
+| Message                                  | Text area; not marked required                                  |
+| Further communications                   | Separate unchecked agreement, marked required                   |
+| Storage and processing                   | Separate unchecked agreement, marked required                   |
+| Human verification                       | reCAPTCHA present                                               |
+| Submission                               | Submit button; success, error, routing, and delivery not tested |
 
 Selecting No for news while being asked for mandatory agreement to other communications could be confusing. The wording does not clearly explain how those preferences differ. Review the fields together and confirm intended behavior before migrating them. This finding is about observable presentation, not whether a particular law is satisfied.
 
-Training and Automation broadly correspond to homepage service categories. Growth Platform does not exactly match AI Product Differentiation for B2B SaaS and should not silently be relabeled during form migration. The [Services audit](../services/AUDIT.md) describes the wider offering behind that older term.
+Training and Automation broadly correspond to homepage service categories. Growth Platform does not exactly match AI Product Differentiation for B2B SaaS and should not silently be relabeled during form migration.
 
 ## Contact channels and policy navigation
 
