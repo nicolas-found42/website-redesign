@@ -116,12 +116,40 @@ for (const interruption of ["queued", "moving"]) {
     await page.evaluate(() => document.fonts.ready);
     // Four choices in one task, so the last transition is genuinely in flight
     // when the motion preference changes.
-    const jumpOrigin = await page.evaluate(() => {
+    const { interrupted, movement } = await page.evaluate(async (mode) => {
       const origin = scrollY;
+      // Observe every frame before clicking: driver round trips can miss a
+      // native jump entirely, especially when WebKit is under load.
+      const moving =
+        mode === "moving"
+          ? new Promise<number>((resolve) => {
+              let frame = 0;
+              let previous = origin;
+              const timeout = window.setTimeout(() => {
+                cancelAnimationFrame(frame);
+                resolve(0);
+              }, 2000);
+              const sample = () => {
+                const current = scrollY;
+                const delta = Math.abs(current - previous);
+                if (previous !== origin && current !== origin && delta > 0) {
+                  clearTimeout(timeout);
+                  resolve(delta);
+                } else {
+                  previous = current;
+                  frame = requestAnimationFrame(sample);
+                }
+              };
+              frame = requestAnimationFrame(sample);
+            })
+          : Promise.resolve(0);
       const choices = [
         ...document.querySelectorAll<HTMLButtonElement>("#services .choice"),
       ];
       [1, 2, 0, 2].forEach((index) => choices[index].click());
+      const interrupted = document
+        .querySelector(".services-art .system-field")
+        ?.getAttribute("aria-label");
       matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
         "change",
         () => {
@@ -129,41 +157,13 @@ for (const interruption of ["queued", "moving"]) {
         },
         { once: true },
       );
-      return origin;
-    });
-    const interrupted = await page
-      .locator(".services-art .system-field")
-      .getAttribute("aria-label");
-    // Cover both the queued jump and demonstrated native scroll motion. A
-    // fixed delay can miss the interruption if an engine finishes sooner.
+      return { interrupted, movement: await moving };
+    }, interruption);
     if (interruption === "moving") {
-      await expect
-        .poll(
-          () =>
-            page.evaluate(
-              (origin) =>
-                new Promise<number>((resolve) => {
-                  requestAnimationFrame(() => {
-                    const before = scrollY;
-                    requestAnimationFrame(() => {
-                      // Reach into the jump rather than just its first update.
-                      resolve(
-                        Math.abs(scrollY - origin) > 1000
-                          ? Math.abs(scrollY - before)
-                          : 0,
-                      );
-                    });
-                  });
-                }),
-              jumpOrigin,
-            ),
-          {
-            message: "native scrolling is still moving before the switch",
-            timeout: 2000,
-            intervals: [16],
-          },
-        )
-        .toBeGreaterThan(0);
+      expect(
+        movement,
+        "native scrolling is still moving before the switch",
+      ).toBeGreaterThan(0);
     }
     await page.emulateMedia({ reducedMotion: "reduce" });
     await expect(page.locator("html")).toHaveAttribute(
@@ -219,12 +219,44 @@ for (const interruption of ["queued", "moving"]) {
     // The rapid clicks end on Automations; the drawing must settle on that
     // customer journey even if the reading observer briefly reports another.
     // This checks the label captured before the motion change, not its current value.
-    // eslint-disable-next-line playwright/prefer-web-first-assertions
     expect(interrupted).toBe(
       "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
     );
   });
 }
+
+test("a reduced-motion service jump lands after later preference handlers change layout", async ({
+  page,
+}) => {
+  await page.goto("/#services");
+  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => {
+    // Native smooth scrolling can suppress scroll anchoring. Model a later
+    // motion subscriber restoring content after the reading handler runs.
+    document.documentElement.style.overflowAnchor = "none";
+    matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
+      "change",
+      () => {
+        document.querySelector<HTMLElement>("#services")!.style.paddingTop =
+          "1200px";
+      },
+      { once: true },
+    );
+    document.querySelector<HTMLButtonElement>('[data-service="2"]')!.click();
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect
+    .poll(() =>
+      page.locator('[data-service-article="2"]').evaluate((article) => {
+        const box = article.getBoundingClientRect();
+        return Math.abs(box.top + box.height / 2 - innerHeight / 2);
+      }),
+    )
+    .toBeLessThan(60);
+  await expect(
+    page.getByRole("button", { name: "Automations", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+});
 
 test("a visitor on a phone gets each service's own drawing and can jump between them", async ({
   browser,
