@@ -10,6 +10,7 @@ interface Saved {
   items: FeedbackItem[];
   receipts?: DeliveryReceipt[];
   published?: string[];
+  uploadedScreenshots?: string[];
 }
 
 export const storageKey = "found42-review:feedback";
@@ -83,6 +84,16 @@ export function createStore() {
           merged.set(receipt.id, receipt);
       }
       write({ ...saved, receipts: [...merged.values()] });
+    },
+    uploadedScreenshots: () => read().uploadedScreenshots ?? [],
+    confirmScreenshot(sha256: string) {
+      const saved = read();
+      write({
+        ...saved,
+        uploadedScreenshots: [
+          ...new Set([...(saved.uploadedScreenshots ?? []), sha256]),
+        ],
+      });
     },
     reviewer: () => read().reviewer,
     setReviewer: (reviewer: string) => write({ ...read(), reviewer }),

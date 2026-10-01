@@ -1,5 +1,6 @@
 import {
   fingerprint,
+  submissionItem,
   maxBatch,
   maxRequestBytes,
   validIssue,
@@ -92,6 +93,57 @@ async function withSubmissionLock<T>(run: () => Promise<T>): Promise<T> {
   }
 }
 
+async function uploadEvidence(
+  store: Store,
+  item: FeedbackItem,
+): Promise<string | undefined> {
+  const image = item.screenshot;
+  if (!image || store.uploadedScreenshots().includes(image.sha256)) return;
+  if (!submissionUrl)
+    return "Screenshot delivery is not configured. Your draft is saved; send text without the image or try later.";
+  try {
+    if (!image.dataUrl?.startsWith("data:image/png;base64,"))
+      return "Saved screenshot pixels are missing. Replace the image or send text without it.";
+    const bytes = Uint8Array.from(atob(image.dataUrl.split(",")[1]), (char) =>
+      char.charCodeAt(0),
+    );
+    const response = await fetch(
+      new URL(`/screenshots/${image.sha256}`, submissionUrl),
+      {
+        method: "POST",
+        headers: { "Content-Type": "image/png" },
+        body: bytes,
+        signal: AbortSignal.timeout(25_000),
+      },
+    );
+    if (!response.ok) {
+      if (response.status === 429)
+        return "Screenshot uploads are temporarily limited. Your draft is saved. Retry later or send text without the image.";
+      if (response.status === 507)
+        return "Free screenshot storage is full. Your draft is saved. Send text without the image or contact the team.";
+      if ([400, 413, 415, 422].includes(response.status))
+        return "This screenshot could not be accepted. Replace it with a smaller PNG or send text without it. Your written draft is saved.";
+      return "Screenshot service is temporarily unavailable. Your draft is saved. Retry or send text without the image.";
+    }
+    const receipt = (await response.json()) as {
+      sha256?: unknown;
+      width?: unknown;
+      height?: unknown;
+    };
+    if (
+      receipt.sha256 === image.sha256 &&
+      receipt.width === image.width &&
+      receipt.height === image.height
+    ) {
+      store.confirmScreenshot(image.sha256);
+      return;
+    }
+  } catch {
+    /* An immutable upload can safely be repeated after an uncertain response. */
+  }
+  return "Screenshot upload could not be confirmed. Your draft is saved. Reconnect and retry or send text without the image.";
+}
+
 /** Sends the captured versions in bounded chunks, retaining every uncertain item. */
 export async function submitDrafts(
   store: Store,
@@ -119,10 +171,24 @@ async function sendSnapshot(
     const items: FeedbackItem[] = [];
     while (offset < snapshot.length && items.length < maxBatch) {
       const next = snapshot[offset];
+      const imageFailure = await uploadEvidence(store, next);
+      if (imageFailure) {
+        remember(next, {
+          id: next.id,
+          fingerprint: await fingerprint(site, next),
+          status: "retryable",
+          reason: "screenshot",
+          message: imageFailure,
+        });
+        offset++;
+        store.setReceipts(receipts);
+        progress(receipts.length, snapshot.length);
+        continue;
+      }
       const proposed: Submission = {
         version: 1,
         site,
-        items: [...items, next],
+        items: [...items, next].map(submissionItem),
       };
       if (
         items.length &&
@@ -133,6 +199,7 @@ async function sendSnapshot(
       items.push(next);
       offset++;
     }
+    if (!items.length) continue;
     const hashes = await Promise.all(
       items.map((item) => fingerprint(site, item)),
     );
@@ -144,7 +211,11 @@ async function sendSnapshot(
       const response = await fetch(submissionUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ version: 1, site, items }),
+        body: JSON.stringify({
+          version: 1,
+          site,
+          items: items.map(submissionItem),
+        }),
         signal: AbortSignal.timeout(25_000),
       });
       if (!response.ok) {

@@ -4,6 +4,8 @@ Issue [#108](https://github.com/nicolas-found42/website-redesign/issues/108)
 adds public, anonymous submission from the existing review tool. The site
 continues to deploy to GitHub Pages; only delivery and durable receipts run on
 Cloudflare. The owner's computer is not part of production delivery.
+Optional screenshot storage, delivery, limits and rollout are documented in
+[review screenshots](REVIEW-SCREENSHOTS.md).
 
 ## Hosting and zero-spend setup
 

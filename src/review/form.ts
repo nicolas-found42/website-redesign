@@ -157,6 +157,18 @@ export function formMarkup({
 
     ${field("why", "Why?", { hint: "What should a visitor understand, feel or do differently?" })}
     ${choices("priority", "How important is it?", priorities, "priority")}
+    <fieldset class="field screenshot-field">
+      <legend>Screenshot (optional)</legend>
+      <p class="hint">Screenshots will be public with your GitHub issue. Check the preview for unintended information. Use a real screenshot showing this target and surrounding page in the state you reviewed.</p>
+      <button type="button" data-act="capture">Capture this tab</button>
+      <p class="hint" data-capture-hint>Choose this tab in the browser’s sharing prompt. Only the visible page is captured; review controls are hidden.</p>
+      <label for="f-screenshot">Attach screenshot file</label>
+      <input id="f-screenshot" type="file" accept="image/png" aria-describedby="screenshot-hint">
+      <p class="hint" id="screenshot-hint">PNG, up to 8 MB. Images may be resized to fit free delivery limits. Replacing an image keeps the old one until the new preview is ready.</p>
+      <div data-screenshot-preview></div>
+      <button type="button" data-act="remove-screenshot" hidden>Remove screenshot</button>
+      <p class="hint" role="status" aria-live="polite" data-screenshot-status></p>
+    </fieldset>
   </div>
   <div class="panel-foot">
     <button type="submit" class="primary">Save feedback</button>
