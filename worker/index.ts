@@ -1,3 +1,4 @@
+import { readScreenshot, uploadScreenshot } from "./screenshots";
 import type { D1Database } from "@cloudflare/workers-types";
 import {
   fingerprint,
@@ -70,12 +71,13 @@ async function allowance(
   key: string,
   maximum: number,
   expires: number,
+  amount = 1,
 ) {
   const result = await env.DB.prepare(
-    `INSERT INTO limits(key,count,expires) VALUES (?,1,?)
-    ON CONFLICT(key) DO UPDATE SET count=count+1 WHERE count < ? RETURNING count`,
+    `INSERT INTO limits(key,count,expires) VALUES (?,?,?)
+    ON CONFLICT(key) DO UPDATE SET count=count+excluded.count WHERE count+excluded.count <= ? RETURNING count`,
   )
-    .bind(key, expires, maximum)
+    .bind(key, amount, expires, maximum)
     .first();
   return !!result;
 }
@@ -174,6 +176,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
     env: Env,
     item: FeedbackItem,
     hash: string,
+    imageOrigin: string,
   ): Promise<Outcome> {
     const result = (status: Outcome["status"], message: string): Outcome => ({
       id: item.id,
@@ -181,6 +184,33 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
       status,
       message,
     });
+    if (item.screenshot) {
+      const image = await env.DB.prepare(
+        "SELECT width,height FROM screenshots WHERE sha256=?",
+      )
+        .bind(item.screenshot.sha256)
+        .first<{ width: number; height: number }>();
+      if (
+        !image ||
+        image.width !== item.screenshot.width ||
+        image.height !== item.screenshot.height
+      )
+        return {
+          ...result(
+            "retryable",
+            "Screenshot has not been delivered. Your written draft is saved. Retry or send text without the image.",
+          ),
+          reason: "screenshot",
+        };
+    }
+    const issue = feedbackIssue(
+      item,
+      publicSite,
+      hash,
+      item.screenshot
+        ? `${imageOrigin}/screenshots/${item.screenshot.sha256}`
+        : undefined,
+    );
     const started = new Date().toISOString();
     await env.DB.prepare(
       "INSERT INTO submissions(id,fingerprint,state,started) VALUES (?,?,'ready',?) ON CONFLICT(id) DO NOTHING",
@@ -201,6 +231,26 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
       };
     if (receipt.state === "confirmed") return resultWithIssue(receipt);
     if (receipt.state === "creating") return reconcile(env, receipt);
+    const day = Math.floor(Date.now() / 86_400_000);
+    if (!(await allowance(env, `create:${day}`, 100, (day + 1) * 86_400_000)))
+      return result("retryable", messages.limited);
+    // Retain before claiming: a storage failure cannot strand an ID in creating.
+    // Recheck atomically against orphan cleanup before starting any external work.
+    if (item.screenshot) {
+      const retained = await env.DB.prepare(
+        "UPDATE screenshots SET retained=1 WHERE sha256=? RETURNING sha256",
+      )
+        .bind(item.screenshot.sha256)
+        .first();
+      if (!retained)
+        return {
+          ...result(
+            "retryable",
+            "Screenshot has not been delivered. Retry or send text without the image.",
+          ),
+          reason: "screenshot",
+        };
+    }
     const claim = crypto.randomUUID();
     const locked = await env.DB.prepare(
       "UPDATE submissions SET state='creating', claim=?, started=? WHERE id=? AND fingerprint=? AND state='ready' RETURNING id",
@@ -210,18 +260,9 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
     if (!locked) return result("pending", messages.pending);
     // Once locked, any crash is ambiguous and requires reconciliation. Even a
     // failure writing the receipt after GitHub success cannot permit a resend.
-    const day = Math.floor(Date.now() / 86_400_000);
-    if (!(await allowance(env, `create:${day}`, 100, (day + 1) * 86_400_000))) {
-      await env.DB.prepare(
-        "UPDATE submissions SET state='ready', claim=NULL WHERE id=? AND claim=?",
-      )
-        .bind(item.id, claim)
-        .run();
-      return result("retryable", messages.limited);
-    }
     const response = await github(env, "issues", {
       method: "POST",
-      body: JSON.stringify(feedbackIssue(item, publicSite, hash)),
+      body: JSON.stringify(issue),
     });
     if (response.status === 201) {
       const data = (await response.json()) as {
@@ -259,7 +300,19 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
     };
     const reply = (body: unknown, status = 200) =>
       new Response(JSON.stringify(body), { status, headers });
-    if (new URL(request.url).pathname !== "/submit")
+    const url = new URL(request.url);
+    const image = /^\/screenshots\/([a-f0-9]{64})$/.exec(url.pathname);
+    if (image && request.method === "GET") {
+      try {
+        return await readScreenshot(env.DB, image[1]);
+      } catch {
+        return reply(
+          { message: "Image service temporarily unavailable." },
+          503,
+        );
+      }
+    }
+    if (url.pathname !== "/submit" && !image)
       return reply({ message: "Not found." }, 404);
     if (request.headers.get("Origin") !== origin)
       return reply(
@@ -299,6 +352,46 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
         return reply({ message: messages.limited }, 429);
     } catch {
       return reply({ message: messages.unavailable }, 503);
+    }
+    if (image) {
+      try {
+        const now = Date.now();
+        const day = Math.floor(now / 86_400_000);
+        await env.DB.prepare(
+          "DELETE FROM screenshots WHERE retained=0 AND uploaded < ?",
+        )
+          .bind(now - 86_400_000)
+          .run();
+        return await uploadScreenshot(
+          env.DB,
+          request,
+          image[1],
+          reply,
+          async (size) =>
+            (await allowance(
+              env,
+              `image-client:${await clientKey(request.headers.get("CF-Connecting-IP") ?? "unknown", env.RATE_SALT, day)}`,
+              2 * 1024 * 1024,
+              (day + 1) * 86_400_000,
+              size,
+            )) &&
+            (await allowance(
+              env,
+              `image-bytes:${day}`,
+              8 * 1024 * 1024,
+              (day + 1) * 86_400_000,
+              size,
+            )),
+        );
+      } catch {
+        return reply(
+          {
+            message:
+              "Screenshot service temporarily unavailable. Your draft is saved. Retry or send text without it.",
+          },
+          503,
+        );
+      }
     }
     if (
       request.headers.get("Content-Type")?.split(";")[0] !== "application/json"
@@ -358,7 +451,14 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
         }
         const hash = await fingerprint(payload.site, value);
         try {
-          feedbackIssue(value, publicSite, hash);
+          feedbackIssue(
+            value,
+            publicSite,
+            hash,
+            value.screenshot
+              ? `${url.origin}/screenshots/${value.screenshot.sha256}`
+              : undefined,
+          );
         } catch {
           outcomes.push({
             id,
@@ -371,7 +471,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
           continue;
         }
         try {
-          outcomes.push(await deliver(env, value, hash));
+          outcomes.push(await deliver(env, value, hash, url.origin));
         } catch {
           outcomes.push({
             id,

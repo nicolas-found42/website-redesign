@@ -3,7 +3,19 @@ import { elementNames } from "./elements";
 
 export const repository = "nicolas-found42/website-redesign";
 export const publicSite = "https://nicolas-found42.github.io/website-redesign/";
+export const maxScreenshotBytes = 512 * 1024;
+export const maxScreenshotPixels = 2_000_000;
+export const maxScreenshotDimension = 1600;
+export const screenshotQuotaBytes = 128 * 1024 * 1024;
 export const maxBatch = 3;
+
+/** Pixel bytes travel separately; the immutable digest binds them to feedback. */
+export function submissionItem(item: FeedbackItem): FeedbackItem {
+  if (!item.screenshot) return item;
+  const screenshot = { ...item.screenshot };
+  delete screenshot.dataUrl;
+  return { ...item, screenshot };
+}
 export const maxRequestBytes = 64_000;
 export const maxItemBytes = 20_000;
 
@@ -17,7 +29,7 @@ export interface Outcome {
   fingerprint: string;
   status: "confirmed" | "retryable" | "invalid" | "pending";
   message: string;
-  reason?: "content-conflict" | "unknown-page";
+  reason?: "content-conflict" | "unknown-page" | "screenshot";
   inputIndex?: number;
   issue?: { number: number; url: string };
 }
@@ -36,7 +48,9 @@ export function canonical(value: unknown): string {
   return JSON.stringify(value) ?? "null";
 }
 export async function fingerprint(site: string, item: FeedbackItem) {
-  const bytes = new TextEncoder().encode(canonical({ site, item }));
+  const bytes = new TextEncoder().encode(
+    canonical({ site, item: submissionItem(item) }),
+  );
   return Array.from(
     new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
     (byte) => byte.toString(16).padStart(2, "0"),
@@ -88,6 +102,7 @@ export function validItem(value: unknown): value is FeedbackItem {
       "everywhere",
       "why",
       "priority",
+      "screenshot",
     ])
   )
     return false;
@@ -102,6 +117,25 @@ export function validItem(value: unknown): value is FeedbackItem {
     !oneOf(value.priority, ["must", "should", "nice"])
   )
     return false;
+  if (value.screenshot !== undefined) {
+    const image = value.screenshot;
+    if (
+      !object(image, ["sha256", "width", "height", "source", "captured"]) ||
+      typeof image.sha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(image.sha256) ||
+      !oneOf(image.source, ["tab", "file"]) ||
+      !date(image.captured) ||
+      ![image.width, image.height].every(
+        (n) =>
+          typeof n === "number" &&
+          Number.isInteger(n) &&
+          n > 0 &&
+          n <= maxScreenshotDimension,
+      ) ||
+      (image.width as number) * (image.height as number) > maxScreenshotPixels
+    )
+      return false;
+  }
   const target = value.target;
   if (
     !object(target, [

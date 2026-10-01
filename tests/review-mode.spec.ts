@@ -339,7 +339,7 @@ test("Send publishes a saved draft in one click and shows its public receipt", a
   await form.getByRole("button", { name: "Save feedback" }).click();
   await expect(send).toHaveText("Send 1 feedback item");
   await expect(page.getByRole("region", { name: "Review mode" })).toContainText(
-    "Your feedback and name will be posted publicly on GitHub.",
+    "Your feedback, name and any screenshots will be posted publicly on GitHub.",
   );
   await send.click();
   await expect(
@@ -889,4 +889,305 @@ test("invalid overlong IDs retain the service validation message using input ind
   await sendButton(page).click();
   await expect(panel(page)).toContainText("The record ID is invalid");
   expect((await saved(page)).items).toHaveLength(1);
+});
+
+test("a reviewer previews, replaces and removes a genuine screenshot on desktop and phone", async ({
+  page,
+}) => {
+  for (const viewport of [
+    { width: 1280, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?review");
+    const heading = page.locator("#audiences-title");
+    await heading.scrollIntoViewIfNeeded();
+    const png = await page.screenshot({ type: "png" });
+    const form = await pick(page, heading);
+    await form.getByLabel("Attach screenshot file").setInputFiles({
+      name: "review.png",
+      mimeType: "image/png",
+      buffer: png,
+    });
+    await expect(
+      form.getByRole("img", { name: /Screenshot of Heading/ }),
+    ).toBeVisible();
+    await expect(form).toContainText("Screenshots will be public");
+    await form.getByLabel("Attach screenshot file").setInputFiles({
+      name: "replacement.png",
+      mimeType: "image/png",
+      buffer: png,
+    });
+    await expect(
+      form.getByRole("button", { name: "Remove screenshot" }),
+    ).toBeEnabled();
+    await form.getByRole("button", { name: "Remove screenshot" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(
+      form.getByRole("img", { name: /Screenshot of Heading/ }),
+    ).toHaveCount(0);
+    await form.getByLabel("Change it to").fill("Clear audience wording.");
+    await answer(form);
+    await form.getByRole("button", { name: "Save feedback" }).click();
+    expect((await saved(page)).items.at(-1).screenshot).toBeUndefined();
+  }
+});
+
+async function saveScreenshotFeedback(page: Page) {
+  await page.goto("/?review");
+  const heading = page.locator("#audiences-title");
+  await heading.scrollIntoViewIfNeeded();
+  const png = await page.screenshot({ type: "png" });
+  const form = await pick(page, heading);
+  await form
+    .getByLabel("Attach screenshot file")
+    .setInputFiles({ name: "review.png", mimeType: "image/png", buffer: png });
+  await expect(
+    form.getByRole("img", { name: /Screenshot of Heading/ }),
+  ).toBeVisible();
+  await form.getByLabel("Change it to").fill("Screenshot feedback wording.");
+  await answer(form);
+  await form.getByRole("button", { name: "Save feedback" }).click();
+}
+
+test("confirmed screenshot uploads survive reload and issue delivery retries", async ({
+  page,
+}) => {
+  let uploads = 0,
+    sends = 0;
+  await page.route(
+    "https://review-submission.test/screenshots/*",
+    async (route) => {
+      uploads++;
+      const image = (await saved(page)).items[0].screenshot;
+      await route.fulfill({
+        json: {
+          sha256: image.sha256,
+          width: image.width,
+          height: image.height,
+        },
+      });
+    },
+  );
+  await page.route("https://review-submission.test/submit", async (route) => {
+    sends++;
+    expect(
+      route.request().postDataJSON().items[0].screenshot.dataUrl,
+    ).toBeUndefined();
+    if (sends === 1) return route.fulfill({ status: 503, json: {} });
+    await route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    });
+  });
+  await saveScreenshotFeedback(page);
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "1 draft remains",
+  );
+  await page.reload();
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
+  expect(uploads).toBe(1);
+  expect(sends).toBe(2);
+});
+
+for (const failure of [
+  "invalid",
+  "oversized",
+  "interrupted",
+  "rate",
+  "quota",
+] as const) {
+  test(`${failure} screenshot delivery preserves the draft and allows an explicit text-only send`, async ({
+    page,
+  }) => {
+    let sends = 0;
+    await page.route("https://review-submission.test/screenshots/*", (route) =>
+      failure === "interrupted"
+        ? route.abort("timedout")
+        : route.fulfill({
+            status: { invalid: 422, oversized: 413, rate: 429, quota: 507 }[
+              failure
+            ],
+            json: {},
+          }),
+    );
+    await page.route("https://review-submission.test/submit", async (route) => {
+      sends++;
+      expect(
+        route.request().postDataJSON().items[0].screenshot,
+      ).toBeUndefined();
+      await route.fulfill({
+        json: await confirmedResponse(route.request().postDataJSON()),
+      });
+    });
+    await saveScreenshotFeedback(page);
+    await sendButton(page).click();
+    await expect(panel(page).getByRole("status")).toContainText(
+      "1 draft remains",
+    );
+    expect(sends).toBe(0);
+    expect((await saved(page)).items[0].screenshot.dataUrl).toContain(
+      "data:image/png;base64,",
+    );
+    await panel(page)
+      .getByRole("button", { name: "Send text without screenshot" })
+      .focus();
+    await page.keyboard.press("Enter");
+    await expect(panel(page).getByRole("status")).toContainText(
+      "0 drafts remain",
+    );
+    expect(sends).toBe(1);
+  });
+}
+
+test("an unreadable screenshot leaves written feedback submittable", async ({
+  page,
+}) => {
+  await page.goto("/?review");
+  const form = await pick(page, page.locator("#audiences-title"));
+  await form.getByLabel("Change it to").fill("Preserved written feedback.");
+  await answer(form);
+  await form.getByLabel("Attach screenshot file").setInputFiles({
+    name: "bad.png",
+    mimeType: "image/png",
+    buffer: Buffer.from("not an image"),
+  });
+  await expect(form.getByRole("status")).toContainText("could not be read");
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  expect((await saved(page)).items[0].change.proposed).toBe(
+    "Preserved written feedback.",
+  );
+  expect((await saved(page)).items[0].screenshot).toBeUndefined();
+});
+
+test("missing server images invalidate confirmed uploads and upload again after reload", async ({
+  page,
+}) => {
+  let uploads = 0,
+    sends = 0;
+  await page.route(
+    "https://review-submission.test/screenshots/*",
+    async (route) => {
+      uploads++;
+      const image = (await saved(page)).items[0].screenshot;
+      await route.fulfill({
+        json: {
+          sha256: image.sha256,
+          width: image.width,
+          height: image.height,
+        },
+      });
+    },
+  );
+  await page.route("https://review-submission.test/submit", async (route) => {
+    sends++;
+    expect(
+      route.request().postDataJSON().items[0].screenshot.dataUrl,
+    ).toBeUndefined();
+    if (sends === 1) {
+      const response = await confirmedResponse(route.request().postDataJSON());
+      await route.fulfill({
+        json: {
+          outcomes: response.outcomes.map((outcome) => ({
+            ...outcome,
+            status: "retryable",
+            reason: "screenshot",
+            issue: undefined,
+            message: "Screenshot missing; retry.",
+          })),
+        },
+      });
+      return;
+    }
+    await route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    });
+  });
+  await saveScreenshotFeedback(page);
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "1 draft remains",
+  );
+  await page.reload();
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
+  expect(uploads).toBe(2);
+  expect(sends).toBe(2);
+});
+
+test("image storage exhaustion saves written feedback and permits persistent later edits", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (
+        key === "found42-review:feedback" &&
+        JSON.parse(value).items.some(
+          (item: { screenshot?: unknown }) => item.screenshot,
+        )
+      )
+        throw new DOMException("Full", "QuotaExceededError");
+      return original.call(this, key, value);
+    };
+  });
+  await saveScreenshotFeedback(page);
+  await expect(
+    page.getByRole("status").filter({ hasText: "Browser storage is full" }),
+  ).toBeVisible();
+  expect((await saved(page)).items[0].screenshot).toBeUndefined();
+  await page.reload();
+  await page.getByRole("button", { name: "My feedback" }).click();
+  await panel(page).getByRole("button", { name: "Edit" }).click();
+  const form = page
+    .getByRole("dialog")
+    .filter({ has: page.getByLabel("Change it to") });
+  await form.getByLabel("Change it to").fill("Persistent revised wording.");
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  await page.reload();
+  expect((await saved(page)).items[0].change.proposed).toBe(
+    "Persistent revised wording.",
+  );
+});
+
+test("PNG upload bytes match the single encoded digest", async ({ page }) => {
+  await page.route(
+    "https://review-submission.test/screenshots/*",
+    async (route) => {
+      const image = (await saved(page)).items[0].screenshot;
+      const { createHash } = await import("node:crypto");
+      expect(
+        createHash("sha256")
+          .update(route.request().postDataBuffer()!)
+          .digest("hex"),
+      ).toBe(image.sha256);
+      await route.fulfill({
+        json: {
+          sha256: image.sha256,
+          width: image.width,
+          height: image.height,
+        },
+      });
+    },
+  );
+  await page.route("https://review-submission.test/submit", async (route) =>
+    route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    }),
+  );
+  await page.addInitScript(() => {
+    HTMLCanvasElement.prototype.toDataURL = () => {
+      throw new Error("Second PNG encode forbidden");
+    };
+  });
+  await saveScreenshotFeedback(page);
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
 });
