@@ -95,7 +95,7 @@ test("rewording a heading records its exact words, new words and place", async (
       "Select all the current text before pasting a replacement. The saved wording will be exactly what’s in this field.",
     ),
   ).toBeVisible();
-  await proposed.press("Meta+A");
+  await proposed.press("ControlOrMeta+A");
   await page.keyboard.insertText("Help your team do better work with Claude.");
   await expect(proposed).toHaveValue(
     "Help your team do better work with Claude.",
