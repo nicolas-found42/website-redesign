@@ -58,14 +58,24 @@ export function createStore() {
     }
     return memory;
   };
-  const write = (next: Saved) => {
+  const write = (next: Saved, fallback?: Saved) => {
     memory = next;
     if (!persistent) return;
     try {
       localStorage.setItem(key, JSON.stringify(next));
     } catch {
+      if (fallback) {
+        try {
+          localStorage.setItem(key, JSON.stringify(fallback));
+          memory = fallback;
+          return true;
+        } catch {
+          /* Written feedback also cannot be persisted; show the storage warning. */
+        }
+      }
       persistent = false;
     }
+    return false;
   };
 
   return {
@@ -95,6 +105,15 @@ export function createStore() {
         ],
       });
     },
+    forgetScreenshot(sha256: string) {
+      const saved = read();
+      write({
+        ...saved,
+        uploadedScreenshots: (saved.uploadedScreenshots ?? []).filter(
+          (sha) => sha !== sha256,
+        ),
+      });
+    },
     reviewer: () => read().reviewer,
     setReviewer: (reviewer: string) => write({ ...read(), reviewer }),
     save(item: FeedbackItem) {
@@ -105,7 +124,21 @@ export function createStore() {
         at < 0
           ? [...saved.items, item]
           : saved.items.map((existing, i) => (i === at ? item : existing));
-      write({ ...saved, items });
+      const withoutImage = { ...item };
+      delete withoutImage.screenshot;
+      return (
+        write(
+          { ...saved, items },
+          item.screenshot
+            ? {
+                ...saved,
+                items: items.map((entry) =>
+                  entry.id === item.id ? withoutImage : entry,
+                ),
+              }
+            : undefined,
+        ) ?? false
+      );
     },
     confirmSubmitted(submitted: FeedbackItem) {
       const saved = read();

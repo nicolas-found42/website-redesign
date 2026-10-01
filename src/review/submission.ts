@@ -280,6 +280,8 @@ async function sendSnapshot(
             return;
           }
         } else {
+          if (outcome.reason === "screenshot" && item.screenshot)
+            store.forgetScreenshot(item.screenshot.sha256);
           remember(item, { ...outcome, id: item.id } as Outcome);
           return;
         }

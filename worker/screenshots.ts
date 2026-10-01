@@ -125,6 +125,7 @@ export async function uploadScreenshot(
   request: Request,
   sha: string,
   reply: (body: unknown, status?: number) => Response,
+  admit: (bytes: number) => Promise<boolean>,
 ) {
   if (request.headers.get("Content-Type")?.split(";")[0] !== "image/png")
     return reply(
@@ -198,12 +199,25 @@ export async function uploadScreenshot(
       },
       422,
     );
+  const existing = await db
+    .prepare("SELECT width,height FROM screenshots WHERE sha256=?")
+    .bind(sha)
+    .first<{ width: number; height: number }>();
+  if (existing) return reply({ sha256: sha, ...existing });
+  if (!(await admit(length)))
+    return reply(
+      {
+        message:
+          "New screenshot uploads are temporarily limited. Your draft is saved. Retry later or send text without the image.",
+      },
+      429,
+    );
   try {
     await db
       .prepare(
-        "INSERT INTO screenshots(sha256,pixels,width,height) VALUES (?,?,?,?) ON CONFLICT(sha256) DO NOTHING",
+        "INSERT INTO screenshots(sha256,pixels,width,height,uploaded,retained) VALUES (?,?,?,?,?,0) ON CONFLICT(sha256) DO NOTHING",
       )
-      .bind(sha, pixels.buffer, dimensions.width, dimensions.height)
+      .bind(sha, pixels.buffer, dimensions.width, dimensions.height, Date.now())
       .run();
   } catch (error) {
     if (String(error).includes("screenshot quota"))

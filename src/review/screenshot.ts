@@ -35,6 +35,16 @@ async function encode(
     maxScreenshotDimension / height,
     Math.sqrt(maxScreenshotPixels / (width * height)),
   );
+  // Freeze a native frame once; asynchronous size retries must use those same pixels.
+  if (source instanceof HTMLVideoElement) {
+    const frame = document.createElement("canvas");
+    frame.width = Math.max(1, Math.floor(width * scale));
+    frame.height = Math.max(1, Math.floor(height * scale));
+    const frameContext = frame.getContext("2d");
+    if (!frameContext) throw new Error("The screenshot could not be read.");
+    frameContext.drawImage(source, 0, 0, frame.width, frame.height);
+    source = frame;
+  }
   for (let attempt = 0; attempt < 8; attempt++) {
     canvas.width = Math.max(1, Math.floor(width * scale));
     canvas.height = Math.max(1, Math.floor(height * scale));
@@ -54,7 +64,7 @@ async function encode(
         height: canvas.height,
         source: kind,
         captured: new Date().toISOString(),
-        dataUrl: canvas.toDataURL("image/png"),
+        dataUrl: `data:image/png;base64,${btoa(Array.from(bytes, (byte) => String.fromCharCode(byte)).join(""))}`,
       } satisfies Screenshot;
     }
     scale *= 0.8;
@@ -130,14 +140,23 @@ export function reviewTabCapture() {
           throw new Error(
             "Choose this review tab, not another tab, window or screen. You can also attach a screenshot file.",
           );
-        const bounds = selected.getBoundingClientRect();
-        if (
-          bounds.bottom <= 0 ||
-          bounds.top >= innerHeight ||
-          bounds.right <= 0 ||
-          bounds.left >= innerWidth
-        )
-          throw new Error("Bring the selected target into view and try again.");
+        const checkTarget = () => {
+          const bounds = selected.getBoundingClientRect();
+          if (
+            !selected.isConnected ||
+            bounds.width <= 0 ||
+            bounds.height <= 0 ||
+            bounds.bottom <= 0 ||
+            bounds.top >= innerHeight ||
+            bounds.right <= 0 ||
+            bounds.left >= innerWidth
+          )
+            throw new Error(
+              "Bring the selected target into view and try again.",
+            );
+        };
+        checkTarget();
+        const scroll = { x: scrollX, y: scrollY };
         video.srcObject = stream;
         visibility(true);
         await video.play();
@@ -162,6 +181,11 @@ export function reviewTabCapture() {
         if (!correctTab() || track?.readyState !== "live")
           throw new Error(
             "Tab capture was interrupted. Retry or attach a screenshot file.",
+          );
+        checkTarget();
+        if (scrollX !== scroll.x || scrollY !== scroll.y)
+          throw new Error(
+            "The page moved during capture. Bring the selected target into view and try again.",
           );
         return await encode(video, video.videoWidth, video.videoHeight, "tab");
       } catch (error) {

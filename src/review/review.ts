@@ -478,7 +478,7 @@ export function mountReview() {
     if (value.reviewer) store.setReviewer(value.reviewer);
     const now = new Date().toISOString();
     const { reviewer, ...answer } = value;
-    store.save({
+    const imageOmitted = store.save({
       id: editing?.id ?? newId(),
       created: editing?.created ?? now,
       ...(editing ? { updated: now } : {}),
@@ -492,9 +492,11 @@ export function mountReview() {
     formPanel.close();
     drawPins();
     say(
-      wasEditing
-        ? "Feedback updated."
-        : `Feedback saved. You have ${count} ${count === 1 ? "item" : "items"}; send them when you’re done.`,
+      imageOmitted
+        ? "Written feedback saved. Browser storage is full, so this screenshot was not saved. Send existing drafts or remove an image before attaching it again."
+        : wasEditing
+          ? "Feedback updated."
+          : `Feedback saved. You have ${count} ${count === 1 ? "item" : "items"}; send them when you’re done.`,
     );
   }
 

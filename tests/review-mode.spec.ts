@@ -1062,3 +1062,132 @@ test("an unreadable screenshot leaves written feedback submittable", async ({
   );
   expect((await saved(page)).items[0].screenshot).toBeUndefined();
 });
+
+test("missing server images invalidate confirmed uploads and upload again after reload", async ({
+  page,
+}) => {
+  let uploads = 0,
+    sends = 0;
+  await page.route(
+    "https://review-submission.test/screenshots/*",
+    async (route) => {
+      uploads++;
+      const image = (await saved(page)).items[0].screenshot;
+      await route.fulfill({
+        json: {
+          sha256: image.sha256,
+          width: image.width,
+          height: image.height,
+        },
+      });
+    },
+  );
+  await page.route("https://review-submission.test/submit", async (route) => {
+    sends++;
+    expect(
+      route.request().postDataJSON().items[0].screenshot.dataUrl,
+    ).toBeUndefined();
+    if (sends === 1) {
+      const response = await confirmedResponse(route.request().postDataJSON());
+      await route.fulfill({
+        json: {
+          outcomes: response.outcomes.map((outcome) => ({
+            ...outcome,
+            status: "retryable",
+            reason: "screenshot",
+            issue: undefined,
+            message: "Screenshot missing; retry.",
+          })),
+        },
+      });
+      return;
+    }
+    await route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    });
+  });
+  await saveScreenshotFeedback(page);
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "1 draft remains",
+  );
+  await page.reload();
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
+  expect(uploads).toBe(2);
+  expect(sends).toBe(2);
+});
+
+test("image storage exhaustion saves written feedback and permits persistent later edits", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (
+        key === "found42-review:feedback" &&
+        JSON.parse(value).items.some(
+          (item: { screenshot?: unknown }) => item.screenshot,
+        )
+      )
+        throw new DOMException("Full", "QuotaExceededError");
+      return original.call(this, key, value);
+    };
+  });
+  await saveScreenshotFeedback(page);
+  await expect(
+    page.getByRole("status").filter({ hasText: "Browser storage is full" }),
+  ).toBeVisible();
+  expect((await saved(page)).items[0].screenshot).toBeUndefined();
+  await page.reload();
+  await page.getByRole("button", { name: "My feedback" }).click();
+  await panel(page).getByRole("button", { name: "Edit" }).click();
+  const form = page
+    .getByRole("dialog")
+    .filter({ has: page.getByLabel("Change it to") });
+  await form.getByLabel("Change it to").fill("Persistent revised wording.");
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  await page.reload();
+  expect((await saved(page)).items[0].change.proposed).toBe(
+    "Persistent revised wording.",
+  );
+});
+
+test("PNG upload bytes match the single encoded digest", async ({ page }) => {
+  await page.route(
+    "https://review-submission.test/screenshots/*",
+    async (route) => {
+      const image = (await saved(page)).items[0].screenshot;
+      const { createHash } = await import("node:crypto");
+      expect(
+        createHash("sha256")
+          .update(route.request().postDataBuffer()!)
+          .digest("hex"),
+      ).toBe(image.sha256);
+      await route.fulfill({
+        json: {
+          sha256: image.sha256,
+          width: image.width,
+          height: image.height,
+        },
+      });
+    },
+  );
+  await page.route("https://review-submission.test/submit", async (route) =>
+    route.fulfill({
+      json: await confirmedResponse(route.request().postDataJSON()),
+    }),
+  );
+  await page.addInitScript(() => {
+    HTMLCanvasElement.prototype.toDataURL = () => {
+      throw new Error("Second PNG encode forbidden");
+    };
+  });
+  await saveScreenshotFeedback(page);
+  await sendButton(page).click();
+  await expect(panel(page).getByRole("status")).toContainText(
+    "0 drafts remain",
+  );
+});

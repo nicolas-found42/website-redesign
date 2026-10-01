@@ -33,8 +33,10 @@ missing images, fonts, animation frames or cross-origin content.
 Files may be up to 8 MB and 32 million decoded pixels. Preview pixels are resized
 to at most 1600 pixels per side, 2 million pixels and 512 KiB of PNG data. The
 preview is the actual image that will be delivered. Draft pixels stay with their
-item in browser storage and in downloaded backups. Storage refusal or exhaustion
-uses the existing in-memory warning: send before leaving that page.
+item in browser storage and in downloaded backups. If saving an image exhausts browser storage, the tool retries saving that draft
+without its image and explicitly reports the omission. Existing drafts remain
+saved, and later edits and receipts can still persist. If even the written draft
+cannot be saved, the existing in-memory warning asks you to send before leaving.
 
 ## Delivery, limits and retention
 
@@ -48,7 +50,9 @@ include 100,000 requests/day and 10 ms CPU/invocation. Reverify the account's Fr
 plan before deploying, using the existing guarded deployment script. Quotas are
 shared with other applications; this feature never enables paid overages.
 
-`POST /screenshots/<sha256>` accepts PNG bytes only from the review-site origin.
+`POST /screenshots/<sha256>` requires the review-site Origin header. That header
+is a browser boundary, not client authentication; direct HTTP clients can supply
+it, so server-side byte allowances and orphan expiry also protect storage.
 The service incrementally bounds the body, validates the signature, chunk order,
 CRC checksums, dimensions, RGB/RGBA format, decompressed scanline length and
 filters, and verifies the pixel digest. Unsupported, truncated, mismatched and
@@ -58,9 +62,13 @@ PNG variants to supported RGB/RGBA PNGs before upload.
 The existing 30 requests/client/hour and 1000 upload/submission requests/day
 apply before decoding. An atomic SQLite trigger caps retained screenshot bytes
 at 128 MiB, leaving room under the 500 MB Free database limit for receipts and
-overhead. Duplicate digests consume no extra storage, even at quota. Images are
-not automatically deleted or expired, including successful uploads whose issue
-creation later fails. The cap stops new uploads; it does not evict evidence.
+overhead. New unique images also consume at most 2 MiB/client/day and 8 MiB/service/day,
+using atomic byte counters. Re-uploading a stored digest bypasses these unique-byte
+allowances and consumes no extra storage, even at quota. Uploads that have not
+reached issue creation expire after 24 hours; the next upload reclaims their
+space. Before attempting GitHub creation, the service retains the image permanently,
+including uncertain deliveries that may already have published an issue. Existing
+images are retained when migrating. The cap does not evict retained evidence.
 
 `GET /screenshots/<sha256>` serves the stored PNG anonymously, without an Origin
 header, login, private token or signed expiration. It also works when submissions
@@ -82,7 +90,8 @@ local pixels; use hosted Send for image delivery.
 The digest identifies immutable uploaded pixels. Confirmed uploads are remembered
 across refreshes. An uncertain upload can safely retry the same digest; it cannot
 allocate another copy. A confirmed image upload is reused when GitHub delivery
-fails. Upload failures do not claim an issue ID or call GitHub. Their receipts
+fails. If the server reports missing pixels (including an expired orphan), the
+client forgets that confirmation and the next retry uploads the same pixels again. Upload failures do not claim an issue ID or call GitHub. Their receipts
 explain invalid/oversized images, interruption, rate limits or free-storage
 exhaustion and offer **Send text without screenshot**. This is an explicit
 reviewer choice. Pending issue creation retains the existing recovery rules;
@@ -101,7 +110,7 @@ controlled GitHub response. Tests never publish live issues.
 Native capture is tested in headed Chromium, including the selected target's
 visible pixel marker. macOS headless Chromium returns `NotSupportedError` for
 native screen capture. The native test uses a visible browser and CI runs tests
-under Xvfb; all Playwright commands retain `--workers=4`. Firefox, WebKit and
+under Xvfb, using two workers by default. Firefox, WebKit and
 mobile viewports exercise the supplied-PNG path. Browser permission refusal or
 missing native identity produces a clear fallback. Cross-origin pixels and fonts
 are captured as rendered by the browser; animations remain a moment in time and
@@ -109,7 +118,8 @@ may change while permission is being granted. The preview is the final check.
 See [MDN screen capture](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia)
 and the [Capture Handle draft](https://www.w3.org/TR/capture-handle-identity/).
 
-Apply migration `0002_screenshots.sql` and deploy the Worker **before** releasing
+Apply migrations `0002_screenshots.sql` and `0003_screenshot_admission.sql`, then
+deploy the Worker **before** releasing
 the Pages UI. Use `npm run worker:deploy` after fresh Workers Free verification;
 it applies migrations without deleting the receipt database. Keep screenshot
 storage when rolling back UI/Worker code. Existing text-only submissions remain
