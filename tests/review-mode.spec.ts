@@ -89,7 +89,17 @@ test("rewording a heading records its exact words, new words and place", async (
   expect(capturedText.replace(/\s+/g, " ").trim()).toBe(
     "Find the work that sounds like yours",
   );
-  await form.getByLabel("Change it to").fill("Who we work with");
+  const proposed = form.getByLabel("Change it to");
+  await expect(
+    form.getByText(
+      "Select all the current text before pasting a replacement. The saved wording will be exactly what’s in this field.",
+    ),
+  ).toBeVisible();
+  await proposed.press("ControlOrMeta+A");
+  await page.keyboard.insertText("Help your team do better work with Claude.");
+  await expect(proposed).toHaveValue(
+    "Help your team do better work with Claude.",
+  );
   await answer(form);
   await form.getByRole("button", { name: "Save feedback" }).click();
 
@@ -106,7 +116,7 @@ test("rewording a heading records its exact words, new words and place", async (
     change: {
       kind: "wording",
       current: capturedText,
-      proposed: "Who we work with",
+      proposed: "Help your team do better work with Claude.",
     },
     target: {
       page: "/",
@@ -115,6 +125,12 @@ test("rewording a heading records its exact words, new words and place", async (
       element: "Heading",
     },
   });
+  await page.getByRole("button", { name: /My feedback/ }).click();
+  await panel(page).getByRole("button", { name: "Edit" }).click();
+  const savedForm = panel(page);
+  await expect(savedForm.getByLabel("Change it to")).toHaveValue(
+    "Help your team do better work with Claude.",
+  );
   expect(
     await page.evaluate(
       (selector) => document.querySelector(selector)?.id,
