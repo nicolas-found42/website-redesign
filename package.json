@@ -16,7 +16,7 @@
     "test": "playwright test",
     "test:quick": "playwright test --config=playwright.quick.config.ts --reporter=line",
     "test:logic": "playwright test --config=playwright.logic.config.ts --reporter=line",
-    "test:jev": "zsh -c 'node scripts/jev-select-tests.mjs'",
+    "test:jev": "node scripts/jev-select-tests.mjs",
     "test:full": "playwright test --reporter=line --workers=2",
     "test:stress": "playwright test --repeat-each=12 --workers=2",
     "preview:pages": "node scripts/serve-pages.mjs",

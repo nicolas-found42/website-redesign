@@ -12,7 +12,7 @@ npm run test:quick -- tests/homepage.spec.ts:54
 npm run test:quick -- --grep 'audiences link'
 
 # Let Jev rank relevant Chromium spec files for the current working-tree changes.
-# This is an advisory, partial smoke pass; it needs the saved OpenRouter key.
+# This is an advisory, partial smoke pass; it needs OPENROUTER_API_KEY exported in the calling environment.
 npm run test:jev
 
 # Run pure rendering/scorecard logic and the Worker submission-service suite.
@@ -21,6 +21,8 @@ npm run test:logic
 ```
 
 `test:quick` uses Chromium only and excludes tests explicitly tagged `[production]` because they need the built Pages preview. `test:logic` runs only `render.spec.ts` and `submission-service.spec.ts` and excludes the browser-backed resource-page test. Both use two workers, skip video, and omit traces; they intentionally provide partial, faster feedback. Use `test:quick` with a focused file/line/filter rather than running every Chromium test.
+
+Export `OPENROUTER_API_KEY` in your calling environment before running `test:jev`. The command invokes Node directly and does not load shell startup files.
 
 `test:jev` lists the eligible Chromium quick-test candidates, sends only changed file paths and test filenames/titles (never source contents) to Jev through the [OpenRouter TypeSafe System One endpoint](https://openrouter.ai/docs/guides/community/typesafe-sdk), and runs directly changed eligible specs plus up to three Jev-ranked relevant specs. It reports changed specs outside its quick scope (for example, built-production or logic-project tests); run those through the appropriate full or logic command. It uses `typesafe/jev-1.13`; a request failure stops before tests start, and reported latency/cost are visible when available. The scores are relevance judgments, not correctness guarantees. This command is intentionally a small **partial** feedback loop; it cannot waive full verification.
 

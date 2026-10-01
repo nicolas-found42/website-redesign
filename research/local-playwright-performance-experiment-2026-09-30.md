@@ -4,7 +4,7 @@ Date: 2026-09-30. Scope: local Playwright test worker count and scheduling. No a
 
 ## Result
 
-`playwright.config.ts` enables `fullyParallel` only outside CI and caps the default worker count at two. This gives finer-grained local scheduling and limits local CPU concurrency. GitHub Actions keeps file-level scheduling at two workers per shard, based on same-SHA critical-path results. The workflow has both `file-level` and existing `fully-parallel` benchmark modes.
+`playwright.config.ts` enables `fullyParallel` only outside CI and caps the default worker count at two. This gives finer-grained local scheduling and limits local CPU concurrency. GitHub Actions keeps file-level scheduling at two workers per shard, based on same-SHA critical-path results. The workflow has `four-workers` and `fully-parallel` benchmark modes. The four-worker arm uses file-level scheduling, compared with the normal two-worker gate.
 
 Playwright's documentation says workers are separate processes and explains that `fullyParallel` allows tests within files to run concurrently; without it, tests in a file are scheduled together. This matches the local result: the homepage spec by itself reported one worker despite a `--workers=2` setting until `--fully-parallel` was enabled. Sources: [Playwright parallelism](https://playwright.dev/docs/test-parallel), [Playwright sharding](https://playwright.dev/docs/test-sharding).
 
@@ -12,12 +12,12 @@ Playwright's documentation says workers are separate processes and explains that
 
 All commands ran sequentially in a worktree on the same checkout, with the same 11 Chromium homepage tests:
 
-| Scheduling | Playwright result | Wall time | CPU time (user + system) | `/usr/bin/time -l` max RSS |
-| --- | ---: | ---: | ---: | ---: |
-| 1 worker, file-level (before config change) | 11 passed | 13.2s reported by Playwright | not captured | not captured |
-| 2 workers, file-level | 11 passed; Playwright still used 1 worker | 10.3s reported by Playwright | not captured | not captured |
-| 2 workers, `fullyParallel` | 11 passed | 7.38s | 21.80s | 541,933,568 bytes |
-| 4 workers, `fullyParallel` | 11 passed | 7.74s | 31.92s | 529,842,176 bytes |
+| Scheduling                                  |                         Playwright result |                    Wall time | CPU time (user + system) | `/usr/bin/time -l` max RSS |
+| ------------------------------------------- | ----------------------------------------: | ---------------------------: | -----------------------: | -------------------------: |
+| 1 worker, file-level (before config change) |                                 11 passed | 13.2s reported by Playwright |             not captured |               not captured |
+| 2 workers, file-level                       | 11 passed; Playwright still used 1 worker | 10.3s reported by Playwright |             not captured |               not captured |
+| 2 workers, `fullyParallel`                  |                                 11 passed |                        7.38s |                   21.80s |          541,933,568 bytes |
+| 4 workers, `fullyParallel`                  |                                 11 passed |                        7.74s |                   31.92s |          529,842,176 bytes |
 
 The comparable 2-versus-4-worker pair used **31.7% less CPU time** and was **4.7% faster** at two workers. The single-run maximum-RSS figures moved in the opposite direction and are too noisy to establish a memory reduction. The result supports a conservative local worker cap for CPU load and faster feedback, but not a claim that peak memory is lower or that four workers are always slower.
 
@@ -33,19 +33,19 @@ The isolated Chromium quick command passed 10 homepage tests in 3.3s; the no-ser
 
 A matched same-SHA GitHub Actions comparison then ran both the normal four-worker fully-parallel gate and the four-worker file-level benchmark at `151e293`. Each variant ran all **606 unique project/test cases**, with **zero failures and zero retries**. Playwright command-step durations by shard were:
 
-| Scheduling | Shard 1 | Shard 2 | Shard 3 | Shard 4 | Slowest shard |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `fullyParallel` | 157s | 167s | 277s | 276s | **277s** |
-| file-level | 221s | 204s | 184s | 209s | **221s** |
+| Scheduling      | Shard 1 | Shard 2 | Shard 3 | Shard 4 | Slowest shard |
+| --------------- | ------: | ------: | ------: | ------: | ------------: |
+| `fullyParallel` |    157s |    167s |    277s |    276s |      **277s** |
+| file-level      |    221s |    204s |    184s |    209s |      **221s** |
 
 In this run, full parallelism increased the critical test step by **56s (25.3%)** and summed test-step time by 59s. As a single comparison, this is evidence for keeping CI file-level, not a universal estimate. The configuration now uses `fullyParallel` locally but disables it when `CI` is set.
 
 A second same-SHA experiment at `206eb35` compared four and two workers with file-level scheduling and all three browsers:
 
-| Workers | Shard 1 | Shard 2 | Shard 3 | Shard 4 | Slowest shard | Test outcomes |
-| ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 4 | 208s | 177s | 261s | 270s | **270s** | 605 passed, 1 failed; no retries |
-| 2 | 167s | 192s | 195s | 182s | **195s** | 606 passed; no retries |
+| Workers | Shard 1 | Shard 2 | Shard 3 | Shard 4 | Slowest shard | Test outcomes                    |
+| ------: | ------: | ------: | ------: | ------: | ------------: | -------------------------------- |
+|       4 |    208s |    177s |    261s |    270s |      **270s** | 605 passed, 1 failed; no retries |
+|       2 |    167s |    192s |    195s |    182s |      **195s** | 606 passed; no retries           |
 
 Two workers finished the slowest test shard **75s (27.8%) faster** in this paired run and avoided a WebKit transition-state failure seen in the four-worker run. This is still one comparison, but it justifies setting normal CI shards to two workers and retaining the manual four-worker/file-level benchmark for repeat measurement. The PR gate should confirm the change before treating this as stable.
 
@@ -58,3 +58,9 @@ The decisions endpoint and TypeSafe/OpenRouter integration are documented at [Op
 ## CI constraint and next validation
 
 The repository's [`ci-runtime-implementation-2026-09-29.md`](ci-runtime-implementation-2026-09-29.md) records earlier mixed results, including a shared-build trial that did not improve the critical path. The current workflow uses file-level scheduling at two workers per shard. Retain three-browser coverage and the `verify`/Pages gates; compare slowest-shard duration, total workflow time, test counts, retries, and failures before claiming any further CI speedup.
+
+## October 1 review correction
+
+The earlier one-frame wait hid a reduced-motion landing race. A live `MediaQueryList.matches` read in the click frame could observe the new setting before its change event reached layout subscribers. The shared page-motion state now changes at that event boundary. The landing regression runs with the click frame held until the preference event, without a frame wait, and after the click frame. The measurements above describe the September 30 version, rather than timings for this correction.
+
+The redundant `file-level` benchmark and `PW_FILE_LEVEL` flag were removed. The old `two-workers` manual arm is now `four-workers`, giving a distinct comparison against the two-worker CI gate.

@@ -1,7 +1,7 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
-  fullyParallel: !process.env.CI && process.env.PW_FILE_LEVEL !== "1",
+  fullyParallel: !process.env.CI,
   workers: 2,
   reporter: process.env.CI
     ? [
