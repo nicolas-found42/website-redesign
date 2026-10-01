@@ -10,7 +10,7 @@ import {
   scorecardResult,
 } from "../src/interactions";
 const page = renderHomepage();
-test("the complete resource page owns the current catalog and availability", async ({
+test("the complete resource page owns the current catalog and availability [browser]", async ({
   page,
 }) => {
   await page.goto("/resources/");

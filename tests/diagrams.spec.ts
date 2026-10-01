@@ -543,7 +543,7 @@ for (const [width, height] of [
   [384, 686],
   [384, 742],
 ] as const) {
-  test(`the executive timeline is complete without scripting at ${width}×${height}`, async ({
+  test(`the executive timeline is complete without scripting at ${width}×${height} [production]`, async ({
     browser,
   }) => {
     const context = await browser.newContext({
@@ -794,7 +794,7 @@ for (const [width, height] of [
   [384, 686],
   [384, 742],
 ] as const) {
-  test(`with scripting disabled the teams scene stays readable at ${width}×${height}`, async ({
+  test(`with scripting disabled the teams scene stays readable at ${width}×${height} [production]`, async ({
     browser,
   }) => {
     const context = await browser.newContext({

@@ -113,7 +113,7 @@ test("phone visitors read each audience beside its own scene and operate a compa
 });
 
 for (const mode of ["reduced motion", "without scripting"] as const) {
-  test(`${mode} leaves every audience article and complete still scene in reading order`, async ({
+  test(`${mode} leaves every audience article and complete still scene in reading order${mode === "without scripting" ? " [production]" : ""}`, async ({
     browser,
   }) => {
     const context = await browser.newContext({

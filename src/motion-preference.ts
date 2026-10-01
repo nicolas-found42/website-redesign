@@ -29,16 +29,24 @@ export interface PageMotion extends MotionPreference {
 export function createPageMotion(query: MediaQueryList): PageMotion {
   const listeners = new Set<() => void>();
   let paused = false;
+  // Read the system setting at the same boundary that notifies subscribers.
+  // A live query read in a jump frame can observe the new value before its
+  // change event, letting the jump settle before later layout handlers run.
+  let bySystem = query.matches;
 
   const notify = () => listeners.forEach((listener) => listener());
-  query.addEventListener("change", notify);
+  const onSystemChange = () => {
+    bySystem = query.matches;
+    notify();
+  };
+  query.addEventListener("change", onSystemChange);
 
   return {
     get matches() {
-      return paused || query.matches;
+      return paused || bySystem;
     },
     get bySystem() {
-      return query.matches;
+      return bySystem;
     },
     get byVisitor() {
       return paused;
@@ -55,7 +63,7 @@ export function createPageMotion(query: MediaQueryList): PageMotion {
       listeners.delete(listener);
     },
     dispose() {
-      query.removeEventListener("change", notify);
+      query.removeEventListener("change", onSystemChange);
       listeners.clear();
     },
   };

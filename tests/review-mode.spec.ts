@@ -36,7 +36,7 @@ async function answer(
   await form.getByRole("radio", { name: "Must change" }).check();
 }
 
-test("visitors never load review mode; a review link does", async ({
+test("visitors never load review mode; a review link does [production]", async ({
   page,
 }) => {
   const requested: string[] = [];

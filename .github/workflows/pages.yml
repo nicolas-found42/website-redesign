@@ -14,7 +14,7 @@ on:
           - none
           - direct-install
           - single-browser
-          - two-workers
+          - four-workers
           - two-shards
           - shared-build
           - fully-parallel
@@ -67,7 +67,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run worker:check
         if: matrix.shard == 1
-      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
+      - run: npm test -- --workers=2 --shard=${{ matrix.shard }}/4
       - name: Summarize browser timings
         if: ${{ !cancelled() }}
         run: |
@@ -151,8 +151,8 @@ jobs:
           path: playwright-timings/
           if-no-files-found: ignore
           retention-days: 14
-  benchmark-two-workers:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'two-workers' }}
+  benchmark-four-workers:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.benchmark == 'four-workers' }}
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.63.0-noble
     strategy:
@@ -168,7 +168,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
-      - run: npm test -- --workers=2 --shard=${{ matrix.shard }}/4
+      - run: npm test -- --workers=4 --shard=${{ matrix.shard }}/4
       - name: Upload benchmark timings
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4

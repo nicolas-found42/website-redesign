@@ -229,38 +229,75 @@ for (const interruption of ["queued", "moving"]) {
   });
 }
 
-test("a reduced-motion service jump lands after later preference handlers change layout", async ({
-  page,
-}) => {
-  await page.goto("/#services");
-  await page.evaluate(() => document.fonts.ready);
-  await page.evaluate(() => {
-    // Native smooth scrolling can suppress scroll anchoring. Model a later
-    // motion subscriber restoring content after the reading handler runs.
-    document.documentElement.style.overflowAnchor = "none";
-    matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
-      "change",
-      () => {
-        document.querySelector<HTMLElement>("#services")!.style.paddingTop =
-          "1200px";
-      },
-      { once: true },
-    );
-    document.querySelector<HTMLButtonElement>('[data-service="2"]')!.click();
+for (const timing of [
+  "before the jump frame",
+  "without a frame wait",
+  "after the jump frame",
+]) {
+  test(`a reduced-motion service jump lands after later layout handlers (${timing})`, async ({
+    page,
+  }) => {
+    await page.goto("/#services");
+    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate((holdFrame) => {
+      // Hold animation frames until the media event has reached all subscribers,
+      // so the before-frame case exercises cancellation of the pending click.
+      const raf = requestAnimationFrame;
+      const cancel = cancelAnimationFrame;
+      const pending = new Map<number, FrameRequestCallback>();
+      let nextId = -1;
+      if (holdFrame) {
+        window.requestAnimationFrame = (callback) => {
+          const id = nextId--;
+          pending.set(id, callback);
+          return id;
+        };
+        window.cancelAnimationFrame = (id) => {
+          if (id < 0) pending.delete(id);
+          else cancel(id);
+        };
+      }
+      // Native smooth scrolling can suppress scroll anchoring. Model a later
+      // motion subscriber restoring content after the reading handler runs.
+      document.documentElement.style.overflowAnchor = "none";
+      matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
+        "change",
+        () => {
+          document.querySelector<HTMLElement>("#services")!.style.paddingTop =
+            "1200px";
+          if (holdFrame) {
+            window.requestAnimationFrame = raf;
+            window.cancelAnimationFrame = cancel;
+            for (const callback of pending.values()) raf(callback);
+            pending.clear();
+          }
+        },
+        { once: true },
+      );
+      document.querySelector<HTMLButtonElement>('[data-service="2"]')!.click();
+    }, timing === "before the jump frame");
+    if (timing === "after the jump frame") {
+      await page.evaluate(
+        () =>
+          new Promise<void>((resolve) =>
+            requestAnimationFrame(() => resolve()),
+          ),
+      );
+    }
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect
+      .poll(() =>
+        page.locator('[data-service-article="2"]').evaluate((article) => {
+          const box = article.getBoundingClientRect();
+          return Math.abs(box.top + box.height / 2 - innerHeight / 2);
+        }),
+      )
+      .toBeLessThan(60);
+    await expect(
+      page.getByRole("button", { name: "Automations", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
   });
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect
-    .poll(() =>
-      page.locator('[data-service-article="2"]').evaluate((article) => {
-        const box = article.getBoundingClientRect();
-        return Math.abs(box.top + box.height / 2 - innerHeight / 2);
-      }),
-    )
-    .toBeLessThan(60);
-  await expect(
-    page.getByRole("button", { name: "Automations", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
-});
+}
 
 test("a visitor on a phone gets each service's own drawing and can jump between them", async ({
   browser,
