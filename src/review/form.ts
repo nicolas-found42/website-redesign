@@ -98,7 +98,10 @@ export function formMarkup({
     <div class="kind-fields" data-for="wording">
       <p class="label">Current text</p>
       <blockquote class="current" data-current></blockquote>
-      ${field("proposed", "Change it to", { hint: "Edit it into exactly what it should say.", rows: 4 })}
+      ${field("proposed", "Change it to", {
+        hint: "Select all the current text before pasting a replacement. The saved wording will be exactly what’s in this field.",
+        rows: 4,
+      })}
     </div>
 
     <div class="kind-fields" data-for="content">
