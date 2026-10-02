@@ -157,8 +157,9 @@ and every unsent snapshot item receives an outcome even if delivery stops.
 ## Release verification
 
 Routine tests use browser service stubs and a local Miniflare D1 database with
-controlled GitHub responses. They never create live issues. Run lint,
-typecheck, build, `npm run worker:check`, and Playwright with `--workers=4`.
+controlled GitHub responses. They never create live issues. Follow
+[the testing guide](guides/testing.md) for the current validation commands and
+worker-count policy.
 
 After hosted secrets and storage are configured, perform one clearly named
 **synthetic release check for #108** from the published review site context.

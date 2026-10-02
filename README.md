@@ -35,8 +35,10 @@ npm run preview:pages
 test rules), CSS with Stylelint, and repository Markdown with markdownlint-cli2.
 Run `npm run lint:actions` to check the GitHub Actions workflow with actionlint.
 Install its binary first (`brew install actionlint` on macOS); CI runs the
-versioned actionlint image. The commit hook runs lint, typecheck, and the full
-Playwright suite.
+versioned actionlint image. The commit hook formats staged files and runs lint
+and typecheck for changes beyond Markdown, or Markdown lint for documentation
+changes. Follow [the testing guide](docs/guides/testing.md) for browser-suite
+validation; the hook does not run Playwright.
 
 Development: http://127.0.0.1:4173/.
 Static production validation: http://127.0.0.1:4179/website-redesign/.
