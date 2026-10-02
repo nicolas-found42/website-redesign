@@ -338,6 +338,21 @@ export function mountReview() {
   let screenshot: Screenshot | undefined;
   let imageBusy = false;
   let imageGeneration = 0;
+  let stopFormLayout: (() => void) | undefined;
+  const viewport = window.visualViewport;
+  const sizeViewport = () => {
+    host.style.setProperty(
+      "--review-viewport-height",
+      `${viewport?.height ?? innerHeight}px`,
+    );
+    host.style.setProperty(
+      "--review-keyboard-inset",
+      `${Math.max(0, innerHeight - (viewport?.height ?? innerHeight) - (viewport?.offsetTop ?? 0))}px`,
+    );
+  };
+  viewport?.addEventListener("resize", sizeViewport);
+  viewport?.addEventListener("scroll", sizeViewport);
+  sizeViewport();
 
   const pointTools = () => ({
     widen: !!selected && !!widen(selected),
@@ -446,6 +461,7 @@ export function mountReview() {
   }
 
   function newForm(item?: FeedbackItem) {
+    stopFormLayout?.();
     editing = item;
     screenshot = item?.screenshot;
     imageGeneration++;
@@ -454,6 +470,28 @@ export function mountReview() {
       sections: pageSections(),
     });
     form = formPanel.querySelector("form")!;
+    form.querySelector(".current")!.classList.add("is-pinned");
+    const body = form.querySelector<HTMLElement>(".panel-body")!;
+    const showMore = () =>
+      body.classList.toggle(
+        "has-more",
+        body.scrollTop + body.clientHeight < body.scrollHeight - 1,
+      );
+    const resizing = new ResizeObserver(showMore);
+    resizing.observe(body);
+    const changing = new MutationObserver(showMore);
+    changing.observe(body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true,
+    });
+    body.addEventListener("scroll", showMore);
+    stopFormLayout = () => {
+      resizing.disconnect();
+      changing.disconnect();
+      body.removeEventListener("scroll", showMore);
+    };
     form.addEventListener("change", (event) => {
       if ((event.target as HTMLInputElement).name === "kind")
         form!.dataset.kindChosen = "yes";
@@ -621,6 +659,8 @@ export function mountReview() {
 
   formPanel.addEventListener("close", () => {
     if (resume) return;
+    stopFormLayout?.();
+    stopFormLayout = undefined;
     showHighlight(null);
     selected = null;
     target = undefined;
@@ -960,6 +1000,9 @@ export function mountReview() {
   }
 
   function dispose() {
+    stopFormLayout?.();
+    viewport?.removeEventListener("resize", sizeViewport);
+    viewport?.removeEventListener("scroll", sizeViewport);
     stopPicking();
     cancelAnimationFrame(frame);
     removeEventListener("scroll", place);
