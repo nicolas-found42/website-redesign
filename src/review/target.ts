@@ -110,10 +110,13 @@ export function sectionName(section: Element | null) {
   // Named by the page's own title, a band is the page's opening. The gloss is
   // the reviewer's, not the sitemap id (#129); the stored field keeps its shape.
   if (named?.localName === "h1") return "Top of the page";
+  // A section with no heading of its own glosses its id rather than showing the
+  // raw identifier, which reads as a sitemap key (#129).
+  const id = clean(section.id).replace(/[-_]+/g, " ");
   return (
     clean((named as HTMLElement | null)?.innerText) ||
     clean(section.getAttribute("aria-label")) ||
-    section.id ||
+    (id ? id[0].toUpperCase() + id.slice(1) : "") ||
     "Unnamed section"
   );
 }
