@@ -21,6 +21,9 @@ import {
  * Design step before Test, an illustrative Claude Daily Brief for executives,
  * a whiteboard-to-keyboard Workshops drawing and the teams-and-contributors
  * name and gate. Issue #80 replaces the executive scene with four day cards.
+ * Issue #139 redraws the Workflows drawing as an ordered process with named
+ * decision and iteration annotations, and returns its portrait loop to the
+ * design step rather than the brief.
  */
 
 type Link = { from: string; to: string; weight: string };
@@ -30,6 +33,7 @@ type Inventory = {
     id: string;
     description: string;
     nodes: { id: string; label: string; kind: string }[];
+    annotations?: { key: string; text: string; kind: string }[];
     flow: Record<"landscape" | "portrait", Link[]>;
   }[];
   scenes: {
@@ -113,16 +117,24 @@ function expectSchematic(
   const expected = inventory.schematics.find((s) => s.id === id)!;
   const where = `${id} ${orientation}`;
   expect(state.describedBy, where).toBe(expected.description);
-  expect(
-    state.labels.map(({ node, text, kind }) => ({ node, text, kind })),
-    where,
-  ).toEqual(
-    expected.nodes.map(({ id: node, label, kind }) => ({
+  // The five node words, then any annotation words the drawing names its
+  // decision and iteration with (issue #139 added them to Workflows).
+  const expectedLabels = [
+    ...expected.nodes.map(({ id: node, label, kind }) => ({
       node,
       text: label,
       kind,
     })),
-  );
+    ...(expected.annotations ?? []).map(({ key: node, text, kind }) => ({
+      node,
+      text,
+      kind,
+    })),
+  ];
+  expect(
+    state.labels.map(({ node, text, kind }) => ({ node, text, kind })),
+    where,
+  ).toEqual(expectedLabels);
   // Exactly the connections the deployed drawing made — no fewer, and none
   // invented — including its return loop and its unnamed outputs.
   expect(drawnLinks(state), where).toEqual(
@@ -230,6 +242,44 @@ test("each service drawing keeps its words and connections in both shapes", asyn
       id,
       "portrait",
     );
+});
+
+test("the Workflows drawing reads as an ordered process with a labelled iteration", async ({
+  page,
+}) => {
+  await open(page, "/", 1440);
+  await page.getByRole("button", { name: "Workflows", exact: true }).click();
+  const field = page.locator(".services-art .system-field");
+  // The decision/review point and the iteration are named in visible words,
+  // not left to arrow-decoding.
+  await expect(
+    field.getByText("Review point: does it still fit the work?", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    field.getByText("Iteration back into tailored design and build", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  // The accessible description carries the same order and iteration in words.
+  await expect(field).toHaveAccessibleName(
+    /brief.*tailored design and build.*test and review.*team deployment.*review in the customer context.*feeds back into tailored design and build/i,
+  );
+  // The portrait drawing returns to the design step, not the brief.
+  await open(page, "/", 390);
+  const portrait = page.locator(
+    "#service-automation .service-figure .system-field",
+  );
+  await expect(
+    portrait.getByText("Iteration back into tailored design and build", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  const links = (await portrait.evaluate(readField)).parts.flatMap(
+    (piece) => piece.links,
+  );
+  expect(links).toContain("n4>n2");
 });
 
 test("each audience scene keeps its words, marks, beats and connections", async ({

@@ -182,8 +182,8 @@
     {
       "id": "automation",
       "choice": "Workflows",
-      "detail": "Operating problem → tailored design → testing and review → team deployment.",
-      "description": "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and skills and plugins the team deploys and uses.",
+      "detail": "Operating problem → tailored design and build → test and review → team deployment → review in customer context, feeding back into tailored design and build.",
+      "description": "Workflow illustration: a brief and operating problem move through tailored design and build, test and review, and team deployment to a review in the customer context, which feeds back into tailored design and build as an iteration.",
       "nodes": [
         {
           "id": "n1",
@@ -209,6 +209,18 @@
           "id": "n4",
           "label": "Review in customer context",
           "kind": "result"
+        }
+      ],
+      "annotations": [
+        {
+          "key": "decision",
+          "text": "Review point: does it still fit the work?",
+          "kind": "caption"
+        },
+        {
+          "key": "iteration",
+          "text": "Iteration back into tailored design and build",
+          "kind": "caption"
         }
       ],
       "flow": {
@@ -262,7 +274,7 @@
           },
           {
             "from": "n4",
-            "to": "n1",
+            "to": "n2",
             "weight": "return"
           }
         ]

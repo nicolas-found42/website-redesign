@@ -30,6 +30,17 @@ export type SchematicNode = {
 };
 
 /**
+ * An extra word a drawing names a decision or iteration with. Annotations are
+ * not nodes: no piece stands for them and no link runs from them, but they
+ * are set as labels over the drawing like the node words are.
+ */
+export type SchematicAnnotation = {
+  readonly key: string;
+  readonly text: string;
+  readonly kind: string;
+};
+
+/**
  * How the work moves: `trunk` is the main line, `branch` joins or leaves it,
  * `return` is the feedback loop. A link to `out1` or `out2` is an unnamed
  * output — the same work reaching further than the named one.
@@ -49,6 +60,8 @@ export type Schematic = {
   /** What the drawing shows, for anyone who cannot see it. */
   readonly description: string;
   readonly nodes: readonly SchematicNode[];
+  /** Extra words the drawing names a decision or iteration with, if any. */
+  readonly annotations?: readonly SchematicAnnotation[];
   readonly flow: Readonly<Record<Orientation, readonly Link[]>>;
 };
 
@@ -106,9 +119,9 @@ export const schematics: readonly Schematic[] = [
     id: "automation",
     choice: "Workflows",
     detail:
-      "Operating problem → tailored design → testing and review → team deployment.",
+      "Operating problem → tailored design and build → test and review → team deployment → review in customer context, feeding back into tailored design and build.",
     description:
-      "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and skills and plugins the team deploys and uses.",
+      "Workflow illustration: a brief and operating problem move through tailored design and build, test and review, and team deployment to a review in the customer context, which feeds back into tailored design and build as an iteration.",
     nodes: cast(
       "Brief / operating problem",
       "Tailored design and build",
@@ -116,8 +129,12 @@ export const schematics: readonly Schematic[] = [
       "Review in customer context",
       "Team deploys and uses it",
     ),
-    // The review in context feeds back: on the wide sheet into the design and
-    // build, on the narrow one into the brief it started from.
+    annotations: [
+      { key: "decision", text: "Review point: does it still fit the work?", kind: "caption" },
+      { key: "iteration", text: "Iteration back into tailored design and build", kind: "caption" },
+    ],
+    // The review in context feeds back into the design and build, on both
+    // the wide sheet and the narrow one.
     flow: {
       landscape: [
         link("n1", "human"),
@@ -131,7 +148,7 @@ export const schematics: readonly Schematic[] = [
         link("n2", "human"),
         link("n3", "human", "trunk"),
         link("human", "n4", "trunk"),
-        link("n4", "n1", "return"),
+        link("n4", "n2", "return"),
       ],
     },
   },
@@ -223,13 +240,20 @@ export const schematicArt = (
 export const schematicLabels = (
   schematic: Schematic,
   art: Art,
-): LabelContent[] =>
-  schematic.nodes.map((node) => ({
+): LabelContent[] => [
+  ...schematic.nodes.map((node) => ({
     key: node.id,
     text: node.label,
     kind: node.kind,
     beat: art.labels[node.id]?.beat ?? 0,
-  }));
+  })),
+  ...(schematic.annotations ?? []).map((note) => ({
+    key: note.key,
+    text: note.text,
+    kind: note.kind,
+    beat: art.labels[note.key]?.beat ?? 0,
+  })),
+];
 
 /**
  * One complete still drawing. The live drawing starts from exactly this markup
