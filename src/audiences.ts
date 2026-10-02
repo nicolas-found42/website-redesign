@@ -10,7 +10,7 @@
  *   decision stays with them. These are illustrative, with no live integration.
  * - **Individual Contributors and Teams** each run a ribbon of their own role
  *   through a skill cut for it — four roles in one company — and the four
- *   ribbons braid together through one gate: the human in the loop.
+ *   ribbons run side by side through one gate: the human in the loop.
  * - **Builders** climb a stair folded from card, from a work problem to a
  *   workflow in use, with a reviewer's seal on each step: design, test,
  *   troubleshoot, anticipate failures.
@@ -280,7 +280,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "contributors",
       description:
-        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
+        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, running as four separate paths through the human-review gate to one result: reviewed work returns to each role.",
       ...rosterScene,
     },
   },

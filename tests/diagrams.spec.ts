@@ -608,7 +608,7 @@ test("the Workshops drawing shows people designing, practising and reviewing", a
   ]);
 });
 
-test("the teams scene braids four role ribbons through a labelled human-review gate", async ({
+test("the teams scene runs four separate role paths through a labelled human-review gate", async ({
   page,
 }) => {
   await open(page, "/", 1440);
@@ -617,8 +617,9 @@ test("the teams scene braids four role ribbons through a labelled human-review g
     .evaluate(readField);
   expect(state.parts.filter((piece) => piece.name === "role")).toHaveLength(4);
   expect(state.parts.map((piece) => piece.name)).toEqual(
-    expect.arrayContaining(["crossings", "gate"]),
+    expect.arrayContaining(["gate"]),
   );
+  expect(state.parts.map((piece) => piece.name)).not.toContain("crossings");
   expect(state.labels.map((label) => label.text)).toContain(
     "Human in the loop",
   );
@@ -626,7 +627,7 @@ test("the teams scene braids four role ribbons through a labelled human-review g
     page.locator("#audience-contributors .scene-field"),
   ).toHaveAttribute(
     "aria-label",
-    /braided together and passing through the human-review gate/,
+    /running as four separate paths through the human-review gate/,
   );
 });
 
