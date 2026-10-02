@@ -70,6 +70,13 @@ A reviewer who loses the link before sending is not stuck: the site notices the
 drafts already saved in their browser and offers **Resume review**. A reviewer
 who never had the link sees the plain site and no dead controls.
 
+Reviewers can choose **Not sure yet** and save a plain comment without choosing
+kind-specific answers. Those records carry optional `kindUncertain: true`, so a
+suggested category remains provisional through editing and issue formatting.
+An unclassified comment uses `change.kind: "comment"` with its text in `detail`;
+existing classified drafts keep their shape. Display glosses do not change stored
+section identifiers or selectors.
+
 ## For whoever acts on it
 
 Hosted submissions already create issues with `needs-triage` and
