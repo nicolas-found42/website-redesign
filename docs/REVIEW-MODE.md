@@ -18,7 +18,8 @@ from a meeting.
 2. Choose **Add feedback**, then click the thing you want to change: a heading,
    a paragraph, a button, a picture, a whole section. **Larger area** and
    **Smaller area** adjust what you picked.
-3. Choose the kind of change and answer what it asks:
+3. Optionally choose a kind of change, or choose **Not sure yet** and write a
+   plain comment. For a classified change, answer what it asks:
    - **Wording**: edit the current text into exactly what it should say.
    - **Content**: add, remove or replace information, written out.
    - **Visual**: what looks wrong, and what it should look or feel like.
