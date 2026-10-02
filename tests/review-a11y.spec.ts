@@ -114,7 +114,13 @@ test("#124: every instructional string is measured at 4.5:1 or better", async ({
   };
   assertContrast(samples);
   const form = page.getByRole("dialog");
-  for (const name of ["Wording", "Content", "Visual", "Layout"]) {
+  for (const name of [
+    "Wording",
+    "Content",
+    "Visual",
+    "Layout",
+    "Not sure yet",
+  ]) {
     await form.getByRole("radio", { name: new RegExp(`^${name}`) }).check();
     assertContrast(await measure(page));
     const actions =
@@ -134,6 +140,15 @@ test("#124: every instructional string is measured at 4.5:1 or better", async ({
       assertContrast(await measure(page));
     }
   }
+  await expect(form.getByLabel("Your comment", { exact: true })).toBeVisible();
+  await form
+    .getByLabel("Attach screenshot file", { exact: true })
+    .setInputFiles("artifacts/native-capture/2026-10-02/after.png");
+  await expect(form.locator("[data-screenshot-preview] img")).toBeVisible();
+  await expect(form.locator("[data-screenshot-preview] .hint")).toContainText(
+    "Attached screenshot",
+  );
+  assertContrast(await measure(page));
   // The measured figures the PR cites, pinned so they cannot silently drift.
   const byName = new Map(samples.map((s) => [s.name, s.ratio]));
   expect(byName.get("hint")).toBeCloseTo(7.13, 1);

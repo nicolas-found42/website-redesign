@@ -11,3 +11,5 @@ Computed-style checks verify selection and Save use ink rather than red, focus u
 The production form now owns the pinning and scroll-cue classes; the tests do not supply them. Visual-viewport resize tests at 360×640 and 390×844 simulate a keyboard reducing available height by 280px, verify Save/Cancel fit in that area, and verify recovery when available height returns. Actual software-keyboard verification on devices remains outstanding in #126; these tests do not claim that evidence.
 
 Priority cards use one column. Geometry checks at 360, 390, and 1280px verify that every label clears its radio and selection checkmark. All 39 focused contrast, control-target, state, pinning/cue, priority, and simulated-keyboard checks passed across Chromium, Firefox, and WebKit with two workers after merging #155 into this branch.
+
+The contrast audit also selects “Not sure yet,” checks that the “Your comment” field is visible, and attaches the saved native capture to measure the rendered caption/status helpers. This expanded audit passed in all three engines with two workers.
