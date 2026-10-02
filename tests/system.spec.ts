@@ -54,6 +54,7 @@ test("the service diagrams make each customer stage visible", async ({
     "Team deploys and uses it",
     "Test and review",
     "Review in customer context",
+    "Reviewed work returns to tailored design.",
   ]);
   expect(await visibleLabels("product")).toEqual([
     "Repetitive work",
