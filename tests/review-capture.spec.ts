@@ -33,6 +33,31 @@ test.describe("native tab screenshot", () => {
       element.append(marker);
     });
     await expect(form.locator("[data-capture-control-marker]")).toBeVisible();
+    const captureStates: unknown[] = [];
+    await page.exposeFunction("observeCaptureControls", (state: unknown) => {
+      captureStates.push(state);
+    });
+    await page.evaluate(() => {
+      const host = document.querySelector("#found42-review")!;
+      const observer = new MutationObserver(() => {
+        if (!host.hasAttribute("data-capturing")) return;
+        const dialog = host.shadowRoot!.querySelector("dialog")!;
+        const marker = dialog.querySelector("[data-capture-control-marker]")!;
+        void (
+          window as unknown as {
+            observeCaptureControls: (state: unknown) => Promise<void>;
+          }
+        ).observeCaptureControls({
+          dialog: getComputedStyle(dialog).visibility,
+          marker: getComputedStyle(marker).visibility,
+          backdrop: getComputedStyle(dialog, "::backdrop").backgroundColor,
+        });
+      });
+      observer.observe(host, {
+        attributes: true,
+        attributeFilter: ["data-capturing"],
+      });
+    });
     const bounds = (await heading.boundingBox())!;
     await form.getByRole("button", { name: "Capture this tab" }).click();
     await expect(form.getByRole("status")).toContainText("Screenshot ready", {
@@ -74,12 +99,22 @@ test.describe("native tab screenshot", () => {
         const controlX = Math.floor((32 * img.width) / innerWidth);
         const controlY = Math.floor((32 * img.height) / innerHeight);
         return {
+          coordinates: {
+            target: { x, y },
+            control: { x: controlX, y: controlY },
+          },
+          viewport: { width: innerWidth, height: innerHeight },
+          image: { width: img.width, height: img.height },
           target: [...context.getImageData(x, y, 1, 1).data],
           control: [...context.getImageData(controlX, controlY, 1, 1).data],
         };
       },
       { image, bounds },
     );
+    await test.info().attach("native-capture-samples.json", {
+      body: JSON.stringify({ bounds, captureStates, ...pixel }, null, 2),
+      contentType: "application/json",
+    });
     // Native video colour conversion and chroma subsampling can shift individual channels.
     expect(pixel.target[0]).toBeGreaterThan(250);
     expect(pixel.target[1]).toBeLessThan(40);
