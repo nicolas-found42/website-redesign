@@ -699,7 +699,7 @@ test("the Workshops drawing shows people designing, practising and reviewing", a
   ]);
 });
 
-test("the teams scene braids four role ribbons through a labelled human-review gate", async ({
+test("the teams scene runs four separate role lanes through a labelled human-review gate", async ({
   page,
 }) => {
   await open(page, "/", 1440);
@@ -708,7 +708,7 @@ test("the teams scene braids four role ribbons through a labelled human-review g
     .evaluate(readField);
   expect(state.parts.filter((piece) => piece.name === "role")).toHaveLength(4);
   expect(state.parts.map((piece) => piece.name)).toEqual(
-    expect.arrayContaining(["crossings", "gate"]),
+    expect.arrayContaining(["lanes", "gate"]),
   );
   expect(state.labels.map((label) => label.text)).toContain(
     "Human in the loop",
@@ -717,8 +717,95 @@ test("the teams scene braids four role ribbons through a labelled human-review g
     page.locator("#audience-contributors .scene-field"),
   ).toHaveAttribute(
     "aria-label",
-    /braided together and passing through the human-review gate/,
+    /each running its own lane to the human-review gate/,
   );
+});
+
+test("the teams scene keeps each role lane clear of the others into and out of the gate", async ({
+  page,
+}) => {
+  const clearanceOf = (root: Element) => {
+    const lanes = [...root.querySelectorAll(".part")]
+      .filter(
+        (piece) =>
+          piece.getAttribute("data-part") === "role" ||
+          piece.getAttribute("data-part") === "return",
+      )
+      .map((piece) => {
+        const line = [...piece.querySelectorAll("path")].find(
+          (el) =>
+            el.getAttribute("fill") === "none" &&
+            (el.getAttribute("stroke") ?? "").startsWith("var("),
+        )! as unknown as SVGPathElement;
+        const half = Number(line.getAttribute("stroke-width")) / 2;
+        const length = line.getTotalLength();
+        const samples: { x: number; y: number }[] = [];
+        const count = 120;
+        for (let i = 0; i <= count; i += 1) {
+          const at = line.getPointAtLength((length * i) / count);
+          samples.push({ x: at.x, y: at.y });
+        }
+        return { samples, half };
+      });
+    let pair = "";
+    let distance = Infinity;
+    for (let a = 0; a < lanes.length; a += 1)
+      for (let b = a + 1; b < lanes.length; b += 1) {
+        let near = Infinity;
+        for (const p of lanes[a].samples)
+          for (const q of lanes[b].samples)
+            near = Math.min(near, Math.hypot(p.x - q.x, p.y - q.y));
+        if (near < distance) {
+          distance = near;
+          pair = `${a}/${b}`;
+        }
+      }
+    const allowance = Math.max(
+      ...lanes.flatMap((lane, i) =>
+        lanes.slice(i + 1).map((other) => lane.half + other.half),
+      ),
+    );
+    return { pair, distance, allowance, lanes: lanes.length };
+  };
+  const expectClear = (
+    clearance: { pair: string; distance: number; allowance: number; lanes: number },
+    where: string,
+  ) => {
+    expect(clearance.lanes, `${where}: four lanes in, four out`).toBe(8);
+    expect(
+      clearance.distance,
+      `${where}: closest lanes ${clearance.pair} stay a ribbon apart`,
+    ).toBeGreaterThanOrEqual(clearance.allowance - 1);
+  };
+  // Portrait: what a narrow or reduced-motion visitor reads in the article.
+  await open(page, "/", 384);
+  await page
+    .getByRole("button", { name: /Individual Contributors and Teams/ })
+    .first()
+    .click();
+  expectClear(
+    await page.locator("#audience-contributors .scene-field").evaluate(clearanceOf),
+    "portrait at 384px",
+  );
+  // Landscape: the pinned scene on a wide screen with motion allowed.
+  await page.setViewportSize({ width: 1638, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  await page
+    .getByRole("button", { name: /Individual Contributors and Teams/ })
+    .first()
+    .click();
+  const wide = page.locator(
+    '.audience-art [data-audience-scene="1"] .scene-field',
+  );
+  await wide.scrollIntoViewIfNeeded();
+  await expect
+    .poll(async () => (await wide.evaluate(readField)).animating, {
+      timeout: 20000,
+    })
+    .toBe(0);
+  expectClear(await wide.evaluate(clearanceOf), "landscape at 1638px");
 });
 
 test("the teams scene carries four separate paths past the gate to one shared result caption", async ({
