@@ -380,7 +380,17 @@
             "beat": 0
           },
           {
+            "text": "Sample: 3 priorities",
+            "kind": "card",
+            "beat": 0
+          },
+          {
             "text": "Meeting Brief",
+            "kind": "card",
+            "beat": 1
+          },
+          {
+            "text": "Sample: agenda draft",
             "kind": "card",
             "beat": 1
           },
@@ -390,8 +400,18 @@
             "beat": 2
           },
           {
+            "text": "Sample: owners, dates",
+            "kind": "card",
+            "beat": 2
+          },
+          {
             "text": "Actions from Transcripts",
             "kind": "result",
+            "beat": 3
+          },
+          {
+            "text": "Sample: tasks from notes",
+            "kind": "card",
             "beat": 3
           },
           {
@@ -436,7 +456,17 @@
             "beat": 0
           },
           {
+            "text": "Sample: 3 priorities",
+            "kind": "card",
+            "beat": 0
+          },
+          {
             "text": "Meeting Brief",
+            "kind": "card",
+            "beat": 1
+          },
+          {
+            "text": "Sample: agenda draft",
             "kind": "card",
             "beat": 1
           },
@@ -446,8 +476,18 @@
             "beat": 2
           },
           {
+            "text": "Sample: owners, dates",
+            "kind": "card",
+            "beat": 2
+          },
+          {
             "text": "Actions from Transcripts",
             "kind": "result",
+            "beat": 3
+          },
+          {
+            "text": "Sample: tasks from notes",
+            "kind": "card",
             "beat": 3
           },
           {

@@ -431,6 +431,14 @@ test("the executive day names four ordered cards and keeps the decision illustra
     "Meeting Debrief",
     "Actions from Transcripts",
   ];
+  // Each card carries a short fictional sample of what it produces: the two
+  // briefs prepare, the debrief follows up, the last card acts on transcripts.
+  const samples = [
+    "Sample: 3 priorities",
+    "Sample: agenda draft",
+    "Sample: owners, dates",
+    "Sample: tasks from notes",
+  ];
   for (const route of ["/", "/services/"]) {
     for (const width of [1440, 384]) {
       await open(page, route, width);
@@ -442,6 +450,14 @@ test("the executive day names four ordered cards and keeps the decision illustra
           .filter((word) => labels.includes(word.trim()))
           .map((word) => word.trim()),
       ).toEqual(labels);
+      for (const sample of samples)
+        await expect(field.getByText(sample, { exact: true })).toHaveCount(1);
+      // The samples read as preparation, follow-up and transcript actions,
+      // and every one is marked as a sample rather than real output.
+      await expect(field.getByText(/3 priorities/)).toBeVisible();
+      await expect(field.getByText(/agenda draft/)).toBeVisible();
+      await expect(field.getByText(/owners, dates/)).toBeVisible();
+      await expect(field.getByText(/tasks from notes/)).toBeVisible();
       await expect(field.getByText("You decide", { exact: true })).toHaveCount(
         1,
       );
@@ -539,6 +555,52 @@ test("executive timeline words stay whole and separate with enlarged text", asyn
   }
 });
 
+test("each executive sample sits inside its own card with enlarged text", async ({
+  page,
+}) => {
+  const cards: [string, string][] = [
+    ["brief", "Sample: 3 priorities"],
+    ["meeting", "Sample: agenda draft"],
+    ["debrief", "Sample: owners, dates"],
+    ["actions", "Sample: tasks from notes"],
+  ];
+  const outside = (field: Element, pairs: [string, string][]) =>
+    pairs.flatMap(([key, text]) => {
+      const card = field
+        .querySelector(`[data-nodes~="${key}"] rect.f-paper`)!
+        .getBoundingClientRect();
+      const sample = field
+        .querySelector(`[data-node="${key}-sample"] .system-label-text`)!
+        .getBoundingClientRect();
+      return sample.left >= card.left - 1 &&
+        sample.right <= card.right + 1 &&
+        sample.top >= card.top - 1 &&
+        sample.bottom <= card.bottom + 1
+        ? []
+        : [`"${text}" is outside its card`];
+    });
+  for (const width of [384, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto("/");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    await page.evaluate(() => document.fonts.ready);
+    await page.getByRole("button", { name: /C-level executives/ }).click();
+    const fields = page.locator(
+      '.audience-art [data-audience-scene="0"] .scene-field:visible, #audience-executives .scene-field:visible',
+    );
+    await expect(fields).toHaveCount(1);
+    await fields.first().scrollIntoViewIfNeeded();
+    for (const [, text] of cards)
+      await expect(fields.first().getByText(text, { exact: true }))
+        .toBeVisible();
+    await expect
+      .poll(() => fields.first().evaluate(outside, cards))
+      .toEqual([]);
+  }
+});
+
 for (const [width, height] of [
   [384, 686],
   [384, 742],
@@ -555,9 +617,13 @@ for (const [width, height] of [
     const field = page.locator("#audience-executives .scene-field:visible");
     for (const text of [
       "Claude Daily Brief",
+      "Sample: 3 priorities",
       "Meeting Brief",
+      "Sample: agenda draft",
       "Meeting Debrief",
+      "Sample: owners, dates",
       "Actions from Transcripts",
+      "Sample: tasks from notes",
       "You decide",
     ])
       await expect(field.getByText(text, { exact: true })).toBeVisible();
@@ -568,6 +634,31 @@ for (const [width, height] of [
     expect(wordProblems(fit)).toEqual([]);
     for (const label of fit)
       expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    // Each sample sits inside the card it illustrates, without scripting too.
+    expect(
+      await field.evaluate((element) => {
+        const pairs = [
+          ["brief", "Sample: 3 priorities"],
+          ["meeting", "Sample: agenda draft"],
+          ["debrief", "Sample: owners, dates"],
+          ["actions", "Sample: tasks from notes"],
+        ];
+        return pairs.flatMap(([key, text]) => {
+          const card = element
+            .querySelector(`[data-nodes~="${key}"] rect.f-paper`)!
+            .getBoundingClientRect();
+          const sample = element
+            .querySelector(`[data-node="${key}-sample"] .system-label-text`)!
+            .getBoundingClientRect();
+          return sample.left >= card.left - 1 &&
+            sample.right <= card.right + 1 &&
+            sample.top >= card.top - 1 &&
+            sample.bottom <= card.bottom + 1
+            ? []
+            : [`"${text}" is outside its card`];
+        });
+      }),
+    ).toEqual([]);
     expect(
       await field.evaluate((element) => element.getBoundingClientRect().width),
     ).toBeGreaterThan(300);
