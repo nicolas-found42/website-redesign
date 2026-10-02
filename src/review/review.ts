@@ -492,7 +492,7 @@ export function mountReview() {
     if (screenshot?.dataUrl) {
       const image = document.createElement("img");
       image.src = screenshot.dataUrl;
-      image.alt = `Screenshot of ${target.element} in ${target.section} on ${target.pageName}`;
+      image.alt = `Screenshot of ${target.element} in ${sectionGloss(target.section)} on ${target.pageName}`;
       preview.append(image);
       const caption = document.createElement("p");
       caption.className = "hint";

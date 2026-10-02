@@ -1,7 +1,7 @@
 import { submissionItem } from "./submission-contract";
 import type { FeedbackItem } from "./model";
 import { itemMarkdown, kindNames, priorityNames } from "./markdown";
-import { targetLabel } from "./target-meta";
+import { sectionGloss, targetLabel } from "./target-meta";
 
 export const issueLabels = ["needs-triage", "review-feedback"];
 export const maxIssueBodyBytes = 60_000;
@@ -84,7 +84,7 @@ export function feedbackIssue(
       "",
       ...(item.screenshot && imageUrl
         ? [
-            `![${literal(`Screenshot of ${item.target.element} in ${item.target.section} on ${item.target.pageName}`)}](${imageUrl})`,
+            `![${literal(`Screenshot of ${item.target.element} in ${sectionGloss(item.target.section)} on ${item.target.pageName}`)}](${imageUrl})`,
             "",
             `Screenshot: ${literal(item.target.page)}; ${safe.target.state.join("; ") || "no additional visible state recorded"}. ${item.screenshot.source === "tab" ? "Native review-tab capture" : "Reviewer-supplied screenshot; reviewer checked target and state"}, ${item.screenshot.width} × ${item.screenshot.height}, ${literal(item.screenshot.captured)}.`,
             "",
