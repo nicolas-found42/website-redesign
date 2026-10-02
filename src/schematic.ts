@@ -139,31 +139,31 @@ export const schematics: readonly Schematic[] = [
     id: "product",
     choice: "Automations",
     detail:
-      "Repetitive process → system handoffs → human review → usable output.",
+      "Repetitive work → system handoffs → human direction → human review → usable output.",
     description:
-      "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
+      "Automation illustration: repetitive work moves through system handoffs in order, a person directs it, human review marks approval where judgment matters, and the reviewed work becomes a usable output the team can rely on.",
     nodes: cast(
       "Repetitive work",
       "System handoffs",
       "Human review",
       "Usable output",
     ),
-    // Two unnamed outputs beside the named one: the same work reaching a
-    // customer more than one way.
+    // The ordered line: each step into the next, then the reviewed work out
+    // two ways beside the named output. One chain in both shapes.
     flow: {
       landscape: [
-        link("n1", "human"),
+        link("n1", "n2", "trunk"),
         link("n2", "human", "trunk"),
-        link("n3", "human"),
-        link("human", "n4", "trunk"),
+        link("human", "n3", "trunk"),
+        link("n3", "n4", "trunk"),
         link("human", "out1"),
         link("human", "out2"),
       ],
       portrait: [
-        link("n1", "human"),
-        link("n2", "human"),
-        link("n3", "human", "trunk"),
-        link("human", "n4", "trunk"),
+        link("n1", "n2", "trunk"),
+        link("n2", "human", "trunk"),
+        link("human", "n3", "trunk"),
+        link("n3", "n4", "trunk"),
         link("human", "out1"),
         link("human", "out2"),
       ],

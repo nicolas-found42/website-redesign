@@ -21,6 +21,8 @@ import {
  * Design step before Test, an illustrative Claude Daily Brief for executives,
  * a whiteboard-to-keyboard Workshops drawing and the teams-and-contributors
  * name and gate. Issue #80 replaces the executive scene with four day cards.
+ * Issue #140 lays the Automations drawing out as an ordered process ending in
+ * a human approval.
  */
 
 type Link = { from: string; to: string; weight: string };
@@ -606,6 +608,54 @@ test("the Workshops drawing shows people designing, practising and reviewing", a
     "Reusable skill",
     "Apply afterwards",
   ]);
+});
+
+test("the Automations drawing reads as an ordered process with a human approval", async ({
+  page,
+}) => {
+  for (const [width, selector] of [
+    [1440, ".services-art .system-field"],
+    [390, "#service-product .service-figure .system-field"],
+  ] as const) {
+    const where = `product at ${width}`;
+    await open(page, "/", width);
+    if (width === 1440)
+      await page
+        .getByRole("button", { name: "Automations", exact: true })
+        .click();
+    const field = page.locator(selector);
+    await expect(field, where).toHaveAttribute(
+      "aria-label",
+      /moves through system handoffs in order.*human review marks approval.*usable output/,
+    );
+    const state = await field.evaluate(readField);
+    // The five words arrive in the order the work moves through them.
+    expect(
+      state.labels.map((label) => label.text),
+      where,
+    ).toEqual([
+      "Repetitive work",
+      "System handoffs",
+      "Human direction",
+      "Human review",
+      "Usable output",
+    ]);
+    const order = ["n1", "n2", "human", "n3", "n4"].map(
+      (node) => state.labels.find((label) => label.node === node)!.beat,
+    );
+    expect(order, `${where}: each step arrives after the one before`).toEqual(
+      [...order].sort((a, b) => a - b),
+    );
+    expect(new Set(order).size, `${where}: no two steps share a beat`).toBe(5);
+    const links = new Set(state.parts.flatMap((piece) => piece.links));
+    for (const link of ["n1>n2", "n2>human", "human>n3", "n3>n4"])
+      expect(links.has(link), `${where}: the drawing joins ${link}`).toBe(true);
+    // The decision is a person's seal on the review step, not an auto-pass.
+    expect(
+      state.parts.flatMap((piece) => piece.marks),
+      `${where}: the review step carries the approval seal`,
+    ).toContain("seal:approved");
+  }
 });
 
 test("the teams scene braids four role ribbons through a labelled human-review gate", async ({
