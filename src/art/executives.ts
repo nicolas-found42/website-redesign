@@ -12,21 +12,40 @@ const cards = ["brief", "meeting", "debrief", "actions"] as const;
 function timeline(orientation: Orientation): Art {
   const wide = orientation === "landscape";
   const width = wide ? 1000 : 600;
-  const height = wide ? 760 : 1260;
+  const height = wide ? 950 : 1646;
   const cardWidth = wide ? 440 : 520;
-  const cardHeight = wide ? 250 : 248;
+  // The last card stands taller: it holds its sample above the decision mark.
+  const cardHeight = (last: boolean) =>
+    wide ? (last ? 410 : 320) : 344;
+  const rowPitch = wide ? 392 : 384;
+  const labelWidth = cardWidth - (wide ? 24 : 48);
   const labels: Record<string, LabelPlace> = {};
   const parts: string[] = [];
 
   cards.forEach((key, index) => {
+    const last = index === cards.length - 1;
+    const tall = cardHeight(last);
     const x = wide ? 30 + (index % 2) * 500 : 40;
-    const y = wide ? 24 + Math.floor(index / 2) * 332 : 24 + index * 288;
+    const y = wide ? 24 + Math.floor(index / 2) * rowPitch : 24 + index * rowPitch;
+    // Titles and samples budget two lines each at enlarged text; the narrow
+    // cards set larger against their type, so the last card's sample keeps
+    // clear of the decision mark.
+    const titleAt = y + (wide ? 78 : last ? 62 : 95);
+    const sampleAt = y + (wide ? 216 : last ? 176 : 190);
     labels[key] = place(
-      [x + cardWidth / 2, y + (wide && index !== 3 ? 100 : 80)],
+      [x + cardWidth / 2, titleAt],
       "center",
       "middle",
       {
-        width: cardWidth - (wide ? 24 : 48),
+        width: labelWidth,
+      },
+    );
+    labels[`${key}-sample`] = place(
+      [x + cardWidth / 2, sampleAt],
+      "center",
+      "middle",
+      {
+        width: labelWidth,
       },
     );
     parts.push(
@@ -39,18 +58,18 @@ function timeline(orientation: Orientation): Art {
           nodes: [key],
           marks: [index === 0 ? "source:brief" : `result:${key}`],
         },
-        `<rect class="f-sunk" x="${x + 5}" y="${y + 6}" width="${cardWidth}" height="${cardHeight}" rx="8"/>` +
-          `<rect class="f-paper s-ink" x="${x}" y="${y}" width="${cardWidth}" height="${cardHeight}" rx="8" stroke-width="3"/>` +
+        `<rect class="f-sunk" x="${x + 5}" y="${y + 6}" width="${cardWidth}" height="${tall}" rx="8"/>` +
+          `<rect class="f-paper s-ink" x="${x}" y="${y}" width="${cardWidth}" height="${tall}" rx="8" stroke-width="3"/>` +
           `<rect class="f-ink" x="${x + 18}" y="${y + 18}" width="28" height="6" rx="3"/>`,
       ),
     );
     if (index < cards.length - 1) {
       const cx = wide ? x + cardWidth + 30 : width / 2;
-      const cy = wide ? y + cardHeight / 2 : y + cardHeight + 20;
+      const cy = wide ? y + tall / 2 : y + tall + 20;
       // Reading continues from the second top card to the first bottom card.
       const arrow =
         wide && index === 1
-          ? "M750 280 L750 315 L250 315 L250 345 M243 338 L250 345 L257 338"
+          ? "M750 350 L750 380 L250 380 L250 405 M243 398 L250 405 L257 398"
           : wide
             ? `M${cx - 12} ${cy} L${cx + 12} ${cy} M${cx + 5} ${cy - 7} L${cx + 12} ${cy} L${cx + 5} ${cy + 7}`
             : `M${cx - 7} ${cy - 7} L${cx} ${cy + 2} L${cx + 7} ${cy - 7}`;
@@ -69,7 +88,7 @@ function timeline(orientation: Orientation): Art {
       const markWidth = wide ? 368 : 330;
       const markHeight = wide ? 88 : 72;
       const mx = x + (cardWidth - markWidth) / 2;
-      const my = y + cardHeight - markHeight - 14;
+      const my = y + tall - markHeight - 14;
       labels.direction = place(
         [x + cardWidth / 2, my + markHeight / 2],
         "center",

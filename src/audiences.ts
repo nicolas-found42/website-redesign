@@ -94,9 +94,13 @@ type SceneContent = Pick<Scene, "labels" | "marks" | "links">;
 const executiveScene: SceneContent = {
   labels: [
     label("brief", "Claude Daily Brief", "source", 0),
+    label("brief-sample", "Sample: 3 priorities", "card", 0),
     label("meeting", "Meeting Brief", "card", 1),
+    label("meeting-sample", "Sample: agenda draft", "card", 1),
     label("debrief", "Meeting Debrief", "card", 2),
+    label("debrief-sample", "Sample: owners, dates", "card", 2),
     label("actions", "Actions from Transcripts", "result", 3),
+    label("actions-sample", "Sample: tasks from notes", "card", 3),
     label("direction", "You decide", "human", 4),
     label(
       "illustrative",
