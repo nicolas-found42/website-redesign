@@ -15,14 +15,15 @@ import {
 /**
  * Workflows: the process track.
  *
- * Five numbered steps in reading order. The brief, the tailored design and
- * build, and the test and review gather down into the red deployment
- * checkpoint the team uses; deployment passes a review diamond — does the
- * work still fit? — and reaches the review in the customer's context. That
- * review's tail is a ribbon threaded back *into* the design-and-build step,
- * labelled as the iteration, because that is how the workflow keeps being
- * fitted to the work. Both compositions show the same order, the same
- * decision and the same return into the design step.
+ * Five numbered steps in reading order, joined as the chain the visitor
+ * follows: the brief feeds the tailored design and build, the design feeds
+ * the test and review, the review feeds the red deployment step the team
+ * uses, and deployment passes a review diamond — does the work still fit? —
+ * into the review in the customer's context. That review's tail is a ribbon
+ * threaded back *into* the design-and-build step, labelled as the iteration,
+ * because that is how the workflow keeps being fitted to the work. Both
+ * compositions show the same chain, the same decision and the same return
+ * into the design step.
  */
 
 const INK = "var(--ink)";
@@ -70,7 +71,7 @@ type Step = {
 function track(
   field: { width: number; height: number },
   steps: readonly [Step, Step, Step, Step, Step],
-  gather: string,
+  chain: string,
   deploy: string,
   gate: { at: Pt; half: number },
   refit: string,
@@ -116,13 +117,13 @@ function track(
     ),
     part(
       {
-        name: "gather",
+        name: "chain",
         beat: 1,
-        enter: "slide-down",
+        enter: "fade",
         origin: [steps[1].box[0], steps[1].box[1]],
-        links: ["n1>human", "n2>human", "n3>human"],
+        links: ["n1>n2", "n2>n3", "n3>human"],
       },
-      gather,
+      chain,
     ),
     part(
       {
@@ -153,18 +154,16 @@ function track(
 
 function landscape(): Art {
   const w = 24;
-  const gather =
-    runStrip([135, 184], [135, 300], INK, w, { from: 0, to: 0 }) +
-    mitre([135, 300], [0, 1], [1, 0], INK, INK, w) +
-    runStrip([135, 300], [280, 300], INK, w, { from: 0, to: 0 }) +
-    mitre([280, 300], [1, 0], [0, 1], INK, INK, w) +
-    runStrip([280, 300], [280, 362], INK, w, { from: 0, to: 0 }) +
-    runStrip([400, 184], [400, 362], INK, w, { from: 0, to: 0 }) +
-    runStrip([670, 184], [670, 300], INK, w, { from: 0, to: 0 }) +
-    mitre([670, 300], [0, 1], [-1, 0], INK, INK, w) +
-    runStrip([670, 300], [520, 300], INK, w, { from: 0, to: 0 }) +
-    mitre([520, 300], [-1, 0], [0, 1], INK, INK, w) +
-    runStrip([520, 300], [520, 362], INK, w, { from: 0, to: 0 });
+  // The chain: across the top row (1→2→3), then down from the test-and-review
+  // step into the deployment step below it.
+  const chain =
+    runStrip([230, 141], [270, 141], INK, w, { from: 0, to: 0 }) +
+    runStrip([530, 141], [570, 141], INK, w, { from: 0, to: 0 }) +
+    runStrip([670, 184], [670, 286], INK, w, { from: 0, to: 0 }) +
+    mitre([670, 286], [0, 1], [-1, 0], INK, INK, w) +
+    runStrip([670, 286], [560, 286], INK, w, { from: 0, to: 0 }) +
+    mitre([560, 286], [-1, 0], [0, 1], INK, INK, w) +
+    runStrip([560, 286], [560, 362], INK, w, { from: 0, to: 0 });
   const deploy = runStrip([548, 410], [712, 410], INK, w, { from: 0, to: 0 });
   const refit =
     runStrip([820, 458], [820, 540], INK, 28, { from: 0, to: 0 }) +
@@ -186,7 +185,7 @@ function landscape(): Art {
   return track(
     { width: 1000, height: 620 },
     steps,
-    gather,
+    chain,
     deploy,
     { at: [670, 410], half: 30 },
     refit,
@@ -197,22 +196,11 @@ function landscape(): Art {
 
 function portrait(): Art {
   const w = 24;
-  const gather =
-    runStrip([468, 86], [570, 86], INK, w, { from: 0, to: 0 }) +
-    mitre([570, 86], [1, 0], [0, 1], INK, INK, w) +
-    runStrip([570, 86], [570, 460], INK, w, { from: 0, to: 0 }) +
-    mitre([570, 460], [0, 1], [-1, 0], INK, INK, w) +
-    runStrip([570, 460], [478, 460], INK, w, { from: 0, to: 0 }) +
-    runStrip([468, 216], [546, 216], INK, w, { from: 0, to: 0 }) +
-    mitre([546, 216], [1, 0], [0, 1], INK, INK, w) +
-    runStrip([546, 216], [546, 486], INK, w, { from: 0, to: 0 }) +
-    mitre([546, 486], [0, 1], [-1, 0], INK, INK, w) +
-    runStrip([546, 486], [478, 486], INK, w, { from: 0, to: 0 }) +
-    runStrip([468, 346], [522, 346], INK, w, { from: 0, to: 0 }) +
-    mitre([522, 346], [1, 0], [0, 1], INK, INK, w) +
-    runStrip([522, 346], [522, 512], INK, w, { from: 0, to: 0 }) +
-    mitre([522, 512], [0, 1], [-1, 0], INK, INK, w) +
-    runStrip([522, 512], [478, 512], INK, w, { from: 0, to: 0 });
+  // The chain: straight down the stack, one run between each pair of steps.
+  const chain =
+    runStrip([310, 136], [310, 166], INK, w, { from: 0, to: 0 }) +
+    runStrip([310, 266], [310, 296], INK, w, { from: 0, to: 0 }) +
+    runStrip([310, 396], [310, 436], INK, w, { from: 0, to: 0 });
   const deploy = runStrip([310, 524], [310, 618], INK, w, { from: 0, to: 0 });
   const refit =
     runStrip([172, 656], [64, 656], INK, 28, { from: 0, to: 0 }) +
@@ -230,7 +218,7 @@ function portrait(): Art {
   return track(
     { width: 620, height: 820 },
     steps,
-    gather,
+    chain,
     deploy,
     { at: [310, 571], half: 30 },
     refit,

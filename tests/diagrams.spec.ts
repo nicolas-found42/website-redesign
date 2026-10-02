@@ -266,7 +266,24 @@ test("the Workflows drawing reads as an ordered process with a labelled iteratio
   await expect(field).toHaveAccessibleName(
     /brief.*tailored design and build.*test and review.*team deployment.*review in the customer context.*feeds back into tailored design and build/i,
   );
-  // The portrait drawing returns to the design step, not the brief.
+  // The landscape connectors read as the ordered chain 1→2→3→4→5: each step
+  // leads to the next, and nothing gathers the first three into deployment.
+  const chain = ["n1>n2", "n2>n3", "n3>human", "human>n4", "n4>n2"];
+  await expect
+    .poll(
+      async () =>
+        [
+          ...new Set(
+            (await field.evaluate(readField)).parts.flatMap(
+              (piece) => piece.links,
+            ),
+          ),
+        ].sort(),
+      { timeout: 15_000 },
+    )
+    .toEqual([...chain].sort(), "landscape");
+  // The portrait drawing returns to the design step, not the brief, and its
+  // connectors read as the same ordered chain.
   await open(page, "/", 390);
   const portrait = page.locator(
     "#service-automation .service-figure .system-field",
@@ -276,10 +293,19 @@ test("the Workflows drawing reads as an ordered process with a labelled iteratio
       exact: true,
     }),
   ).toBeVisible();
-  const links = (await portrait.evaluate(readField)).parts.flatMap(
-    (piece) => piece.links,
-  );
-  expect(links).toContain("n4>n2");
+  await expect
+    .poll(
+      async () =>
+        [
+          ...new Set(
+            (await portrait.evaluate(readField)).parts.flatMap(
+              (piece) => piece.links,
+            ),
+          ),
+        ].sort(),
+      { timeout: 15_000 },
+    )
+    .toEqual([...chain].sort(), "portrait");
 });
 
 test("each audience scene keeps its words, marks, beats and connections", async ({
