@@ -18,3 +18,9 @@ The saved native image includes the feedback dialog, its backdrop, and the green
 The original failure is timing-dependent: a rerun of the same GitHub head passed, as did 20 focused baseline captures in the Linux image with two workers. A deterministic ordering regression at the production capture seam supplies queued video callbacks before page paint: before the fix, both callbacks observe zero page-paint ticks; after the fix, both observe two. Run `npx playwright test tests/review-capture.spec.ts --project=chromium --workers=2 --grep 'queued video'` (under `xvfb-run -a` on Linux).
 
 The fix waits across a page paint boundary before requesting fresh native video frames, inside the existing five-second timeout. The genuine native capture test and its original single-pixel colour thresholds remain unchanged. Five repetitions of the complete capture spec in the Linux image passed all 25 tests using two workers. `after-samples.json` records the successful native sampling coordinates and pixels.
+
+## Full CI blocker: WebKit preference notification
+
+The full CI run at `8ab4903` passed native capture but failed `requesting reduced motion during a transition leaves the drawing settled` in WebKit. In the same Linux image with two workers, the original focused loop failed 9 of 10 repetitions. Boundary instrumentation measured sampling starting at 1,891 ms while the media-query change notification arrived at 1,993 ms. The live query already reported `true`, but application handlers had not yet been notified; the first samples counted seven legitimately running pieces before the preference took effect.
+
+The test now observes that change notification before its sampling window, as the related service-jump tests already do. The assertion still requires zero disturbed pieces and zero running animations. No drawing behavior or animation allowance changed. Temporary timing instrumentation was removed.
