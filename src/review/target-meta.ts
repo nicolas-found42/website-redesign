@@ -10,3 +10,9 @@ export function targetLabel(target: Pick<Target, "element" | "text">) {
 
 export const screenName = ({ width }: Target["viewport"]) =>
   width < 768 ? "phone" : width < 1024 ? "tablet" : "desktop";
+
+/** Plain display context; the stored section identifier stays unchanged. */
+export const sectionGloss = (section: string) =>
+  section === "Page opening"
+    ? "Top of the page"
+    : section.replace(/[-_]+/g, " ");

@@ -1,0 +1,28 @@
+{
+  "bounds": {
+    "x": 71.046875,
+    "y": 269.578125,
+    "width": 475.515625,
+    "height": 283.875
+  },
+  "coordinates": {
+    "target": {
+      "x": 83,
+      "y": 281
+    },
+    "control": {
+      "x": 32,
+      "y": 32
+    }
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "image": {
+    "width": 1280,
+    "height": 720
+  },
+  "target": [255, 26, 1, 255],
+  "control": [249, 250, 245, 255]
+}

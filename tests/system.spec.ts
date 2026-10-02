@@ -440,10 +440,23 @@ test("requesting reduced motion during a transition leaves the drawing settled",
   await page.evaluate(async () => {
     const sleep = (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms));
+    matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
+      "change",
+      () => {
+        document.documentElement.dataset.transitionMotionChanged = "true";
+      },
+      { once: true },
+    );
     document.querySelector<HTMLButtonElement>('[data-service="1"]')!.click();
     await sleep(120);
   });
   await page.emulateMedia({ reducedMotion: "reduce" });
+  // WebKit can acknowledge emulation before delivering the preference event.
+  // Observe the application after its handlers have received that notification.
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-transition-motion-changed",
+    "true",
+  );
   const disturbed = await page.evaluate(async () => {
     const field = document.querySelector(".services-art")!;
     const sleep = (ms: number) =>

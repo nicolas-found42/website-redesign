@@ -99,6 +99,7 @@ export function validItem(value: unknown): value is FeedbackItem {
       "reviewer",
       "target",
       "change",
+      "kindUncertain",
       "everywhere",
       "why",
       "priority",
@@ -113,6 +114,7 @@ export function validItem(value: unknown): value is FeedbackItem {
     (value.updated !== undefined && !date(value.updated)) ||
     !text(value.reviewer, 100) ||
     !text(value.why, 4000) ||
+    (value.kindUncertain !== undefined && value.kindUncertain !== true) ||
     typeof value.everywhere !== "boolean" ||
     !oneOf(value.priority, ["must", "should", "nice"])
   )
@@ -185,6 +187,8 @@ export function validItem(value: unknown): value is FeedbackItem {
   )
     return false;
   switch (change.kind) {
+    case "comment":
+      return object(change, ["kind", "detail"]) && text(change.detail, 4000);
     case "wording":
       return (
         object(change, ["kind", "current", "proposed"]) &&

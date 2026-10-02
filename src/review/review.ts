@@ -1,3 +1,4 @@
+import { sectionGloss } from "./target-meta";
 import { reviewTabCapture, screenshotFile } from "./screenshot";
 import type { Screenshot } from "./model";
 import css from "./review.css?inline";
@@ -54,10 +55,6 @@ const barNoticeStyle =
   "display:inline-block;font-weight:inherit;max-width:none;padding:0;color:#d4d3cc;font-size:12px";
 /** The explainer inside a panel, where it sits with other muted hints. */
 const panelNoticeStyle = "max-width:60ch;font-size:13px;color:#5e5e58";
-
-/** The tool's own id for the band a page opens with. Reviewers read it plainly. */
-const sectionGloss = (section: string) =>
-  section === "Page opening" ? "Top of this page" : section;
 
 /** Where an item points, as context a reviewer reads — never a raw sitemap id. */
 const whereLine = (target: FeedbackItem["target"]) =>
@@ -533,7 +530,7 @@ export function mountReview() {
     if (screenshot?.dataUrl) {
       const image = document.createElement("img");
       image.src = screenshot.dataUrl;
-      image.alt = `Screenshot of ${target.element} in ${target.section} on ${target.pageName}`;
+      image.alt = `Screenshot of ${target.element} in ${sectionGloss(target.section)} on ${target.pageName}`;
       preview.append(image);
       const caption = document.createElement("p");
       caption.className = "hint";

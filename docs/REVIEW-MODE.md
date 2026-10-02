@@ -18,7 +18,8 @@ from a meeting.
 2. Choose **Add feedback**, then click the thing you want to change: a heading,
    a paragraph, a button, a picture, a whole section. **Larger area** and
    **Smaller area** adjust what you picked.
-3. Choose the kind of change and answer what it asks:
+3. Optionally choose a kind of change, or choose **Not sure yet** and write a
+   plain comment. For a classified change, answer what it asks:
    - **Wording**: edit the current text into exactly what it should say.
    - **Content**: add, remove or replace information, written out.
    - **Visual**: what looks wrong, and what it should look or feel like.
@@ -69,6 +70,13 @@ and tells them what to do once it opens:
 A reviewer who loses the link before sending is not stuck: the site notices the
 drafts already saved in their browser and offers **Resume review**. A reviewer
 who never had the link sees the plain site and no dead controls.
+
+Reviewers can choose **Not sure yet** and save a plain comment without choosing
+kind-specific answers. Those records carry optional `kindUncertain: true`, so a
+suggested category remains provisional through editing and issue formatting.
+An unclassified comment uses `change.kind: "comment"` with its text in `detail`;
+existing classified drafts keep their shape. Display glosses do not change stored
+section identifiers or selectors.
 
 ## For whoever acts on it
 
