@@ -30,6 +30,7 @@ type Inventory = {
     id: string;
     description: string;
     nodes: { id: string; label: string; kind: string }[];
+    annotations?: { key: string; text: string; kind: string; beat: number }[];
     flow: Record<"landscape" | "portrait", Link[]>;
   }[];
   scenes: {
@@ -113,8 +114,13 @@ function expectSchematic(
   const expected = inventory.schematics.find((s) => s.id === id)!;
   const where = `${id} ${orientation}`;
   expect(state.describedBy, where).toBe(expected.description);
+  const nodeIds = new Set(expected.nodes.map((node) => node.id));
+  const isNode = (label: { node?: string }) =>
+    label.node !== undefined && nodeIds.has(label.node);
   expect(
-    state.labels.map(({ node, text, kind }) => ({ node, text, kind })),
+    state.labels
+      .filter(isNode)
+      .map(({ node, text, kind }) => ({ node, text, kind })),
     where,
   ).toEqual(
     expected.nodes.map(({ id: node, label, kind }) => ({
@@ -123,6 +129,19 @@ function expectSchematic(
       kind,
     })),
   );
+  // Words the drawing carries besides its stages, such as a labelled return
+  // loop: the inventory names each one, so none arrives unannounced.
+  expect(
+    state.labels
+      .filter((label) => !isNode(label))
+      .map(({ node, text, kind, beat }) => ({
+        key: node,
+        text,
+        kind,
+        beat,
+      })),
+    where,
+  ).toEqual(expected.annotations ?? []);
   // Exactly the connections the deployed drawing made — no fewer, and none
   // invented — including its return loop and its unnamed outputs.
   expect(drawnLinks(state), where).toEqual(

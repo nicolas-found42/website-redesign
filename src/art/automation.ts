@@ -20,9 +20,11 @@ import {
  * another. The brief, the tailored design and build, and the test and review
  * are the first three panels; the team deploying and using it is the red
  * panel; the review in the customer's context is the last. Its tail is a
- * ribbon threaded back into the panel it improves — the design and build on
- * the wide sheet, the brief on the narrow one — because that is how the
- * workflow keeps being fitted to the work.
+ * ribbon threaded back into the tailored design and build it improves, on
+ * both sheets, because that is how the workflow keeps being fitted to the
+ * work. The review is the decision point: it decides what still needs work,
+ * and a note on the ribbon says so — reviewed work returns to tailored
+ * design — so the loop reads as an iteration rather than decoration.
  */
 
 type Panel = { top: [Pt, Pt]; bottom: [Pt, Pt] };
@@ -113,9 +115,9 @@ function leaflet(
     );
   };
 
-  // The tail of the last panel is a ribbon threaded back into the panel it
-  // refits: out from under the leaflet, up in two sharp folds, and back
-  // behind the panel, its cut end showing on the far side.
+  // The tail of the last panel is a ribbon threaded back into the tailored
+  // design and build it refits: out from under the leaflet, up in two sharp
+  // folds, and back behind the panel, its cut end showing on the far side.
   const last = sheet[4];
   const target = sheet[back.into];
   const mid = (a: Pt, b: Pt): Pt => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
@@ -137,6 +139,42 @@ function leaflet(
     cutEnd(cut, ink, w, 60) +
     mitre(turnUp, [1, 0], [0, -1], ink, ink, w, { crease: "s-muted" }) +
     mitre(turnIn, [0, -1], [-1, 0], ink, ink, w, { crease: "s-muted" });
+
+  // The ribbon carries a note saying what the loop is: reviewed work
+  // returning to tailored design. It sits beside the ribbon's upright run,
+  // between the leaflet and the ribbon, where the wide sheet has room; on
+  // the narrow sheet that gap is too thin for words, so the note sits in
+  // the open margin below the leaflet instead.
+  const runTop = Math.min(turnUp[1], turnIn[1]);
+  const runBottom = Math.max(turnUp[1], turnIn[1]);
+  const originY = geometry.origin[1];
+  const beside = Math.max(
+    ...sheet.flatMap((panel, index) => {
+      const top = originY + index * geometry.height;
+      const bottom = top + geometry.height;
+      return top < runBottom && bottom > runTop
+        ? [panel.top[1][0], panel.bottom[1][0]]
+        : [Number.NEGATIVE_INFINITY];
+    }),
+  );
+  const gap = outX - w / 2 - beside;
+  const refitNote =
+    gap >= 140
+      ? place(
+          [beside + gap / 2, (runTop + runBottom) / 2],
+          "center",
+          "middle",
+          { width: gap - 24, ground: "paper", beat: 3 },
+        )
+      : place(
+          [
+            field.width / 2,
+            sheet[4].bottom[0][1] + (field.height - sheet[4].bottom[0][1]) / 2,
+          ],
+          "center",
+          "middle",
+          { width: field.width - 200, ground: "paper", beat: 3 },
+        );
 
   const parts = [
     part(
@@ -170,7 +208,7 @@ function leaflet(
     ),
   ];
 
-  const labels: Record<string, LabelPlace> = {};
+  const labels: Record<string, LabelPlace> = { refit: refitNote };
   sheet.forEach((panel, index) => {
     const [x, y] = centre(panel);
     labels[keys[index]] = place([x, y + 1], "center", "middle", {
@@ -193,7 +231,7 @@ export const automationArt = (orientation: Orientation): Art =>
     ? leaflet(
         { width: 620, height: 820 },
         { origin: [70, 40], width: 400, height: 136, drift: 40, lean: 5 },
-        { into: 0, reach: 44 },
+        { into: 1, reach: 44 },
         330,
       )
     : leaflet(
