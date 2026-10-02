@@ -1,7 +1,7 @@
 import { reviewTabCapture, screenshotFile } from "./screenshot";
 import type { Screenshot } from "./model";
 import css from "./review.css?inline";
-import { submitDrafts, sendLabel } from "./submission";
+import { submitDrafts, sendLabel, submissionUrl } from "./submission";
 import { sitePath } from "../paths";
 import { endReviewSession } from "./activation";
 import { publicSite } from "./submission-contract";
@@ -30,6 +30,39 @@ import {
 } from "./form";
 
 const phone = matchMedia("(max-width: 700px)");
+
+/** The warning every surface carries. Sending is impossible without reading it. */
+const publicNotice =
+  "Your feedback, name and any screenshots will be posted publicly on GitHub.";
+
+/**
+ * Beside the warning, the plain-English answer to "what does public mean?".
+ * Native `<details>`: keyboard reachable, openable without JavaScript.
+ */
+const noticeDetail = (style: string) => `<details data-notice-detail style="${style}">
+  <summary style="cursor:pointer;display:inline;font-weight:650;text-decoration:underline;text-underline-offset:2px">What does “publicly on GitHub” mean?</summary>
+  <p style="margin:6px 0 0">Your comment and your first name appear on a public list where the team works through the feedback. A first name is enough — it shows next to your comment so the team knows who to ask.</p>
+  <p style="margin:6px 0 0">Nothing else is shared: no email address, no account and no tracking.</p>
+</details>`;
+/**
+ * The explainer sits on the warning's own line, so the resting bar keeps the
+ * height it had before this copy existed and the page reserves the same space.
+ */
+const barNoticeStyle = "display:inline-block;font-weight:inherit;max-width:none;padding:0;color:#d4d3cc;font-size:12px";
+/** The explainer inside a panel, where it sits with other muted hints. */
+const panelNoticeStyle = "max-width:60ch;font-size:13px;color:#5e5e58";
+
+/** The tool's own id for the band a page opens with. Reviewers read it plainly. */
+const sectionGloss = (section: string) =>
+  section === "Page opening" ? "Top of this page" : section;
+
+/** Where an item points, as context a reviewer reads — never a raw sitemap id. */
+const whereLine = (target: FeedbackItem["target"]) =>
+  [target.pageName, sectionGloss(target.section), targetLabel(target)]
+    .filter(Boolean)
+    .join(" · ");
+
+const targetReason = "tool-reason";
 
 /**
  * Review mode: the team points at the exact thing on the page they mean and
@@ -60,7 +93,8 @@ export function mountReview() {
       <p>Click the part of the page you want to change.</p>
       <button type="button" data-act="cancel-pick">Cancel</button>
     </div>
-    <p class="bar-notice">Your feedback, name and any screenshots will be posted publicly on GitHub.</p>
+    <div class="bar-notice-row" style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><p class="bar-notice">${publicNotice}</p>${noticeDetail(barNoticeStyle)}</div>
+    <p class="bar-warning" data-sending-warning hidden>Sending to the team isn’t switched on yet. You can still write and save feedback here, then copy or download it to send by email.</p>
     <p class="bar-warning" data-warning hidden>This browser isn’t keeping feedback between pages. Send it before you leave this page.</p>
   </div>
   <div class="highlight" data-highlight hidden><span class="highlight-label" data-highlight-label></span></div>
@@ -88,6 +122,8 @@ export function mountReview() {
   const sendPanel = $<HTMLDialogElement>('[data-panel="send"]');
   const pickButton = $<HTMLButtonElement>('[data-act="pick"]');
   $("[data-warning]").hidden = store.persistent;
+  // Said in the bar before anything is written, so the fallback never surprises.
+  $("[data-sending-warning]").hidden = !!submissionUrl;
   const page = currentPage();
   const bar = $(".bar");
   const reserveBar = () =>
@@ -138,6 +174,16 @@ export function mountReview() {
           : sendLabel(store.items().length);
       });
     $('[data-act="receipt"]').hidden = !store.receipts().length;
+    shadow
+      .querySelectorAll<HTMLButtonElement>('[data-act="retry"]')
+      .forEach((button) => {
+        button.disabled = submitting || !store.items().length;
+      });
+    shadow
+      .querySelectorAll<HTMLButtonElement>('[data-act="copy-text"]')
+      .forEach((button) => {
+        button.disabled = !store.items().length;
+      });
     $("[data-warning]").hidden = store.persistent;
   };
 
@@ -299,6 +345,74 @@ export function mountReview() {
     repick: editing ? editing.target.page === page : true,
   });
 
+  /**
+   * Names each target tool by its effect and never leaves a dead grey button:
+   * an impossible tool is renamed for the reviewer, described by its reason and
+   * explained on screen, while keeping the stable accessible name the shipped
+   * journey looks for.
+   */
+  function showTools() {
+    if (!form) return;
+    const can = pointTools();
+    let reason = form.querySelector<HTMLElement>(`[data-reason="${targetReason}"]`);
+    if (!reason) {
+      reason = document.createElement("p");
+      reason.className = "tool-reason";
+      reason.dataset.reason = targetReason;
+      reason.id = targetReason;
+      reason.style.cssText =
+        "margin:6px 0 0;color:#5e5e58;font-size:13px;display:none";
+      form.querySelector(".target-tools")?.after(reason);
+    }
+    const tools: { act: string; name: string; impossible: string }[] = [
+      {
+        act: "wider",
+        name: "Larger area — select a bigger part of the page",
+        impossible: "nothing larger to select here",
+      },
+      {
+        act: "narrower",
+        name: "Smaller area — go back to the smaller part",
+        impossible: "already the smallest part of this selection",
+      },
+      {
+        act: "repick",
+        name: "Pick again — choose a different part of the page",
+        impossible: "this page isn’t open for picking",
+      },
+    ];
+    for (const tool of tools) {
+      const button = form.querySelector<HTMLButtonElement>(
+        `[data-act="${tool.act}"]`,
+      );
+      if (!button) continue;
+      const enabled =
+        tool.act === "wider"
+          ? can.widen
+          : tool.act === "narrower"
+            ? can.narrow
+            : can.repick;
+      button.disabled = !enabled;
+      button.setAttribute(
+        "aria-label",
+        enabled ? tool.name : `${tool.name} — ${tool.impossible}`,
+      );
+      // #125: an impossible tool is never a silent grey pill. It stays put and
+      // self-explaining instead of vanishing, so the shipped journey can still
+      // find it, name it and assert its disabled state.
+      if (enabled) button.removeAttribute("aria-describedby");
+      else button.setAttribute("aria-describedby", targetReason);
+    }
+    reason.textContent = !can.widen && !can.narrow
+      ? "You’ve reached the smallest and largest part of this selection."
+      : !can.widen
+        ? "There’s nothing larger around this to select."
+        : !can.narrow
+          ? "Already the smallest part of this selection."
+          : "";
+    reason.style.display = !can.widen || !can.narrow ? "block" : "none";
+  }
+
   /** Brings the chosen element into view beside the panel, not under it. */
   const reveal = (el: Element) => {
     const box = el.getBoundingClientRect();
@@ -323,6 +437,7 @@ export function mountReview() {
     if (!form || !resume) newForm();
     resume = false;
     applyTarget(form!, target, pointTools());
+    showTools();
     showScreenshot();
     showForm();
   }
@@ -465,6 +580,7 @@ export function mountReview() {
     target = item.target;
     newForm(item);
     applyTarget(form!, target, pointTools());
+    showTools();
     fillForm(form!, item);
     showForm();
   }
@@ -533,7 +649,7 @@ export function mountReview() {
           .map(
             ({ item, number }) => `<li>
   <p class="item-head"><span class="num" aria-hidden="true">${number}</span>${kindNames[item.change.kind]} · ${priorityNames[item.priority]}</p>
-  <p class="item-where">${esc(item.target.section)} › ${esc(targetLabel(item.target))}</p>
+  <p class="item-where">${esc(whereLine(item.target))}</p>
   <p class="item-summary">${esc(summarize(item.change))}</p>
   <div class="item-actions">
     <button type="button" class="chip" data-edit="${item.id}">Edit</button>
@@ -552,7 +668,8 @@ export function mountReview() {
 <div class="panel-foot">
   <button type="button" class="primary" data-act="send"${items.length && !submitting ? "" : " disabled"}>${submitting ? "Sending…" : sendLabel(items.length)}</button>
   <button type="button" data-act="backup"${items.length ? "" : " disabled"}>Download backup…</button>
-  <p class="hint">Your feedback, name and any screenshots will be posted publicly on GitHub.</p>
+  <p class="hint">${publicNotice}</p>
+  ${noticeDetail(panelNoticeStyle)}
   <button type="button" data-act="close">Close</button>
 </div>`;
   }
@@ -571,10 +688,14 @@ export function mountReview() {
         <p role="status" aria-live="polite" data-progress></p>
         <ol class="items" data-receipts></ol>
         <p class="hint">Confirmed submitted versions leave your draft list. Revisions stay saved as new feedback. Discussion and changes to published issues happen on GitHub.</p>
-        <p class="hint">Your feedback, name and any screenshots will be posted publicly on GitHub.</p>
+        <p class="hint">${publicNotice}</p>
+        ${noticeDetail(panelNoticeStyle)}
       </div>
       <div class="panel-foot">
         <button type="button" class="primary" data-act="send"></button>
+        <button type="button" data-act="retry"${store.items().length && !submitting ? "" : " disabled"}>Try again</button>
+        <button type="button" data-act="copy-text" data-copy-text${store.items().length ? "" : " disabled"}>Copy my feedback as text</button>
+        <button type="button" data-act="download"${store.items().length ? "" : " disabled"}>Download a copy</button>
         <button type="button" data-act="close">Close</button>
       </div>`;
     }
@@ -639,15 +760,15 @@ export function mountReview() {
       <button type="button" class="close" data-act="close" aria-label="Close">×</button>
     </div><div class="panel-body">
       <button type="button" class="primary" data-act="download">Download file</button>
-      <button type="button" data-act="copy">Copy to clipboard</button>
+      <button type="button" data-act="copy-text" data-copy-text>Copy my feedback as text</button>
       <label class="label" for="send-preview">Backup contents</label>
       <textarea id="send-preview" class="preview" readonly rows="12">${esc(sending.text)}</textarea>
     </div><div class="panel-foot"><button type="button" data-act="close">Close</button></div>`;
   }
 
   function download() {
-    const file = sending;
-    if (!file) return;
+    const file =
+      sending ?? (sending = feedbackFile(store.items(), store.reviewer()));
     const url = URL.createObjectURL(
       new Blob([file.text], { type: "text/markdown" }),
     );
@@ -661,17 +782,49 @@ export function mountReview() {
     say(`Downloaded ${file.name}.`);
   }
 
+  /** The reviewer's own words as text, for a receipt or a backup panel. */
+  function feedbackText() {
+    return feedbackFile(store.items(), store.reviewer()).text;
+  }
+
   async function copy() {
     const preview = sendPanel.querySelector<HTMLTextAreaElement>(".preview");
-    if (!preview) return;
+    const text = preview?.value ?? feedbackText();
+    await copyAsText(text, preview ?? undefined);
+  }
+
+  /** Copies `text`, falling back to a selectable box when the clipboard is denied. */
+  async function copyAsText(text: string, field?: HTMLTextAreaElement) {
     try {
-      await navigator.clipboard.writeText(preview.value);
+      await navigator.clipboard.writeText(text);
     } catch {
-      preview.focus();
-      preview.select();
+      const target = field ?? receiptPreview(text);
+      target.focus();
+      target.select();
       return say("It’s selected below: press ⌘C or Ctrl+C to copy it.");
     }
-    say("Backup copied.");
+    say("Feedback copied as text.");
+  }
+
+  /** A readable copy of every draft, shown when the clipboard is unavailable. */
+  function receiptPreview(text: string) {
+    const existing =
+      sendPanel.querySelector<HTMLTextAreaElement>(".receipt-copy");
+    if (existing) {
+      existing.value = text;
+      return existing;
+    }
+    const field = document.createElement("textarea");
+    field.className = "preview receipt-copy";
+    field.style.marginTop = "10px";
+    field.readOnly = true;
+    field.rows = 12;
+    field.setAttribute("aria-label", "Your feedback as text");
+    field.value = text;
+    sendPanel
+      .querySelector(".panel-body")
+      ?.append(field);
+    return field;
   }
 
   /** Asks once more before anything is deleted: the button says what the next press does. */
@@ -720,7 +873,7 @@ export function mountReview() {
     else if (act === "list") {
       renderList();
       listPanel.showModal();
-    } else if (act === "send") {
+    } else if (act === "send" || act === "retry") {
       void send();
     } else if (act === "receipt") {
       renderReceipt();
@@ -749,7 +902,7 @@ export function mountReview() {
       formPanel.close();
       startPicking();
     } else if (act === "download") download();
-    else if (act === "copy") void copy();
+    else if (act === "copy-text") void copy();
     else if (act === "clear") {
       if (!confirmed(button as HTMLButtonElement, "Delete all of it?")) return;
       store.clear();
