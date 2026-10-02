@@ -160,7 +160,9 @@ export function reviewTabCapture() {
         video.srcObject = stream;
         visibility(true);
         await video.play();
-        // Wait for fresh native frames after hiding the dialog and its backdrop.
+        // Video callbacks can consume queued frames before the page has painted
+        // the hidden dialog/backdrop. Cross a paint boundary first, then wait
+        // for fresh native frames. Keep both waits inside the same timeout.
         await new Promise<void>((resolve, reject) => {
           const timer = setTimeout(
             () =>
@@ -171,11 +173,15 @@ export function reviewTabCapture() {
               ),
             5000,
           );
-          video.requestVideoFrameCallback(() =>
-            video.requestVideoFrameCallback(() => {
-              clearTimeout(timer);
-              resolve();
-            }),
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() =>
+              video.requestVideoFrameCallback(() =>
+                video.requestVideoFrameCallback(() => {
+                  clearTimeout(timer);
+                  resolve();
+                }),
+              ),
+            ),
           );
         });
         if (!correctTab() || track?.readyState !== "live")
