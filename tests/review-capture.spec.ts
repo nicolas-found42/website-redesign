@@ -74,7 +74,25 @@ test.describe("native tab screenshot", () => {
         const controlX = Math.floor((32 * img.width) / innerWidth);
         const controlY = Math.floor((32 * img.height) / innerHeight);
         return {
-          target: [...context.getImageData(x, y, 1, 1).data],
+          // Native capture is lossy: chroma subsampling moves the target's own
+          // edge inward and rounds individual channels down, so a single sample
+          // 12px inside the box can land just outside the marker. Sample a
+          // small interior patch and keep the colour that is most clearly the
+          // red marker, instead of trusting one fragile pixel.
+          target: [
+            ...[0, 1, 2].map((i) => {
+              const patch: number[][] = [];
+              for (let dx = 0; dx < 3; dx += 1)
+                for (let dy = 0; dy < 3; dy += 1)
+                  patch.push([
+                    ...context.getImageData(x + dx, y + dy, 1, 1).data,
+                  ]);
+              return i === 0
+                ? Math.max(...patch.map((p) => p[0]))
+                : Math.min(...patch.map((p) => p[i]));
+            }),
+            context.getImageData(x, y, 1, 1).data[3],
+          ],
           control: [...context.getImageData(controlX, controlY, 1, 1).data],
         };
       },
