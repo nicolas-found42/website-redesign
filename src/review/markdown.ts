@@ -1,7 +1,8 @@
 import type { Change, FeedbackItem, Kind, Priority } from "./model";
-import { screenName, targetLabel } from "./target-meta";
+import { screenName, sectionGloss, targetLabel } from "./target-meta";
 
 export const kindNames: Record<Kind, string> = {
+  comment: "Comment (not classified)",
   wording: "Wording",
   content: "Content",
   visual: "Visual",
@@ -19,6 +20,8 @@ const short = (text: string, length = 70) =>
 /** One line saying what the change is, beside a label that already names the target. */
 export function summarize(change: Change) {
   switch (change.kind) {
+    case "comment":
+      return short(change.detail);
     case "wording":
       return `Change to “${short(change.proposed, 90)}”`;
     case "content":
@@ -47,6 +50,8 @@ const quote = (text: string) =>
 
 function changeLines(change: Change) {
   switch (change.kind) {
+    case "comment":
+      return ["**Comment**", quote(change.detail)];
     case "wording":
       return [
         "**Current text**",
@@ -106,13 +111,19 @@ export function itemMarkdown(item: FeedbackItem, number: number) {
   return [
     `## ${number}. ${kindNames[item.change.kind]} · ${priorityNames[item.priority]}`,
     "",
-    `**Where:** ${target.pageName} › ${target.section} › ${targetLabel(target)}`,
+    ...(item.kindUncertain
+      ? [
+          "**Kind:** The reviewer chose “Not sure yet”; classification remains provisional.",
+          "",
+        ]
+      : []),
+    `**Where:** ${target.pageName} › ${sectionGloss(target.section)} › ${targetLabel(target)}`,
     "",
     ...changeLines(item.change),
     "",
-    "**Why**",
-    quote(item.why),
-    "",
+    ...(item.change.kind === "comment" && item.change.detail === item.why
+      ? []
+      : ["**Why**", quote(item.why), ""]),
     ...(item.everywhere
       ? ["**Applies everywhere this appears on the site.**", ""]
       : []),

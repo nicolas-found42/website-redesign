@@ -9,8 +9,9 @@ INSERT INTO screenshot_storage VALUES (1,0);
 CREATE TRIGGER screenshot_quota BEFORE INSERT ON screenshots
 WHEN NOT EXISTS(SELECT 1 FROM screenshots WHERE sha256=NEW.sha256)
 BEGIN
-  SELECT CASE WHEN (SELECT bytes FROM screenshot_storage WHERE id=1) + length(NEW.pixels) > 134217728
-    THEN RAISE(ABORT, 'screenshot quota') END;
+  -- Parentheses keep D1 remote splitting from treating CASE END as trigger END.
+  SELECT (CASE WHEN (SELECT bytes FROM screenshot_storage WHERE id=1) + length(NEW.pixels) > 134217728
+    THEN RAISE(ABORT, 'screenshot quota') END);
 END;
 CREATE TRIGGER screenshot_bytes AFTER INSERT ON screenshots
 BEGIN

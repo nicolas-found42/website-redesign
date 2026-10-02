@@ -95,7 +95,10 @@ test("#123 the warning is on every surface and cannot be sent past unseen", asyn
   await expect(list).toContainText(
     "Your feedback, name and any screenshots will be posted publicly on GitHub.",
   );
-  await list.getByRole("button", { name: "Close", exact: true }).first().click();
+  await list
+    .getByRole("button", { name: "Close", exact: true })
+    .first()
+    .click();
 
   // Reaching the Send button means opening the bar that carries the warning;
   // the receipt repeats both the warning and the explainer.
@@ -137,7 +140,9 @@ test("#125 every target tool names its effect and smaller says why", async ({
     "Smaller area — go back to the smaller part — already the smallest part of this selection",
   );
   await expect(smaller).toHaveAttribute("aria-describedby", "tool-reason");
-  await expect(reason).toHaveText("Already the smallest part of this selection.");
+  await expect(reason).toHaveText(
+    "Already the smallest part of this selection.",
+  );
   await expect(larger).toBeEnabled();
 
   // The page highlight is the live cue (acceptance criterion 3): widening a
@@ -151,7 +156,7 @@ test("#125 every target tool names its effect and smaller says why", async ({
   );
   expect(
     (await form.getByRole("heading", { level: 2 }).innerText()).trim(),
-  ).toContain("Area “");
+  ).toContain("You picked an area “");
 
   // Shrinking comes back once it can round-trip the wider selection.
   await expect(smaller).toBeEnabled();
@@ -162,11 +167,13 @@ test("#125 every target tool names its effect and smaller says why", async ({
   await expect(smaller).not.toHaveAttribute("aria-describedby", "tool-reason");
   await smaller.click();
   await expect(form.getByRole("heading", { level: 2 })).toHaveText(
-    "Heading “Train teams. Build useful skills. Automate the work.”",
+    "You picked a heading “Train teams. Build useful skills. Automate the work.”",
   );
   // Back at the smallest part it is explained again — never a silent pill.
   await expect(smaller).toBeDisabled();
-  await expect(reason).toHaveText("Already the smallest part of this selection.");
+  await expect(reason).toHaveText(
+    "Already the smallest part of this selection.",
+  );
 
   expect((await axe(page)).violations).toEqual([]);
 });
@@ -183,7 +190,9 @@ test("#127 the receipt offers copy-as-text beside any file export", async ({
   await expect(
     receipt.getByRole("button", { name: "Copy my feedback as text" }),
   ).toBeVisible();
-  await expect(receipt.getByRole("button", { name: "Try again" })).toBeEnabled();
+  await expect(
+    receipt.getByRole("button", { name: "Try again" }),
+  ).toBeEnabled();
   await expect(
     receipt.getByRole("button", { name: "Download a copy" }),
   ).toBeVisible();
@@ -207,7 +216,7 @@ test("#127 the receipt offers copy-as-text beside any file export", async ({
   // the exact string handed to the clipboard (also pasted by hand and
   // recorded in the PR notes).
   const copied = await copiedText(page);
-  expect(copied).toContain("**Where:** Home › Page opening ›");
+  expect(copied).toContain("**Where:** Home › Top of the page ›");
   expect(copied).toContain(
     "Heading “Train teams. Build useful skills. Automate the work.”",
   );
@@ -246,7 +255,9 @@ test("#127 copy and retry are disabled when the receipt has no drafts left", asy
   await expect(
     receipt.getByRole("button", { name: "Copy my feedback as text" }),
   ).toBeDisabled();
-  await expect(receipt.getByRole("button", { name: "Try again" })).toBeDisabled();
+  await expect(
+    receipt.getByRole("button", { name: "Try again" }),
+  ).toBeDisabled();
 });
 
 test("#127 with no sending configured the bar says so before anything is written", async ({

@@ -20,11 +20,12 @@ export interface Target {
   viewport: { width: number; height: number };
 }
 
-export type Kind = "wording" | "content" | "visual" | "layout";
+export type Kind = "wording" | "content" | "visual" | "layout" | "comment";
 export type Priority = "must" | "should" | "nice";
 
 /** Each kind asks for the answer that kind of feedback is missing without it. */
 export type Change =
+  | { kind: "comment"; detail: string }
   | { kind: "wording"; current: string; proposed: string }
   | {
       kind: "content";
@@ -61,6 +62,8 @@ export interface FeedbackItem {
   reviewer: string;
   target: Target;
   change: Change;
+  /** The reviewer chose Not sure yet; change.kind was inferred from the fields. */
+  kindUncertain?: true;
   /** The change applies wherever the same thing appears on the site. */
   everywhere: boolean;
   why: string;
