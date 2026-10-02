@@ -51,8 +51,9 @@ If storage is refused, the tool warns that drafts only live on the current page.
 When hosted sending is unavailable, the receipt says so on the spot — “Sending
 isn’t set up on this site yet” — and keeps your words saved. **My feedback →
 Download backup…** opens the text export (**Copy to clipboard** or **Download
-file**) so you can email it to the team. Nothing leaves the browser until a
-**Send** is confirmed.
+file**) for your own recovery copy. Feedback for the team is tracked in GitHub
+Issues; retry hosted sending or use the issue tracker directly. Nothing leaves
+the browser until a **Send** is confirmed.
 
 ## Running a review round
 
@@ -80,21 +81,14 @@ section identifiers or selectors.
 
 ## For whoever acts on it
 
-Hosted submissions already create issues with `needs-triage` and
+Review feedback always comes through GitHub Issues. Before reading or acting on
+it, follow [the issue-tracker conventions](agents/issue-tracker.md) and read the
+issue's discussion and labels. Hosted submissions create issues with `needs-triage` and
 `review-feedback`, and no assignee. Publication requests triage; it does not
 authorize implementation.
 
-For the manual backup fallback only, save files under `feedback/`, which is ignored by git because the files
-name reviewers.
-
-`npm run feedback:issues -- <file>` prints one issue per item: title, labels
-(`needs-triage`, `review-feedback`) and a body carrying the readable item plus
-its JSON record. Add `--create` to open them with `gh`. This repository is
-public, so its issues are too; confirm with the site owner before `--create`.
-Re-running checks existing feedback IDs. The manual importer does not share the
-service’s durable claim: never use `--create` for an unresolved hosted
-submission or run it concurrently with hosted sending for the same items.
-Recover the hosted receipt first; see [hosted setup and recovery](REVIEW-SUBMISSION.md).
+For an uncertain hosted submission, recover the existing receipt before creating
+another issue for the same feedback. See [hosted setup and recovery](REVIEW-SUBMISSION.md).
 
 Each item's `target.selector` finds the element while the markup holds. When it
 no longer resolves, find the element by `target.page`, `target.section` and
@@ -110,10 +104,10 @@ the tools. It also renders the drafts-aware **Resume review** bar in the site's
 own DOM (not the review shadow root) — plain markup and one `<style>`, with no
 review code imported — so the nudge costs a first-time visitor nothing. The UI
 lives in a shadow root, which keeps it out of the site's
-styles and the site's styles out of it. `src/review/export.ts` owns the file
-format and its parser; the import script loads that same module through Vite.
+styles and the site's styles out of it. `src/review/export.ts` owns the local
+backup format and its parser.
 `src/review/submission.ts` sends versioned snapshots to the Worker;
 `worker/index.ts` owns validation, limits and durable recovery.
-`src/review/issue.ts` formats hosted issues and the fallback importer consistently.
+`src/review/issue.ts` formats the published GitHub issues.
 `tests/review-mode.spec.ts` covers the browser journeys, and
 `tests/submission-service.spec.ts` covers the service boundary with local D1.
