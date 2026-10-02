@@ -56,14 +56,14 @@ function chain(at: Pt, link: number): string {
   return loop(x - step, false) + loop(x + step, false) + loop(x, true);
 }
 
-type Step = { key: string; x: number; top: number; width: number };
+type Step = { key: string; x: number; top: number; width: number; ly?: number; lw?: number };
 
 function stair(
   field: { width: number; height: number },
   ground: number,
   steps: readonly Step[],
   learner: { at: Pt; label: LabelPlace },
-  plates: { height: number; front?: boolean },
+  plates: { height: number; front?: boolean; labelWidth?: number },
 ): Art {
   const face = "var(--paper-warm)";
   const labels: Record<string, LabelPlace> = { learner: learner.label };
@@ -96,12 +96,20 @@ function stair(
       plates.front && index > 0
         ? steps[index - 1].top + DEPTH[1] - step.top
         : height;
+    // A step may pin its label's height (`ly`): the wide composition keeps
+    // "Troubleshoot" clear of the two-line "Anticipate failures" above it and
+    // rides "Workflow in use" at the middle of its tall face, clear of both.
     const middle: Pt = [
       step.x + step.width / 2,
-      step.top + Math.min(shown / 2, 70),
+      step.ly ?? step.top + Math.min(shown / 2, 70),
     ];
+    // The wide composition's step faces are narrower than their longest words
+    // ("Troubleshoot"), so its labels set wider than the face they name, and
+    // the words never break inside themselves (see the builders rule in
+    // system.css).
     labels[step.key] = place(middle, "center", "middle", {
-      width: last ? step.width - 20 : step.width - 44,
+      width:
+        step.lw ?? plates.labelWidth ?? (last ? step.width - 20 : step.width - 44),
       ground: last ? "ink" : "paper",
     });
     blocks.push(
@@ -176,15 +184,15 @@ function landscape(): Art {
     [
       { key: "design", x: 130, top: 400, width: 168 },
       { key: "test", x: 298, top: 330, width: 168 },
-      { key: "troubleshoot", x: 466, top: 260, width: 168 },
+      { key: "troubleshoot", x: 466, top: 260, width: 168, ly: 342 },
       { key: "anticipate", x: 634, top: 190, width: 168 },
-      { key: "workflow", x: 802, top: 190, width: 168 },
+      { key: "workflow", x: 802, top: 190, width: 168, ly: 380, lw: 220 },
     ],
     {
       at: [68, ground - 34],
-      label: place([30, ground + 24], "start", "below", { width: 420 }),
+      label: place([30, ground + 24], "start", "below", { width: 640 }),
     },
-    { height: 62 },
+    { height: 62, labelWidth: 240 },
   );
 }
 

@@ -790,6 +790,210 @@ for (const [route, width, text] of [
   });
 }
 
+/**
+ * What a person reads in the builders scene's article figure: no stage label
+ * is broken inside itself, every label stays on screen and legible, and none
+ * cover another (issue #138 — "Troubleshoot" split midword in its step).
+ * Under reduced motion (and on narrow screens) the article's portrait figure
+ * is the composition shown, so this guards phone widths and enlarged text.
+ */
+for (const [width, text] of [
+  [320, "100%"],
+  [384, "100%"],
+  [384, "150%"],
+  [768, "100%"],
+  [768, "150%"],
+  [1024, "100%"],
+  [1024, "150%"],
+  [1440, "100%"],
+  [1440, "150%"],
+] as const) {
+  test(`builder stair words stay whole at ${width}px with ${text} text applied at load`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    // The setting is in place before the scene is first drawn.
+    await page.addInitScript((size) => {
+      const apply = () => {
+        if (!document.documentElement) return false;
+        document.documentElement.style.fontSize = size;
+        return true;
+      };
+      if (!apply())
+        new MutationObserver((_, watch) => {
+          if (apply()) watch.disconnect();
+        }).observe(document, { childList: true });
+    }, text);
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    await page
+      .getByRole("button", { name: /AI builders/ })
+      .first()
+      .click();
+    const field = page.locator("#audience-builders .scene-field:visible");
+    await expect(field.getByText("Workflow in use")).toBeVisible();
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.map((label) => label.text)).toEqual(
+      expect.arrayContaining([
+        "Design",
+        "Test",
+        "Troubleshoot",
+        "Anticipate failures",
+        "Workflow in use",
+      ]),
+    );
+    expect(wordProblems(fit)).toEqual([]);
+    // Large enough to read on a narrow screen (docs/DESIGN.md: 13px).
+    for (const label of fit)
+      expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    const overlaps = await field.evaluate((element) => {
+      const boxes = [
+        ...element.querySelectorAll(".system-label-text"),
+      ].map((label) => ({
+        text: label.textContent,
+        box: label.getBoundingClientRect(),
+      }));
+      return boxes.flatMap((a, i) =>
+        boxes
+          .slice(i + 1)
+          .filter(
+            (b) =>
+              a.box.left < b.box.right - 1 &&
+              b.box.left < a.box.right - 1 &&
+              a.box.top < b.box.bottom - 1 &&
+              b.box.top < a.box.bottom - 1,
+          )
+          .map((b) => `${a.text} / ${b.text}`),
+      );
+    });
+    expect(overlaps).toEqual([]);
+  });
+}
+
+/**
+ * What a person reads on the pinned builders stair at desktop widths: the
+ * wide landscape composition a visitor with motion enabled actually sees.
+ * Its step faces are narrow, so this is where "Troubleshoot" split midword.
+ */
+for (const [width, text] of [
+  [1024, "100%"],
+  [1024, "150%"],
+  [1440, "100%"],
+  [1440, "150%"],
+  [1638, "100%"],
+] as const) {
+  test(`builder stair words stay whole on the pinned stair at ${width}px with ${text} text applied at load`, async ({
+    page,
+  }) => {
+    // Full motion: the pinned landscape scene only shows with motion enabled.
+    await page.addInitScript((size) => {
+      const apply = () => {
+        if (!document.documentElement) return false;
+        document.documentElement.style.fontSize = size;
+        return true;
+      };
+      if (!apply())
+        new MutationObserver((_, watch) => {
+          if (apply()) watch.disconnect();
+        }).observe(document, { childList: true });
+    }, text);
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    await page.locator("#audiences").scrollIntoViewIfNeeded();
+    await page
+      .getByRole("button", { name: /AI builders/ })
+      .first()
+      .click();
+    const field = page.locator(
+      '.audience-art [data-audience-scene="2"] .scene-field',
+    );
+    await expect(field.getByText("Workflow in use")).toBeVisible();
+    // Measure once the entrance has settled, not mid-animation.
+    await expect
+      .poll(
+        async () =>
+          field.evaluate((element) => {
+            const words = [...element.querySelectorAll(".system-label")];
+            const parts = [...element.querySelectorAll(".part")];
+            const atRest = (el: Element) => {
+              const style = getComputedStyle(el);
+              return (
+                style.opacity === "1" &&
+                (style.transform === "none" ||
+                  style.transform === "matrix(1, 0, 0, 1, 0, 0)")
+              );
+            };
+            return {
+              parts: parts.filter(
+                (piece) => !atRest(piece.querySelector(".part-body") ?? piece),
+              ).length,
+              words: words.filter(
+                (label) =>
+                  !atRest(label.querySelector(".system-label-text") ?? label),
+              ).length,
+              animating: element.getAnimations({ subtree: true }).length,
+            };
+          }),
+        { timeout: 20000 },
+      )
+      .toEqual({ parts: 0, words: 0, animating: 0 });
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.map((label) => label.text)).toEqual(
+      expect.arrayContaining([
+        "Design",
+        "Test",
+        "Troubleshoot",
+        "Anticipate failures",
+        "Workflow in use",
+      ]),
+    );
+    expect(wordProblems(fit)).toEqual([]);
+    // Large enough to read (docs/DESIGN.md: 13px).
+    for (const label of fit)
+      expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    const layout = await field.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const boxes = [...element.querySelectorAll(".system-label-text")].map(
+        (label) => ({
+          text: label.textContent,
+          box: label.getBoundingClientRect(),
+        }),
+      );
+      return { box, boxes };
+    });
+    const overlaps = layout.boxes.flatMap((a, i) =>
+      layout.boxes
+        .slice(i + 1)
+        .filter(
+          (b) =>
+            a.box.left < b.box.right - 1 &&
+            b.box.left < a.box.right - 1 &&
+            a.box.top < b.box.bottom - 1 &&
+            b.box.top < a.box.bottom - 1,
+        )
+        .map((b) => `${a.text} / ${b.text}`),
+    );
+    expect(overlaps).toEqual([]);
+    // Nothing clips outside the drawing.
+    for (const { text: labelText, box } of layout.boxes) {
+      expect(box.left, labelText ?? "").toBeGreaterThanOrEqual(
+        layout.box.left - 2,
+      );
+      expect(box.right, labelText ?? "").toBeLessThanOrEqual(
+        layout.box.right + 2,
+      );
+      expect(box.top, labelText ?? "").toBeGreaterThanOrEqual(
+        layout.box.top - 2,
+      );
+      expect(box.bottom, labelText ?? "").toBeLessThanOrEqual(
+        layout.box.bottom + 2,
+      );
+    }
+  });
+}
+
 for (const [width, height] of [
   [384, 686],
   [384, 742],
