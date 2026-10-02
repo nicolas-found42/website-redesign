@@ -7,8 +7,14 @@ from a meeting.
 
 ## For reviewers
 
-1. Open a review link: `https://nicolas-found42.github.io/website-redesign/?review`.
-   It stays on while you move between pages in that tab.
+1. Open the review link: `https://nicolas-found42.github.io/website-redesign/?review`.
+   It stays on while you move between pages in that tab. The site owner — or
+   whoever is running the review round — sends this link to reviewers out of
+   band (chat or email), because the site deliberately does not advertise review
+   mode to visitors. Lost the link? Open the site normally: if this browser
+   already holds unsent drafts, a bar at the bottom offers **Resume review**,
+   which reopens the same page with the link. With no saved drafts there is
+   nothing to resume, so the page stays plain.
 2. Choose **Add feedback**, then click the thing you want to change: a heading,
    a paragraph, a button, a picture, a whole section. **Larger area** and
    **Smaller area** adjust what you picked.
@@ -41,7 +47,28 @@ from a meeting.
 
 **Exit** turns review mode off; unsent feedback and receipts stay in this browser.
 If storage is refused, the tool warns that drafts only live on the current page.
-**My feedback → Download backup…** is available when hosted sending is unavailable.
+When hosted sending is unavailable, the receipt says so on the spot — “Sending
+isn’t set up on this site yet” — and keeps your words saved. **My feedback →
+Download backup…** opens the text export (**Copy to clipboard** or **Download
+file**) so you can email it to the team. Nothing leaves the browser until a
+**Send** is confirmed.
+
+## Running a review round
+
+Review mode is invited, not advertised: the site owner (or the person who
+collects the feedback) sends each reviewer their own link,
+`https://nicolas-found42.github.io/website-redesign/?review`, by chat or email,
+and tells them what to do once it opens:
+
+1. **Add feedback**, then click the thing that should change.
+2. Answer what the form asks and **Save feedback** — that is a local draft.
+3. Repeat for every item, from any page.
+4. **Send N feedback items** once when done; each item becomes a public GitHub
+   issue. See **For whoever acts on it** below for the triage side.
+
+A reviewer who loses the link before sending is not stuck: the site notices the
+drafts already saved in their browser and offers **Resume review**. A reviewer
+who never had the link sees the plain site and no dead controls.
 
 ## For whoever acts on it
 
@@ -71,7 +98,10 @@ or journeys an item touches.
 
 `src/review/activation.ts` is the only part in the main bundle: it reads
 `?review` and loads `src/review/review.ts` on demand, so visitors never fetch
-the tools. The UI lives in a shadow root, which keeps it out of the site's
+the tools. It also renders the drafts-aware **Resume review** bar in the site's
+own DOM (not the review shadow root) — plain markup and one `<style>`, with no
+review code imported — so the nudge costs a first-time visitor nothing. The UI
+lives in a shadow root, which keeps it out of the site's
 styles and the site's styles out of it. `src/review/export.ts` owns the file
 format and its parser; the import script loads that same module through Vite.
 `src/review/submission.ts` sends versioned snapshots to the Worker;
