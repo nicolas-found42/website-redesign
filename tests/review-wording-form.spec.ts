@@ -135,6 +135,40 @@ test("#121: the taxonomy is genuinely optional, and the words decide the kind", 
     kind: "wording",
     proposed: "This headline sounds pushy.",
   });
+  expect(items[0].kindUncertain).toBe(true);
+  await page.reload();
+  await page.getByRole("button", { name: /My feedback/ }).click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
+  await expect(
+    panel(page).getByRole("radio", { name: /Not sure yet/ }),
+  ).toBeChecked();
+  await panel(page).getByRole("button", { name: "Save feedback" }).click();
+  expect((await saved(page)).items[0].kindUncertain).toBe(true);
+});
+
+test("#121: a plain comment saves without kind-specific fields", async ({
+  page,
+}) => {
+  await page.goto("/?review");
+  const form = await pick(page, "#hero-title");
+  await form.getByRole("radio", { name: /Not sure yet/ }).check();
+  await answer(form, { why: "This headline sounds pushy." });
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  const { items } = await saved(page);
+  expect(items[0].change).toEqual({
+    kind: "comment",
+    detail: "This headline sounds pushy.",
+  });
+  expect(items[0].kindUncertain).toBe(true);
+  await page.reload();
+  await page.getByRole("button", { name: /My feedback/ }).click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
+  await expect(panel(page).getByLabel("Your comment")).toHaveValue(
+    "This headline sounds pushy.",
+  );
+  await expect(
+    panel(page).getByRole("radio", { name: /Not sure yet/ }),
+  ).toBeChecked();
 });
 
 test("#121: an explicit kind always wins over the suggestion", async ({
@@ -149,6 +183,7 @@ test("#121: an explicit kind always wins over the suggestion", async ({
   await form.getByRole("button", { name: "Save feedback" }).click();
   await expect(panel(page)).toHaveCount(0);
   expect((await saved(page)).items[0].change.kind).toBe("layout");
+  expect((await saved(page)).items[0].kindUncertain).toBeUndefined();
 });
 
 test("#121: stored target values keep their shape (regression)", async ({
@@ -167,8 +202,8 @@ test("#121: stored target values keep their shape (regression)", async ({
     element: "Heading",
     selector: "#hero-title",
   });
-  // #129: the section is no longer a sitemap-internal id shown raw.
-  expect(items[0].target.section).toBe("Top of the page");
+  // #129: the displayed gloss must preserve the original stored section.
+  expect(items[0].target.section).toBe("Page opening");
   expect(
     await page.evaluate(
       (selector) => document.querySelector(selector)?.id,

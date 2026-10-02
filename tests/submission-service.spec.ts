@@ -304,6 +304,34 @@ test("the service returns a durable receipt and creates one safe issue per item"
   expect(service.requests).toHaveLength(0);
 });
 
+test("reviewer uncertainty survives hosted validation and issue formatting", async ({
+  service,
+}) => {
+  const feedback = { ...item(), kindUncertain: true as const };
+  const result = await outcomes(await service.send([feedback]));
+  expect(result[0].status).toBe("confirmed");
+  expect(service.requests[0].body!.body).toContain(
+    "The reviewer chose “Not sure yet”",
+  );
+  expect(service.requests[0].body!.body).toContain('"kindUncertain": true');
+  const comment = {
+    ...item("plain-comment"),
+    why: "This sounds pushy.",
+    kindUncertain: true as const,
+    change: { kind: "comment" as const, detail: "This sounds pushy." },
+  };
+  expect((await outcomes(await service.send([comment])))[0].status).toBe(
+    "confirmed",
+  );
+  expect(service.requests[1].body!.body).toContain("**Comment**");
+  expect(service.requests[1].body!.body).toContain("This sounds pushy");
+  expect(service.requests[1].body!.body).not.toContain("**Why**");
+  const invalid = { ...item("invalid-uncertainty"), kindUncertain: "yes" };
+  expect((await outcomes(await service.send([invalid])))[0].status).toBe(
+    "invalid",
+  );
+});
+
 test("concurrent tabs coordinate creation before calling GitHub", async ({
   service,
 }) => {

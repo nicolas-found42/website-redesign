@@ -1,3 +1,4 @@
+import { sectionGloss } from "./target-meta";
 import { reviewTabCapture, screenshotFile } from "./screenshot";
 import type { Screenshot } from "./model";
 import css from "./review.css?inline";
@@ -39,7 +40,9 @@ const publicNotice =
  * Beside the warning, the plain-English answer to "what does public mean?".
  * Native `<details>`: keyboard reachable, openable without JavaScript.
  */
-const noticeDetail = (style: string) => `<details data-notice-detail style="${style}">
+const noticeDetail = (
+  style: string,
+) => `<details data-notice-detail style="${style}">
   <summary style="cursor:pointer;display:inline;font-weight:650;text-decoration:underline;text-underline-offset:2px">What does “publicly on GitHub” mean?</summary>
   <p style="margin:6px 0 0">Your comment and your first name appear on a public list where the team works through the feedback. A first name is enough — it shows next to your comment so the team knows who to ask.</p>
   <p style="margin:6px 0 0">Nothing else is shared: no email address, no account and no tracking.</p>
@@ -48,13 +51,10 @@ const noticeDetail = (style: string) => `<details data-notice-detail style="${st
  * The explainer sits on the warning's own line, so the resting bar keeps the
  * height it had before this copy existed and the page reserves the same space.
  */
-const barNoticeStyle = "display:inline-block;font-weight:inherit;max-width:none;padding:0;color:#d4d3cc;font-size:12px";
+const barNoticeStyle =
+  "display:inline-block;font-weight:inherit;max-width:none;padding:0;color:#d4d3cc;font-size:12px";
 /** The explainer inside a panel, where it sits with other muted hints. */
 const panelNoticeStyle = "max-width:60ch;font-size:13px;color:#5e5e58";
-
-/** The tool's own id for the band a page opens with. Reviewers read it plainly. */
-const sectionGloss = (section: string) =>
-  section === "Page opening" ? "Top of this page" : section;
 
 /** Where an item points, as context a reviewer reads — never a raw sitemap id. */
 const whereLine = (target: FeedbackItem["target"]) =>
@@ -354,7 +354,9 @@ export function mountReview() {
   function showTools() {
     if (!form) return;
     const can = pointTools();
-    let reason = form.querySelector<HTMLElement>(`[data-reason="${targetReason}"]`);
+    let reason = form.querySelector<HTMLElement>(
+      `[data-reason="${targetReason}"]`,
+    );
     if (!reason) {
       reason = document.createElement("p");
       reason.className = "tool-reason";
@@ -403,13 +405,14 @@ export function mountReview() {
       if (enabled) button.removeAttribute("aria-describedby");
       else button.setAttribute("aria-describedby", targetReason);
     }
-    reason.textContent = !can.widen && !can.narrow
-      ? "You’ve reached the smallest and largest part of this selection."
-      : !can.widen
-        ? "There’s nothing larger around this to select."
-        : !can.narrow
-          ? "Already the smallest part of this selection."
-          : "";
+    reason.textContent =
+      !can.widen && !can.narrow
+        ? "You’ve reached the smallest and largest part of this selection."
+        : !can.widen
+          ? "There’s nothing larger around this to select."
+          : !can.narrow
+            ? "Already the smallest part of this selection."
+            : "";
     reason.style.display = !can.widen || !can.narrow ? "block" : "none";
   }
 
@@ -821,9 +824,7 @@ export function mountReview() {
     field.rows = 12;
     field.setAttribute("aria-label", "Your feedback as text");
     field.value = text;
-    sendPanel
-      .querySelector(".panel-body")
-      ?.append(field);
+    sendPanel.querySelector(".panel-body")?.append(field);
     return field;
   }
 

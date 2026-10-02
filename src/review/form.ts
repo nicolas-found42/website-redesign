@@ -1,3 +1,4 @@
+import { sectionGloss } from "./target-meta";
 import type { Change, FeedbackItem, Kind, Priority } from "./store";
 import { clean, isMediaKind, isTextKind, type Target } from "./target";
 
@@ -10,11 +11,6 @@ export const esc = (text: string) =>
       ]!,
   );
 
-/**
- * The kind a change is, each with one plain example of what it means. The last
- * entry is a real answer: a reviewer is never forced to pick a taxonomy, and
- * what they wrote decides the kind they didn't pick (#121).
- */
 /**
  * The target as plain context, for the form's own title. Unlike the shared
  * `targetLabel` (a list label, `Heading “…”`), this reads as a sentence —
@@ -128,6 +124,9 @@ export function formMarkup({
     <p class="hint" id="form-errors" role="alert" data-form-errors></p>
     ${askName ? field("reviewer", "Your name", { input: true, hint: "We save your name in this browser, so you only type it once. A first name is fine — it sits beside your comment so the team knows who to ask." }) : ""}
     ${choices("kind", "What kind of change? (optional)", kinds, "kinds")}
+    <div class="kind-fields" data-for="comment">
+      ${field("comment", "Your comment", { hint: "Just tell us what you would like changed. You can leave the kind to us." })}
+    </div>
     <p class="hint" data-no-text hidden>This has no words to change. For its text, choose Larger area or pick a heading or paragraph instead.</p>
 
     <div class="kind-fields" data-for="wording">
@@ -230,7 +229,10 @@ export function syncForm(form: HTMLFormElement) {
   // target's suggested kind's fields stay on screen (#121).
   const kind = valueOf(form, "kind") || (form.dataset.suggestedKind ?? "");
   form.querySelectorAll<HTMLElement>("[data-for]").forEach((el) => {
-    el.hidden = el.dataset.for !== kind;
+    el.hidden =
+      el.dataset.for === "comment"
+        ? !!valueOf(form, "kind")
+        : el.dataset.for !== kind;
   });
   form.querySelectorAll<HTMLElement>("[data-when]").forEach((el) => {
     const [name, values] = el.dataset.when!.split(":");
@@ -279,7 +281,7 @@ export function applyTarget(
   form.dataset.shownText = target.text;
   form.querySelector("[data-target-name]")!.textContent = contextLabel(target);
   form.querySelector("[data-target-where]")!.textContent =
-    `${target.pageName} › ${target.section}`;
+    `${target.pageName} › ${sectionGloss(target.section)}`;
   form.querySelector("[data-current]")!.textContent = target.text;
   const proposed = control<HTMLTextAreaElement>(form, "proposed")!;
   if (!proposed.value || proposed.value === previous) {
@@ -323,7 +325,15 @@ export function applyTarget(
 export function fillForm(form: HTMLFormElement, item: FeedbackItem) {
   const { change } = item;
   form.dataset.kindChosen = "yes";
-  setValue(form, "kind", change.kind);
+  form.dataset.suggestedKind = change.kind;
+  if (item.kindUncertain || change.kind === "comment") {
+    form
+      .querySelectorAll<HTMLInputElement>('input[name="kind"]')
+      .forEach((radio) => {
+        radio.checked = radio.value === "";
+      });
+  } else setValue(form, "kind", change.kind);
+  if (change.kind === "comment") setValue(form, "comment", change.detail);
   if (change.kind === "wording") setValue(form, "proposed", change.proposed);
   if (change.kind === "content") {
     setValue(form, "contentAction", change.action);
@@ -367,16 +377,20 @@ export function fillForm(form: HTMLFormElement, item: FeedbackItem) {
 export interface FormValue {
   reviewer?: string;
   change: Change;
+  kindUncertain?: true;
   everywhere: boolean;
   why: string;
   priority: Priority;
 }
 
 /** A field the reviewer filled, and the kind it most likely means (#121). */
-const inferredKinds = (form: HTMLFormElement): Kind[] => {
+const inferredKinds = (form: HTMLFormElement, target: Target): Kind[] => {
   const filled = (name: string) => !!valueOf(form, name);
   return [
-    ...(filled("proposed") ? (["wording"] as Kind[]) : []),
+    ...(filled("proposed") &&
+    clean(valueOf(form, "proposed")) !== clean(target.text)
+      ? (["wording"] as Kind[])
+      : []),
     ...(filled("contentAction") ? (["content"] as Kind[]) : []),
     ...(filled("visualProblem") || filled("visualDesired")
       ? (["visual"] as Kind[])
@@ -405,12 +419,21 @@ export function readForm(
     ? need("reviewer", "Add your name.")
     : undefined;
   const chosen = valueOf(form, "kind") as Kind | "";
-  const inferred = chosen ? [] : inferredKinds(form);
-  const kind = chosen || inferred[0] || "";
+  const inferred = chosen ? [] : inferredKinds(form, target);
+  const comment = valueOf(form, "comment");
+  const kind =
+    chosen ||
+    (comment ? "comment" : inferred[0]) ||
+    (valueOf(form, "why") ? "comment" : "");
   if (!kind && !inferred.length) {
-    errors.push(["kind", "Choose what kind of change this is."]);
+    errors.push([
+      "comment",
+      "Write your comment or describe the change below.",
+    ]);
   }
   let change: Change | undefined;
+  if (kind === "comment")
+    change = { kind, detail: comment || valueOf(form, "why") };
   if (kind === "wording") {
     const proposed = control<HTMLTextAreaElement>(
       form,
@@ -502,6 +525,7 @@ export function readForm(
     value: {
       ...(reviewer ? { reviewer } : {}),
       change,
+      ...(!chosen ? { kindUncertain: true as const } : {}),
       everywhere: control(form, "everywhere")!.checked,
       why,
       priority,
