@@ -1,0 +1,97 @@
+[
+  {
+    "label": "curl redirect headers",
+    "command": [
+      "curl",
+      "-sS",
+      "-L",
+      "-D",
+      "-",
+      "--max-time",
+      "5",
+      "http://127.0.0.1:<PORT>/redirect"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "HTTP/1.0 302 Found\nServer: BaseHTTP/0.6 Python/3.14.7\nDate: <DATE>\nLocation: /ok\n\nHTTP/1.0 200 OK\nServer: BaseHTTP/0.6 Python/3.14.7\nDate: <DATE>\n\n{\"ok\":true}",
+    "stderr": ""
+  },
+  {
+    "label": "lsof listener ownership",
+    "command": ["lsof", "-nP", "-iTCP:<PORT>", "-sTCP:LISTEN"],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "COMMAND PID USER TYPE NAME\nPython <SERVER_PID> <USER> IPv4 TCP 127.0.0.1:<PORT> (LISTEN)\n",
+    "stderr": ""
+  },
+  {
+    "label": "jq sorted keys a.json",
+    "command": ["jq", "-S", ".", "<FIXTURE_DIR>/a.json"],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "{\n  \"a\": [\n    2,\n    1\n  ],\n  \"b\": 2\n}\n",
+    "stderr": ""
+  },
+  {
+    "label": "jq sorted keys b.json",
+    "command": ["jq", "-S", ".", "<FIXTURE_DIR>/b.json"],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "{\n  \"a\": [\n    2,\n    1\n  ],\n  \"b\": 2\n}\n",
+    "stderr": ""
+  },
+  {
+    "label": "ShellCheck unquoted expansion",
+    "command": ["shellcheck", "<FIXTURE_DIR>/quoting.sh"],
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "stdout": "\nIn <FIXTURE_DIR>/quoting.sh line 3:\nprintf \"%s\\n\" $value\n              ^----^ SC2086 (info): Double quote to prevent globbing and word splitting.\n\nDid you mean:\nprintf \"%s\\n\" \"$value\"\n\nFor more information:\n  https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...\n",
+    "stderr": ""
+  },
+  {
+    "label": "ShellCheck corrected script",
+    "command": ["shellcheck", "<FIXTURE_DIR>/corrected.sh"],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "label": "explainshell endpoint reachability",
+    "command": [
+      "curl",
+      "-sS",
+      "-L",
+      "-o",
+      "/dev/null",
+      "-w",
+      "%{http_code}\n",
+      "--max-time",
+      "20",
+      "https://explainshell.com/"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "403\n",
+    "stderr": ""
+  },
+  {
+    "label": "Can I use endpoint reachability",
+    "command": [
+      "curl",
+      "-sS",
+      "-L",
+      "-o",
+      "/dev/null",
+      "-w",
+      "%{http_code}\n",
+      "--max-time",
+      "20",
+      "https://caniuse.com/"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "200\n",
+    "stderr": ""
+  }
+]
