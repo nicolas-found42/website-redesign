@@ -227,18 +227,18 @@
         "landscape": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
-            "to": "human",
+            "to": "n3",
             "weight": "trunk"
           },
           {
             "from": "n3",
             "to": "human",
-            "weight": "branch"
+            "weight": "trunk"
           },
           {
             "from": "human",
@@ -254,13 +254,13 @@
         "portrait": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
-            "to": "human",
-            "weight": "branch"
+            "to": "n3",
+            "weight": "trunk"
           },
           {
             "from": "n3",
