@@ -182,8 +182,8 @@
     {
       "id": "automation",
       "choice": "Workflows",
-      "detail": "Operating problem → tailored design → testing and review → team deployment.",
-      "description": "Workflow illustration: a customer brief and operating problem move through tailored design and testing, human review in the customer's context, and skills and plugins the team deploys and uses.",
+      "detail": "Operating problem → tailored design and build → test and review → team deployment → review in customer context, feeding back into tailored design and build.",
+      "description": "Workflow illustration: a brief and operating problem move through tailored design and build, test and review, and team deployment to a review in the customer context, which feeds back into tailored design and build as an iteration.",
       "nodes": [
         {
           "id": "n1",
@@ -211,22 +211,34 @@
           "kind": "result"
         }
       ],
+      "annotations": [
+        {
+          "key": "decision",
+          "text": "Review point: does it still fit the work?",
+          "kind": "caption"
+        },
+        {
+          "key": "iteration",
+          "text": "Iteration back into tailored design and build",
+          "kind": "caption"
+        }
+      ],
       "flow": {
         "landscape": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
-            "to": "human",
+            "to": "n3",
             "weight": "trunk"
           },
           {
             "from": "n3",
             "to": "human",
-            "weight": "branch"
+            "weight": "trunk"
           },
           {
             "from": "human",
@@ -242,13 +254,13 @@
         "portrait": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
-            "to": "human",
-            "weight": "branch"
+            "to": "n3",
+            "weight": "trunk"
           },
           {
             "from": "n3",
@@ -262,7 +274,7 @@
           },
           {
             "from": "n4",
-            "to": "n1",
+            "to": "n2",
             "weight": "return"
           }
         ]
@@ -271,8 +283,8 @@
     {
       "id": "product",
       "choice": "Automations",
-      "detail": "Repetitive process → system handoffs → human review → usable output.",
-      "description": "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
+      "detail": "Repetitive work → system handoffs → human direction → human review → usable output.",
+      "description": "Automation illustration: repetitive work moves through system handoffs in order, a person directs it, human review marks approval where judgment matters, and the reviewed work becomes a usable output the team can rely on.",
       "nodes": [
         {
           "id": "n1",
@@ -304,8 +316,8 @@
         "landscape": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
@@ -313,12 +325,12 @@
             "weight": "trunk"
           },
           {
-            "from": "n3",
-            "to": "human",
-            "weight": "branch"
+            "from": "human",
+            "to": "n3",
+            "weight": "trunk"
           },
           {
-            "from": "human",
+            "from": "n3",
             "to": "n4",
             "weight": "trunk"
           },
@@ -336,21 +348,21 @@
         "portrait": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
-            "to": "human",
-            "weight": "branch"
-          },
-          {
-            "from": "n3",
             "to": "human",
             "weight": "trunk"
           },
           {
             "from": "human",
+            "to": "n3",
+            "weight": "trunk"
+          },
+          {
+            "from": "n3",
             "to": "n4",
             "weight": "trunk"
           },
@@ -380,7 +392,17 @@
             "beat": 0
           },
           {
+            "text": "Sample: 3 priorities",
+            "kind": "card",
+            "beat": 0
+          },
+          {
             "text": "Meeting Brief",
+            "kind": "card",
+            "beat": 1
+          },
+          {
+            "text": "Sample: agenda draft",
             "kind": "card",
             "beat": 1
           },
@@ -390,8 +412,18 @@
             "beat": 2
           },
           {
+            "text": "Sample: owners, dates",
+            "kind": "card",
+            "beat": 2
+          },
+          {
             "text": "Actions from Transcripts",
             "kind": "result",
+            "beat": 3
+          },
+          {
+            "text": "Sample: tasks from notes",
+            "kind": "card",
             "beat": 3
           },
           {
@@ -436,7 +468,17 @@
             "beat": 0
           },
           {
+            "text": "Sample: 3 priorities",
+            "kind": "card",
+            "beat": 0
+          },
+          {
             "text": "Meeting Brief",
+            "kind": "card",
+            "beat": 1
+          },
+          {
+            "text": "Sample: agenda draft",
             "kind": "card",
             "beat": 1
           },
@@ -446,8 +488,18 @@
             "beat": 2
           },
           {
+            "text": "Sample: owners, dates",
+            "kind": "card",
+            "beat": 2
+          },
+          {
             "text": "Actions from Transcripts",
             "kind": "result",
+            "beat": 3
+          },
+          {
+            "text": "Sample: tasks from notes",
+            "kind": "card",
             "beat": 3
           },
           {
@@ -487,7 +539,7 @@
     },
     {
       "id": "contributors",
-      "description": "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
+      "description": "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, each running its own lane to the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
       "landscape": {
         "labels": [
           {
