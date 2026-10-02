@@ -170,15 +170,18 @@ function stair(
 
 function landscape(): Art {
   const ground = 490;
+  // The steps share the run from x=100 to x=990. The middle steps carry the
+  // longest words — "Troubleshoot" must sit on one line, "Anticipate" must
+  // never split — so they take the width Design and Test do not need.
   return stair(
     { width: 1000, height: 590 },
     ground,
     [
-      { key: "design", x: 130, top: 400, width: 168 },
-      { key: "test", x: 298, top: 330, width: 168 },
-      { key: "troubleshoot", x: 466, top: 260, width: 168 },
-      { key: "anticipate", x: 634, top: 190, width: 168 },
-      { key: "workflow", x: 802, top: 190, width: 168 },
+      { key: "design", x: 100, top: 400, width: 150 },
+      { key: "test", x: 250, top: 330, width: 115 },
+      { key: "troubleshoot", x: 365, top: 260, width: 255 },
+      { key: "anticipate", x: 620, top: 190, width: 205 },
+      { key: "workflow", x: 825, top: 190, width: 165 },
     ],
     {
       at: [68, ground - 34],

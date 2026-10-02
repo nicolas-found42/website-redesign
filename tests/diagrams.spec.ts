@@ -422,6 +422,118 @@ test("the builder stair starts at Design and keeps its reviewed steps", async ({
   ).toHaveLength(4);
 });
 
+/**
+ * What a person reads on the builder stair: no stage label ever splits a word
+ * mid-word (issue #138). Labels only break between words; the landscape steps
+ * share their run unequally so "Troubleshoot" sits on one line. The pinned
+ * landscape scene only shows with motion allowed, so it is measured settled
+ * without reduced motion; the in-panel portrait scene is measured with it.
+ */
+for (const [width, text] of [
+  [390, "100%"],
+  [320, "100%"],
+  [390, "150%"],
+  [390, "200%"],
+] as const) {
+  test(`builder stair words stay whole at ${width}px with ${text} text`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    if (text !== "100%")
+      await page.evaluate((size) => {
+        document.documentElement.style.fontSize = size;
+      }, text);
+    await page.getByRole("button", { name: /AI builders/ }).click();
+    const field = page.locator("#audience-builders .scene-field:visible");
+    await expect(
+      field.getByText("Troubleshoot", { exact: true }),
+    ).toBeVisible();
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.map((label) => label.text)).toEqual(
+      expect.arrayContaining([
+        "Design",
+        "Test",
+        "Troubleshoot",
+        "Anticipate failures",
+        "Workflow in use",
+      ]),
+    );
+    expect(wordProblems(fit)).toEqual([]);
+    for (const label of fit)
+      expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+  });
+}
+
+for (const [width, text] of [
+  [1024, "100%"],
+  [1440, "100%"],
+  [1440, "150%"],
+] as const) {
+  test(`builder stair landscape words stay whole at ${width}px with ${text} text`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    if (text !== "100%")
+      await page.evaluate((size) => {
+        document.documentElement.style.fontSize = size;
+      }, text);
+    await page.getByRole("button", { name: /AI builders/ }).click();
+    const field = page.locator(
+      '.audience-art [data-audience-scene="2"] .scene-field',
+    );
+    await field.scrollIntoViewIfNeeded();
+    await expect(
+      field.getByText("Troubleshoot", { exact: true }),
+    ).toBeVisible();
+    await expect
+      .poll(async () => {
+        const state = await field.evaluate(readField);
+        return {
+          animating: state.animating,
+          unsettled: state.unsettled,
+        };
+      })
+      .toEqual({ animating: 0, unsettled: { parts: 0, words: 0 } });
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.map((label) => label.text)).toEqual(
+      expect.arrayContaining([
+        "Design",
+        "Test",
+        "Troubleshoot",
+        "Anticipate failures",
+        "Workflow in use",
+      ]),
+    );
+    expect(wordProblems(fit)).toEqual([]);
+    const overlaps = await field.evaluate((element) => {
+      const boxes = [...element.querySelectorAll(".system-label-text")].map(
+        (label) => ({
+          text: label.textContent,
+          box: label.getBoundingClientRect(),
+        }),
+      );
+      return boxes.flatMap((a, i) =>
+        boxes
+          .slice(i + 1)
+          .filter(
+            (b) =>
+              a.box.left < b.box.right - 1 &&
+              b.box.left < a.box.right - 1 &&
+              a.box.top < b.box.bottom - 1 &&
+              b.box.top < a.box.bottom - 1,
+          )
+          .map((b) => `${a.text} / ${b.text}`),
+      );
+    });
+    expect(overlaps).toEqual([]);
+  });
+}
+
 test("the executive day names four ordered cards and keeps the decision illustrative", async ({
   page,
 }) => {

@@ -138,7 +138,10 @@
   color: var(--ink);
   letter-spacing: -0.005em;
   text-wrap: balance;
-  overflow-wrap: anywhere;
+  /* A label only ever breaks between words: `anywhere` split long words
+   * (notably "Troubleshoot" on the builder stair) mid-word. A word wider
+   * than its box is a drawing bug to fix in the art, not here. */
+  overflow-wrap: normal;
   translate: var(--tx) var(--ty);
 }
 .system-label.is-center {
