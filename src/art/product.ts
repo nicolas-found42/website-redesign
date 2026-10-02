@@ -11,13 +11,17 @@ import {
 } from "./kit";
 
 /**
- * Automations: the stamp.
+ * Automations: the stamp, read as an ordered process.
  *
- * Repetitive work is a stack of the same sheet. System handoffs are a strip
- * passed through one slot after another. Human review is its own sheet. All
- * three go under one red stamp — human direction — and what comes out is the
- * usable output, pressed with the human's mark, with two more copies beside it:
- * the same work reaching a customer more than one way.
+ * Five stages run one way along a single rail: a stack of repetitive work
+ * piled at the infeed, system handoffs slotted along the line, a human-review
+ * sheet astride it as the checkpoint the work passes through, one red
+ * stamp — human direction — pressing down as the decision, and the usable
+ * output tucked out from under the press, each sheet carrying the human's
+ * mark, with two more copies beside it: the same work reaching a customer
+ * more than one way. Paper heads on the rail point the way, so the order
+ * reads by shape and place, never by colour alone — and nothing is approved
+ * until the review and the press have had their say.
  */
 
 /** A sheet of paper turned about its centre, with a flat sheet beneath it. */
@@ -87,6 +91,23 @@ const slotsAcross = (ys: readonly number[], x: number, width: number) =>
     )
     .join("");
 
+/**
+ * A direction head riding the rail: a solid paper point with a charcoal
+ * outline, so the way the work moves reads by shape on any ground.
+ */
+function chevron(at: Pt, along: "x" | "y") {
+  const h = 11;
+  const d =
+    along === "x"
+      ? `M${-h} ${-h} L${h} 0 L${-h} ${h} Z`
+      : `M${-h} ${-h} L0 ${h} L${h} ${-h} Z`;
+  return (
+    `<g transform="translate(${pt(at)})">` +
+    `<path class="f-paper s-ink" d="${d}" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `</g>`
+  );
+}
+
 function landscape(): Art {
   const repetitive = identityFill.n1;
   const handoffs = identityFill.n2;
@@ -97,7 +118,7 @@ function landscape(): Art {
 
   const stack = [0, 1, 2, 3, 4]
     .map((k) =>
-      sheet([246 + k * 14, 214 - k * 11], 200, 120, 12, repetitive, {
+      sheet([230 + k * 13, 200 - k * 10], 200, 120, 12, repetitive, {
         corner: k === 4,
       }),
     )
@@ -134,20 +155,9 @@ function landscape(): Art {
         origin: press,
         nodes: ["n4"],
         links: ["human>n4"],
+        marks: ["result:n4"],
       },
-      sheet([724, 338], 256, 150, -2, "var(--ink)", { mark: true }),
-    ),
-    part(
-      {
-        name: "reviewed",
-        beat: 1,
-        enter: "rise",
-        order: 1,
-        origin: [300, 420],
-        nodes: ["n3"],
-        links: ["n3>human"],
-      },
-      sheet([296, 418], 226, 122, -13, review),
+      sheet([710, 338], 256, 150, -2, "var(--ink)", { mark: true }),
     ),
     part(
       {
@@ -159,14 +169,32 @@ function landscape(): Art {
         links: ["n2>human"],
       },
       strip(`M40 336 L${press[0]} 336`, 40, handoffs) +
-        slots([124, 196], 336, 76),
+        slots([100, 160], 336, 76) +
+        chevron([62, 336], "x") +
+        chevron([190, 336], "x"),
+    ),
+    part(
+      {
+        name: "reviewed",
+        beat: 1,
+        enter: "rise",
+        order: 1,
+        origin: [288, 386],
+        nodes: ["n3"],
+        links: ["n3>human"],
+        marks: ["check:n3"],
+      },
+      // Astride the rail, ahead of the press: the checkpoint the work passes
+      // through. It paints over the line, so the line visibly runs into the
+      // review and out again towards the stamp.
+      sheet([288, 336], 160, 100, -4, review),
     ),
     part(
       {
         name: "repetition",
         beat: 0,
         enter: "drop",
-        origin: [280, 190],
+        origin: [250, 180],
         nodes: ["n1"],
         links: ["n1>human"],
       },
@@ -179,6 +207,7 @@ function landscape(): Art {
         enter: "stamp",
         origin: press,
         nodes: ["human"],
+        marks: ["human:human"],
       },
       stamp(press, 250),
     ),
@@ -189,15 +218,15 @@ function landscape(): Art {
     height: 620,
     parts: parts.join(""),
     labels: {
-      n1: place([150, 76], "start", "above", { width: 330, beat: 0 }),
-      n2: place([40, 336 + 34], "start", "below", { width: 136, beat: 1 }),
-      n3: place([170, 512], "start", "below", { width: 330, beat: 1 }),
+      n1: place([150, 66], "start", "above", { width: 330, beat: 0 }),
+      n2: place([40, 372], "start", "below", { width: 160, beat: 1 }),
+      n3: place([288, 452], "center", "below", { width: 240, beat: 1 }),
       human: place([press[0], press[1] - 54], "center", "middle", {
         width: 226,
         ground: "red",
         beat: 2,
       }),
-      n4: place([744, 334], "center", "middle", {
+      n4: place([710, 334], "center", "middle", {
         width: 180,
         ground: "ink",
         beat: 3,
@@ -210,11 +239,11 @@ function portrait(): Art {
   const repetitive = identityFill.n1;
   const handoffs = identityFill.n2;
   const review = identityFill.n3;
-  const press: Pt = [310, 560];
+  const press: Pt = [310, 590];
 
   const stack = [0, 1, 2, 3, 4]
     .map((k) =>
-      sheet([138 + k * 12, 408 - k * 10], 184, 110, 10, repetitive, {
+      sheet([120 + k * 11, 300 - k * 9], 184, 110, 10, repetitive, {
         corner: k === 4,
       }),
     )
@@ -230,7 +259,7 @@ function portrait(): Art {
         origin: press,
         links: ["human>out1"],
       },
-      sheet([176, 632], 176, 122, -15, "var(--paper)", { mark: true }),
+      sheet([176, 657], 176, 122, -15, "var(--paper)", { mark: true }),
     ),
     part(
       {
@@ -241,7 +270,7 @@ function portrait(): Art {
         origin: press,
         links: ["human>out2"],
       },
-      sheet([444, 632], 176, 122, 15, "var(--paper)", { mark: true }),
+      sheet([444, 657], 176, 122, 15, "var(--paper)", { mark: true }),
     ),
     part(
       {
@@ -251,8 +280,9 @@ function portrait(): Art {
         origin: press,
         nodes: ["n4"],
         links: ["human>n4"],
+        marks: ["result:n4"],
       },
-      sheet([310, 628], 256, 150, -1, "var(--ink)", { mark: true }),
+      sheet([310, 655], 256, 150, -1, "var(--ink)", { mark: true }),
     ),
     part(
       {
@@ -263,8 +293,10 @@ function portrait(): Art {
         nodes: ["n2"],
         links: ["n2>human"],
       },
-      strip(`M310 40 L310 ${press[1] - 70}`, 40, handoffs) +
-        slotsAcross([120, 196], 310, 76),
+      strip(`M310 40 L310 ${press[1] - 30}`, 40, handoffs) +
+        slotsAcross([120, 196], 310, 76) +
+        chevron([310, 158], "y") +
+        chevron([310, 228], "y"),
     ),
     part(
       {
@@ -272,18 +304,21 @@ function portrait(): Art {
         beat: 1,
         enter: "rise",
         order: 1,
-        origin: [470, 410],
+        origin: [310, 360],
         nodes: ["n3"],
         links: ["n3>human"],
+        marks: ["check:n3"],
       },
-      sheet([468, 410], 196, 112, -10, review),
+      // Astride the rail, ahead of the press: the checkpoint the work passes
+      // through on its way down to the stamp.
+      sheet([310, 310], 160, 100, -4, review),
     ),
     part(
       {
         name: "repetition",
         beat: 0,
         enter: "drop",
-        origin: [170, 380],
+        origin: [140, 280],
         nodes: ["n1"],
         links: ["n1>human"],
       },
@@ -296,6 +331,7 @@ function portrait(): Art {
         enter: "stamp",
         origin: press,
         nodes: ["human"],
+        marks: ["human:human"],
       },
       stamp(press, 280),
     ),
@@ -306,15 +342,15 @@ function portrait(): Art {
     height: 740,
     parts: parts.join(""),
     labels: {
-      n1: place([40, 282], "start", "above", { width: 240, beat: 0 }),
+      n1: place([40, 168], "start", "above", { width: 240, beat: 0 }),
       n2: place([342, 70], "start", "middle", { width: 250, beat: 1 }),
-      n3: place([580, 322], "end", "above", { width: 240, beat: 1 }),
+      n3: place([600, 310], "end", "middle", { width: 190, beat: 1 }),
       human: place([press[0], press[1] - 54], "center", "middle", {
         width: 250,
         ground: "red",
         beat: 2,
       }),
-      n4: place([306, 640], "center", "middle", {
+      n4: place([310, 657], "center", "middle", {
         width: 210,
         ground: "ink",
         beat: 3,
