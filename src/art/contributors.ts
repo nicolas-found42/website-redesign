@@ -10,7 +10,6 @@ import {
   type Art,
   type LabelPlace,
   type Orientation,
-  type Pt,
 } from "./kit";
 
 /**
@@ -18,16 +17,17 @@ import {
  *
  * Four people in one company, each with a ribbon of their own role. Each
  * ribbon runs through a skill cut for that role — its buckle — and the four
- * ribbons are then braided into one bundle. The bundle passes through a gate:
- * the human in the loop, where a person reviews before anything leaves. The
- * ribbons stay four ribbons the whole way; the method is shared, the skill is
- * not. Past the gate the four ribbons part into four separate paths, each with
- * room of its own, and end together at one shared result: reviewed work
- * returns to each role. The ribbons alternate the owner's red, charcoal and
- * white, each with a charcoal outline.
+ * ribbons then run side by side as parallel lanes in the rows' own order.
+ * The lanes pass through a gate: the human in the loop, where a person
+ * reviews before anything leaves. The ribbons stay four ribbons the whole
+ * way; the method is shared, the skill is not. Past the gate the four
+ * ribbons part into four separate paths, each with room of its own, and end
+ * together at one shared result: reviewed work returns to each role. The
+ * ribbons alternate the owner's red, charcoal and white, each with a
+ * charcoal outline.
  */
 
-/** Red, charcoal, white, red: one per role, alternating along the bundle. */
+/** Red, charcoal, white, red: one per role, alternating along the lanes. */
 const FILLS = [
   "var(--red-strand)",
   "var(--ink)",
@@ -64,82 +64,7 @@ function buckle(
   );
 }
 
-/**
- * Four strands braided along one axis: at each crossing neighbouring strands
- * swap lanes, the one moving towards the higher lane passing over. Returns the
- * strands' continuations from their first lane, the crossings' upper pieces
- * (drawn again on top of every strand) and the lane each strand leaves in.
- */
-function braid({
-  start,
-  step,
-  lanes,
-  width,
-  fills,
-  axis,
-}: {
-  start: number;
-  step: number;
-  lanes: readonly number[];
-  width: number;
-  /** One fill per strand, in the order the strands start across the lanes. */
-  fills: readonly string[];
-  axis: "x" | "y";
-}) {
-  const at = (along: number, across: number): Pt =>
-    axis === "x" ? [along, across] : [across, along];
-  const ease = axis === "x" ? easeX : easeY;
-  const crossings = [
-    [
-      [0, 1],
-      [2, 3],
-    ],
-    [[1, 2]],
-    [
-      [0, 1],
-      [2, 3],
-    ],
-  ];
-  let lane = [0, 1, 2, 3];
-  const paths = ["", "", "", ""];
-  const overs: { strand: number; d: string; fillPath: string }[] = [];
-  crossings.forEach((swaps, k) => {
-    const next = [...lane];
-    for (const [a, b] of swaps) {
-      next[lane.indexOf(a)] = b;
-      next[lane.indexOf(b)] = a;
-    }
-    const from = start + k * step;
-    const to = from + step;
-    for (let s = 0; s < 4; s += 1) {
-      const a = at(from, lanes[lane[s]]);
-      const b = at(to, lanes[next[s]]);
-      const piece = ` ${ease(a, b, 0.5)}`;
-      paths[s] += piece;
-      if (next[s] > lane[s])
-        overs.push({
-          strand: s,
-          d: `M${a[0]} ${a[1]}${piece}`,
-          fillPath: `M${r(at(from - 1.5, lanes[lane[s]])[0])} ${r(at(from - 1.5, lanes[lane[s]])[1])} L${a[0]} ${a[1]}${piece} L${r(at(to + 1.5, lanes[next[s]])[0])} ${r(at(to + 1.5, lanes[next[s]])[1])}`,
-        });
-    }
-    lane = next;
-  });
-  return {
-    paths,
-    overs: overs
-      .map((over) =>
-        strip(over.d, width, fills[over.strand], {
-          fillPath: over.fillPath,
-        }),
-      )
-      .join(""),
-    /** The lane each strand leaves in. */
-    leaves: lane,
-  };
-}
-
-/** The gate: four charcoal posts framing the bundle, with a reviewer's seal on it. */
+/** The gate: four charcoal posts framing the lanes, with a reviewer's seal on it. */
 function gate(frame: { x: number; y: number; w: number; h: number }): string {
   const { x, y, w, h } = frame;
   const post = 16;
@@ -170,16 +95,12 @@ const resultPanel = (x: number, y: number, w: number, h: number) =>
 function landscape(): Art {
   const ys = [170, 272, 374, 476];
   const centre = 330;
-  const lanes = ys.map((_, i) => centre + (i - 1.5) * 42);
+  // Four parallel lanes in the rows' own top-to-bottom order, spaced wider
+  // than a ribbon: each role keeps its lane all the way through the gate,
+  // so no ribbon crosses another.
+  const lanes = ys.map((_, i) => centre + (i - 1.5) * 56);
   const width = 30;
-  const braided = braid({
-    start: 675,
-    step: 40,
-    lanes,
-    width,
-    fills: FILLS,
-    axis: "x",
-  });
+  const channel = 700;
   const frame = { x: 806, y: 196, w: 84, h: 268 };
   // Past the gate the four paths part to ends of their own on the result.
   const panel = { x: 1060, y: 196, w: 230, h: 268 };
@@ -207,7 +128,7 @@ function landscape(): Art {
       ground: "ink",
     });
     labels[`skill${n}`] = place([490, y], "center", "middle", { width: 214 });
-    const d = `M290 ${y} L640 ${y} ${easeX([640, y], [675, lanes[i]], 0.5)}${braided.paths[i]} L${beyond} ${lanes[braided.leaves[i]]}`;
+    const d = `M290 ${y} L640 ${y} ${easeX([640, y], [channel, lanes[i]], 0.5)} L${beyond} ${lanes[i]}`;
     return part(
       {
         name: "role",
@@ -224,8 +145,8 @@ function landscape(): Art {
     );
   });
   const returns = ys.map((_, i) => {
-    const y = lanes[braided.leaves[i]];
-    const tail = `L${beyond + 30} ${y} ${easeX([beyond + 30, y], [panel.x + 30, ends[braided.leaves[i]]], 0.5)}`;
+    const y = lanes[i];
+    const tail = `L${beyond + 30} ${y} ${easeX([beyond + 30, y], [panel.x + 30, ends[i]], 0.5)}`;
     return part(
       {
         name: "return",
@@ -262,10 +183,6 @@ function landscape(): Art {
         plate(frame.x + frame.w / 2 - 180, 500, 360, 62),
     ),
     ...rows,
-    part(
-      { name: "crossings", beat: 4, enter: "fade", order: 1 },
-      braided.overs,
-    ),
     ...returns,
     part(
       {
@@ -288,18 +205,13 @@ function portrait(): Art {
   // The top role's ribbon runs furthest right, so no ribbon crosses another
   // on its way down; it takes the bundle's last lane.
   const lanes = [594, 566, 538, 510];
+  // Four parallel lanes holding the rows' left-to-right order: each ribbon
+  // keeps its lane all the way through the gate, so no ribbon crosses
+  // another. The lanes sit a ribbon apart with the backdrop showing between.
   const bundle = [492, 522, 552, 582];
   const strandOf = (row: number) => 3 - row;
   const width = 20;
-  const braidStart = 650;
-  const braided = braid({
-    start: braidStart,
-    step: 34,
-    lanes: bundle,
-    width,
-    fills: [...FILLS].reverse(),
-    axis: "y",
-  });
+  const channel = 650;
   const frame = { x: 470, y: 762, w: 134, h: 74 };
   // Past the gate the four paths part to ends of their own on the result.
   const panel = { x: 120, y: 1004, w: 470, h: 104 };
@@ -330,7 +242,7 @@ function portrait(): Art {
       ground: "ink",
     });
     labels[`skill${n}`] = place([382, y], "center", "middle", { width: 170 });
-    const d = `M262 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${braidStart - 30} ${easeY([x, braidStart - 30], [bundle[strandOf(i)], braidStart], 0.5)}${braided.paths[strandOf(i)]} L${bundle[braided.leaves[strandOf(i)]]} ${beyond}`;
+    const d = `M262 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${channel - 30} ${easeY([x, channel - 30], [bundle[strandOf(i)], channel], 0.5)} L${bundle[strandOf(i)]} ${beyond}`;
     return part(
       {
         name: "role",
@@ -347,7 +259,7 @@ function portrait(): Art {
     );
   });
   const returns = ys.map((_, i) => {
-    const lane = braided.leaves[strandOf(i)];
+    const lane = strandOf(i);
     const x = bundle[lane];
     const tail = `L${x} ${beyond + 26} ${easeY([x, beyond + 26], [ends[lane], panel.y + 30], 0.5)}`;
     return part(
@@ -384,10 +296,6 @@ function portrait(): Art {
         plate(172, frame.y + frame.h / 2 - 48, 268, 96),
     ),
     ...rows,
-    part(
-      { name: "crossings", beat: 4, enter: "fade", order: 1 },
-      braided.overs,
-    ),
     ...returns,
     part(
       {
