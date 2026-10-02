@@ -481,6 +481,37 @@ for (const size of [
   });
 }
 
+for (const width of [360, 390, 1280]) {
+  test(`#124: selected priority labels clear their radio and checkmark at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 844 });
+    const form = await openForm(page);
+    for (const value of ["must", "should", "nice"]) {
+      const radio = form.locator(`input[name="priority"][value="${value}"]`);
+      await radio.check();
+      const bounds = await radio.evaluate((input) => {
+        const card = input.closest(".choice")!;
+        const label = card.querySelector(".choice-name")!;
+        const range = document.createRange();
+        range.selectNodeContents(label);
+        const text = range.getBoundingClientRect();
+        const cardBox = card.getBoundingClientRect();
+        const mark = getComputedStyle(card, "::after");
+        return {
+          textRight: text.right,
+          textLeft: text.left,
+          radioRight: input.getBoundingClientRect().right,
+          markLeft:
+            cardBox.right - parseFloat(mark.right) - parseFloat(mark.width),
+        };
+      });
+      expect(bounds.textLeft).toBeGreaterThanOrEqual(bounds.radioRight);
+      expect(bounds.textRight).toBeLessThanOrEqual(bounds.markLeft);
+    }
+  });
+}
+
 test("contract tokens are present with the agreed values", async ({ page }) => {
   await openForm(page);
   const tokens = await page.evaluate((view) => {
