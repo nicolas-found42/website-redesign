@@ -283,8 +283,8 @@
     {
       "id": "product",
       "choice": "Automations",
-      "detail": "Repetitive process → system handoffs → human review → usable output.",
-      "description": "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
+      "detail": "Repetitive work → system handoffs → human direction → human review → usable output.",
+      "description": "Automation illustration: repetitive work moves through system handoffs in order, a person directs it, human review marks approval where judgment matters, and the reviewed work becomes a usable output the team can rely on.",
       "nodes": [
         {
           "id": "n1",
@@ -316,8 +316,8 @@
         "landscape": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
@@ -325,12 +325,12 @@
             "weight": "trunk"
           },
           {
-            "from": "n3",
-            "to": "human",
-            "weight": "branch"
+            "from": "human",
+            "to": "n3",
+            "weight": "trunk"
           },
           {
-            "from": "human",
+            "from": "n3",
             "to": "n4",
             "weight": "trunk"
           },
@@ -348,21 +348,21 @@
         "portrait": [
           {
             "from": "n1",
-            "to": "human",
-            "weight": "branch"
+            "to": "n2",
+            "weight": "trunk"
           },
           {
             "from": "n2",
-            "to": "human",
-            "weight": "branch"
-          },
-          {
-            "from": "n3",
             "to": "human",
             "weight": "trunk"
           },
           {
             "from": "human",
+            "to": "n3",
+            "weight": "trunk"
+          },
+          {
+            "from": "n3",
             "to": "n4",
             "weight": "trunk"
           },
