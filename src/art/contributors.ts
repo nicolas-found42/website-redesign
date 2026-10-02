@@ -85,7 +85,7 @@ function gate(frame: { x: number; y: number; w: number; h: number }): string {
     `<rect class="f-ink" x="${x}" y="${y}" width="${post}" height="${h}" rx="4"/>` +
     `<rect class="f-ink" x="${x + w - post}" y="${y}" width="${post}" height="${h}" rx="4"/>` +
     `<rect class="f-ink" x="${x}" y="${y}" width="${w}" height="${post}" rx="4"/>` +
-    `<rect class="f-ink" x="${x}" y="${y + h - post}" width="${w}" height="${h}" rx="4"/>`
+    `<rect class="f-ink" x="${x}" y="${y + h - post}" width="${w}" height="${post}" rx="4"/>`
   );
 }
 

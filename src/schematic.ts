@@ -37,7 +37,7 @@ export type SchematicNode = {
 export type SchematicAnnotation = {
   readonly key: string;
   readonly text: string;
-  readonly kind: string;
+  readonly kind: "caption";
 };
 
 /**

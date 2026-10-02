@@ -934,6 +934,72 @@ test("the teams scene keeps each role lane clear of the others into and out of t
   expectClear(await wide.evaluate(clearanceOf), "landscape at 1638px");
 });
 
+/** What the teams gate's rects look like from the browser, in viewBox units. */
+const gateFrameOf = (root: Element) => {
+  const svg = root.querySelector("svg")!;
+  const viewHeight = Number(svg.getAttribute("viewBox")!.split(" ")[3]);
+  const gate = [...root.querySelectorAll(".part")].find(
+    (piece) => piece.getAttribute("data-part") === "gate",
+  )!;
+  const rects = [...gate.querySelectorAll("rect")].map((rect) => ({
+    y: Number(rect.getAttribute("y")),
+    height: Number(rect.getAttribute("height")),
+  }));
+  return {
+    count: rects.length,
+    thinnest: Math.min(...rects.map((rect) => rect.height)),
+    frameTall: rects.filter((rect) => rect.height > viewHeight * 0.5).length,
+    pastFrame: rects.filter((rect) => rect.y + rect.height > viewHeight + 1).length,
+  };
+};
+
+const expectGateFrame = (
+  frame: { count: number; thinnest: number; frameTall: number; pastFrame: number },
+  where: string,
+) => {
+  expect(frame.count, `${where}: four posts plus the label plate`).toBe(6);
+  expect(frame.thinnest, `${where}: posts are thin`).toBeLessThan(40);
+  // The wide composition's side posts span the frame; the narrow one's are
+  // transposed, so at most two rects may be frame-height.
+  expect(frame.frameTall, `${where}: no third frame-height rect`).toBeLessThanOrEqual(2);
+  expect(frame.pastFrame, `${where}: no rect leaves the drawing`).toBe(0);
+};
+
+test("the teams gate is a frame of posts, not a filled block", async ({ page }) => {
+  // Regression: the gate's bottom post once rendered with the frame's full
+  // height, painting a dark bar past the canvas edge (review finding on the
+  // October redraw). No gate rect may be frame-height or leave the drawing.
+  // Portrait: what a narrow or reduced-motion visitor reads in the article.
+  await open(page, "/", 384);
+  await page
+    .getByRole("button", { name: /Individual Contributors and Teams/ })
+    .first()
+    .click();
+  await expectGateFrame(
+    await page.locator("#audience-contributors .scene-field").evaluate(gateFrameOf),
+    "portrait at 384px",
+  );
+  // Landscape: the pinned scene on a wide screen with motion allowed.
+  await page.setViewportSize({ width: 1638, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  await page
+    .getByRole("button", { name: /Individual Contributors and Teams/ })
+    .first()
+    .click();
+  const wide = page.locator(
+    '.audience-art [data-audience-scene="1"] .scene-field',
+  );
+  await wide.scrollIntoViewIfNeeded();
+  await expect
+    .poll(async () => (await wide.evaluate(readField)).animating, {
+      timeout: 20000,
+    })
+    .toBe(0);
+  await expectGateFrame(await wide.evaluate(gateFrameOf), "landscape at 1638px");
+});
+
 test("the teams scene carries four separate paths past the gate to one shared result caption", async ({
   page,
 }) => {
