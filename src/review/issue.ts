@@ -41,7 +41,12 @@ export function feedbackIssue(
   imageUrl?: string,
 ) {
   item = submissionItem(item);
-  const safe = escaped(item) as FeedbackItem;
+  // Gloss display context before escaping punctuation; keep the stored record
+  // unchanged for the structured payload below.
+  const safe = escaped({
+    ...item,
+    target: { ...item.target, section: sectionGloss(item.target.section) },
+  }) as FeedbackItem;
   // The export's final HTML metadata line uses code spans; quote those fields
   // separately so arbitrary selector text cannot break out of a code span.
   const readable = itemMarkdown(safe, 1).split("\n").slice(2, -1).join("\n");
