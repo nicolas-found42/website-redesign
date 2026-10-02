@@ -270,6 +270,7 @@ test("#122: an untouched field waits for its turn instead of scolding early", as
   const why = form.getByLabel("Why?", { exact: true });
   await why.fill("A reason.");
   await why.blur();
+  await expect(form.locator("[data-form-errors]")).toHaveText("");
   // A field the reviewer filled is not scolded; nothing else piles on.
   await expect(form).not.toContainText("Say why");
   await expect(form.locator(".field-error:not(:empty)")).toHaveCount(0);

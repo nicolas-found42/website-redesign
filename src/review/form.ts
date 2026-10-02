@@ -31,7 +31,7 @@ const contextLabel = (target: Pick<Target, "element" | "text">) => {
  * entry is a real answer: a reviewer is never forced to pick a taxonomy, and
  * what they wrote decides the kind they didn't pick (#121).
  */
-const kinds: [string, string, string][] = [
+const kinds: [Kind | "", string, string][] = [
   [
     "wording",
     "Wording",
@@ -570,16 +570,10 @@ function showSummary(form: HTMLFormElement, errors: [string, string][]) {
 /**
  * Marks the outstanding fields and clears the rest; returns the first one.
  * Progressive by default (#122): one Save reveals only the first fix so no
- * error wall lands at once. Pass `all` true to re-show every marked field
- * together (used once the reviewer has seen the first and asks again).
+ * error wall lands at once. Each later Save focuses the next missing answer.
  */
-export function showErrors(
-  form: HTMLFormElement,
-  errors: [string, string][],
-  all = false,
-) {
-  const failed = new Map(errors);
-  const shown = all ? failed : new Map(errors.slice(0, 1));
+export function showErrors(form: HTMLFormElement, errors: [string, string][]) {
+  const shown = new Map(errors.slice(0, 1));
   form.querySelectorAll<HTMLElement>(".field-error").forEach((el) => {
     const name = el.id.slice(2);
     if (!name) return; // the summary block carries its own id
@@ -675,7 +669,8 @@ function watchFields(form: HTMLFormElement) {
       if (message) el.setAttribute("aria-invalid", "true");
       else el.removeAttribute("aria-invalid");
       // A field that is now fine may still leave a stale summary behind.
-      if (!message) showSummary(form, errors);
+      if (!message && form.querySelector("[data-form-errors]")?.textContent)
+        showSummary(form, errors);
     },
     true,
   );
