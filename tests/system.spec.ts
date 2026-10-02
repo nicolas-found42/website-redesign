@@ -226,7 +226,7 @@ for (const interruption of ["queued", "moving"]) {
     // customer journey even if the reading observer briefly reports another.
     // This checks the label captured before the motion change, not its current value.
     expect(interrupted).toBe(
-      "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
+      "Automation illustration: repetitive work moves through system handoffs in order, a person directs it, human review marks approval where judgment matters, and the reviewed work becomes a usable output the team can rely on.",
     );
   });
 }

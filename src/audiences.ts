@@ -10,7 +10,7 @@
  *   decision stays with them. These are illustrative, with no live integration.
  * - **Individual Contributors and Teams** each run a ribbon of their own role
  *   through a skill cut for it — four roles in one company — and the four
- *   ribbons braid together through one gate: the human in the loop.
+ *   ribbons run as four separate lanes to one gate: the human in the loop.
  * - **Builders** climb a stair folded from card, from a work problem to a
  *   workflow in use, with a reviewer's seal on each step: design, test,
  *   troubleshoot, anticipate failures.
@@ -94,9 +94,13 @@ type SceneContent = Pick<Scene, "labels" | "marks" | "links">;
 const executiveScene: SceneContent = {
   labels: [
     label("brief", "Claude Daily Brief", "source", 0),
+    label("brief-sample", "Sample: 3 priorities", "card", 0),
     label("meeting", "Meeting Brief", "card", 1),
+    label("meeting-sample", "Sample: agenda draft", "card", 1),
     label("debrief", "Meeting Debrief", "card", 2),
+    label("debrief-sample", "Sample: owners, dates", "card", 2),
     label("actions", "Actions from Transcripts", "result", 3),
+    label("actions-sample", "Sample: tasks from notes", "card", 3),
     label("direction", "You decide", "human", 4),
     label(
       "illustrative",
@@ -280,7 +284,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "contributors",
       description:
-        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, braided together and passing through the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
+        "Individual Contributors and Teams illustration: four roles in one company — deal team, operations, product and sales — each connected to its own skill, each running its own lane to the human-review gate, then continuing as four separate paths to one result: reviewed work returns to each role.",
       ...rosterScene,
     },
   },

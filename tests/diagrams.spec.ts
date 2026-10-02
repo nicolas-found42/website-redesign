@@ -24,6 +24,8 @@ import {
  * Issue #139 redraws the Workflows drawing as an ordered process with named
  * decision and iteration annotations, and returns its portrait loop to the
  * design step rather than the brief.
+ * Issue #140 lays the Automations drawing out as an ordered process ending in
+ * a human approval.
  */
 
 type Link = { from: string; to: string; weight: string };
@@ -507,6 +509,14 @@ test("the executive day names four ordered cards and keeps the decision illustra
     "Meeting Debrief",
     "Actions from Transcripts",
   ];
+  // Each card carries a short fictional sample of what it produces: the two
+  // briefs prepare, the debrief follows up, the last card acts on transcripts.
+  const samples = [
+    "Sample: 3 priorities",
+    "Sample: agenda draft",
+    "Sample: owners, dates",
+    "Sample: tasks from notes",
+  ];
   for (const route of ["/", "/services/"]) {
     for (const width of [1440, 384]) {
       await open(page, route, width);
@@ -518,6 +528,14 @@ test("the executive day names four ordered cards and keeps the decision illustra
           .filter((word) => labels.includes(word.trim()))
           .map((word) => word.trim()),
       ).toEqual(labels);
+      for (const sample of samples)
+        await expect(field.getByText(sample, { exact: true })).toHaveCount(1);
+      // The samples read as preparation, follow-up and transcript actions,
+      // and every one is marked as a sample rather than real output.
+      await expect(field.getByText(/3 priorities/)).toBeVisible();
+      await expect(field.getByText(/agenda draft/)).toBeVisible();
+      await expect(field.getByText(/owners, dates/)).toBeVisible();
+      await expect(field.getByText(/tasks from notes/)).toBeVisible();
       await expect(field.getByText("You decide", { exact: true })).toHaveCount(
         1,
       );
@@ -615,6 +633,52 @@ test("executive timeline words stay whole and separate with enlarged text", asyn
   }
 });
 
+test("each executive sample sits inside its own card with enlarged text", async ({
+  page,
+}) => {
+  const cards: [string, string][] = [
+    ["brief", "Sample: 3 priorities"],
+    ["meeting", "Sample: agenda draft"],
+    ["debrief", "Sample: owners, dates"],
+    ["actions", "Sample: tasks from notes"],
+  ];
+  const outside = (field: Element, pairs: [string, string][]) =>
+    pairs.flatMap(([key, text]) => {
+      const card = field
+        .querySelector(`[data-nodes~="${key}"] rect.f-paper`)!
+        .getBoundingClientRect();
+      const sample = field
+        .querySelector(`[data-node="${key}-sample"] .system-label-text`)!
+        .getBoundingClientRect();
+      return sample.left >= card.left - 1 &&
+        sample.right <= card.right + 1 &&
+        sample.top >= card.top - 1 &&
+        sample.bottom <= card.bottom + 1
+        ? []
+        : [`"${text}" is outside its card`];
+    });
+  for (const width of [384, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto("/");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    await page.evaluate(() => document.fonts.ready);
+    await page.getByRole("button", { name: /C-level executives/ }).click();
+    const fields = page.locator(
+      '.audience-art [data-audience-scene="0"] .scene-field:visible, #audience-executives .scene-field:visible',
+    );
+    await expect(fields).toHaveCount(1);
+    await fields.first().scrollIntoViewIfNeeded();
+    for (const [, text] of cards)
+      await expect(fields.first().getByText(text, { exact: true }))
+        .toBeVisible();
+    await expect
+      .poll(() => fields.first().evaluate(outside, cards))
+      .toEqual([]);
+  }
+});
+
 for (const [width, height] of [
   [384, 686],
   [384, 742],
@@ -631,9 +695,13 @@ for (const [width, height] of [
     const field = page.locator("#audience-executives .scene-field:visible");
     for (const text of [
       "Claude Daily Brief",
+      "Sample: 3 priorities",
       "Meeting Brief",
+      "Sample: agenda draft",
       "Meeting Debrief",
+      "Sample: owners, dates",
       "Actions from Transcripts",
+      "Sample: tasks from notes",
       "You decide",
     ])
       await expect(field.getByText(text, { exact: true })).toBeVisible();
@@ -644,6 +712,31 @@ for (const [width, height] of [
     expect(wordProblems(fit)).toEqual([]);
     for (const label of fit)
       expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    // Each sample sits inside the card it illustrates, without scripting too.
+    expect(
+      await field.evaluate((element) => {
+        const pairs = [
+          ["brief", "Sample: 3 priorities"],
+          ["meeting", "Sample: agenda draft"],
+          ["debrief", "Sample: owners, dates"],
+          ["actions", "Sample: tasks from notes"],
+        ];
+        return pairs.flatMap(([key, text]) => {
+          const card = element
+            .querySelector(`[data-nodes~="${key}"] rect.f-paper`)!
+            .getBoundingClientRect();
+          const sample = element
+            .querySelector(`[data-node="${key}-sample"] .system-label-text`)!
+            .getBoundingClientRect();
+          return sample.left >= card.left - 1 &&
+            sample.right <= card.right + 1 &&
+            sample.top >= card.top - 1 &&
+            sample.bottom <= card.bottom + 1
+            ? []
+            : [`"${text}" is outside its card`];
+        });
+      }),
+    ).toEqual([]);
     expect(
       await field.evaluate((element) => element.getBoundingClientRect().width),
     ).toBeGreaterThan(300);
@@ -684,7 +777,55 @@ test("the Workshops drawing shows people designing, practising and reviewing", a
   ]);
 });
 
-test("the teams scene braids four role ribbons through a labelled human-review gate", async ({
+test("the Automations drawing reads as an ordered process with a human approval", async ({
+  page,
+}) => {
+  for (const [width, selector] of [
+    [1440, ".services-art .system-field"],
+    [390, "#service-product .service-figure .system-field"],
+  ] as const) {
+    const where = `product at ${width}`;
+    await open(page, "/", width);
+    if (width === 1440)
+      await page
+        .getByRole("button", { name: "Automations", exact: true })
+        .click();
+    const field = page.locator(selector);
+    await expect(field, where).toHaveAttribute(
+      "aria-label",
+      /moves through system handoffs in order.*human review marks approval.*usable output/,
+    );
+    const state = await field.evaluate(readField);
+    // The five words arrive in the order the work moves through them.
+    expect(
+      state.labels.map((label) => label.text),
+      where,
+    ).toEqual([
+      "Repetitive work",
+      "System handoffs",
+      "Human direction",
+      "Human review",
+      "Usable output",
+    ]);
+    const order = ["n1", "n2", "human", "n3", "n4"].map(
+      (node) => state.labels.find((label) => label.node === node)!.beat,
+    );
+    expect(order, `${where}: each step arrives after the one before`).toEqual(
+      [...order].sort((a, b) => a - b),
+    );
+    expect(new Set(order).size, `${where}: no two steps share a beat`).toBe(5);
+    const links = new Set(state.parts.flatMap((piece) => piece.links));
+    for (const link of ["n1>n2", "n2>human", "human>n3", "n3>n4"])
+      expect(links.has(link), `${where}: the drawing joins ${link}`).toBe(true);
+    // The decision is a person's seal on the review step, not an auto-pass.
+    expect(
+      state.parts.flatMap((piece) => piece.marks),
+      `${where}: the review step carries the approval seal`,
+    ).toContain("seal:approved");
+  }
+});
+
+test("the teams scene runs four separate role lanes through a labelled human-review gate", async ({
   page,
 }) => {
   await open(page, "/", 1440);
@@ -693,7 +834,7 @@ test("the teams scene braids four role ribbons through a labelled human-review g
     .evaluate(readField);
   expect(state.parts.filter((piece) => piece.name === "role")).toHaveLength(4);
   expect(state.parts.map((piece) => piece.name)).toEqual(
-    expect.arrayContaining(["crossings", "gate"]),
+    expect.arrayContaining(["lanes", "gate"]),
   );
   expect(state.labels.map((label) => label.text)).toContain(
     "Human in the loop",
@@ -702,8 +843,95 @@ test("the teams scene braids four role ribbons through a labelled human-review g
     page.locator("#audience-contributors .scene-field"),
   ).toHaveAttribute(
     "aria-label",
-    /braided together and passing through the human-review gate/,
+    /each running its own lane to the human-review gate/,
   );
+});
+
+test("the teams scene keeps each role lane clear of the others into and out of the gate", async ({
+  page,
+}) => {
+  const clearanceOf = (root: Element) => {
+    const lanes = [...root.querySelectorAll(".part")]
+      .filter(
+        (piece) =>
+          piece.getAttribute("data-part") === "role" ||
+          piece.getAttribute("data-part") === "return",
+      )
+      .map((piece) => {
+        const line = [...piece.querySelectorAll("path")].find(
+          (el) =>
+            el.getAttribute("fill") === "none" &&
+            (el.getAttribute("stroke") ?? "").startsWith("var("),
+        )! as unknown as SVGPathElement;
+        const half = Number(line.getAttribute("stroke-width")) / 2;
+        const length = line.getTotalLength();
+        const samples: { x: number; y: number }[] = [];
+        const count = 120;
+        for (let i = 0; i <= count; i += 1) {
+          const at = line.getPointAtLength((length * i) / count);
+          samples.push({ x: at.x, y: at.y });
+        }
+        return { samples, half };
+      });
+    let pair = "";
+    let distance = Infinity;
+    for (let a = 0; a < lanes.length; a += 1)
+      for (let b = a + 1; b < lanes.length; b += 1) {
+        let near = Infinity;
+        for (const p of lanes[a].samples)
+          for (const q of lanes[b].samples)
+            near = Math.min(near, Math.hypot(p.x - q.x, p.y - q.y));
+        if (near < distance) {
+          distance = near;
+          pair = `${a}/${b}`;
+        }
+      }
+    const allowance = Math.max(
+      ...lanes.flatMap((lane, i) =>
+        lanes.slice(i + 1).map((other) => lane.half + other.half),
+      ),
+    );
+    return { pair, distance, allowance, lanes: lanes.length };
+  };
+  const expectClear = (
+    clearance: { pair: string; distance: number; allowance: number; lanes: number },
+    where: string,
+  ) => {
+    expect(clearance.lanes, `${where}: four lanes in, four out`).toBe(8);
+    expect(
+      clearance.distance,
+      `${where}: closest lanes ${clearance.pair} stay a ribbon apart`,
+    ).toBeGreaterThanOrEqual(clearance.allowance - 1);
+  };
+  // Portrait: what a narrow or reduced-motion visitor reads in the article.
+  await open(page, "/", 384);
+  await page
+    .getByRole("button", { name: /Individual Contributors and Teams/ })
+    .first()
+    .click();
+  expectClear(
+    await page.locator("#audience-contributors .scene-field").evaluate(clearanceOf),
+    "portrait at 384px",
+  );
+  // Landscape: the pinned scene on a wide screen with motion allowed.
+  await page.setViewportSize({ width: 1638, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  await page
+    .getByRole("button", { name: /Individual Contributors and Teams/ })
+    .first()
+    .click();
+  const wide = page.locator(
+    '.audience-art [data-audience-scene="1"] .scene-field',
+  );
+  await wide.scrollIntoViewIfNeeded();
+  await expect
+    .poll(async () => (await wide.evaluate(readField)).animating, {
+      timeout: 20000,
+    })
+    .toBe(0);
+  expectClear(await wide.evaluate(clearanceOf), "landscape at 1638px");
 });
 
 test("the teams scene carries four separate paths past the gate to one shared result caption", async ({
@@ -863,6 +1091,210 @@ for (const [route, width, text] of [
       ]),
     );
     expect(wordProblems(fit)).toEqual([]);
+  });
+}
+
+/**
+ * What a person reads in the builders scene's article figure: no stage label
+ * is broken inside itself, every label stays on screen and legible, and none
+ * cover another (issue #138 — "Troubleshoot" split midword in its step).
+ * Under reduced motion (and on narrow screens) the article's portrait figure
+ * is the composition shown, so this guards phone widths and enlarged text.
+ */
+for (const [width, text] of [
+  [320, "100%"],
+  [384, "100%"],
+  [384, "150%"],
+  [768, "100%"],
+  [768, "150%"],
+  [1024, "100%"],
+  [1024, "150%"],
+  [1440, "100%"],
+  [1440, "150%"],
+] as const) {
+  test(`builder stair words stay whole at ${width}px with ${text} text applied at load`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    // The setting is in place before the scene is first drawn.
+    await page.addInitScript((size) => {
+      const apply = () => {
+        if (!document.documentElement) return false;
+        document.documentElement.style.fontSize = size;
+        return true;
+      };
+      if (!apply())
+        new MutationObserver((_, watch) => {
+          if (apply()) watch.disconnect();
+        }).observe(document, { childList: true });
+    }, text);
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    await page
+      .getByRole("button", { name: /AI builders/ })
+      .first()
+      .click();
+    const field = page.locator("#audience-builders .scene-field:visible");
+    await expect(field.getByText("Workflow in use")).toBeVisible();
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.map((label) => label.text)).toEqual(
+      expect.arrayContaining([
+        "Design",
+        "Test",
+        "Troubleshoot",
+        "Anticipate failures",
+        "Workflow in use",
+      ]),
+    );
+    expect(wordProblems(fit)).toEqual([]);
+    // Large enough to read on a narrow screen (docs/DESIGN.md: 13px).
+    for (const label of fit)
+      expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    const overlaps = await field.evaluate((element) => {
+      const boxes = [
+        ...element.querySelectorAll(".system-label-text"),
+      ].map((label) => ({
+        text: label.textContent,
+        box: label.getBoundingClientRect(),
+      }));
+      return boxes.flatMap((a, i) =>
+        boxes
+          .slice(i + 1)
+          .filter(
+            (b) =>
+              a.box.left < b.box.right - 1 &&
+              b.box.left < a.box.right - 1 &&
+              a.box.top < b.box.bottom - 1 &&
+              b.box.top < a.box.bottom - 1,
+          )
+          .map((b) => `${a.text} / ${b.text}`),
+      );
+    });
+    expect(overlaps).toEqual([]);
+  });
+}
+
+/**
+ * What a person reads on the pinned builders stair at desktop widths: the
+ * wide landscape composition a visitor with motion enabled actually sees.
+ * Its step faces are narrow, so this is where "Troubleshoot" split midword.
+ */
+for (const [width, text] of [
+  [1024, "100%"],
+  [1024, "150%"],
+  [1440, "100%"],
+  [1440, "150%"],
+  [1638, "100%"],
+] as const) {
+  test(`builder stair words stay whole on the pinned stair at ${width}px with ${text} text applied at load`, async ({
+    page,
+  }) => {
+    // Full motion: the pinned landscape scene only shows with motion enabled.
+    await page.addInitScript((size) => {
+      const apply = () => {
+        if (!document.documentElement) return false;
+        document.documentElement.style.fontSize = size;
+        return true;
+      };
+      if (!apply())
+        new MutationObserver((_, watch) => {
+          if (apply()) watch.disconnect();
+        }).observe(document, { childList: true });
+    }, text);
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    await page.locator("#audiences").scrollIntoViewIfNeeded();
+    await page
+      .getByRole("button", { name: /AI builders/ })
+      .first()
+      .click();
+    const field = page.locator(
+      '.audience-art [data-audience-scene="2"] .scene-field',
+    );
+    await expect(field.getByText("Workflow in use")).toBeVisible();
+    // Measure once the entrance has settled, not mid-animation.
+    await expect
+      .poll(
+        async () =>
+          field.evaluate((element) => {
+            const words = [...element.querySelectorAll(".system-label")];
+            const parts = [...element.querySelectorAll(".part")];
+            const atRest = (el: Element) => {
+              const style = getComputedStyle(el);
+              return (
+                style.opacity === "1" &&
+                (style.transform === "none" ||
+                  style.transform === "matrix(1, 0, 0, 1, 0, 0)")
+              );
+            };
+            return {
+              parts: parts.filter(
+                (piece) => !atRest(piece.querySelector(".part-body") ?? piece),
+              ).length,
+              words: words.filter(
+                (label) =>
+                  !atRest(label.querySelector(".system-label-text") ?? label),
+              ).length,
+              animating: element.getAnimations({ subtree: true }).length,
+            };
+          }),
+        { timeout: 20000 },
+      )
+      .toEqual({ parts: 0, words: 0, animating: 0 });
+    const fit = await field.evaluate(readTextFit);
+    expect(fit.map((label) => label.text)).toEqual(
+      expect.arrayContaining([
+        "Design",
+        "Test",
+        "Troubleshoot",
+        "Anticipate failures",
+        "Workflow in use",
+      ]),
+    );
+    expect(wordProblems(fit)).toEqual([]);
+    // Large enough to read (docs/DESIGN.md: 13px).
+    for (const label of fit)
+      expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
+    const layout = await field.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const boxes = [...element.querySelectorAll(".system-label-text")].map(
+        (label) => ({
+          text: label.textContent,
+          box: label.getBoundingClientRect(),
+        }),
+      );
+      return { box, boxes };
+    });
+    const overlaps = layout.boxes.flatMap((a, i) =>
+      layout.boxes
+        .slice(i + 1)
+        .filter(
+          (b) =>
+            a.box.left < b.box.right - 1 &&
+            b.box.left < a.box.right - 1 &&
+            a.box.top < b.box.bottom - 1 &&
+            b.box.top < a.box.bottom - 1,
+        )
+        .map((b) => `${a.text} / ${b.text}`),
+    );
+    expect(overlaps).toEqual([]);
+    // Nothing clips outside the drawing.
+    for (const { text: labelText, box } of layout.boxes) {
+      expect(box.left, labelText ?? "").toBeGreaterThanOrEqual(
+        layout.box.left - 2,
+      );
+      expect(box.right, labelText ?? "").toBeLessThanOrEqual(
+        layout.box.right + 2,
+      );
+      expect(box.top, labelText ?? "").toBeGreaterThanOrEqual(
+        layout.box.top - 2,
+      );
+      expect(box.bottom, labelText ?? "").toBeLessThanOrEqual(
+        layout.box.bottom + 2,
+      );
+    }
   });
 }
 

@@ -163,6 +163,16 @@
   display: block;
   font-style: normal;
 }
+/**
+ * The builders stair names narrow step faces, so its labels set wider than
+ * the face they sit on. Words there wrap only at word boundaries and never
+ * split inside themselves; the steps stand far enough apart in height that
+ * neighbouring labels cannot meet. Scoped to this scene: every other drawing
+ * keeps the shared wrapping.
+ */
+[data-scene="builders"] .system-label {
+  overflow-wrap: normal;
+}
 /* A word set on the paper stays whole where a piece passes behind it. */
 .system-label.ground-paper .system-label-text {
   text-shadow:
