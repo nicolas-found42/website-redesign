@@ -151,7 +151,7 @@ test("#125 every target tool names its effect and smaller says why", async ({
   );
   expect(
     (await form.getByRole("heading", { level: 2 }).innerText()).trim(),
-  ).toContain("Area “");
+  ).toContain("You picked an area “");
 
   // Shrinking comes back once it can round-trip the wider selection.
   await expect(smaller).toBeEnabled();
@@ -162,7 +162,7 @@ test("#125 every target tool names its effect and smaller says why", async ({
   await expect(smaller).not.toHaveAttribute("aria-describedby", "tool-reason");
   await smaller.click();
   await expect(form.getByRole("heading", { level: 2 })).toHaveText(
-    "Heading “Train teams. Build useful skills. Automate the work.”",
+    "You picked a heading “Train teams. Build useful skills. Automate the work.”",
   );
   // Back at the smallest part it is explained again — never a silent pill.
   await expect(smaller).toBeDisabled();
@@ -207,7 +207,7 @@ test("#127 the receipt offers copy-as-text beside any file export", async ({
   // the exact string handed to the clipboard (also pasted by hand and
   // recorded in the PR notes).
   const copied = await copiedText(page);
-  expect(copied).toContain("**Where:** Home › Page opening ›");
+  expect(copied).toContain("**Where:** Home › Top of the page ›");
   expect(copied).toContain(
     "Heading “Train teams. Build useful skills. Automate the work.”",
   );
