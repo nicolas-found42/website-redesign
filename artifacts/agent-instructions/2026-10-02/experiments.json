@@ -1,0 +1,1375 @@
+{
+  "date": "2026-10-02",
+  "source": {
+    "repository": "https://github.com/trimstray/the-book-of-secret-knowledge",
+    "commit": "7d37069a361d3fd9f214480755f7969744e866fa",
+    "raw_characters": 211640
+  },
+  "baseline": "# Repository instructions\n\n## Development workflow\n\nBefore making changes, create a feature branch from the latest `main`. Use `feat/<description>`, `fix/<description>`, or `chore/<description>` as appropriate. Commit and push changes on that branch, then open a pull request targeting `main`. All changes to `main` must go through a pull request; direct commits and pushes to `main` are prohibited. Complete the relevant checks and report validation in the PR before merging.\n\nUse two Playwright workers by default for local checks to limit resource contention. `npm run test:quick`, `npm run test:logic`, and `npm run test:jev` are intentionally partial feedback loops; they are not full verification. Use `npm run test:full` for all projects and browser engines. See `docs/guides/testing.md` for scope and commands. Change the worker count only for an explicit performance comparison or to isolate a concurrency-sensitive failure, and report why.\n\n## Agent skills\n\n### Issue tracker\n\nTrack issues and specs in GitHub Issues. Before reading or publishing tickets, read `docs/agents/issue-tracker.md`.\n\n### Triage labels\n\nUse the five default triage labels. Before triaging or changing issue labels, read `docs/agents/triage-labels.md`.\n\n### Review feedback\n\nTeam feedback arrives as review-mode files (`found42-feedback-*.md`). Before acting on one, read `docs/REVIEW-MODE.md`.\n\n### Domain docs\n\nUse a multi-context layout: root `CONTEXT-MAP.md` points to domain glossaries under `docs/contexts/`. Before exploring the codebase, read `docs/agents/domain.md`.\n",
+  "approaches": [
+    {
+      "id": "tool_list",
+      "text": "Append an inline list of curl, lsof, jq, ShellCheck, explainshell, Can I use, tldr, HTTPie, tcpdump, nmap and cheatsheets to AGENTS.md. No symptom mapping. Source citation retained."
+    },
+    {
+      "id": "symptom_table",
+      "text": "Append a compact AGENTS.md diagnostic reference section with one trigger per symptom: HTTP -> curl; port ownership -> lsof; JSON comparison -> jq -S; shell bugs -> ShellCheck; shell flags -> explainshell; browser support -> Can I use. Cite a pinned source revision. Preflight tools at use time, consult current tool docs, retain existing workflow/testing rules."
+    },
+    {
+      "id": "index_pointer",
+      "text": "Add only a one-sentence AGENTS.md pointer to the pinned Book of Secret Knowledge CLI Tools, Web Tools and Manuals sections whenever diagnostics are needed. No local symptom mapping."
+    },
+    {
+      "id": "diagnostic_sequence",
+      "text": "Write a mandatory ordered recipe in AGENTS.md for every defect: curl then DNS lookup then packet capture then profiler then browser tests, deriving it from the catalogue's tool entries."
+    },
+    {
+      "id": "availability_matrix",
+      "text": "Append a machine-specific installed/absent version matrix and tested one-liners for all catalogue tools to AGENTS.md. Update manually after environment changes."
+    },
+    {
+      "id": "separate_guide",
+      "text": "Add a new docs/agents/diagnostics.md with a six-row symptom table, availability record, primary docs and pinned source attribution, and a short trigger pointer in AGENTS.md."
+    }
+  ],
+  "drafts": [
+    {
+      "id": "list",
+      "addition": "## Diagnostic references\n\nTools from [The Book of Secret Knowledge](https://github.com/trimstray/the-book-of-secret-knowledge/blob/7d37069a361d3fd9f214480755f7969744e866fa/README.md): curl, HTTPie, lsof, jq, ShellCheck, explainshell, Can I use, tldr, tcpdump and nmap.\n"
+    },
+    {
+      "id": "pointer",
+      "addition": "## Diagnostic references\n\nFor HTTP, local server, JSON, shell, or browser compatibility problems, consult the CLI Tools, Web Tools, Manuals/Howtos/Tutorials and Shell One-liners chapters in [The Book of Secret Knowledge](https://github.com/trimstray/the-book-of-secret-knowledge/blob/7d37069a361d3fd9f214480755f7969744e866fa/README.md). Check tool availability before using examples.\n"
+    },
+    {
+      "id": "table",
+      "addition": "## Diagnostic references\n\nFor HTTP, port ownership, JSON comparison, shell, or browser compatibility questions, use the symptom routes below. They adapt entries from [The Book of Secret Knowledge](https://github.com/trimstray/the-book-of-secret-knowledge/blob/7d37069a361d3fd9f214480755f7969744e866fa/README.md), a reference catalogue rather than a repository workflow.\n\n| Symptom or question | Reference to consult |\n| --- | --- |\n| HTTP status, headers, or redirects | curl — CLI Tools / Network (HTTP). |\n| Local dev server cannot bind its port | lsof — Shell One-liners / Tool: lsof, for the process using that port. |\n| JSON fixtures differ only in key order | jq `-S` — Shell One-liners / Tool: vimdiff / Compare two JSON files. Preserve array order. |\n| Shell script has quoting or expansion bugs | ShellCheck — Web Tools / Code parsers/playgrounds; check the script's declared shell is supported. |\n| Unfamiliar shell flags or pipelines | explainshell — Web Tools / Code parsers/playgrounds. Confirm flags in the installed command's manual. |\n| Browser support for a web feature is unclear | Can I use — Web Tools / Browsers. Confirm site behavior with the repository's browser tests. |\n\nBefore using a local tool, check `command -v <tool>` and its local help/manual for supported flags. Record an unavailable tool and use an available equivalent. Treat upstream examples as references: adapt them to the current OS and shell, retain TLS verification, and use public or sanitized examples in online tools. These references supplement the development and testing requirements above.\n"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "http",
+      "text": "A public website URL redirects unexpectedly; identify a specific tool for response headers and redirect inspection.",
+      "expected": "The draft explicitly routes HTTP headers or redirects to curl."
+    },
+    {
+      "id": "port",
+      "text": "Vite fails with EADDRINUSE; identify the process using its local port.",
+      "expected": "The draft explicitly routes local port ownership to lsof."
+    },
+    {
+      "id": "json",
+      "text": "Two JSON fixtures have the same values but different object key order; compare without reordering arrays.",
+      "expected": "The draft explicitly routes JSON key order comparison to jq -S and preserves arrays."
+    },
+    {
+      "id": "shell_bug",
+      "text": "A bash script has an unquoted expansion; choose a linting resource.",
+      "expected": "The draft explicitly routes shell quoting or expansion bugs to ShellCheck."
+    },
+    {
+      "id": "shell_flags",
+      "text": "An unfamiliar pipeline includes command flags whose meaning is unclear.",
+      "expected": "The draft explicitly routes shell command explanation to explainshell and confirms flags locally."
+    },
+    {
+      "id": "browser",
+      "text": "A proposed CSS feature may have browser-specific support limitations.",
+      "expected": "The draft explicitly routes browser compatibility to Can I use and requires actual site behavior checks through repository browser tests."
+    }
+  ],
+  "judgments": {
+    "baseline": {
+      "tool": "jev_noul",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "status": "ok",
+      "results": [
+        {
+          "id": "proposition0",
+          "proposition": "The current AGENTS.md gives explicit branch, pull request, and testing requirements.",
+          "probability": 0.95,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition1",
+          "proposition": "The current AGENTS.md provides a symptom-to-tool route for investigating HTTP, JSON, or shell command problems.",
+          "probability": 0.06,
+          "label": "unlikely",
+          "auto": true
+        },
+        {
+          "id": "proposition2",
+          "proposition": "The current AGENTS.md points to local domain, issue, triage, and review instructions with clear triggers.",
+          "probability": 0.9,
+          "label": "likely",
+          "auto": true
+        }
+      ],
+      "thresholds": {
+        "auto_accept": 0.85
+      },
+      "usage": {
+        "input_tokens": 1001,
+        "output_tokens": 67
+      }
+    },
+    "source_screening": [
+      {
+        "offset": 0,
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.03,
+          "substance": 0.99,
+          "relevance": 0.95
+        },
+        "thresholds": {
+          "block_at": 0.75,
+          "review_at": 0.25
+        },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": {
+          "input_tokens": 12125,
+          "output_tokens": 57
+        }
+      },
+      {
+        "offset": 38000,
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.05,
+          "substance": 0.98,
+          "relevance": 0.95
+        },
+        "thresholds": {
+          "block_at": 0.75,
+          "review_at": 0.25
+        },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": {
+          "input_tokens": 12176,
+          "output_tokens": 57
+        }
+      },
+      {
+        "offset": 76000,
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.06,
+          "substance": 0.98,
+          "relevance": 0.9
+        },
+        "thresholds": {
+          "block_at": 0.75,
+          "review_at": 0.25
+        },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": {
+          "input_tokens": 12315,
+          "output_tokens": 57
+        }
+      },
+      {
+        "offset": 114000,
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.06,
+          "substance": 0.98,
+          "relevance": 0.8
+        },
+        "thresholds": {
+          "block_at": 0.75,
+          "review_at": 0.25
+        },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": {
+          "input_tokens": 12133,
+          "output_tokens": 57
+        }
+      },
+      {
+        "offset": 152000,
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.04,
+          "substance": 0.99,
+          "relevance": 0.95
+        },
+        "thresholds": {
+          "block_at": 0.75,
+          "review_at": 0.25
+        },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": {
+          "input_tokens": 13143,
+          "output_tokens": 57
+        }
+      },
+      {
+        "offset": 190000,
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.08,
+          "substance": 0.99,
+          "relevance": 0.96
+        },
+        "thresholds": {
+          "block_at": 0.75,
+          "review_at": 0.25
+        },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": {
+          "input_tokens": 8054,
+          "output_tokens": 57
+        }
+      }
+    ],
+    "source_selection": [
+      {
+        "id": "section_7",
+        "relevance": 0.77
+      },
+      {
+        "id": "section_14",
+        "relevance": 0.45
+      },
+      {
+        "id": "section_13",
+        "relevance": 0.42
+      },
+      {
+        "id": "section_15",
+        "relevance": 0.41
+      },
+      {
+        "id": "section_1",
+        "relevance": 0.32
+      },
+      {
+        "id": "section_3",
+        "relevance": 0.2
+      },
+      {
+        "id": "section_0",
+        "relevance": 0.17
+      },
+      {
+        "id": "section_8",
+        "relevance": 0.14
+      },
+      {
+        "id": "section_2",
+        "relevance": 0.11
+      },
+      {
+        "id": "section_9",
+        "relevance": 0.11
+      },
+      {
+        "id": "section_4",
+        "relevance": 0.09
+      },
+      {
+        "id": "section_5",
+        "relevance": 0.06
+      }
+    ],
+    "topic_selection": [
+      [
+        {
+          "id": "topic_9",
+          "relevance": 0.9,
+          "heading": "##### :black_small_square: Network (HTTP)"
+        },
+        {
+          "id": "topic_31",
+          "relevance": 0.88,
+          "heading": "##### :black_small_square: HTTP Headers & Web Linters"
+        },
+        {
+          "id": "topic_64",
+          "relevance": 0.87,
+          "heading": "##### :black_small_square: Shell/Command line"
+        },
+        {
+          "id": "topic_29",
+          "relevance": 0.8,
+          "heading": "##### :black_small_square: Browsers"
+        },
+        {
+          "id": "topic_37",
+          "relevance": 0.78,
+          "heading": "##### :black_small_square: Code parsers/playgrounds"
+        },
+        {
+          "id": "topic_74",
+          "relevance": 0.73,
+          "heading": "##### :black_small_square: All-in-one"
+        },
+        {
+          "id": "topic_35",
+          "relevance": 0.66,
+          "heading": "##### :black_small_square: Net-tools"
+        },
+        {
+          "id": "topic_2",
+          "relevance": 0.62,
+          "heading": "##### :black_small_square: Shells"
+        },
+        {
+          "id": "topic_19",
+          "relevance": 0.6,
+          "heading": "##### :black_small_square: Other"
+        },
+        {
+          "id": "topic_3",
+          "relevance": 0.56,
+          "heading": "##### :black_small_square: Shell plugins"
+        }
+      ],
+      [
+        {
+          "id": "topic_116",
+          "relevance": 0.95,
+          "heading": "##### Tool: [lsof](https://en.wikipedia.org/wiki/Lsof)"
+        },
+        {
+          "id": "topic_145",
+          "relevance": 0.9,
+          "heading": "##### Tool: [curl](https://curl.haxx.se)"
+        },
+        {
+          "id": "topic_125",
+          "relevance": 0.88,
+          "heading": "##### Tool: [vimdiff](http://vimdoc.sourceforge.net/htmldoc/diff.html)"
+        },
+        {
+          "id": "topic_146",
+          "relevance": 0.88,
+          "heading": "##### Tool: [httpie](https://httpie.org/)"
+        },
+        {
+          "id": "topic_158",
+          "relevance": 0.88,
+          "heading": "##### Tool: [netstat](https://en.wikipedia.org/wiki/Netstat)"
+        },
+        {
+          "id": "topic_123",
+          "relevance": 0.85,
+          "heading": "##### Tool: [kill](https://en.wikipedia.org/wiki/Kill_(command))"
+        },
+        {
+          "id": "topic_115",
+          "relevance": 0.81,
+          "heading": "##### Tool: [fuser](https://en.wikipedia.org/wiki/Fuser_(Unix))"
+        },
+        {
+          "id": "topic_154",
+          "relevance": 0.76,
+          "heading": "##### Tool: [netcat](http://netcat.sourceforge.net/)"
+        },
+        {
+          "id": "topic_126",
+          "relevance": 0.74,
+          "heading": "##### Tool: [tail](https://en.wikipedia.org/wiki/Tail_(Unix))"
+        },
+        {
+          "id": "topic_110",
+          "relevance": 0.71,
+          "heading": "#### Shell One-liners &nbsp;[<sup>[TOC]</sup>](#anger-table-of-contents)"
+        }
+      ],
+      [
+        {
+          "id": "topic_165",
+          "relevance": 0.62,
+          "heading": "##### Tool: [python](https://www.python.org/)"
+        },
+        {
+          "id": "topic_168",
+          "relevance": 0.62,
+          "heading": "##### Tool: [grep](http://www.grymoire.com/Unix/Grep.html)"
+        },
+        {
+          "id": "topic_166",
+          "relevance": 0.61,
+          "heading": "##### Tool: [awk](http://www.grymoire.com/Unix/Awk.html)"
+        },
+        {
+          "id": "topic_160",
+          "relevance": 0.6,
+          "heading": "##### Tool: [host](https://en.wikipedia.org/wiki/Host_(Unix))"
+        },
+        {
+          "id": "topic_161",
+          "relevance": 0.6,
+          "heading": "##### Tool: [dig](https://en.wikipedia.org/wiki/Dig_(command))"
+        },
+        {
+          "id": "topic_167",
+          "relevance": 0.57,
+          "heading": "##### Tool: [sed](http://www.grymoire.com/Unix/Sed.html)"
+        },
+        {
+          "id": "topic_172",
+          "relevance": 0.53,
+          "heading": "##### Table of Contents"
+        },
+        {
+          "id": "topic_170",
+          "relevance": 0.52,
+          "heading": "#### Shell Tricks &nbsp;[<sup>[TOC]</sup>](#anger-table-of-contents)"
+        },
+        {
+          "id": "topic_163",
+          "relevance": 0.44,
+          "heading": "##### Tool: [network-other](https://github.com/trimstray/the-book-of-secret-knowledge#tool-network-other)"
+        },
+        {
+          "id": "topic_171",
+          "relevance": 0.4,
+          "heading": "#### Shell functions &nbsp;[<sup>[TOC]</sup>](#anger-table-of-contents)"
+        }
+      ]
+    ],
+    "source_verification": {
+      "tool": "jev_verify",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "auto_accept": 0.8,
+      "subject_at": 0.5,
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "The source is a catalogue primarily aimed at system and network administrators, DevOps, pentesters and security researchers.",
+          "verdict": "verified",
+          "probabilities": {
+            "says_nothing": 0,
+            "contradicts": 0,
+            "supports": 1
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "source-introduction",
+          "same_subject": 0.73
+        },
+        {
+          "id": "claim1",
+          "claim": "The source lists curl as a URL transfer tool, lsof for open files, ShellCheck for finding shell script bugs, explainshell for shell command help, and Can I use for browser support.",
+          "verdict": "verified",
+          "probabilities": {
+            "says_nothing": 0,
+            "contradicts": 0,
+            "supports": 1
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "selected-entries",
+          "same_subject": 0.64
+        },
+        {
+          "id": "claim2",
+          "claim": "The source demonstrates comparing JSON files after sorting keys with jq -S.",
+          "verdict": "verified",
+          "probabilities": {
+            "says_nothing": 0.01,
+            "contradicts": 0,
+            "supports": 0.99
+          },
+          "confidence": 0.99,
+          "action": "auto",
+          "supporting_evidence": "selected-entries",
+          "same_subject": 0.45
+        }
+      ],
+      "usage": {
+        "input_tokens": 4264,
+        "output_tokens": 328
+      }
+    },
+    "approach_ranking": {
+      "tool": "jev_rerank",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "query": "Choose promising AGENTS.md refinement experiments grounded in a reference catalogue for this macOS TypeScript/Vite/Playwright website repository. Prefer actionable symptom routing, compact always-loaded instructions, source fidelity, preserved project workflow and runtime tool checks. Avoid invented mandatory procedures and stale machine-wide inventories.",
+      "summary": {
+        "candidates": 6,
+        "returned": 6
+      },
+      "ranked": [
+        {
+          "rank": 1,
+          "id": "symptom_table",
+          "relevance": 0.95,
+          "text": "Append a compact AGENTS.md diagnostic reference section with one trigger per symptom: HTTP -> curl; port ownership -> lsof; JSON comparison -> jq -S; shell bugs -> ShellCheck; shell flags -> explainshell; browser support -> Can I use. Cite a pinned source revision. Preflight tools at use time, consult current tool docs, retain existing workflow/testing rules."
+        },
+        {
+          "rank": 2,
+          "id": "separate_guide",
+          "relevance": 0.91,
+          "text": "Add a new docs/agents/diagnostics.md with a six-row symptom table, availability record, primary docs and pinned source attribution, and a short trigger pointer in AGENTS.md."
+        },
+        {
+          "rank": 3,
+          "id": "index_pointer",
+          "relevance": 0.58,
+          "text": "Add only a one-sentence AGENTS.md pointer to the pinned Book of Secret Knowledge CLI Tools, Web Tools and Manuals sections whenever diagnostics are needed. No local symptom mapping."
+        },
+        {
+          "rank": 4,
+          "id": "availability_matrix",
+          "relevance": 0.3,
+          "text": "Append a machine-specific installed/absent version matrix and tested one-liners for all catalogue tools to AGENTS.md. Update manually after environment changes."
+        },
+        {
+          "rank": 5,
+          "id": "tool_list",
+          "relevance": 0.22,
+          "text": "Append an inline list of curl, lsof, jq, ShellCheck, explainshell, Can I use, tldr, HTTPie, tcpdump, nmap and cheatsheets to AGENTS.md. No symptom mapping. Source citation retained."
+        },
+        {
+          "rank": 6,
+          "id": "diagnostic_sequence",
+          "relevance": 0.18,
+          "text": "Write a mandatory ordered recipe in AGENTS.md for every defect: curl then DNS lookup then packet capture then profiler then browser tests, deriving it from the catalogue's tool entries."
+        }
+      ],
+      "usage": {
+        "input_tokens": 1016,
+        "output_tokens": 112
+      }
+    },
+    "scenario_drafts": [
+      {
+        "variant": "list",
+        "result": {
+          "tool": "jev_noul",
+          "model": "typesafe/jev-1.13",
+          "provider": "openrouter",
+          "status": "ok",
+          "results": [
+            {
+              "id": "proposition0",
+              "proposition": "The draft explicitly routes HTTP headers or redirects to curl.",
+              "probability": 0.22,
+              "label": "uncertain",
+              "auto": false
+            },
+            {
+              "id": "proposition1",
+              "proposition": "The draft explicitly routes local port ownership to lsof.",
+              "probability": 0.17,
+              "label": "uncertain",
+              "auto": false
+            },
+            {
+              "id": "proposition2",
+              "proposition": "The draft explicitly routes JSON key order comparison to jq -S and preserves arrays.",
+              "probability": 0.09,
+              "label": "unlikely",
+              "auto": true
+            },
+            {
+              "id": "proposition3",
+              "proposition": "The draft explicitly routes shell quoting or expansion bugs to ShellCheck.",
+              "probability": 0.2,
+              "label": "uncertain",
+              "auto": false
+            },
+            {
+              "id": "proposition4",
+              "proposition": "The draft explicitly routes shell command explanation to explainshell and confirms flags locally.",
+              "probability": 0.13,
+              "label": "unlikely",
+              "auto": true
+            },
+            {
+              "id": "proposition5",
+              "proposition": "The draft explicitly routes browser compatibility to Can I use and requires actual site behavior checks through repository browser tests.",
+              "probability": 0.07,
+              "label": "unlikely",
+              "auto": true
+            }
+          ],
+          "thresholds": {
+            "auto_accept": 0.85
+          },
+          "usage": {
+            "input_tokens": 1046,
+            "output_tokens": 130
+          }
+        }
+      },
+      {
+        "variant": "pointer",
+        "result": {
+          "tool": "jev_noul",
+          "model": "typesafe/jev-1.13",
+          "provider": "openrouter",
+          "status": "ok",
+          "results": [
+            {
+              "id": "proposition0",
+              "proposition": "The draft explicitly routes HTTP headers or redirects to curl.",
+              "probability": 0.08,
+              "label": "unlikely",
+              "auto": true
+            },
+            {
+              "id": "proposition1",
+              "proposition": "The draft explicitly routes local port ownership to lsof.",
+              "probability": 0.05,
+              "label": "unlikely",
+              "auto": true
+            },
+            {
+              "id": "proposition2",
+              "proposition": "The draft explicitly routes JSON key order comparison to jq -S and preserves arrays.",
+              "probability": 0.04,
+              "label": "unlikely",
+              "auto": true
+            },
+            {
+              "id": "proposition3",
+              "proposition": "The draft explicitly routes shell quoting or expansion bugs to ShellCheck.",
+              "probability": 0.07,
+              "label": "unlikely",
+              "auto": true
+            },
+            {
+              "id": "proposition4",
+              "proposition": "The draft explicitly routes shell command explanation to explainshell and confirms flags locally.",
+              "probability": 0.04,
+              "label": "unlikely",
+              "auto": true
+            },
+            {
+              "id": "proposition5",
+              "proposition": "The draft explicitly routes browser compatibility to Can I use and requires actual site behavior checks through repository browser tests.",
+              "probability": 0.03,
+              "label": "unlikely",
+              "auto": true
+            }
+          ],
+          "thresholds": {
+            "auto_accept": 0.85
+          },
+          "usage": {
+            "input_tokens": 1055,
+            "output_tokens": 130
+          }
+        }
+      },
+      {
+        "variant": "table",
+        "result": {
+          "tool": "jev_noul",
+          "model": "typesafe/jev-1.13",
+          "provider": "openrouter",
+          "status": "ok",
+          "results": [
+            {
+              "id": "proposition0",
+              "proposition": "The draft explicitly routes HTTP headers or redirects to curl.",
+              "probability": 0.99,
+              "label": "likely",
+              "auto": true
+            },
+            {
+              "id": "proposition1",
+              "proposition": "The draft explicitly routes local port ownership to lsof.",
+              "probability": 0.99,
+              "label": "likely",
+              "auto": true
+            },
+            {
+              "id": "proposition2",
+              "proposition": "The draft explicitly routes JSON key order comparison to jq -S and preserves arrays.",
+              "probability": 0.98,
+              "label": "likely",
+              "auto": true
+            },
+            {
+              "id": "proposition3",
+              "proposition": "The draft explicitly routes shell quoting or expansion bugs to ShellCheck.",
+              "probability": 0.99,
+              "label": "likely",
+              "auto": true
+            },
+            {
+              "id": "proposition4",
+              "proposition": "The draft explicitly routes shell command explanation to explainshell and confirms flags locally.",
+              "probability": 0.96,
+              "label": "likely",
+              "auto": true
+            },
+            {
+              "id": "proposition5",
+              "proposition": "The draft explicitly routes browser compatibility to Can I use and requires actual site behavior checks through repository browser tests.",
+              "probability": 0.97,
+              "label": "likely",
+              "auto": true
+            }
+          ],
+          "thresholds": {
+            "auto_accept": 0.85
+          },
+          "usage": {
+            "input_tokens": 1321,
+            "output_tokens": 130
+          }
+        }
+      }
+    ],
+    "design_tradeoffs": {
+      "tool": "jev_noul",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "status": "ok",
+      "results": [
+        {
+          "id": "proposition0",
+          "proposition": "The table variant provides directly actionable symptom routes without inventing a mandatory troubleshooting sequence.",
+          "probability": 0.9,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition1",
+          "proposition": "The list variant requires the agent to infer which tool answers each symptom.",
+          "probability": 0.91,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition2",
+          "proposition": "The pointer variant keeps AGENTS.md shorter but requires searching the source to resolve a symptom to a tool.",
+          "probability": 0.91,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition3",
+          "proposition": "A machine-wide availability inventory in AGENTS.md would require upkeep as installed tools change.",
+          "probability": 0.9,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition4",
+          "proposition": "Adding a separate diagnostics guide for six routes increases the number of documents agents must navigate.",
+          "probability": 0.71,
+          "label": "uncertain",
+          "auto": false
+        }
+      ],
+      "thresholds": {
+        "auto_accept": 0.85
+      },
+      "usage": {
+        "input_tokens": 1956,
+        "output_tokens": 109
+      }
+    },
+    "existing_rule_comparison": {
+      "tool": "jev_compare",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "overall": {
+        "relation": "same_fact",
+        "probabilities": {
+          "different_facts": 0.44,
+          "same_fact": 0.56,
+          "contradicts": 0
+        },
+        "confidence": 0.33,
+        "margin": 0.12000000000000005,
+        "decision": "review"
+      },
+      "aspects": [
+        {
+          "aspect": "branch and pull request workflow",
+          "relation": "same_fact",
+          "probabilities": {
+            "different_facts": 0,
+            "same_fact": 1,
+            "contradicts": 0
+          },
+          "confidence": 1,
+          "margin": 1,
+          "decision": "auto"
+        },
+        {
+          "aspect": "two local Playwright workers and full verification scope",
+          "relation": "same_fact",
+          "probabilities": {
+            "different_facts": 0,
+            "same_fact": 1,
+            "contradicts": 0
+          },
+          "confidence": 1,
+          "margin": 1,
+          "decision": "auto"
+        },
+        {
+          "aspect": "issue tracker pointer",
+          "relation": "same_fact",
+          "probabilities": {
+            "different_facts": 0,
+            "same_fact": 1,
+            "contradicts": 0
+          },
+          "confidence": 1,
+          "margin": 1,
+          "decision": "auto"
+        },
+        {
+          "aspect": "triage label pointer",
+          "relation": "same_fact",
+          "probabilities": {
+            "different_facts": 0,
+            "same_fact": 1,
+            "contradicts": 0
+          },
+          "confidence": 1,
+          "margin": 1,
+          "decision": "auto"
+        },
+        {
+          "aspect": "review feedback pointer",
+          "relation": "same_fact",
+          "probabilities": {
+            "different_facts": 0,
+            "same_fact": 1,
+            "contradicts": 0
+          },
+          "confidence": 1,
+          "margin": 1,
+          "decision": "auto"
+        },
+        {
+          "aspect": "domain docs pointer",
+          "relation": "same_fact",
+          "probabilities": {
+            "different_facts": 0,
+            "same_fact": 1,
+            "contradicts": 0
+          },
+          "confidence": 1,
+          "margin": 1,
+          "decision": "auto"
+        }
+      ],
+      "thresholds": {
+        "auto_accept": 0.85,
+        "minimum_margin": 0.5
+      },
+      "usage": {
+        "input_tokens": 2308,
+        "output_tokens": 302
+      }
+    },
+    "structure_decision": {
+      "tool": "jev_decide",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "recommendation": {
+        "selected": "symptom_table",
+        "escaped": false,
+        "confidence": 0.92,
+        "probabilities": {
+          "ask_user": 0,
+          "symptom_table": 0.93,
+          "separate_guide": 0.06,
+          "index_pointer": 0.01,
+          "none": 0,
+          "investigate": 0
+        },
+        "contradicted_requirements": []
+      },
+      "requirements_checked": 3,
+      "checks": [
+        {
+          "candidate": "symptom_table",
+          "requirement": 0,
+          "answer": "supported"
+        },
+        {
+          "candidate": "symptom_table",
+          "requirement": 1,
+          "answer": "supported"
+        },
+        {
+          "candidate": "symptom_table",
+          "requirement": 2,
+          "answer": "supported"
+        },
+        {
+          "candidate": "index_pointer",
+          "requirement": 0,
+          "answer": "supported"
+        },
+        {
+          "candidate": "index_pointer",
+          "requirement": 1,
+          "answer": "contradicted"
+        },
+        {
+          "candidate": "index_pointer",
+          "requirement": 2,
+          "answer": "supported"
+        },
+        {
+          "candidate": "separate_guide",
+          "requirement": 0,
+          "answer": "supported"
+        },
+        {
+          "candidate": "separate_guide",
+          "requirement": 1,
+          "answer": "supported"
+        },
+        {
+          "candidate": "separate_guide",
+          "requirement": 2,
+          "answer": "contradicted"
+        }
+      ],
+      "warnings": [],
+      "usage": {
+        "input_tokens": 2320,
+        "output_tokens": 458
+      }
+    },
+    "command_verification": {
+      "tool": "jev_verify",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "auto_accept": 0.8,
+      "subject_at": 0.5,
+      "summary": {
+        "verified": 4,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "curl captured HTTP 302 and HTTP 200 headers on a controlled local redirect.",
+          "verdict": "verified",
+          "probabilities": {
+            "contradicts": 0,
+            "says_nothing": 0,
+            "supports": 1
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": null,
+          "same_subject": 0.98
+        },
+        {
+          "id": "claim1",
+          "claim": "lsof identified the process listening on the controlled local server's port.",
+          "verdict": "verified",
+          "probabilities": {
+            "contradicts": 0,
+            "says_nothing": 0,
+            "supports": 1
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": null,
+          "same_subject": 0.98
+        },
+        {
+          "id": "claim2",
+          "claim": "jq -S produced identical fixture output while retaining [2,1] array order.",
+          "verdict": "verified",
+          "probabilities": {
+            "contradicts": 0,
+            "says_nothing": 0,
+            "supports": 1
+          },
+          "confidence": 0.99,
+          "action": "auto",
+          "supporting_evidence": null,
+          "same_subject": 0.97
+        },
+        {
+          "id": "claim3",
+          "claim": "ShellCheck detected SC2086 in the unquoted script, and the corrected script returned exit code 0.",
+          "verdict": "verified",
+          "probabilities": {
+            "contradicts": 0.03,
+            "says_nothing": 0.02,
+            "supports": 0.95
+          },
+          "confidence": 0.92,
+          "action": "auto",
+          "supporting_evidence": null,
+          "same_subject": 0.92
+        }
+      ],
+      "usage": {
+        "input_tokens": 2598,
+        "output_tokens": 248
+      }
+    },
+    "pre_edit_review": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.84,
+      "scores": {
+        "correctness": {
+          "score": 1.91,
+          "confidence": 0.86,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.05,
+            "2": 0.93
+          }
+        },
+        "spec_match": {
+          "score": 1.91,
+          "confidence": 0.86,
+          "probabilities": {
+            "0": 0,
+            "1": 0.09,
+            "2": 0.91
+          }
+        },
+        "test_gap": {
+          "score": 0.22,
+          "confidence": 0.67,
+          "probabilities": {
+            "0": 0.82,
+            "1": 0.14,
+            "2": 0.04
+          }
+        },
+        "blast_radius": {
+          "score": 0.11,
+          "confidence": 0.84,
+          "probabilities": {
+            "0": 0.94,
+            "1": 0.02,
+            "2": 0.04
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "review",
+      "composite": 0.9437500000000001,
+      "reason_codes": ["confidence_below_auto_accept"],
+      "limiting_rubrics": ["test_gap"],
+      "usage": {
+        "input_tokens": 2404,
+        "output_tokens": 79
+      }
+    },
+    "install-verification": {
+      "tool": "jev_verify",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "auto_accept": 0.8,
+      "subject_at": 0.5,
+      "summary": {
+        "verified": 1,
+        "contradicted": 0,
+        "unsupported": 1,
+        "needs_review": 0
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "Homebrew's tldr formula is disabled as unmaintained and explicitly identifies tlrc as its replacement.",
+          "verdict": "verified",
+          "probabilities": {
+            "contradicts": 0,
+            "supports": 1,
+            "says_nothing": 0
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "homebrew-formula",
+          "same_subject": 0.92
+        },
+        {
+          "id": "claim1",
+          "claim": "The tldr reference appears in the supplied source catalogue under CLI Tools / Other.",
+          "verdict": "unsupported",
+          "probabilities": {
+            "contradicts": 0.06,
+            "supports": 0.03,
+            "says_nothing": 0.91
+          },
+          "confidence": 0.86,
+          "action": "auto",
+          "supporting_evidence": null,
+          "same_subject": 0.21
+        }
+      ],
+      "usage": {
+        "input_tokens": 1150,
+        "output_tokens": 217
+      }
+    },
+    "tldr-source-verification": {
+      "tool": "jev_verify",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "auto_accept": 0.8,
+      "subject_at": 0.5,
+      "summary": {
+        "verified": 1,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "The source lists tldr in the CLI Tools chapter's Other subsection as simplified community-driven man pages.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 1,
+            "contradicts": 0,
+            "says_nothing": 0
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "other-subsection",
+          "same_subject": 0.93
+        }
+      ],
+      "usage": {
+        "input_tokens": 1177,
+        "output_tokens": 108
+      }
+    },
+    "tldr-screen": {
+      "tool": "jev_screen",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "probabilities": {
+        "injection": 0.02,
+        "substance": 0.98,
+        "relevance": 0.96
+      },
+      "thresholds": {
+        "block_at": 0.75,
+        "review_at": 0.25
+      },
+      "recommendation": {
+        "action": "pass",
+        "reason": "no signals above thresholds"
+      },
+      "usage": {
+        "input_tokens": 975,
+        "output_tokens": 57
+      }
+    },
+    "installed-command-verification": {
+      "tool": "jev_verify",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "auto_accept": 0.8,
+      "subject_at": 0.5,
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 1
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "All six local commands used by the final AGENTS.md are available: curl, lsof, jq, shellcheck, tldr and man.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 1,
+            "says_nothing": 0,
+            "contradicts": 0
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "command-inventory",
+          "same_subject": 0.89
+        },
+        {
+          "id": "claim1",
+          "claim": "The newly installed tldr command is tlrc v1.13.1 and successfully displays curl usage examples.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 0.97,
+            "says_nothing": 0,
+            "contradicts": 0.03
+          },
+          "confidence": 0.95,
+          "action": "auto",
+          "supporting_evidence": null,
+          "same_subject": 0.92
+        },
+        {
+          "id": "claim2",
+          "claim": "The final instruction section has no optional tool route and names tldr plus man for unfamiliar command flags.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 0.62,
+            "says_nothing": 0.02,
+            "contradicts": 0.36
+          },
+          "confidence": 0.43,
+          "action": "review",
+          "supporting_evidence": "final-agents",
+          "same_subject": 0.86
+        }
+      ],
+      "usage": {
+        "input_tokens": 2853,
+        "output_tokens": 344
+      }
+    },
+    "final-route-checks": {
+      "tool": "jev_noul",
+      "model": "typesafe/jev-1.13",
+      "provider": "openrouter",
+      "status": "ok",
+      "results": [
+        {
+          "id": "proposition0",
+          "proposition": "The instructions explicitly route HTTP headers or redirects to curl.",
+          "probability": 0.99,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition1",
+          "proposition": "The instructions explicitly route local port ownership to lsof.",
+          "probability": 0.99,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition2",
+          "proposition": "The instructions explicitly route JSON key-order comparisons to jq -S while preserving array order.",
+          "probability": 0.98,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition3",
+          "proposition": "The instructions explicitly route shell quoting or expansion bugs to ShellCheck.",
+          "probability": 0.99,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition4",
+          "proposition": "The instructions explicitly route unfamiliar command flags to tldr examples and installed man pages.",
+          "probability": 0.97,
+          "label": "likely",
+          "auto": true
+        },
+        {
+          "id": "proposition5",
+          "proposition": "The instructions explicitly route browser compatibility to Can I use and call for site behavior checks through repository browser tests.",
+          "probability": 0.98,
+          "label": "likely",
+          "auto": true
+        }
+      ],
+      "thresholds": {
+        "auto_accept": 0.85
+      },
+      "usage": {
+        "input_tokens": 1740,
+        "output_tokens": 130
+      }
+    }
+  },
+  "limitations": [
+    "Jev scores assess supplied text; they do not measure autonomous agent behavior or guarantee correctness.",
+    "The generic pointer and tool-list drafts were evaluated on explicit routing; this rubric favors instructions that name the tool directly.",
+    "The comparison's overall confidence was low because the addition introduces new facts; all six existing-policy aspects agreed. Actual prefix equality is checked after formatting.",
+    "The pre-edit patch review requested review because its test-gap confidence was 0.67; artifact lint and deterministic checks follow.",
+    "An oversized rerank and malformed context call were rejected and corrected; neither was accepted as evidence.",
+    "An initial command harness wrongly assumed web HTTP 200 and stopped at explainshell HTTP 403; its missing evidence caused five unsupported Jev claims. The repaired harness records actual codes and local results before verification.",
+    "Web checks establish HTTP responses only, not interactive site functionality.",
+    "An installation-verification claim about removing optional routes had low confidence (0.43); final deterministic token absence and row-content checks resolve it."
+  ],
+  "final_addition": "## Diagnostic references\n\nFor HTTP, port ownership, JSON comparison, shell, or browser compatibility questions, use the symptom routes below. They adapt entries from [The Book of Secret Knowledge](https://github.com/trimstray/the-book-of-secret-knowledge/blob/7d37069a361d3fd9f214480755f7969744e866fa/README.md), a reference catalogue rather than a repository workflow.\n\n| Symptom or question                          | Reference to consult                                                                                                               |\n| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |\n| HTTP status, headers, or redirects           | curl — CLI Tools / Network (HTTP).                                                                                                 |\n| Local dev server cannot bind its port        | lsof — Shell One-liners / Tool: lsof, for the process using that port.                                                             |\n| JSON fixtures differ only in key order       | jq `-S` — Shell One-liners / Tool: vimdiff / Compare two JSON files. Preserve array order.                                         |\n| Shell script has quoting or expansion bugs   | ShellCheck — Web Tools / Code parsers/playgrounds; check the script's declared shell is supported.                                 |\n| Unfamiliar shell flags or pipelines          | tldr — CLI Tools / Other, for command examples. Use `man <command>` to confirm flags for each pipeline stage. |\n| Browser support for a web feature is unclear | Can I use — Web Tools / Browsers. Confirm site behavior with the repository's browser tests.                                       |\n\nUse `curl`, `lsof`, `jq`, `shellcheck`, `tldr`, and `man` for these routes. Check `command -v <tool>` before use; install a missing command through the host's package manager and verify it runs. Confirm flags in local help/manuals. Treat upstream examples as references: adapt them to the current OS and shell, retain TLS verification, and use public or sanitized examples in online tools. These references supplement the development and testing requirements above.\n",
+  "followup": "User requested no optional tooling and installation of all commands needed by the final routes.",
+  "installation": {
+    "package": "tlrc",
+    "version": "1.13.1",
+    "command": "brew install tlrc",
+    "provides": "tldr",
+    "cache_update": "tldr --update; successful, 7557 pages",
+    "inventory": "curl: available\nlsof: available\njq: available\nshellcheck: available\ntldr: available\nman: available\nShellCheck version: 0.11.0\ntlrc v1.13.1 (implementing the tldr client specification v2.3)\n",
+    "example": "warning: 1 page(s) found for other platforms:\n1. windows (tldr --platform windows curl)\n\n  curl\n\n  Transfer data from or to a server.\n  Supports most protocols, including HTTP, HTTPS, FTP, SCP, etc.\n  See also: wcurl, wget.\n  More information: https://curl.se/docs/manpage.html.\n\n  Make an HTTP GET request and dump the contents in stdout:\n\n    curl https://example.com\n\n  Make an HTTP GET request, follow any 3xx redirects, and dump the reply headers and contents to stdout:\n\n    curl --location --dump-header - https://example.com\n\n  Download a file, saving the output under the filename indicated by the URL:\n\n    curl --remote-name https://example.com/filename.zip\n",
+    "example_scope": "Excerpt of the original tldr output: HTTPS GET, redirect/header inspection, and download. Remaining examples are omitted."
+  },
+  "artifact_sanitization": {
+    "scope": "Command captures, authoring-host installation inventory, and selected tldr excerpt; experiment judgments and recorded outcomes are preserved.",
+    "placeholders": [
+      "<FIXTURE_DIR>",
+      "<PORT>",
+      "<DATE>",
+      "<SERVER_PID>",
+      "<USER>"
+    ],
+    "omitted": "Absolute authoring-host paths, executable locations, file descriptor, device, size and node metadata.",
+    "interpretation": "These are sanitized recorded observations. Placeholder arguments identify the original fixtures and shared server without claiming to be literal executed commands."
+  }
+}
