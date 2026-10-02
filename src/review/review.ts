@@ -39,7 +39,9 @@ const publicNotice =
  * Beside the warning, the plain-English answer to "what does public mean?".
  * Native `<details>`: keyboard reachable, openable without JavaScript.
  */
-const noticeDetail = (style: string) => `<details data-notice-detail style="${style}">
+const noticeDetail = (
+  style: string,
+) => `<details data-notice-detail style="${style}">
   <summary style="cursor:pointer;display:inline;font-weight:650;text-decoration:underline;text-underline-offset:2px">What does “publicly on GitHub” mean?</summary>
   <p style="margin:6px 0 0">Your comment and your first name appear on a public list where the team works through the feedback. A first name is enough — it shows next to your comment so the team knows who to ask.</p>
   <p style="margin:6px 0 0">Nothing else is shared: no email address, no account and no tracking.</p>
@@ -48,7 +50,8 @@ const noticeDetail = (style: string) => `<details data-notice-detail style="${st
  * The explainer sits on the warning's own line, so the resting bar keeps the
  * height it had before this copy existed and the page reserves the same space.
  */
-const barNoticeStyle = "display:inline-block;font-weight:inherit;max-width:none;padding:0;color:#d4d3cc;font-size:12px";
+const barNoticeStyle =
+  "display:inline-block;font-weight:inherit;max-width:none;padding:0;color:#d4d3cc;font-size:12px";
 /** The explainer inside a panel, where it sits with other muted hints. */
 const panelNoticeStyle = "max-width:60ch;font-size:13px;color:#5e5e58";
 
@@ -338,6 +341,21 @@ export function mountReview() {
   let screenshot: Screenshot | undefined;
   let imageBusy = false;
   let imageGeneration = 0;
+  let stopFormLayout: (() => void) | undefined;
+  const viewport = window.visualViewport;
+  const sizeViewport = () => {
+    host.style.setProperty(
+      "--review-viewport-height",
+      `${viewport?.height ?? innerHeight}px`,
+    );
+    host.style.setProperty(
+      "--review-keyboard-inset",
+      `${Math.max(0, innerHeight - (viewport?.height ?? innerHeight) - (viewport?.offsetTop ?? 0))}px`,
+    );
+  };
+  viewport?.addEventListener("resize", sizeViewport);
+  viewport?.addEventListener("scroll", sizeViewport);
+  sizeViewport();
 
   const pointTools = () => ({
     widen: !!selected && !!widen(selected),
@@ -354,7 +372,9 @@ export function mountReview() {
   function showTools() {
     if (!form) return;
     const can = pointTools();
-    let reason = form.querySelector<HTMLElement>(`[data-reason="${targetReason}"]`);
+    let reason = form.querySelector<HTMLElement>(
+      `[data-reason="${targetReason}"]`,
+    );
     if (!reason) {
       reason = document.createElement("p");
       reason.className = "tool-reason";
@@ -403,13 +423,14 @@ export function mountReview() {
       if (enabled) button.removeAttribute("aria-describedby");
       else button.setAttribute("aria-describedby", targetReason);
     }
-    reason.textContent = !can.widen && !can.narrow
-      ? "You’ve reached the smallest and largest part of this selection."
-      : !can.widen
-        ? "There’s nothing larger around this to select."
-        : !can.narrow
-          ? "Already the smallest part of this selection."
-          : "";
+    reason.textContent =
+      !can.widen && !can.narrow
+        ? "You’ve reached the smallest and largest part of this selection."
+        : !can.widen
+          ? "There’s nothing larger around this to select."
+          : !can.narrow
+            ? "Already the smallest part of this selection."
+            : "";
     reason.style.display = !can.widen || !can.narrow ? "block" : "none";
   }
 
@@ -443,6 +464,7 @@ export function mountReview() {
   }
 
   function newForm(item?: FeedbackItem) {
+    stopFormLayout?.();
     editing = item;
     screenshot = item?.screenshot;
     imageGeneration++;
@@ -451,6 +473,28 @@ export function mountReview() {
       sections: pageSections(),
     });
     form = formPanel.querySelector("form")!;
+    form.querySelector(".current")!.classList.add("is-pinned");
+    const body = form.querySelector<HTMLElement>(".panel-body")!;
+    const showMore = () =>
+      body.classList.toggle(
+        "has-more",
+        body.scrollTop + body.clientHeight < body.scrollHeight - 1,
+      );
+    const resizing = new ResizeObserver(showMore);
+    resizing.observe(body);
+    const changing = new MutationObserver(showMore);
+    changing.observe(body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true,
+    });
+    body.addEventListener("scroll", showMore);
+    stopFormLayout = () => {
+      resizing.disconnect();
+      changing.disconnect();
+      body.removeEventListener("scroll", showMore);
+    };
     form.addEventListener("change", (event) => {
       if ((event.target as HTMLInputElement).name === "kind")
         form!.dataset.kindChosen = "yes";
@@ -618,6 +662,8 @@ export function mountReview() {
 
   formPanel.addEventListener("close", () => {
     if (resume) return;
+    stopFormLayout?.();
+    stopFormLayout = undefined;
     showHighlight(null);
     selected = null;
     target = undefined;
@@ -821,9 +867,7 @@ export function mountReview() {
     field.rows = 12;
     field.setAttribute("aria-label", "Your feedback as text");
     field.value = text;
-    sendPanel
-      .querySelector(".panel-body")
-      ?.append(field);
+    sendPanel.querySelector(".panel-body")?.append(field);
     return field;
   }
 
@@ -959,6 +1003,9 @@ export function mountReview() {
   }
 
   function dispose() {
+    stopFormLayout?.();
+    viewport?.removeEventListener("resize", sizeViewport);
+    viewport?.removeEventListener("scroll", sizeViewport);
     stopPicking();
     cancelAnimationFrame(frame);
     removeEventListener("scroll", place);

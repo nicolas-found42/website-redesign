@@ -65,9 +65,7 @@ const measure = (page: Page) =>
       }
       return [250, 249, 246];
     };
-    const sample = (selector: string, name: string): Sample | null => {
-      const element = root.querySelector(selector);
-      if (!element) return null;
+    const sample = (element: Element, name: string): Sample => {
       const style = getComputedStyle(element);
       const behind = ground(element.parentElement ?? element);
       const fg = over(parse(style.color), behind);
@@ -79,15 +77,26 @@ const measure = (page: Page) =>
         ground: `rgb(${behind.join(",")})`,
       };
     };
-    return [
-      sample(".panel-head .eyebrow", "eyebrow"),
-      sample(".panel-head .where", "where"),
-      sample(".panel-body .hint", "hint"),
-      sample(".choice-hint", "choice-hint"),
-      sample('.choice:has(input:checked) .choice-hint', "checked choice-hint"),
-      sample(".bar-notice", "bar-notice"),
-      sample(".bar-warning", "bar-warning"),
-    ].filter((entry): entry is Sample => entry !== null);
+    const selectors = [
+      [".panel-head .eyebrow", "eyebrow"],
+      [".panel-head .where", "where"],
+      [".panel-body .hint", "hint"],
+      [".choice-hint", "choice-hint"],
+      [".choice:has(input:checked) .choice-hint", "checked choice-hint"],
+      [".bar-notice", "bar-notice"],
+      [".bar-warning", "bar-warning"],
+    ];
+    return selectors.flatMap(([selector, name]) =>
+      [...root.querySelectorAll(selector)]
+        .filter(
+          (element) =>
+            element.getClientRects().length > 0 &&
+            getComputedStyle(element).visibility !== "hidden",
+        )
+        .map((element, index) =>
+          sample(element, index ? `${name}[${index}]` : name),
+        ),
+    );
   }, VIEW);
 
 test("#124: every instructional string is measured at 4.5:1 or better", async ({
@@ -95,14 +104,35 @@ test("#124: every instructional string is measured at 4.5:1 or better", async ({
 }) => {
   await openForm(page);
   const samples = await measure(page);
-  expect(samples.length).toBeGreaterThanOrEqual(7);
-  for (const sample of samples) {
-    // Nothing here is large text: all the helpers are 12-15px, so 4.5:1 is
-    // the bar for every one of them.
-    expect(
-      sample.ratio,
-      `${sample.name} (${sample.px}px/${sample.weight}) ${sample.ratio}:1 on ${sample.ground}`,
-    ).toBeGreaterThanOrEqual(4.5);
+  expect(samples.length).toBeGreaterThanOrEqual(12);
+  const assertContrast = (samples: Sample[]) => {
+    for (const sample of samples)
+      expect(
+        sample.ratio,
+        `${sample.name} (${sample.px}px/${sample.weight}) ${sample.ratio}:1 on ${sample.ground}`,
+      ).toBeGreaterThanOrEqual(4.5);
+  };
+  assertContrast(samples);
+  const form = page.getByRole("dialog");
+  for (const name of ["Wording", "Content", "Visual", "Layout"]) {
+    await form.getByRole("radio", { name: new RegExp(`^${name}`) }).check();
+    assertContrast(await measure(page));
+    const actions =
+      name === "Content"
+        ? ["Add something", "Remove this", "Replace it"]
+        : name === "Layout"
+          ? [
+              "Move it",
+              "Remove it",
+              "Combine it with another section",
+              "Change the order of what’s inside",
+              "Something else",
+            ]
+          : [];
+    for (const action of actions) {
+      await form.getByRole("radio", { name: action, exact: true }).check();
+      assertContrast(await measure(page));
+    }
   }
   // The measured figures the PR cites, pinned so they cannot silently drift.
   const byName = new Map(samples.map((s) => [s.name, s.ratio]));
@@ -313,16 +343,17 @@ test("#126: the current target pins to the top of the scrolling form", async ({
     const current = root.querySelector(".current")!;
     const body = root.querySelector(".panel-body")!;
     const wording = root.querySelector('textarea[name="proposed"]')!;
-    // The shell toggles these classes; the CSS is what is measured here.
-    current.classList.add("is-pinned");
-    body.classList.add("has-more");
+    // Classes must come from the production form, not this test.
     const style = getComputedStyle(current);
     // Scroll so the wording field is in view — the moment the acceptance
     // criterion is about.
     const bodyTop0 = body.getBoundingClientRect().top;
     const wordingOffset =
       wording.getBoundingClientRect().top - bodyTop0 + body.scrollTop;
-    body.scrollTo({ top: Math.max(0, wordingOffset - 120), behavior: "instant" });
+    body.scrollTo({
+      top: Math.max(0, wordingOffset - 120),
+      behavior: "instant",
+    });
     const bodyRect = body.getBoundingClientRect();
     const currentRect = current.getBoundingClientRect();
     const wordingRect = wording.getBoundingClientRect();
@@ -358,15 +389,13 @@ test("#126: the current target pins to the top of the scrolling form", async ({
   expect(pinned.currentBottom).toBeLessThanOrEqual(pinned.bodyBottom);
   expect(pinned.currentBottom).toBeLessThanOrEqual(pinned.wordingTop);
 
-  // Control: with the pin removed the quote clips off the top of the scroll
-  // box at the same scroll position, so the class is what keeps it visible.
-  const unpinnedTop = await page.evaluate((view) => {
-    const root = document.querySelector(view)!.shadowRoot!;
-    const current = root.querySelector(".current")!;
-    current.classList.remove("is-pinned");
-    return +current.getBoundingClientRect().top.toFixed(1);
-  }, VIEW);
-  expect(unpinnedTop).toBeLessThan(pinned.bodyTop);
+  // The cue disappears at the end; the runtime owns both states.
+  await page.locator("#found42-review .panel-body").evaluate((body) => {
+    body.scrollTo({ top: body.scrollHeight, behavior: "instant" });
+  });
+  await expect(page.locator("#found42-review .panel-body")).not.toHaveClass(
+    /has-more/,
+  );
 });
 
 test("#126: pinned/scroll styling keeps the pinned phone geometry", async ({
@@ -378,10 +407,11 @@ test("#126: pinned/scroll styling keeps the pinned phone geometry", async ({
   const form = await openForm(page);
   const geometry = await page.evaluate((view) => {
     const root = document.querySelector(view)!.shadowRoot!;
-    root.querySelector(".current")!.classList.add("is-pinned");
-    root.querySelector(".panel-body")!.classList.add("has-more");
+
     const sheet = root.querySelector(".panel[open]")!.getBoundingClientRect();
-    const heading = document.querySelector("#hero-title")!.getBoundingClientRect();
+    const heading = document
+      .querySelector("#hero-title")!
+      .getBoundingClientRect();
     return {
       x: +sheet.x.toFixed(1),
       width: +sheet.width.toFixed(1),
@@ -398,6 +428,58 @@ test("#126: pinned/scroll styling keeps the pinned phone geometry", async ({
   expect(geometry.scrollWidth).toBeLessThanOrEqual(390);
   await expect(form).toBeVisible();
 });
+
+for (const size of [
+  { width: 360, height: 640 },
+  { width: 390, height: 844 },
+]) {
+  test(`#126: a simulated keyboard viewport keeps Save and Cancel visible (${size.width}x${size.height})`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(size);
+    const form = await openForm(page);
+    const available = size.height - 280;
+    await page.evaluate((height) => {
+      const viewport = window.visualViewport!;
+      Object.defineProperty(viewport, "height", {
+        configurable: true,
+        value: height,
+      });
+      Object.defineProperty(viewport, "offsetTop", {
+        configurable: true,
+        value: 0,
+      });
+      viewport.dispatchEvent(new Event("resize"));
+    }, available);
+    await expect
+      .poll(() =>
+        form.evaluate((panel) =>
+          Math.round(panel.getBoundingClientRect().bottom),
+        ),
+      )
+      .toBe(available);
+    for (const name of ["Save feedback", "Cancel"]) {
+      const button = form.getByRole("button", { name, exact: true });
+      await expect(button).toBeVisible();
+      const box = await button.boundingBox();
+      expect(box!.y).toBeGreaterThanOrEqual(0);
+      expect(box!.y + box!.height).toBeLessThanOrEqual(available);
+    }
+    await page.evaluate(() => {
+      const viewport = window.visualViewport!;
+      delete (viewport as unknown as { height?: number }).height;
+      delete (viewport as unknown as { offsetTop?: number }).offsetTop;
+      viewport.dispatchEvent(new Event("resize"));
+    });
+    await expect
+      .poll(() =>
+        form.evaluate((panel) =>
+          Math.round(panel.getBoundingClientRect().bottom),
+        ),
+      )
+      .toBe(size.height);
+  });
+}
 
 test("contract tokens are present with the agreed values", async ({ page }) => {
   await openForm(page);

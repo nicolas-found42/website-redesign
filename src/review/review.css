@@ -416,6 +416,7 @@ button:disabled {
 }
 
 .panel-foot {
+  flex-shrink: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -601,8 +602,7 @@ textarea {
 }
 
 /* #126: while the wording field is edited the target quote sticks to the top of
-   .panel-body, so the reviewer never rewrites copy blind. Stream A/B set
-   .is-pinned; this only supplies the presentation. */
+   .panel-body, so the reviewer keeps the source in view while typing. */
 .current.is-pinned {
   position: sticky;
   top: -18px;
@@ -750,10 +750,10 @@ textarea {
 @media (max-width: 700px) {
   .panel,
   .panel.dock-left {
-    inset: auto 0 0 0;
+    inset: auto 0 var(--review-keyboard-inset, 0px) 0;
     width: 100%;
     height: auto;
-    max-height: 78dvh;
+    max-height: min(78dvh, var(--review-viewport-height, 100dvh));
     border: 0;
     border-radius: 16px 16px 0 0;
     box-shadow: 0 -12px 40px rgb(0 0 0 / 20%);
@@ -761,7 +761,7 @@ textarea {
 
   .panel-list,
   .panel-list.dock-left {
-    max-height: 88dvh;
+    max-height: min(88dvh, var(--review-viewport-height, 100dvh));
   }
 
   .kinds .choices {
