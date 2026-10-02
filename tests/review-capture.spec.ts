@@ -33,31 +33,6 @@ test.describe("native tab screenshot", () => {
       element.append(marker);
     });
     await expect(form.locator("[data-capture-control-marker]")).toBeVisible();
-    const captureStates: unknown[] = [];
-    await page.exposeFunction("observeCaptureControls", (state: unknown) => {
-      captureStates.push(state);
-    });
-    await page.evaluate(() => {
-      const host = document.querySelector("#found42-review")!;
-      const observer = new MutationObserver(() => {
-        if (!host.hasAttribute("data-capturing")) return;
-        const dialog = host.shadowRoot!.querySelector("dialog")!;
-        const marker = dialog.querySelector("[data-capture-control-marker]")!;
-        void (
-          window as unknown as {
-            observeCaptureControls: (state: unknown) => Promise<void>;
-          }
-        ).observeCaptureControls({
-          dialog: getComputedStyle(dialog).visibility,
-          marker: getComputedStyle(marker).visibility,
-          backdrop: getComputedStyle(dialog, "::backdrop").backgroundColor,
-        });
-      });
-      observer.observe(host, {
-        attributes: true,
-        attributeFilter: ["data-capturing"],
-      });
-    });
     const bounds = (await heading.boundingBox())!;
     await form.getByRole("button", { name: "Capture this tab" }).click();
     await expect(form.getByRole("status")).toContainText("Screenshot ready", {
@@ -112,7 +87,7 @@ test.describe("native tab screenshot", () => {
       { image, bounds },
     );
     await test.info().attach("native-capture-samples.json", {
-      body: JSON.stringify({ bounds, captureStates, ...pixel }, null, 2),
+      body: JSON.stringify({ bounds, ...pixel }, null, 2),
       contentType: "application/json",
     });
     // Native video colour conversion and chroma subsampling can shift individual channels.
@@ -192,3 +167,66 @@ for (const change of ["offscreen", "detached", "scroll"] as const) {
     expect(result.state).toBe("ended");
   });
 }
+
+test("capture waits for the hidden page to paint before consuming queued video frames", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const result = await page.evaluate(async () => {
+    const modulePath = "/src/review/screenshot.ts";
+    const { reviewTabCapture } = await import(modulePath);
+    const stream = document.createElement("canvas").captureStream();
+    const track = stream.getVideoTracks()[0];
+    let handle = "";
+    Object.defineProperty(navigator.mediaDevices, "setCaptureHandleConfig", {
+      configurable: true,
+      value: (config: { handle: string }) => {
+        handle = config.handle;
+      },
+    });
+    Object.defineProperty(navigator.mediaDevices, "getDisplayMedia", {
+      configurable: true,
+      value: async () => stream,
+    });
+    Object.defineProperty(track, "getSettings", {
+      value: () => ({ displaySurface: "browser" }),
+    });
+    Object.defineProperty(track, "getCaptureHandle", {
+      value: () => ({ handle }),
+    });
+    HTMLVideoElement.prototype.play = async () => {};
+    const selected = document.createElement("div");
+    selected.style.cssText =
+      "position:fixed;top:100px;left:100px;width:100px;height:100px";
+    document.body.append(selected);
+    let paints = 0;
+    let frames = 0;
+    const paintsAtFrame: number[] = [];
+    // Native callbacks can deliver already queued frames before the page paints.
+    HTMLVideoElement.prototype.requestVideoFrameCallback = (callback) => {
+      queueMicrotask(() => {
+        paintsAtFrame.push(paints);
+        // Stop before encoding: this probe measures ordering at the capture seam.
+        if (++frames === 2) selected.remove();
+        callback(0, {} as VideoFrameCallbackMetadata);
+      });
+      return frames;
+    };
+    try {
+      await reviewTabCapture().capture(selected, (hidden: boolean) => {
+        if (hidden)
+          requestAnimationFrame(() => {
+            paints++;
+            requestAnimationFrame(() => {
+              paints++;
+            });
+          });
+      });
+    } catch {
+      // Detaching the target intentionally exercises cleanup after the probe.
+    }
+    return { paintsAtFrame, state: track.readyState };
+  });
+  expect(result.paintsAtFrame).toEqual([2, 2]);
+  expect(result.state).toBe("ended");
+});
