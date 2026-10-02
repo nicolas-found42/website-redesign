@@ -107,8 +107,9 @@ export function sectionName(section: Element | null) {
   const named =
     (labelledBy && document.getElementById(labelledBy)) ||
     section.querySelector("h1, h2, h3");
-  // Named by the page's own title, a band is the page's opening.
-  if (named?.localName === "h1") return "Page opening";
+  // Named by the page's own title, a band is the page's opening. The gloss is
+  // the reviewer's, not the sitemap id (#129); the stored field keeps its shape.
+  if (named?.localName === "h1") return "Top of the page";
   return (
     clean((named as HTMLElement | null)?.innerText) ||
     clean(section.getAttribute("aria-label")) ||
