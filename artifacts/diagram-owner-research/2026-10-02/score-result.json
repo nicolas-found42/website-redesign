@@ -1,0 +1,402 @@
+{
+  "model": "typesafe/jev-1.13-20260917",
+  "answers": {
+    "scene0_activity": {
+      "type": "score",
+      "score": 1.71,
+      "legend": {
+        "0": "Only generic office equipment; no owner-specific activity",
+        "1": "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "2": "Several concrete actions and artifacts strongly distinguish the intended owner"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.28,
+        "2": 0.71
+      },
+      "confidence": 0.56
+    },
+    "scene0_human": {
+      "type": "score",
+      "score": 1.66,
+      "legend": {
+        "0": "Decisions appear automatic or human agency is absent",
+        "1": "A person is present but their responsibility is ambiguous",
+        "2": "A person visibly performs the relevant decision, review, or test"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.31,
+        "2": 0.68
+      },
+      "confidence": 0.49
+    },
+    "scene0_difference": {
+      "type": "score",
+      "score": 1.71,
+      "legend": {
+        "0": "Could be substituted for Workshops without changing the visible activity",
+        "1": "Some distinction, but principal scene still resembles group instruction",
+        "2": "Principal activity is clearly different from guided workshop learning"
+      },
+      "probabilities": {
+        "0": 0.12,
+        "1": 0.05,
+        "2": 0.83
+      },
+      "confidence": 0.57
+    },
+    "scene0_real": {
+      "type": "score",
+      "score": 2,
+      "legend": {
+        "0": "Fantastical or unrelated metaphorical world",
+        "1": "Office-like setting with metaphorical elements dominating",
+        "2": "Plausible business work setting with ordinary recognizable tools"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0,
+        "2": 1
+      },
+      "confidence": 0.99
+    },
+    "scene0_owner": {
+      "type": "choice",
+      "choice": "workflows",
+      "probabilities": {
+        "workshops": 0.01,
+        "workflows": 0.94,
+        "manual_review": 0.04,
+        "contributors": 0,
+        "automations": 0,
+        "executives": 0,
+        "builders": 0.01
+      },
+      "confidence": 0.93
+    },
+    "scene0_visual_proof": {
+      "type": "noul",
+      "noul": 0.02
+    },
+    "scene1_activity": {
+      "type": "score",
+      "score": 1.79,
+      "legend": {
+        "0": "Only generic office equipment; no owner-specific activity",
+        "1": "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "2": "Several concrete actions and artifacts strongly distinguish the intended owner"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.2,
+        "2": 0.8
+      },
+      "confidence": 0.69
+    },
+    "scene1_human": {
+      "type": "score",
+      "score": 1.97,
+      "legend": {
+        "0": "Decisions appear automatic or human agency is absent",
+        "1": "A person is present but their responsibility is ambiguous",
+        "2": "A person visibly performs the relevant decision, review, or test"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.02,
+        "2": 0.98
+      },
+      "confidence": 0.96
+    },
+    "scene1_difference": {
+      "type": "score",
+      "score": 1.98,
+      "legend": {
+        "0": "Could be substituted for Workshops without changing the visible activity",
+        "1": "Some distinction, but principal scene still resembles group instruction",
+        "2": "Principal activity is clearly different from guided workshop learning"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0,
+        "2": 0.99
+      },
+      "confidence": 0.97
+    },
+    "scene1_real": {
+      "type": "score",
+      "score": 1.99,
+      "legend": {
+        "0": "Fantastical or unrelated metaphorical world",
+        "1": "Office-like setting with metaphorical elements dominating",
+        "2": "Plausible business work setting with ordinary recognizable tools"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.01,
+        "2": 0.99
+      },
+      "confidence": 0.98
+    },
+    "scene1_owner": {
+      "type": "choice",
+      "choice": "automations",
+      "probabilities": {
+        "workshops": 0,
+        "workflows": 0,
+        "manual_review": 0,
+        "contributors": 0,
+        "executives": 0,
+        "automations": 1,
+        "builders": 0
+      },
+      "confidence": 1
+    },
+    "scene1_visual_proof": {
+      "type": "noul",
+      "noul": 0.02
+    },
+    "scene2_activity": {
+      "type": "score",
+      "score": 1.63,
+      "legend": {
+        "0": "Only generic office equipment; no owner-specific activity",
+        "1": "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "2": "Several concrete actions and artifacts strongly distinguish the intended owner"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.36,
+        "2": 0.64
+      },
+      "confidence": 0.45
+    },
+    "scene2_human": {
+      "type": "score",
+      "score": 1.89,
+      "legend": {
+        "0": "Decisions appear automatic or human agency is absent",
+        "1": "A person is present but their responsibility is ambiguous",
+        "2": "A person visibly performs the relevant decision, review, or test"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.1,
+        "2": 0.9
+      },
+      "confidence": 0.84
+    },
+    "scene2_difference": {
+      "type": "score",
+      "score": 1.98,
+      "legend": {
+        "0": "Could be substituted for Workshops without changing the visible activity",
+        "1": "Some distinction, but principal scene still resembles group instruction",
+        "2": "Principal activity is clearly different from guided workshop learning"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0,
+        "2": 0.99
+      },
+      "confidence": 0.96
+    },
+    "scene2_real": {
+      "type": "score",
+      "score": 2,
+      "legend": {
+        "0": "Fantastical or unrelated metaphorical world",
+        "1": "Office-like setting with metaphorical elements dominating",
+        "2": "Plausible business work setting with ordinary recognizable tools"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0,
+        "2": 1
+      },
+      "confidence": 1
+    },
+    "scene2_owner": {
+      "type": "choice",
+      "choice": "executives",
+      "probabilities": {
+        "workshops": 0,
+        "workflows": 0,
+        "manual_review": 0,
+        "contributors": 0,
+        "automations": 0,
+        "executives": 1,
+        "builders": 0
+      },
+      "confidence": 1
+    },
+    "scene2_visual_proof": {
+      "type": "noul",
+      "noul": 0.02
+    },
+    "scene3_activity": {
+      "type": "score",
+      "score": 1.33,
+      "legend": {
+        "0": "Only generic office equipment; no owner-specific activity",
+        "1": "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "2": "Several concrete actions and artifacts strongly distinguish the intended owner"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.65,
+        "2": 0.34
+      },
+      "confidence": 0.48
+    },
+    "scene3_human": {
+      "type": "score",
+      "score": 1.88,
+      "legend": {
+        "0": "Decisions appear automatic or human agency is absent",
+        "1": "A person is present but their responsibility is ambiguous",
+        "2": "A person visibly performs the relevant decision, review, or test"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.11,
+        "2": 0.89
+      },
+      "confidence": 0.82
+    },
+    "scene3_difference": {
+      "type": "score",
+      "score": 1.89,
+      "legend": {
+        "0": "Could be substituted for Workshops without changing the visible activity",
+        "1": "Some distinction, but principal scene still resembles group instruction",
+        "2": "Principal activity is clearly different from guided workshop learning"
+      },
+      "probabilities": {
+        "0": 0.04,
+        "1": 0.03,
+        "2": 0.93
+      },
+      "confidence": 0.83
+    },
+    "scene3_real": {
+      "type": "score",
+      "score": 2,
+      "legend": {
+        "0": "Fantastical or unrelated metaphorical world",
+        "1": "Office-like setting with metaphorical elements dominating",
+        "2": "Plausible business work setting with ordinary recognizable tools"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0,
+        "2": 1
+      },
+      "confidence": 1
+    },
+    "scene3_owner": {
+      "type": "choice",
+      "choice": "contributors",
+      "probabilities": {
+        "workshops": 0,
+        "workflows": 0,
+        "manual_review": 0,
+        "contributors": 1,
+        "executives": 0,
+        "automations": 0,
+        "builders": 0
+      },
+      "confidence": 1
+    },
+    "scene3_visual_proof": {
+      "type": "noul",
+      "noul": 0.02
+    },
+    "scene4_activity": {
+      "type": "score",
+      "score": 1.97,
+      "legend": {
+        "0": "Only generic office equipment; no owner-specific activity",
+        "1": "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "2": "Several concrete actions and artifacts strongly distinguish the intended owner"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.03,
+        "2": 0.97
+      },
+      "confidence": 0.95
+    },
+    "scene4_human": {
+      "type": "score",
+      "score": 1.92,
+      "legend": {
+        "0": "Decisions appear automatic or human agency is absent",
+        "1": "A person is present but their responsibility is ambiguous",
+        "2": "A person visibly performs the relevant decision, review, or test"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.07,
+        "2": 0.93
+      },
+      "confidence": 0.88
+    },
+    "scene4_difference": {
+      "type": "score",
+      "score": 1.7,
+      "legend": {
+        "0": "Could be substituted for Workshops without changing the visible activity",
+        "1": "Some distinction, but principal scene still resembles group instruction",
+        "2": "Principal activity is clearly different from guided workshop learning"
+      },
+      "probabilities": {
+        "0": 0.06,
+        "1": 0.18,
+        "2": 0.76
+      },
+      "confidence": 0.55
+    },
+    "scene4_real": {
+      "type": "score",
+      "score": 1.99,
+      "legend": {
+        "0": "Fantastical or unrelated metaphorical world",
+        "1": "Office-like setting with metaphorical elements dominating",
+        "2": "Plausible business work setting with ordinary recognizable tools"
+      },
+      "probabilities": {
+        "0": 0,
+        "1": 0.01,
+        "2": 0.99
+      },
+      "confidence": 0.98
+    },
+    "scene4_owner": {
+      "type": "choice",
+      "choice": "builders",
+      "probabilities": {
+        "workshops": 0,
+        "workflows": 0.01,
+        "manual_review": 0,
+        "contributors": 0,
+        "automations": 0,
+        "executives": 0,
+        "builders": 0.99
+      },
+      "confidence": 0.99
+    },
+    "scene4_visual_proof": {
+      "type": "noul",
+      "noul": 0.02
+    }
+  },
+  "usage": {
+    "input_tokens": 4876,
+    "output_tokens": 773,
+    "cost": 0.000204792
+  },
+  "id": "gen-dec-1790984702-GWSbtpysxz4C30MyK8UL",
+  "provider": "TypeSafe"
+}

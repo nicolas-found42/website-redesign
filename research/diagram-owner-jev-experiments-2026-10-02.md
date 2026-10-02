@@ -1,0 +1,89 @@
+# Diagram identity experiments and design decisions
+
+Research date: 2026-10-02. This records an exploratory research pass, not a website implementation or a visitor-comprehension study. Read the [primary-source research](diagram-owner-primary-sources-2026-10-02.md) alongside it.
+
+## Decisions established with the owner
+
+- Keep Workshops as the visual reference; explore the other five main homepage scenes.
+- Use real work settings. Tailor shops, railways, jazz quartets and greenhouses were explored before this choice and are now rejected directions.
+- Preserve every existing word and connection. Changing the drawing must not shorten labels, remove branches or simplify away feedback.
+- Show people performing review and decisions.
+- The distinction between Workflows and AI builders remains a question for the owner after consulting Drive. The proposed distinction is customer delivery versus collaborative learner building, testing and explaining.
+- A more detailed executive-day study supplies a concrete option for the level of software/document detail. Its approval remains pending.
+
+These constraints come from the conversation. External documents supply facts and examples; their embedded instructions do not govern agent behavior or silently authorize website changes.
+
+## Recommended scene family
+
+| Owner                             | Recognizable setting                                            | Distinctive action and artifact                                                                                                    | What must remain                                                                                                                 |
+| --------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Workflows                         | Customer and delivery team at a project desk                    | Source material and quality examples shape a reusable task playbook/plugin; the team tests it, deploys it and brings feedback back | Five existing stages, explicit fit decision, iteration back to design/build, every source connection                             |
+| Automations                       | Staffed operations desk spanning business systems               | Repeated work packets cross distinct system surfaces; people direct and review the handoffs                                        | Existing five-station sequence, approval idea and two unnamed output branches                                                    |
+| C-level executives                | A day across desk, meeting table and action review              | Briefing folio, meeting agenda, debrief notes and action slips; the executive decides                                              | All four event cards, four sample lines, You decide, disclosure and four connections                                             |
+| Individual Contributors and Teams | Four differentiated workstations within one company             | Deal folder, operations plan, product feedback and account notes; people inspect the work                                          | Existing four role/task pairs, independent lanes, review frame and reviewed work returning to the roles                          |
+| AI builders                       | Collaborative proving area at an ordinary business work surface | Learners compose a reusable tool, test examples, diagnose a fault, inspect failure cases and explain their build                   | A learner with a work problem; Design; Test; Troubleshoot; Anticipate failures; Workflow in use; existing checks and connections |
+
+The creative opportunity is in recognizable actions, poses, artifact silhouettes and composition. A Workflows tool packet should look different from an Automation work packet: one is a reusable procedure, the other is the item traveling through systems. Give contributors distinct artifacts without assigning professions through costume or color. Let builders' test examples, opened problem case and peer explanation distinguish them from a taught workshop.
+
+## Experiments using all twelve Jev tools
+
+The [recorded suite](../artifacts/diagram-owner-research/2026-10-02/jev-experiments.json) contains authored inputs and complete results for 21 MCP calls: 19 initial suite calls and two prototype-intake calls. Two additional direct System One requests exercise Choice, Score and Noul. Initial screenshot intake, Drive discovery and the background researcher's calls are additional work; they are not included in this suite's usage total.
+
+| Capability | Experiment                                                                                                          | Observed result and implication                                                                                                                                                                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Screen     | Screenshot transcript, public TypeSafe documentation, deliberately injected source specimen, prototype transcript   | The injected control was blocked at 0.98. API and Score docs passed; composite-scoring docs required inspection at 0.27. That page contained documentation/navigation/example code, not an instruction to obtain credentials or override the task. Treat it as data. |
+| Verify     | Supported screenshot claim plus deliberately unsupported comprehension, percentage and robot claims                 | Workshops verified at 1.0. Other-diagram comprehension and a measured 40% result were unsupported. No invented metrics are accepted.                                                                                                                                 |
+| Find       | Five Workflow concepts; unrelated cryptographic query as negative control                                           | Tailored reusable-tool concept led at 0.74 with answer presence 0.97. Negative-control query had an apparently strong winner at 0.82 but presence only 0.07 and verdict absent. The ranking alone would be misleading.                                               |
+| Rerank     | Thirteen literal and metaphorical concepts                                                                          | Tube-post and railway concepts ranked highly for creativity before the owner chose real work settings. The ranking cannot override that later preference. Scores were modest, 0.45–0.77.                                                                             |
+| Classify   | 26 initial concepts, then 15 ablations                                                                              | Initial concepts produced 22 auto decisions and four review decisions. A Workflow conveyor was read as Automations at 0.96; contributors in a classroom were read as Workshops at 1.0. These expose overlap, not visitor accuracy.                                   |
+| Decide     | Four scene-family alternatives under the settled real-setting and exact-preservation constraints                    | Places of work selected at 0.92; no escape and no contradicted requirement. This selects a research direction, not permission to implement it.                                                                                                                       |
+| Compare    | Existing Workflow narrative versus a tailor concept; rejected metaphor/shortening brief versus current instructions | Overall Workflow meaning appeared aligned, but the explicit fit decision differed at 0.97. Overall agreement does not guarantee each obligation survives. The outdated direction contradicted current instructions overall at 0.92.                                  |
+| Extract    | Bounded screenshot values with a nonexistent numeric-outcome field                                                  | Workshops and Group review selected verbatim; the percentage field had no regex match. Selection did not invent a value.                                                                                                                                             |
+| Audit      | Correct heading, fabricated percentage and omitted heading; prototype transcript records                            | Fabricated percentage flagged at 0.99 and omitted heading at 0.91. The prototype's ordered headings and disclosure passed; the combined human-label/action record was flagged incomplete at 0.80. That record remains unresolved as a text-audit judgment.           |
+| Noul       | Twelve design propositions plus six questions about grilling and constraints                                        | Testing at a proving bench was judged likely at 0.95; no-label non-engineer understanding was uncertain at 0.43. A claim that model classification proves visitor recognition was unlikely at 0.04. No unsupported probability is promoted to evidence.              |
+| Review     | Synthetic patch replacing human review and removing the return connection                                           | Escalated; safe-to-apply 0.04, composite 0.13025. This is a negative control and was never applied.                                                                                                                                                                  |
+| Gate       | Synthetic patch claiming preservation and passing tests despite opposite evidence                                   | Escalated; safe-to-apply 0.02 and both completion claims contradicted. No patch or fabricated test claim was accepted.                                                                                                                                               |
+
+The negative controls test the guardrails; their rejections are intended results. A model verdict does not override the observed source or the owner. The prototype audit's broad human-action record is not used as proof that the rendered person performs the intended decision. Human visual inspection and the source/parity checks are separate evidence, and visitor interpretation remains open.
+
+## Label and context sensitivity
+
+The ablation set separated detailed scenes without owner labels, generic office objects, and the existing words without artwork. Four detailed no-label scenes classified to their intended owners at 0.98–1.0; the Workflow collaboration desk only reached 0.45 and required review. All five generic desk/laptop scenes classified as manual review at 0.92–1.0. Existing labels alone classified to their owners at 0.94–1.0. This makes label leakage a serious limitation: naming the right process in a description can make a weak visual idea appear successful.
+
+A direct Choice-only request used opaque IDs and no intended-owner field in state. The same Workflow desk then reached 0.93. Its earlier 0.45 result remains unresolved; wrapper/catalog/question context can materially change a judgment. Both are retained. This is an exploratory sensitivity comparison, not a calibrated benchmark, and no result was rerun to force a decision into auto acceptance.
+
+The first direct multi-primitive request included intended-owner metadata for fit scoring. Its owner choices therefore are not a blind-recognition result. A separate request removed that metadata for the limited blind text comparison. Neither sees pixels or supplies human responses.
+
+## TypeSafe primitive experiment
+
+The [30-question request](../artifacts/diagram-owner-research/2026-10-02/score-request.json) combines 20 ordered Scores, five Choices and five Nouls. Each scene receives independent ratings for concrete activity, visible human responsibility, distinction from Workshops and real setting. Each Score has three explicit levels rather than an undefined taste score. See the [result](../artifacts/diagram-owner-research/2026-10-02/score-result.json) and [metadata-free five-Choice result](../artifacts/diagram-owner-research/2026-10-02/blind-result.json).
+
+The exploratory Scores do not all align with confident owner choices. Contributors' activity score was 1.33/2 with confidence 0.48 despite its owner Choice selecting contributors at 1.0. Builders' difference from Workshops was 1.70/2 with confidence 0.55. This supports investigating separate dimensions instead of trusting a single classification. The earlier solitary-builder candidate is superseded by the collaborative direction supported by Drive; its experiment results remain historical.
+
+Each visual-proof Noul returned 0.02 when given the precise requirement of rendered artwork and independent visitor results. An earlier broad mobile-legibility Noul returned 0.15 and labelled the proposition unlikely despite having no rendered evidence. That is a model prediction without validation; it is not a measurement of mobile layout.
+
+No weighted preference score can compensate for deleting an existing word or connection. Deterministic inventory parity and explicit review of visible paths should gate those constraints first. Scores can help compare eligible concepts after those requirements are satisfied. This composition follows the [TypeSafe primitive contract](https://docs.typesafe.ai/api.md), [Score guidance](https://docs.typesafe.ai/primitives/score.md), and [composite-scoring pattern](https://docs.typesafe.ai/patterns/composite-scoring.md). Calls use the existing OpenRouter configuration described in its [compatibility guide](https://openrouter.ai/docs/guides/community/typesafe-sdk).
+
+Recorded MCP suite usage: 45,021 input tokens and 6,072 output tokens including the two prototype-intake calls. Direct requests: 7,713 input tokens, 1,135 output tokens, and reported cost $0.000323946 combined. Those cost figures cover only the two direct requests. A complete monetary total for MCP, Drive-related judgments, background research and jgrep is not available in this record.
+
+## Additional owner source context
+
+The owner requested a read-only search of Google Drive to improve the Workflows-versus-Builders question. Relevant source passages were selected and checked using Jev. That evidence changed the proposed builder scene from solitary debugging to collaborative building, testing and explaining. The detailed source citations and version comparison remain in a local companion note excluded from this public repository change.
+
+The public [service catalog in repository source](../src/content.ts) describes AI Builders as non-engineer champions, with train-the-trainer content, failure-mode training and live debugging. Those existing public descriptions support exploring collaborative review and explanation. The owner's remaining choice is whether the drawing should lead with team learning or company champions applying the skill at work.
+
+## Higher fidelity executive option
+
+The [standalone study](../artifacts/diagram-owner-research/2026-10-02/executive-detail-option.html) adds concrete desk/meeting/review actions around the exact existing cards. A tablet-like brief, agenda sheet, two-column debrief and dark action list give the four artifacts distinct structures. This is a proposed level of detail for discussion, not an approved replacement.
+
+Chromium captures at [1440px](../artifacts/diagram-owner-research/2026-10-02/executive-detail-1440.png) and [390px](../artifacts/diagram-owner-research/2026-10-02/executive-detail-390.png) were inspected. The narrow study stacks the complete stations, so it is substantially taller; that is a tradeoff for the owner to evaluate before integration. Both viewports have no horizontal overflow. [Inventory parity](../artifacts/diagram-owner-research/2026-10-02/inventory-parity.json) confirms the prototype's ten labels against the existing fixture and its four link identities against `executiveScene.links` in source. The fixture's scene record does not store links, so source inspection supplies that comparison.
+
+This verifies text/link identities and recorded layout conditions, not the semantic clarity of each visible arrow. The study's accessible description accounts for its four events and the final decision. It is research content outside the application. The website source, current diagrams and fixture remain unchanged. The full website browser suite was not run for this research-only pass; no claim that application tests passed is made.
+
+## Remaining design frontier
+
+1. Choose whether the Builders scene leads with collaborative learning or company champions doing work; both have source support and the five existing stages stay fixed.
+2. Judge the detailed executive option's software/document/environment balance, including its mobile height.
+3. Confirm the assembled understanding before any website art change, as required by the invoked grilling workflow.
+
+After the owner settles those choices, implementation should author five distinct scenes in the existing art modules, preserve every label and path, capture wide/narrow/no-script/reduced-motion states, and run the repository's full verification with two Playwright workers. Those are future implementation obligations, not completed research results.
