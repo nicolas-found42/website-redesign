@@ -78,7 +78,7 @@ test("rewording a heading records its exact words, new words and place", async (
   const form = await pick(page, heading);
 
   await expect(form.getByRole("heading", { level: 2 })).toHaveText(
-    "Heading “Find the work that sounds like yours”",
+    "You picked a heading “Find the work that sounds like yours”",
   );
   await expect(form.getByRole("radio", { name: /Wording/ })).toBeChecked();
   await expect(form.locator("[data-current]")).toHaveText(
@@ -92,7 +92,7 @@ test("rewording a heading records its exact words, new words and place", async (
   const proposed = form.getByLabel("Change it to");
   await expect(
     form.getByText(
-      "Select all the current text before pasting a replacement. The saved wording will be exactly what’s in this field.",
+      "The saved wording will be exactly what’s in this field. Click in and the current text is selected, ready to replace — or edit it as it is.",
     ),
   ).toBeVisible();
   await proposed.press("ControlOrMeta+A");
@@ -146,14 +146,33 @@ test("vague or unchanged answers are refused with what is missing", async ({
   const form = await pick(page, page.locator("#hero-title"));
   await form.getByRole("button", { name: "Save feedback" }).click();
 
+  // #122: the first Save gives one piece of guidance, not four at once.
   await expect(form).toContainText("Add your name.");
-  await expect(form).toContainText("This still matches the current text.");
-  await expect(form).toContainText("Say why");
-  await expect(form).toContainText("Choose how important it is.");
   await expect(form.getByLabel("Your name")).toBeFocused();
+  await expect(form.getByRole("alert")).toContainText(
+    "fields still need attention",
+  );
+
+  // The draft is still refused, and each later Save advances one step.
   await form.getByLabel("Your name").fill("Adejoke");
-  await expect(form).not.toContainText("Add your name.");
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  await expect(form).toContainText("This still matches the current text.");
+
+  await form.getByLabel("Change it to").fill("Training for your team.");
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  await expect(form).toContainText("Say why");
+
+  await form.getByLabel("Why?", { exact: true }).fill("It reads better.");
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  await expect(form).toContainText("Choose how important it is.");
+
   expect(await saved(page)).toBeNull();
+
+  // A complete draft then saves.
+  await form.getByRole("radio", { name: "Must change" }).check();
+  await form.getByRole("button", { name: "Save feedback" }).click();
+  await expect(panel(page)).toHaveCount(0);
+  expect((await saved(page)).items).toHaveLength(1);
 });
 
 test("while picking, a press chooses a link instead of following it", async ({
@@ -166,12 +185,12 @@ test("while picking, a press chooses a link instead of following it", async ({
   const form = await pick(page, services);
   await expect(page).toHaveURL(/\/\?review$/);
   const title = form.getByRole("heading", { level: 2 });
-  await expect(title).toHaveText("Link “Services”");
+  await expect(title).toHaveText("You picked a link “Services”");
 
   await form.getByRole("button", { name: "Larger area" }).click();
-  await expect(title).not.toHaveText("Link “Services”");
+  await expect(title).not.toHaveText("You picked a link “Services”");
   await form.getByRole("button", { name: "Smaller area" }).click();
-  await expect(title).toHaveText("Link “Services”");
+  await expect(title).toHaveText("You picked a link “Services”");
   await expect(
     form.getByRole("button", { name: "Smaller area" }),
   ).toBeDisabled();
@@ -235,7 +254,7 @@ test("the sent file reads plainly and carries data the import script reads", asy
   const text = readFileSync(file, "utf8");
   expect(text).toContain("# Website feedback from Adejoke Test");
   expect(text).toContain(
-    "**Where:** Home › Page opening › Heading “Train teams. Build useful skills. Automate the work.”",
+    "**Where:** Home › Top of the page › Heading “Train teams. Build useful skills. Automate the work.”",
   );
   expect(text).toContain("**Change it to**\n> Claude training for your team.");
   expect(text).toContain("`#hero-title`");

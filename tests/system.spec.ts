@@ -54,6 +54,8 @@ test("the service diagrams make each customer stage visible", async ({
     "Team deploys and uses it",
     "Test and review",
     "Review in customer context",
+    "Review point: does it still fit the work?",
+    "Iteration back into tailored design and build",
   ]);
   expect(await visibleLabels("product")).toEqual([
     "Repetitive work",
@@ -224,7 +226,7 @@ for (const interruption of ["queued", "moving"]) {
     // customer journey even if the reading observer briefly reports another.
     // This checks the label captured before the motion change, not its current value.
     expect(interrupted).toBe(
-      "Automation illustration: a repetitive process crosses system handoffs, passes human review where judgment matters, and ends in a usable output the team can rely on.",
+      "Automation illustration: repetitive work moves through system handoffs in order, a person directs it, human review marks approval where judgment matters, and the reviewed work becomes a usable output the team can rely on.",
     );
   });
 }
@@ -438,10 +440,23 @@ test("requesting reduced motion during a transition leaves the drawing settled",
   await page.evaluate(async () => {
     const sleep = (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms));
+    matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
+      "change",
+      () => {
+        document.documentElement.dataset.transitionMotionChanged = "true";
+      },
+      { once: true },
+    );
     document.querySelector<HTMLButtonElement>('[data-service="1"]')!.click();
     await sleep(120);
   });
   await page.emulateMedia({ reducedMotion: "reduce" });
+  // WebKit can acknowledge emulation before delivering the preference event.
+  // Observe the application after its handlers have received that notification.
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-transition-motion-changed",
+    "true",
+  );
   const disturbed = await page.evaluate(async () => {
     const field = document.querySelector(".services-art")!;
     const sleep = (ms: number) =>

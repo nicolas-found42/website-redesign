@@ -9,13 +9,18 @@
   --ink-deep: #131312;
   --paper: #faf9f6;
   --paper-warm: #f1eee6;
-  --muted: #5e5e58;
+  /* Read on paper, never on the ink bar (#124): >= 6.4:1 on paper, paper-warm,
+     white and the selection wash. The bar keeps its own colours below. */
+  --muted: #55554f;
   --line: #d9d6cd;
   --line-strong: #bdb9ad;
   --red: #b70611;
   --red-on-ink: #ff5347;
   --focus: #1264c0;
   --focus-on-ink: #8ab8ff;
+  /* Selection is not an error (#128): ink, never red. */
+  --sel: var(--ink);
+  --sel-wash: #eef2fb;
   --font: "Manrope Variable", "Manrope", system-ui, sans-serif;
   --layer: 2147483000;
 }
@@ -70,14 +75,17 @@ button:disabled {
   outline-offset: 2px;
 }
 
+/* In-panel primary (Save feedback): ink, never red — red is errors only (#128).
+   The bar's own .primary keeps --red-on-ink: it is a dark toolbar, not an
+   error surface (see ".bar .primary" below). */
 .primary {
-  background: var(--red);
-  border-color: var(--red);
+  background: var(--ink-deep);
+  border-color: var(--ink-deep);
   color: #fff;
 }
 
 .primary:hover:not(:disabled) {
-  background: #8d040d;
+  background: #2f2e2c;
 }
 
 /* ── The bar ── */
@@ -326,7 +334,7 @@ button:disabled {
 
 .panel-head {
   position: relative;
-  padding: 20px 56px 16px 20px;
+  padding: 20px 64px 16px 20px;
   border-bottom: 1px solid var(--line);
   background: var(--paper-warm);
 }
@@ -362,6 +370,11 @@ button:disabled {
   margin-top: 12px;
 }
 
+/* Contract: a hidden target control must not occupy the row (#125). */
+.target-tools .chip[hidden] {
+  display: none;
+}
+
 .chip {
   padding: 6px 11px;
   font-size: 14px;
@@ -375,17 +388,19 @@ button:disabled {
   color: var(--red);
 }
 
+/* 44px close target (#124): the whole square is the hit area, not just the ×. */
 .close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
   justify-content: center;
   padding: 0;
   border-color: transparent;
   background: transparent;
   font-size: 22px;
+  line-height: 1;
 }
 
 .close:hover {
@@ -401,6 +416,7 @@ button:disabled {
 }
 
 .panel-foot {
+  flex-shrink: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -488,38 +504,74 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* Labels need room beside the 24px radio and selected checkmark at every size. */
 .priority .choices {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .choice {
   position: relative;
+  min-height: 44px;
   margin: 0;
-  padding: 10px 12px 10px 36px;
+  padding: 12px 14px 12px 46px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
   background: #fff;
   font-weight: 650;
+  /* The whole card chooses; afford it visibly for pointer, keyboard and touch. */
   cursor: pointer;
 }
 
-.choice input {
+.choice:hover:not(:has(input:checked)):not(:has(input:disabled)) {
+  border-color: var(--ink);
+  background: #fbfbfa;
+}
+
+/* A 24x24 radio visual (#124) whose painted dot follows the selection (never
+   red, #128). The native input stays in the layout for keyboard and AT. */
+.choice input[type="radio"] {
   position: absolute;
-  top: 13px;
+  top: 12px;
   left: 12px;
+  width: 24px;
+  height: 24px;
   margin: 0;
-  accent-color: var(--red);
+  accent-color: var(--sel);
+}
+
+/* The check glyph on the chosen card (#128): a visible non-red mark. */
+.choice::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--sel);
+  color: var(--paper);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  display: none;
 }
 
 .choice:has(input:checked) {
-  border-color: var(--red);
-  box-shadow: 0 0 0 1px var(--red);
-  background: #fff8f7;
+  padding-right: 40px;
+  border-color: var(--sel);
+  box-shadow: 0 0 0 1px var(--sel);
+  background: var(--sel-wash);
 }
 
+.choice:has(input:checked)::after {
+  display: block;
+}
+
+/* A disabled option stays non-interactive; grey it, never call it an error. */
 .choice:has(input:disabled) {
-  opacity: 0.5;
   cursor: not-allowed;
+  background: var(--paper-warm);
 }
 
 .choice:has(input:focus-visible) {
@@ -550,17 +602,42 @@ textarea {
   overflow-y: auto;
 }
 
+/* #126: while the wording field is edited the target quote sticks to the top of
+   .panel-body, so the reviewer keeps the source in view while typing. */
+.current.is-pinned {
+  position: sticky;
+  top: -18px;
+  z-index: 2;
+  margin: -18px -20px 16px;
+  padding: 14px 20px 12px;
+  border-left: 0;
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 6px 12px rgb(0 0 0 / 8%);
+}
+
+/* #126: a bottom fade signals more content below. Set by the shell only while
+   more of the form remains, so it disappears at the end of the scroll. */
+.panel-body.has-more {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
+}
+
 .check {
   display: flex;
   gap: 10px;
   align-items: flex-start;
+  min-height: 44px;
   margin: 0 0 18px;
   font-weight: 600;
+  cursor: pointer;
 }
 
+/* 24x24 checkbox visual (#124); its own tick follows the selection, not red (#128). */
 .check input {
-  margin: 3px 0 0;
-  accent-color: var(--red);
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--sel);
 }
 
 /* ── Lists and sending ── */
@@ -674,10 +751,10 @@ textarea {
 @media (max-width: 700px) {
   .panel,
   .panel.dock-left {
-    inset: auto 0 0 0;
+    inset: auto 0 var(--review-keyboard-inset, 0px) 0;
     width: 100%;
     height: auto;
-    max-height: 78dvh;
+    max-height: min(78dvh, var(--review-viewport-height, 100dvh));
     border: 0;
     border-radius: 16px 16px 0 0;
     box-shadow: 0 -12px 40px rgb(0 0 0 / 20%);
@@ -685,7 +762,7 @@ textarea {
 
   .panel-list,
   .panel-list.dock-left {
-    max-height: 88dvh;
+    max-height: min(88dvh, var(--review-viewport-height, 100dvh));
   }
 
   .kinds .choices {
@@ -694,12 +771,6 @@ textarea {
 
   .toast {
     bottom: 132px;
-  }
-}
-
-@media (max-width: 380px) {
-  .priority .choices {
-    grid-template-columns: 1fr;
   }
 }
 

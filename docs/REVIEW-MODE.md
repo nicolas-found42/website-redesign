@@ -7,12 +7,19 @@ from a meeting.
 
 ## For reviewers
 
-1. Open a review link: `https://nicolas-found42.github.io/website-redesign/?review`.
-   It stays on while you move between pages in that tab.
+1. Open the review link: `https://nicolas-found42.github.io/website-redesign/?review`.
+   It stays on while you move between pages in that tab. The site owner — or
+   whoever is running the review round — sends this link to reviewers out of
+   band (chat or email), because the site deliberately does not advertise review
+   mode to visitors. Lost the link? Open the site normally: if this browser
+   already holds unsent drafts, a bar at the bottom offers **Resume review**,
+   which reopens the same page with the link. With no saved drafts there is
+   nothing to resume, so the page stays plain.
 2. Choose **Add feedback**, then click the thing you want to change: a heading,
    a paragraph, a button, a picture, a whole section. **Larger area** and
    **Smaller area** adjust what you picked.
-3. Choose the kind of change and answer what it asks:
+3. Optionally choose a kind of change, or choose **Not sure yet** and write a
+   plain comment. For a classified change, answer what it asks:
    - **Wording**: edit the current text into exactly what it should say.
    - **Content**: add, remove or replace information, written out.
    - **Visual**: what looks wrong, and what it should look or feel like.
@@ -41,25 +48,47 @@ from a meeting.
 
 **Exit** turns review mode off; unsent feedback and receipts stay in this browser.
 If storage is refused, the tool warns that drafts only live on the current page.
-**My feedback → Download backup…** is available when hosted sending is unavailable.
+When hosted sending is unavailable, the receipt says so on the spot — “Sending
+isn’t set up on this site yet” — and keeps your words saved. **My feedback →
+Download backup…** opens the text export (**Copy to clipboard** or **Download
+file**) for your own recovery copy. Feedback for the team is tracked in GitHub
+Issues; retry hosted sending or use the issue tracker directly. Nothing leaves
+the browser until a **Send** is confirmed.
+
+## Running a review round
+
+Review mode is invited, not advertised: the site owner (or the person who
+collects the feedback) sends each reviewer their own link,
+`https://nicolas-found42.github.io/website-redesign/?review`, by chat or email,
+and tells them what to do once it opens:
+
+1. **Add feedback**, then click the thing that should change.
+2. Answer what the form asks and **Save feedback** — that is a local draft.
+3. Repeat for every item, from any page.
+4. **Send N feedback items** once when done; each item becomes a public GitHub
+   issue. See **For whoever acts on it** below for the triage side.
+
+A reviewer who loses the link before sending is not stuck: the site notices the
+drafts already saved in their browser and offers **Resume review**. A reviewer
+who never had the link sees the plain site and no dead controls.
+
+Reviewers can choose **Not sure yet** and save a plain comment without choosing
+kind-specific answers. Those records carry optional `kindUncertain: true`, so a
+suggested category remains provisional through editing and issue formatting.
+An unclassified comment uses `change.kind: "comment"` with its text in `detail`;
+existing classified drafts keep their shape. Display glosses do not change stored
+section identifiers or selectors.
 
 ## For whoever acts on it
 
-Hosted submissions already create issues with `needs-triage` and
+Review feedback always comes through GitHub Issues. Before reading or acting on
+it, follow [the issue-tracker conventions](agents/issue-tracker.md) and read the
+issue's discussion and labels. Hosted submissions create issues with `needs-triage` and
 `review-feedback`, and no assignee. Publication requests triage; it does not
 authorize implementation.
 
-For the manual backup fallback only, save files under `feedback/`, which is ignored by git because the files
-name reviewers.
-
-`npm run feedback:issues -- <file>` prints one issue per item: title, labels
-(`needs-triage`, `review-feedback`) and a body carrying the readable item plus
-its JSON record. Add `--create` to open them with `gh`. This repository is
-public, so its issues are too; confirm with the site owner before `--create`.
-Re-running checks existing feedback IDs. The manual importer does not share the
-service’s durable claim: never use `--create` for an unresolved hosted
-submission or run it concurrently with hosted sending for the same items.
-Recover the hosted receipt first; see [hosted setup and recovery](REVIEW-SUBMISSION.md).
+For an uncertain hosted submission, recover the existing receipt before creating
+another issue for the same feedback. See [hosted setup and recovery](REVIEW-SUBMISSION.md).
 
 Each item's `target.selector` finds the element while the markup holds. When it
 no longer resolves, find the element by `target.page`, `target.section` and
@@ -71,11 +100,14 @@ or journeys an item touches.
 
 `src/review/activation.ts` is the only part in the main bundle: it reads
 `?review` and loads `src/review/review.ts` on demand, so visitors never fetch
-the tools. The UI lives in a shadow root, which keeps it out of the site's
-styles and the site's styles out of it. `src/review/export.ts` owns the file
-format and its parser; the import script loads that same module through Vite.
+the tools. It also renders the drafts-aware **Resume review** bar in the site's
+own DOM (not the review shadow root) — plain markup and one `<style>`, with no
+review code imported — so the nudge costs a first-time visitor nothing. The UI
+lives in a shadow root, which keeps it out of the site's
+styles and the site's styles out of it. `src/review/export.ts` owns the local
+backup format and its parser.
 `src/review/submission.ts` sends versioned snapshots to the Worker;
 `worker/index.ts` owns validation, limits and durable recovery.
-`src/review/issue.ts` formats hosted issues and the fallback importer consistently.
+`src/review/issue.ts` formats the published GitHub issues.
 `tests/review-mode.spec.ts` covers the browser journeys, and
 `tests/submission-service.spec.ts` covers the service boundary with local D1.

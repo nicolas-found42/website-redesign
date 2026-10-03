@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Executive day — detailed work setting study</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #faf9f5;
+        --ink: #242424;
+        --red: #bf1020;
+        --shade: #e7e4dc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          17px/1.45 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 1440px;
+        margin: auto;
+        padding: 52px 52px 40px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        align-items: end;
+        border-bottom: 1px solid #d5d1c8;
+        padding-bottom: 25px;
+      }
+      h1 {
+        font-size: 40px;
+        letter-spacing: -1.7px;
+        margin: 8px 0 0;
+        line-height: 1.08;
+      }
+      .eyebrow {
+        color: var(--red);
+        font-size: 14px;
+        font-weight: 650;
+        margin: 0;
+      }
+      .status {
+        font-size: 14px;
+        color: #65615a;
+        max-width: 270px;
+        margin: 0;
+      }
+      .sequence {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 32px;
+        padding-top: 58px;
+      }
+      .station {
+        position: relative;
+        min-width: 0;
+      }
+      .artifact {
+        background: var(--paper);
+        border: 2px solid var(--ink);
+        box-shadow: 6px 7px 0 var(--shade);
+        min-height: 175px;
+        margin: 0 14px;
+        padding: 18px;
+        position: relative;
+      }
+      .artifact h2 {
+        font-size: 20px;
+        line-height: 1.22;
+        margin: 0;
+        letter-spacing: -0.4px;
+        min-height: 49px;
+      }
+      .sample {
+        font-size: 14px;
+        margin: 7px 0 13px;
+      }
+      .brief {
+        border-radius: 10px;
+        border-width: 5px;
+        padding: 15px;
+        background: #f4f2eb;
+      }
+      .agenda {
+        transform: rotate(-3deg);
+      }
+      .debrief {
+        border-radius: 0 9px 9px 0;
+        border-left-width: 7px;
+      }
+      .actions {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .mini {
+        display: flex;
+        gap: 7px;
+        margin: 7px 0;
+        align-items: center;
+      }
+      .mini i {
+        display: block;
+        flex: none;
+        height: 11px;
+        width: 11px;
+        border: 1.5px solid currentColor;
+        border-radius: 2px;
+      }
+      .mini b {
+        display: block;
+        height: 5px;
+        background: currentColor;
+        opacity: 0.65;
+        width: 76%;
+      }
+      .mini:nth-last-child(2) b {
+        width: 60%;
+      }
+      .mini:last-child b {
+        width: 68%;
+      }
+      .debrief .mini {
+        justify-content: space-between;
+      }
+      .debrief .mini b {
+        width: 35%;
+      }
+      .debrief .mini em {
+        height: 5px;
+        width: 23%;
+        background: var(--ink);
+        opacity: 0.45;
+      }
+      .actions .mini i {
+        border-color: var(--paper);
+      }
+      .actions .mini:first-of-type i {
+        background: var(--red);
+      }
+      .join {
+        position: absolute;
+        left: calc(100% + 6px);
+        top: 96px;
+        width: 20px;
+        height: 3px;
+        background: var(--ink);
+      }
+      .join::after {
+        content: "";
+        position: absolute;
+        right: -1px;
+        top: -4px;
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid var(--ink);
+        border-top: 2px solid var(--ink);
+        transform: rotate(45deg);
+      }
+      .workplace {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-top: 13px;
+        overflow: visible;
+      }
+      .workplace .paper {
+        fill: var(--paper);
+        stroke: var(--ink);
+        stroke-width: 2.5;
+        stroke-linejoin: round;
+      }
+      .workplace .ink {
+        fill: var(--ink);
+      }
+      .workplace .red {
+        fill: var(--red);
+      }
+      .workplace .shade {
+        fill: var(--shade);
+      }
+      .workplace .line {
+        fill: none;
+        stroke: var(--ink);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .decision {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 25px 0 0;
+        color: var(--red);
+        font-weight: 700;
+        justify-content: flex-end;
+      }
+      .decision svg {
+        width: 62px;
+        height: 46px;
+        flex: none;
+      }
+      .caption {
+        text-align: center;
+        margin: 28px 0 0;
+        font-size: 14px;
+        color: #65615a;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 28px;
+        margin-top: 39px;
+        padding-top: 23px;
+        border-top: 1px solid #d5d1c8;
+        color: #65615a;
+        font-size: 14px;
+      }
+      .legend span {
+        max-width: 355px;
+      }
+      @media (max-width: 850px) {
+        main {
+          padding: 28px 22px;
+        }
+        header {
+          display: block;
+        }
+        h1 {
+          font-size: 31px;
+        }
+        .status {
+          max-width: none;
+          margin-top: 15px;
+        }
+        .sequence {
+          grid-template-columns: 1fr;
+          gap: 70px;
+          padding: 35px 30px 0;
+          max-width: 400px;
+          margin: auto;
+        }
+        .artifact {
+          min-height: 175px;
+        }
+        .join {
+          left: 50%;
+          top: calc(100% + 24px);
+          width: 3px;
+          height: 24px;
+        }
+        .join::after {
+          right: -3.5px;
+          top: 17px;
+          transform: rotate(135deg);
+        }
+        .workplace {
+          max-height: 175px;
+        }
+        .caption {
+          margin-top: 25px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">Higher fidelity option · research study</p>
+          <h1>The executive’s working day</h1>
+        </div>
+        <p class="status">
+          Concrete documents, readable software structure, and a person making
+          the final call.
+        </p>
+      </header>
+      <div
+        class="sequence"
+        role="img"
+        aria-label="Claude Daily Brief to Meeting Brief to Meeting Debrief to Actions from Transcripts. A person decides the actions. Illustrative example with no live integrations."
+      >
+        <section class="station" data-node="brief">
+          <div class="artifact brief">
+            <h2>Claude Daily Brief</h2>
+            <p class="sample">Sample: 3 priorities</p>
+            <div class="mini"><i></i><b></b></div>
+            <div class="mini"><i></i><b></b></div>
+            <div class="mini"><i></i><b></b></div>
+          </div>
+          <span
+            class="join"
+            data-link="brief&gt;meeting"
+            aria-hidden="true"
+          ></span>
+          <svg class="workplace" viewBox="0 0 260 190" aria-hidden="true">
+            <path class="shade" d="M8 113h245v11H8z" />
+            <path class="line" d="M10 110h239M28 113v63M232 113v63" />
+            <rect class="paper" x="36" y="61" width="63" height="44" rx="3" />
+            <path class="line" d="M27 109h79M44 72h26M44 81h38M44 89h31" />
+            <ellipse class="shade" cx="171" cy="166" rx="40" ry="9" />
+            <path class="ink" d="M151 84q20-18 37 0l6 42h-50z" />
+            <circle class="paper" cx="169" cy="56" r="18" />
+            <path class="ink" d="M153 46q11-20 26-3l6 11-7-3-13-8-13 12z" />
+            <path
+              class="line"
+              d="M151 92l-24 15-26-3M187 92l15 17h24M155 124v43M179 124v43"
+            />
+            <path class="paper" d="M123 111l5-21 21 6-5 17z" />
+            <path class="red" d="M130 101h10v3h-10z" />
+          </svg>
+        </section>
+        <section class="station" data-node="meeting">
+          <div class="artifact agenda">
+            <h2>Meeting Brief</h2>
+            <p class="sample">Sample: agenda draft</p>
+            <div class="mini"><i></i><b></b></div>
+            <div class="mini"><i></i><b></b></div>
+            <div class="mini"><i></i><b></b></div>
+          </div>
+          <span
+            class="join"
+            data-link="meeting&gt;debrief"
+            aria-hidden="true"
+          ></span>
+          <svg class="workplace" viewBox="0 0 260 190" aria-hidden="true">
+            <path class="shade" d="M29 105l96-27 110 29-99 36z" />
+            <path class="paper" d="M25 99l96-27 110 29-99 35z" />
+            <path class="line" d="M48 109v57M212 112v54M132 137v41" />
+            <circle class="paper" cx="41" cy="51" r="16" />
+            <path class="ink" d="M23 81q18-20 36 0l4 23-33 9z" />
+            <path class="line" d="M58 81l26 5 18-14" />
+            <circle class="paper" cx="218" cy="53" r="16" />
+            <path class="ink" d="M201 81q16-17 32 0l5 23-33-6z" />
+            <path class="line" d="M203 86l-24 13-14-8" />
+            <path class="paper" d="M112 89l25-7 25 8-25 8z" />
+            <path class="red" d="M124 88l12-3 12 4-12 3z" />
+            <path class="line" d="M32 54q-1-15 13-17M210 40q16-8 22 8" />
+          </svg>
+        </section>
+        <section class="station" data-node="debrief">
+          <div class="artifact debrief">
+            <h2>Meeting Debrief</h2>
+            <p class="sample">Sample: owners, dates</p>
+            <div class="mini"><i></i><b></b><em></em></div>
+            <div class="mini"><i></i><b></b><em></em></div>
+            <div class="mini"><i></i><b></b><em></em></div>
+          </div>
+          <span
+            class="join"
+            data-link="debrief&gt;actions"
+            aria-hidden="true"
+          ></span>
+          <svg class="workplace" viewBox="0 0 260 190" aria-hidden="true">
+            <path class="shade" d="M19 120h224v11H19z" />
+            <path class="line" d="M17 117h225M32 120v56M227 120v56" />
+            <circle class="paper" cx="109" cy="46" r="18" />
+            <path class="ink" d="M91 76q19-16 35 1l8 43H80z" />
+            <path
+              class="line"
+              d="M92 83l-31 20 24 10M125 83l25 14 22 11M93 124v43M118 124v43"
+            />
+            <path class="paper" d="M137 112l17-19 41 15-13 17z" />
+            <path class="paper" d="M53 112l7-19 29 8-7 17z" />
+            <path class="line" d="M156 108l17 6M64 101l14 4" />
+            <path class="red" d="M174 95l5-4 9 18-5 4z" />
+            <path class="ink" d="M94 33q13-15 29 1l4 13-9-5-19-4-8 10z" />
+          </svg>
+        </section>
+        <section class="station" data-node="actions">
+          <div class="artifact actions">
+            <h2>Actions from Transcripts</h2>
+            <p class="sample">Sample: tasks from notes</p>
+            <div class="mini"><i></i><b></b></div>
+            <div class="mini"><i></i><b></b></div>
+            <div class="mini"><i></i><b></b></div>
+          </div>
+          <svg class="workplace" viewBox="0 0 260 190" aria-hidden="true">
+            <path class="shade" d="M8 122h245v11H8z" />
+            <path class="line" d="M10 119h239M28 122v54M232 122v54" />
+            <path class="paper" d="M35 84h47v35H35zM39 78h39v6H39z" />
+            <path class="paper" d="M44 77h43v35H44z" />
+            <circle class="paper" cx="166" cy="49" r="18" />
+            <path class="ink" d="M148 80q20-18 37 0l7 42h-50z" />
+            <path
+              class="line"
+              d="M149 87l-26 13-30 10M185 88l15 19-17 7M155 125v42M180 125v42"
+            />
+            <path class="paper" d="M88 112l12-18 38 11-12 20z" />
+            <path class="red" d="M113 97l4-2 8 21-4 2z" />
+            <path class="line" d="M100 108l6 7 11-5" />
+            <path class="ink" d="M150 38q10-19 27-3l7 12-14-7-13 3-8 9z" />
+          </svg>
+          <div class="decision" data-node="direction">
+            <span>You decide</span
+            ><svg
+              data-link="direction&gt;actions"
+              viewBox="0 0 62 46"
+              aria-hidden="true"
+            >
+              <path
+                d="M1 32H32Q47 32 47 17V3M40 10l7-8 7 8"
+                fill="none"
+                stroke="#bf1020"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </section>
+      </div>
+      <p class="caption" data-node="illustrative">
+        Illustrative example · no live integrations
+      </p>
+      <div class="legend">
+        <span
+          >Option: software and work documents are detailed enough to
+          recognize.</span
+        ><span
+          >People read, discuss, review, and decide. The existing four-event
+          sequence stays intact.</span
+        ><span>Research prototype; the website is unchanged.</span>
+      </div>
+    </main>
+  </body>
+</html>

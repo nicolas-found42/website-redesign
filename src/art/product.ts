@@ -1,327 +1,144 @@
 import {
-  identityFill,
   part,
   place,
-  pt,
-  r,
-  strip,
+  seal,
   type Art,
+  type LabelPlace,
   type Orientation,
-  type Pt,
 } from "./kit";
+import { arrow, colleague, contents, desk, folio, laptop, paper } from "./work";
 
-/**
- * Automations: the stamp.
- *
- * Repetitive work is a stack of the same sheet. System handoffs are a strip
- * passed through one slot after another. Human review is its own sheet. All
- * three go under one red stamp — human direction — and what comes out is the
- * usable output, pressed with the human's mark, with two more copies beside it:
- * the same work reaching a customer more than one way.
- */
-
-/** A sheet of paper turned about its centre, with a flat sheet beneath it. */
-function sheet(
-  at: Pt,
-  width: number,
-  height: number,
-  turn: number,
-  fill: string,
-  { mark = false, corner = true } = {},
-): string {
-  const x = -width / 2;
-  const y = -height / 2;
-  const fold = 20;
-  const outline = corner
-    ? `M${x} ${y} L${x + width - fold} ${y} L${x + width} ${y + fold} L${x + width} ${y + height} L${x} ${y + height} Z`
-    : `M${x} ${y} L${x + width} ${y} L${x + width} ${y + height} L${x} ${y + height} Z`;
-  const dog = corner
-    ? `<path class="f-sunk s-ink" d="M${x + width - fold} ${y} L${x + width - fold} ${y + fold} L${x + width} ${y + fold} Z" stroke-width="2"/>`
-    : "";
-  // The stamp's impression: a ring and its tick, in the human's red.
-  const impression = mark
-    ? `<g transform="translate(${r(x + width - 42)} ${r(y + height - 38)}) rotate(-14)" opacity="0.92"><circle class="s-red" r="21" fill="none" stroke-width="4"/><circle class="s-red" r="14" fill="none" stroke-width="1.6"/><path class="s-red" d="M-8 1 L-2 7 L9 -6" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>`
-    : "";
-  return (
-    `<g transform="translate(${pt(at)}) rotate(${r(turn)})">` +
-    `<path class="f-sunk" d="${outline}" transform="translate(5 6)"/>` +
-    `<path class="s-ink" d="${outline}" fill="${fill}" stroke-width="2.5"/>` +
-    dog +
-    impression +
-    `</g>`
-  );
+/** Automations: repeated work crosses systems under human direction and review. */
+function operations(orientation: Orientation): Art {
+  const wide = orientation === "landscape";
+  const width = wide ? 1000 : 620;
+  const height = wide ? 670 : 1790;
+  const xs = wide ? [100, 300, 500, 700, 900] : [430, 430, 430, 430, 430];
+  const ys = wide ? [250, 250, 250, 250, 250] : [140, 440, 780, 1120, 1460];
+  const keys = ["n1", "n2", "human", "n3", "n4"];
+  const labels: Record<string, LabelPlace> = {};
+  const parts: string[] = [];
+  keys.forEach((key, i) => {
+    const x = xs[i],
+      y = ys[i];
+    labels[key] = wide
+      ? place([x, 135], "center", "middle", { width: 175, beat: i })
+      : place([35, y - 15], "start", "middle", { width: 225, beat: i });
+    let object: string;
+    if (i === 0)
+      object =
+        [2, 1, 0]
+          .map((k) => paper(x - 70 - k * 5, y - 45 - k * 8, 140, 100))
+          .join("") + contents(x - 52, y - 18, 108, "priorities");
+    else if (i === 1)
+      object =
+        laptop(x - 74, y - 55, 148, "systems") +
+        `<path class="s-ink" d="M${x - 36} ${y + 65} V${y + 82} H${x + 36} V${y + 65}" stroke-width="2.5"/>` +
+        paper(x - 48, y + 68, 30, 42) +
+        paper(x + 18, y + 68, 30, 42);
+    else if (i === 4)
+      object =
+        paper(x - 76, y - 55, 152, 120, true) +
+        contents(x - 58, y - 20, 116, "actions", true) +
+        seal([x + 48, y + 46], 15);
+    else
+      object =
+        laptop(x - 90, y - 58, 125, i === 2 ? "plan" : "tests") +
+        colleague([x + 35, y + 105], 0.92, i === 2 ? "point" : "review") +
+        folio(x + 38, y + 120, 58, "actions") +
+        desk(x - 92, y + 154, 184) +
+        (i === 3 ? seal([x + 68, y + 142], 15) : "");
+    parts.push(
+      part(
+        {
+          name:
+            i === 0
+              ? "work-queue"
+              : i === 1
+                ? "system-handoffs"
+                : i === 2
+                  ? "operator"
+                  : i === 3
+                    ? "reviewer"
+                    : "output",
+          beat: i,
+          enter: "rise",
+          origin: [x, y],
+          nodes: [key],
+          marks: i === 3 ? ["seal:approved"] : [],
+        },
+        object,
+      ),
+    );
+  });
+  const links = ["n1>n2", "n2>human", "human>n3", "n3>n4"];
+  links.forEach((link, i) => {
+    const d = wide
+      ? `M${xs[i] + 86} 245 H${xs[i + 1] - 86}`
+      : `M430 ${ys[i] + (i < 2 ? 135 : 240)} V${ys[i + 1] - 70}`;
+    const tip = wide
+      ? ([xs[i + 1] - 86, 245] as const)
+      : ([430, ys[i + 1] - 70] as const);
+    parts.unshift(
+      part(
+        { name: "next", beat: i + 1, enter: "fade", links: [link] },
+        arrow(d, tip, wide ? "right" : "down"),
+      ),
+    );
+  });
+  // Preserve both unnamed outputs as visible branches from human direction.
+  const outputAt = wide
+    ? [
+        [900, 5],
+        [900, 565],
+      ]
+    : [
+        [150, 1675],
+        [480, 1675],
+      ];
+  outputAt.forEach(([x, y], i) => {
+    const d = wide
+      ? i === 0
+        ? "M548 200 H600 V20 H806 V65 H820"
+        : "M500 488 V605 H820"
+      : i === 0
+        ? "M335 780 H18 V1710 H82"
+        : "M524 780 H602 V1710 H552";
+    const tip = wide
+      ? i === 0
+        ? ([820, 65] as const)
+        : ([820, 605] as const)
+      : i === 0
+        ? ([82, 1710] as const)
+        : ([552, 1710] as const);
+    parts.unshift(
+      part(
+        {
+          name: "branch",
+          beat: 4,
+          enter: "fade",
+          links: [`human>out${i + 1}`],
+        },
+        arrow(d, tip, !wide && i === 1 ? "left" : "right"),
+      ),
+    );
+    parts.push(
+      part(
+        {
+          name: "copy",
+          beat: 4,
+          order: i + 1,
+          enter: "rise",
+          origin: [x, y],
+          links: [],
+        },
+        paper(x - 66, y, 132, 80) +
+          contents(x - 50, y + 16, 96, "owners") +
+          seal([x + 46, y + 61], 13),
+      ),
+    );
+  });
+  return { width, height, parts: parts.join(""), labels };
 }
-
-/** A rubber stamp seen from the side: knob, neck, block and rubber. */
-function stamp(at: Pt, width: number) {
-  const [x, y] = at;
-  const block = { x: x - width / 2, y: y - 92, w: width, h: 78 };
-  return (
-    `<rect class="f-sunk" x="${r(block.x + 7)}" y="${r(block.y + 8)}" width="${block.w}" height="${block.h + 14}" rx="8"/>` +
-    `<path class="f-red-deep" d="M${r(x - 20)} ${r(block.y)} L${r(x - 26)} ${r(block.y - 58)} L${r(x + 26)} ${r(block.y - 58)} L${r(x + 20)} ${r(block.y)} Z"/>` +
-    `<circle class="f-red" cx="${r(x)}" cy="${r(block.y - 84)}" r="36"/>` +
-    `<circle class="f-red-deep" cx="${r(x + 10)}" cy="${r(block.y - 78)}" r="24" opacity="0.6"/>` +
-    `<rect class="f-red" x="${r(block.x)}" y="${r(block.y)}" width="${block.w}" height="${block.h}" rx="8"/>` +
-    `<rect class="f-red-deep" x="${r(block.x)}" y="${r(block.y + block.h - 18)}" width="${block.w}" height="18" rx="6"/>` +
-    `<rect class="f-ink" x="${r(block.x + 8)}" y="${r(y - 14)}" width="${block.w - 16}" height="16" rx="2"/>`
-  );
-}
-
-/** Two handoff slots a strip passes through. */
-const slots = (xs: readonly number[], y: number, height: number) =>
-  xs
-    .map(
-      (x) =>
-        `<rect class="f-ink" x="${r(x - 9)}" y="${r(y - height / 2)}" width="18" height="${height}" rx="3"/>` +
-        `<rect class="f-paper" x="${r(x - 3)}" y="${r(y - height / 2 + 8)}" width="6" height="${height - 16}" rx="2"/>`,
-    )
-    .join("");
-
-/** Two handoff slots across a strip that runs down the sheet. */
-const slotsAcross = (ys: readonly number[], x: number, width: number) =>
-  ys
-    .map(
-      (y) =>
-        `<rect class="f-ink" x="${r(x - width / 2)}" y="${r(y - 9)}" width="${width}" height="18" rx="3"/>` +
-        `<rect class="f-paper" x="${r(x - width / 2 + 8)}" y="${r(y - 3)}" width="${width - 16}" height="6" rx="2"/>`,
-    )
-    .join("");
-
-function landscape(): Art {
-  const repetitive = identityFill.n1;
-  const handoffs = identityFill.n2;
-  const review = identityFill.n3;
-  // Everything that goes in reaches under the stamp, and everything that comes
-  // out starts from under it.
-  const press: Pt = [500, 334];
-
-  const stack = [0, 1, 2, 3, 4]
-    .map((k) =>
-      sheet([246 + k * 14, 214 - k * 11], 200, 120, 12, repetitive, {
-        corner: k === 4,
-      }),
-    )
-    .join("");
-
-  const parts = [
-    part(
-      {
-        name: "copy",
-        beat: 3,
-        enter: "slide-right",
-        order: 1,
-        origin: press,
-        links: ["human>out1"],
-      },
-      sheet([706, 236], 200, 128, -17, "var(--paper)", { mark: true }),
-    ),
-    part(
-      {
-        name: "copy",
-        beat: 3,
-        enter: "slide-right",
-        order: 2,
-        origin: press,
-        links: ["human>out2"],
-      },
-      sheet([706, 440], 200, 128, 17, "var(--paper)", { mark: true }),
-    ),
-    part(
-      {
-        name: "output",
-        beat: 3,
-        enter: "slide-right",
-        origin: press,
-        nodes: ["n4"],
-        links: ["human>n4"],
-      },
-      sheet([724, 338], 256, 150, -2, "var(--ink)", { mark: true }),
-    ),
-    part(
-      {
-        name: "reviewed",
-        beat: 1,
-        enter: "rise",
-        order: 1,
-        origin: [300, 420],
-        nodes: ["n3"],
-        links: ["n3>human"],
-      },
-      sheet([296, 418], 226, 122, -13, review),
-    ),
-    part(
-      {
-        name: "handoffs",
-        beat: 1,
-        enter: "slide-right",
-        origin: [40, 336],
-        nodes: ["n2"],
-        links: ["n2>human"],
-      },
-      strip(`M40 336 L${press[0]} 336`, 40, handoffs) +
-        slots([124, 196], 336, 76),
-    ),
-    part(
-      {
-        name: "repetition",
-        beat: 0,
-        enter: "drop",
-        origin: [280, 190],
-        nodes: ["n1"],
-        links: ["n1>human"],
-      },
-      stack,
-    ),
-    part(
-      {
-        name: "stamp",
-        beat: 2,
-        enter: "stamp",
-        origin: press,
-        nodes: ["human"],
-      },
-      stamp(press, 250),
-    ),
-  ];
-
-  return {
-    width: 1000,
-    height: 620,
-    parts: parts.join(""),
-    labels: {
-      n1: place([150, 76], "start", "above", { width: 330, beat: 0 }),
-      n2: place([40, 336 + 34], "start", "below", { width: 136, beat: 1 }),
-      n3: place([170, 512], "start", "below", { width: 330, beat: 1 }),
-      human: place([press[0], press[1] - 54], "center", "middle", {
-        width: 226,
-        ground: "red",
-        beat: 2,
-      }),
-      n4: place([744, 334], "center", "middle", {
-        width: 180,
-        ground: "ink",
-        beat: 3,
-      }),
-    },
-  };
-}
-
-function portrait(): Art {
-  const repetitive = identityFill.n1;
-  const handoffs = identityFill.n2;
-  const review = identityFill.n3;
-  const press: Pt = [310, 560];
-
-  const stack = [0, 1, 2, 3, 4]
-    .map((k) =>
-      sheet([138 + k * 12, 408 - k * 10], 184, 110, 10, repetitive, {
-        corner: k === 4,
-      }),
-    )
-    .join("");
-
-  const parts = [
-    part(
-      {
-        name: "copy",
-        beat: 3,
-        enter: "slide-down",
-        order: 1,
-        origin: press,
-        links: ["human>out1"],
-      },
-      sheet([176, 632], 176, 122, -15, "var(--paper)", { mark: true }),
-    ),
-    part(
-      {
-        name: "copy",
-        beat: 3,
-        enter: "slide-down",
-        order: 2,
-        origin: press,
-        links: ["human>out2"],
-      },
-      sheet([444, 632], 176, 122, 15, "var(--paper)", { mark: true }),
-    ),
-    part(
-      {
-        name: "output",
-        beat: 3,
-        enter: "slide-down",
-        origin: press,
-        nodes: ["n4"],
-        links: ["human>n4"],
-      },
-      sheet([310, 628], 256, 150, -1, "var(--ink)", { mark: true }),
-    ),
-    part(
-      {
-        name: "handoffs",
-        beat: 1,
-        enter: "slide-down",
-        origin: [310, 40],
-        nodes: ["n2"],
-        links: ["n2>human"],
-      },
-      strip(`M310 40 L310 ${press[1] - 70}`, 40, handoffs) +
-        slotsAcross([120, 196], 310, 76),
-    ),
-    part(
-      {
-        name: "reviewed",
-        beat: 1,
-        enter: "rise",
-        order: 1,
-        origin: [470, 410],
-        nodes: ["n3"],
-        links: ["n3>human"],
-      },
-      sheet([468, 410], 196, 112, -10, review),
-    ),
-    part(
-      {
-        name: "repetition",
-        beat: 0,
-        enter: "drop",
-        origin: [170, 380],
-        nodes: ["n1"],
-        links: ["n1>human"],
-      },
-      stack,
-    ),
-    part(
-      {
-        name: "stamp",
-        beat: 2,
-        enter: "stamp",
-        origin: press,
-        nodes: ["human"],
-      },
-      stamp(press, 280),
-    ),
-  ];
-
-  return {
-    width: 620,
-    height: 740,
-    parts: parts.join(""),
-    labels: {
-      n1: place([40, 282], "start", "above", { width: 240, beat: 0 }),
-      n2: place([342, 70], "start", "middle", { width: 250, beat: 1 }),
-      n3: place([580, 322], "end", "above", { width: 240, beat: 1 }),
-      human: place([press[0], press[1] - 54], "center", "middle", {
-        width: 250,
-        ground: "red",
-        beat: 2,
-      }),
-      n4: place([306, 640], "center", "middle", {
-        width: 210,
-        ground: "ink",
-        beat: 3,
-      }),
-    },
-  };
-}
-
 export const productArt = (orientation: Orientation): Art =>
-  orientation === "portrait" ? portrait() : landscape();
+  operations(orientation);

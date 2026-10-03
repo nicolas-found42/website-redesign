@@ -1,0 +1,472 @@
+[
+  {
+    "id": "workflows",
+    "width": 1440,
+    "pageOverflow": false,
+    "viewBox": "0 0 1000 1020",
+    "labels": [
+      {
+        "key": "n1",
+        "text": "Brief / operating problem"
+      },
+      {
+        "key": "n2",
+        "text": "Tailored design and build"
+      },
+      {
+        "key": "human",
+        "text": "Team deploys and uses it"
+      },
+      {
+        "key": "n3",
+        "text": "Test and review"
+      },
+      {
+        "key": "n4",
+        "text": "Review in customer context"
+      },
+      {
+        "key": "decision",
+        "text": "Review point: does it still fit the work?"
+      },
+      {
+        "key": "iteration",
+        "text": "Iteration back into tailored design and build"
+      }
+    ],
+    "links": ["human>n4", "n1>n2", "n2>n3", "n3>human", "n4>n2"],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "automations",
+    "width": 1440,
+    "pageOverflow": false,
+    "viewBox": "0 0 1000 670",
+    "labels": [
+      {
+        "key": "n1",
+        "text": "Repetitive work"
+      },
+      {
+        "key": "n2",
+        "text": "System handoffs"
+      },
+      {
+        "key": "human",
+        "text": "Human direction"
+      },
+      {
+        "key": "n3",
+        "text": "Human review"
+      },
+      {
+        "key": "n4",
+        "text": "Usable output"
+      }
+    ],
+    "links": [
+      "human>n3",
+      "human>out1",
+      "human>out2",
+      "n1>n2",
+      "n2>human",
+      "n3>n4"
+    ],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "executives",
+    "width": 1440,
+    "pageOverflow": false,
+    "viewBox": "0 0 1000 1140",
+    "labels": [
+      {
+        "key": "brief",
+        "text": "Claude Daily Brief"
+      },
+      {
+        "key": "brief-sample",
+        "text": "Sample: 3 priorities"
+      },
+      {
+        "key": "meeting",
+        "text": "Meeting Brief"
+      },
+      {
+        "key": "meeting-sample",
+        "text": "Sample: agenda draft"
+      },
+      {
+        "key": "debrief",
+        "text": "Meeting Debrief"
+      },
+      {
+        "key": "debrief-sample",
+        "text": "Sample: owners, dates"
+      },
+      {
+        "key": "actions",
+        "text": "Actions from Transcripts"
+      },
+      {
+        "key": "actions-sample",
+        "text": "Sample: tasks from notes"
+      },
+      {
+        "key": "direction",
+        "text": "You decide"
+      },
+      {
+        "key": "illustrative",
+        "text": "Illustrative example · no live integrations"
+      }
+    ],
+    "links": [
+      "brief>meeting",
+      "debrief>actions",
+      "direction>actions",
+      "meeting>debrief"
+    ],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "contributors",
+    "width": 1440,
+    "pageOverflow": false,
+    "viewBox": "0 0 1340 1100",
+    "labels": [
+      {
+        "key": "company",
+        "text": "Your company"
+      },
+      {
+        "key": "role1",
+        "text": "Deal team"
+      },
+      {
+        "key": "skill1",
+        "text": "Deal screening"
+      },
+      {
+        "key": "role2",
+        "text": "Operations"
+      },
+      {
+        "key": "skill2",
+        "text": "Plans and reviews"
+      },
+      {
+        "key": "role3",
+        "text": "Product"
+      },
+      {
+        "key": "skill3",
+        "text": "Feedback triage"
+      },
+      {
+        "key": "role4",
+        "text": "Sales"
+      },
+      {
+        "key": "skill4",
+        "text": "Account planning"
+      },
+      {
+        "key": "human",
+        "text": "Human in the loop"
+      },
+      {
+        "key": "result",
+        "text": "Reviewed work returns to each role."
+      }
+    ],
+    "links": [
+      "human>result",
+      "role1>skill1",
+      "role2>skill2",
+      "role3>skill3",
+      "role4>skill4",
+      "skill1>human",
+      "skill2>human",
+      "skill3>human",
+      "skill4>human"
+    ],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "builders",
+    "width": 1440,
+    "pageOverflow": false,
+    "viewBox": "0 0 1000 970",
+    "labels": [
+      {
+        "key": "learner",
+        "text": "A learner with a work problem"
+      },
+      {
+        "key": "design",
+        "text": "Design"
+      },
+      {
+        "key": "test",
+        "text": "Test"
+      },
+      {
+        "key": "troubleshoot",
+        "text": "Troubleshoot"
+      },
+      {
+        "key": "anticipate",
+        "text": "Anticipate failures"
+      },
+      {
+        "key": "workflow",
+        "text": "Workflow in use"
+      }
+    ],
+    "links": [
+      "anticipate>workflow",
+      "design>test",
+      "learner>design",
+      "test>troubleshoot",
+      "troubleshoot>anticipate",
+      "workflow>blocks"
+    ],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "workflows",
+    "width": 390,
+    "pageOverflow": false,
+    "viewBox": "0 0 620 1770",
+    "labels": [
+      {
+        "key": "n1",
+        "text": "Brief / operating problem"
+      },
+      {
+        "key": "n2",
+        "text": "Tailored design and build"
+      },
+      {
+        "key": "human",
+        "text": "Team deploys and uses it"
+      },
+      {
+        "key": "n3",
+        "text": "Test and review"
+      },
+      {
+        "key": "n4",
+        "text": "Review in customer context"
+      },
+      {
+        "key": "decision",
+        "text": "Review point: does it still fit the work?"
+      },
+      {
+        "key": "iteration",
+        "text": "Iteration back into tailored design and build"
+      }
+    ],
+    "links": ["human>n4", "n1>n2", "n2>n3", "n3>human", "n4>n2"],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "automations",
+    "width": 390,
+    "pageOverflow": false,
+    "viewBox": "0 0 620 1790",
+    "labels": [
+      {
+        "key": "n1",
+        "text": "Repetitive work"
+      },
+      {
+        "key": "n2",
+        "text": "System handoffs"
+      },
+      {
+        "key": "human",
+        "text": "Human direction"
+      },
+      {
+        "key": "n3",
+        "text": "Human review"
+      },
+      {
+        "key": "n4",
+        "text": "Usable output"
+      }
+    ],
+    "links": [
+      "human>n3",
+      "human>out1",
+      "human>out2",
+      "n1>n2",
+      "n2>human",
+      "n3>n4"
+    ],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "executives",
+    "width": 390,
+    "pageOverflow": false,
+    "viewBox": "0 0 600 2450",
+    "labels": [
+      {
+        "key": "brief",
+        "text": "Claude Daily Brief"
+      },
+      {
+        "key": "brief-sample",
+        "text": "Sample: 3 priorities"
+      },
+      {
+        "key": "meeting",
+        "text": "Meeting Brief"
+      },
+      {
+        "key": "meeting-sample",
+        "text": "Sample: agenda draft"
+      },
+      {
+        "key": "debrief",
+        "text": "Meeting Debrief"
+      },
+      {
+        "key": "debrief-sample",
+        "text": "Sample: owners, dates"
+      },
+      {
+        "key": "actions",
+        "text": "Actions from Transcripts"
+      },
+      {
+        "key": "actions-sample",
+        "text": "Sample: tasks from notes"
+      },
+      {
+        "key": "direction",
+        "text": "You decide"
+      },
+      {
+        "key": "illustrative",
+        "text": "Illustrative example · no live integrations"
+      }
+    ],
+    "links": [
+      "brief>meeting",
+      "debrief>actions",
+      "direction>actions",
+      "meeting>debrief"
+    ],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "contributors",
+    "width": 390,
+    "pageOverflow": false,
+    "viewBox": "0 0 620 1604",
+    "labels": [
+      {
+        "key": "company",
+        "text": "Your company"
+      },
+      {
+        "key": "role1",
+        "text": "Deal team"
+      },
+      {
+        "key": "skill1",
+        "text": "Deal screening"
+      },
+      {
+        "key": "role2",
+        "text": "Operations"
+      },
+      {
+        "key": "skill2",
+        "text": "Plans and reviews"
+      },
+      {
+        "key": "role3",
+        "text": "Product"
+      },
+      {
+        "key": "skill3",
+        "text": "Feedback triage"
+      },
+      {
+        "key": "role4",
+        "text": "Sales"
+      },
+      {
+        "key": "skill4",
+        "text": "Account planning"
+      },
+      {
+        "key": "human",
+        "text": "Human in the loop"
+      },
+      {
+        "key": "result",
+        "text": "Reviewed work returns to each role."
+      }
+    ],
+    "links": [
+      "human>result",
+      "role1>skill1",
+      "role2>skill2",
+      "role3>skill3",
+      "role4>skill4",
+      "skill1>human",
+      "skill2>human",
+      "skill3>human",
+      "skill4>human"
+    ],
+    "isolatedSceneOverflow": false
+  },
+  {
+    "id": "builders",
+    "width": 390,
+    "pageOverflow": false,
+    "viewBox": "0 0 620 2030",
+    "labels": [
+      {
+        "key": "learner",
+        "text": "A learner with a work problem"
+      },
+      {
+        "key": "design",
+        "text": "Design"
+      },
+      {
+        "key": "test",
+        "text": "Test"
+      },
+      {
+        "key": "troubleshoot",
+        "text": "Troubleshoot"
+      },
+      {
+        "key": "anticipate",
+        "text": "Anticipate failures"
+      },
+      {
+        "key": "workflow",
+        "text": "Workflow in use"
+      }
+    ],
+    "links": [
+      "anticipate>workflow",
+      "design>test",
+      "learner>design",
+      "test>troubleshoot",
+      "troubleshoot>anticipate",
+      "workflow>blocks"
+    ],
+    "isolatedSceneOverflow": false
+  }
+]

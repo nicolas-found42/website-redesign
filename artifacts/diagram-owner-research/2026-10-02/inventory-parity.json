@@ -1,0 +1,42 @@
+{
+  "labelParity": true,
+  "linkParity": true,
+  "expectedLabels": [
+    "Claude Daily Brief",
+    "Sample: 3 priorities",
+    "Meeting Brief",
+    "Sample: agenda draft",
+    "Meeting Debrief",
+    "Sample: owners, dates",
+    "Actions from Transcripts",
+    "Sample: tasks from notes",
+    "You decide",
+    "Illustrative example · no live integrations"
+  ],
+  "observedLabels": [
+    "Claude Daily Brief",
+    "Sample: 3 priorities",
+    "Meeting Brief",
+    "Sample: agenda draft",
+    "Meeting Debrief",
+    "Sample: owners, dates",
+    "Actions from Transcripts",
+    "Sample: tasks from notes",
+    "You decide",
+    "Illustrative example · no live integrations"
+  ],
+  "expectedLinks": [
+    "brief>meeting",
+    "meeting>debrief",
+    "debrief>actions",
+    "direction>actions"
+  ],
+  "observedLinks": [
+    "brief>meeting",
+    "meeting>debrief",
+    "debrief>actions",
+    "direction>actions"
+  ],
+  "labelSource": "tests/fixtures/diagram-inventory.json",
+  "linkSource": "src/audiences.ts executiveScene.links"
+}

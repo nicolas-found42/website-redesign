@@ -85,7 +85,10 @@ record has a 20,000-byte cap and field-specific text limits. Formatted issue
 bodies have a 60,000-byte cap; oversized formatting is invalid before any
 creation attempt. The schema allows
 only the site's seven page routes, existing element types, kinds, priorities,
-and kind-specific fields. Additional repository, label, assignee or command
+and kind-specific fields, including an unclassified `comment` with `detail`.
+Optional `kindUncertain: true` preserves the reviewer’s uncertainty; other values
+are refused. Existing classified records without that field remain valid.
+Additional repository, label, assignee or command
 fields are refused. Invalid records receive separate invalid outcomes correlated by input index
 when the ID is unusable. Unsupported page paths receive a distinct
 `unknown-page` reason and backup instructions, because editing cannot change
@@ -154,8 +157,9 @@ and every unsent snapshot item receives an outcome even if delivery stops.
 ## Release verification
 
 Routine tests use browser service stubs and a local Miniflare D1 database with
-controlled GitHub responses. They never create live issues. Run lint,
-typecheck, build, `npm run worker:check`, and Playwright with `--workers=4`.
+controlled GitHub responses. They never create live issues. Follow
+[the testing guide](guides/testing.md) for the current validation commands and
+worker-count policy.
 
 After hosted secrets and storage are configured, perform one clearly named
 **synthetic release check for #108** from the published review site context.

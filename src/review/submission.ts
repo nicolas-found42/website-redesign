@@ -240,7 +240,7 @@ async function sendSnapshot(
     } catch {
       if (!submissionUrl)
         failure =
-          "Sending is not available yet. Your draft is saved. Please contact the team or download a backup.";
+          "Sending isn’t set up on this site yet, so nothing was posted. Your words are saved in this browser — choose Copy my feedback as text and email it to the team, or try again later.";
       else if (!navigator.onLine)
         failure =
           "You’re offline. Your draft is saved. Reconnect and send again.";
