@@ -99,7 +99,7 @@ function operations(orientation: Orientation): Art {
   outputAt.forEach(([x, y], i) => {
     const d = wide
       ? i === 0
-        ? "M500 190 V20 H806 V65 H820"
+        ? "M548 200 H600 V20 H806 V65 H820"
         : "M500 488 V605 H820"
       : i === 0
         ? "M335 780 H18 V1710 H82"

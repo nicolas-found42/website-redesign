@@ -3,6 +3,11 @@
 The five approved work settings are implemented in commit
 `e99b83edf6dc8c58620496632a95d61ff394ddba` on PR
 [161](https://github.com/nicolas-found42/website-redesign/pull/161).
+The original validation below applies to that implementation commit. Subsequent
+review fixes update the Builders accessible description and its matching fixture
+entry, route the Automation output branch clear of its labels, and correct the
+capture workflow and overflow measurements. Visible words and connection
+identities remain unchanged.
 Workshops remains the reference. Every existing label and connection remains;
 the audience marks and beats remain. The Workflow engagement now assembles
 its five stations sequentially. No source content or inventory fixture changed.
@@ -44,6 +49,54 @@ one desktop (1440px) and one mobile (390px) composition per scene.
 [Capture records](captures.json) record all labels and connection identities,
 with no horizontal overflow in those ten captures. The capture script uses
 the repository's actual font assets and styles.
+
+The refreshed capture records distinguish `pageOverflow`, measured in the
+complete homepage before isolation, from `isolatedSceneOverflow`, measured
+after the selected diagram replaces the page body for the screenshot.
+The previous single `overflow` field measured only the isolated scene and
+could not establish whether the surrounding homepage overflowed.
+
+## Reproducing the captures
+
+From the repository root, start the configured development server in one
+terminal and run the capture script in another:
+
+```sh
+npm run dev -- --port 4173 --strictPort
+node artifacts/diagram-owner-implementation/2026-10-02/capture.mjs
+```
+
+The script defaults to `http://127.0.0.1:4173/`. For an already running server
+on another port or a built Pages preview, provide its complete homepage URL:
+
+```sh
+CAPTURE_BASE_URL=http://127.0.0.1:4183/ node artifacts/diagram-owner-implementation/2026-10-02/capture.mjs
+# Built preview, after npm run build and npm run preview:pages:
+CAPTURE_BASE_URL=http://127.0.0.1:4179/website-redesign/ node artifacts/diagram-owner-implementation/2026-10-02/capture.mjs
+```
+
+The script writes the ten PNGs and `captures.json` next to itself. It does not
+start a server. The review board displays those files from the same directory.
+
+## Review-fix validation
+
+The two focused Chromium checks passed: the Builders accessible description
+matches the collaborative stations, and the Automation output connector stays
+clear of the direction and review words at 100%, 150% and 200% text size.
+The connector check reads actual path and rendered text geometry.
+
+Capture generation completed with both the default server URL (4173) and the
+configured alternate URL (4183). All ten refreshed records report
+`pageOverflow: false` and `isolatedSceneOverflow: false`. A controlled 5000px
+element inserted outside a diagram before isolation produces
+`pageOverflow: true` and `isolatedSceneOverflow: false`, confirming that removal
+of the surrounding page no longer hides its overflow in the page record.
+Only the desktop Automation image changes; the other nine refreshed PNGs match
+their prior files. The assistant inspected the changed image and confirmed
+that both unnamed branches remain and the upper branch clears both labels.
+
+Lint and typecheck passed. Full local verification and CI results for the
+review-fix commit are recorded in the PR discussion when those runs complete.
 
 The assistant inspected all ten captures. Final refinements route the Workflow
 return clear of its review caption, leave the contributor review words visible,

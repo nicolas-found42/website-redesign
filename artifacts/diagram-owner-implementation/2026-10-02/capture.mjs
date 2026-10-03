@@ -1,5 +1,7 @@
 import { chromium } from "playwright";
 import { writeFile } from "node:fs/promises";
+import process from "node:process";
+const baseUrl = process.env.CAPTURE_BASE_URL ?? "http://127.0.0.1:4173/";
 const browser = await chromium.launch();
 const page = await browser.newPage({ deviceScaleFactor: 2 });
 const evidence = [];
@@ -41,7 +43,7 @@ for (const width of [1440, 390]) {
     reducedMotion: width === 1440 ? "no-preference" : "reduce",
   });
   for (const [id, name, narrow, wide] of scenes) {
-    await page.goto("http://127.0.0.1:4183/");
+    await page.goto(baseUrl);
     await page.evaluate(() => document.fonts.ready);
     await page.getByRole("button", { name, exact: true }).click();
     const field = page.locator(width === 1440 ? wide : narrow);
@@ -57,6 +59,10 @@ for (const width of [1440, 390]) {
         );
       },
       width === 1440 ? wide : narrow,
+    );
+    // Retain the real page measurement before isolation removes its layout.
+    const pageOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > innerWidth,
     );
     await field.evaluate((field) => {
       const w = field.getBoundingClientRect().width;
@@ -76,6 +82,7 @@ for (const width of [1440, 390]) {
     evidence.push({
       id,
       width,
+      pageOverflow,
       ...(await page.locator(".system-field").evaluate((field) => ({
         viewBox: field.querySelector("svg").getAttribute("viewBox"),
         labels: [...field.querySelectorAll(".system-label")].map((l) => ({
@@ -89,7 +96,8 @@ for (const width of [1440, 390]) {
             ),
           ),
         ].sort(),
-        overflow: document.documentElement.scrollWidth > innerWidth,
+        isolatedSceneOverflow:
+          document.documentElement.scrollWidth > innerWidth,
       }))),
     });
   }

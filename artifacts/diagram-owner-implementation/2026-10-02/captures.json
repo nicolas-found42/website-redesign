@@ -2,6 +2,7 @@
   {
     "id": "workflows",
     "width": 1440,
+    "pageOverflow": false,
     "viewBox": "0 0 1000 1020",
     "labels": [
       {
@@ -34,11 +35,12 @@
       }
     ],
     "links": ["human>n4", "n1>n2", "n2>n3", "n3>human", "n4>n2"],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "automations",
     "width": 1440,
+    "pageOverflow": false,
     "viewBox": "0 0 1000 670",
     "labels": [
       {
@@ -70,11 +72,12 @@
       "n2>human",
       "n3>n4"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "executives",
     "width": 1440,
+    "pageOverflow": false,
     "viewBox": "0 0 1000 1140",
     "labels": [
       {
@@ -124,11 +127,12 @@
       "direction>actions",
       "meeting>debrief"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "contributors",
     "width": 1440,
+    "pageOverflow": false,
     "viewBox": "0 0 1340 1100",
     "labels": [
       {
@@ -187,11 +191,12 @@
       "skill3>human",
       "skill4>human"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "builders",
     "width": 1440,
+    "pageOverflow": false,
     "viewBox": "0 0 1000 970",
     "labels": [
       {
@@ -227,11 +232,12 @@
       "troubleshoot>anticipate",
       "workflow>blocks"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "workflows",
     "width": 390,
+    "pageOverflow": false,
     "viewBox": "0 0 620 1770",
     "labels": [
       {
@@ -264,11 +270,12 @@
       }
     ],
     "links": ["human>n4", "n1>n2", "n2>n3", "n3>human", "n4>n2"],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "automations",
     "width": 390,
+    "pageOverflow": false,
     "viewBox": "0 0 620 1790",
     "labels": [
       {
@@ -300,11 +307,12 @@
       "n2>human",
       "n3>n4"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "executives",
     "width": 390,
+    "pageOverflow": false,
     "viewBox": "0 0 600 2450",
     "labels": [
       {
@@ -354,11 +362,12 @@
       "direction>actions",
       "meeting>debrief"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "contributors",
     "width": 390,
+    "pageOverflow": false,
     "viewBox": "0 0 620 1604",
     "labels": [
       {
@@ -417,11 +426,12 @@
       "skill3>human",
       "skill4>human"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   },
   {
     "id": "builders",
     "width": 390,
+    "pageOverflow": false,
     "viewBox": "0 0 620 2030",
     "labels": [
       {
@@ -457,6 +467,6 @@
       "troubleshoot>anticipate",
       "workflow>blocks"
     ],
-    "overflow": false
+    "isolatedSceneOverflow": false
   }
 ]

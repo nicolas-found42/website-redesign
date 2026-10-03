@@ -183,7 +183,7 @@ const builderScene: SceneContent = {
     mark("anticipate", "check", 4),
     mark("workflow", "result", 5),
   ],
-  // The workflow in use is three linked parts, joined to the climb that made it.
+  // The workflow in use is three linked parts, joined to the work that made it.
   links: [
     "learner>design",
     "design>test",
@@ -310,7 +310,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "builders",
       description:
-        "Builder illustration: a learner with a work problem climbs four reviewed steps — design, test, troubleshoot, anticipate failures — to a workflow in use.",
+        "Builder illustration: a learner with a work problem works with colleagues through four reviewed stations — design, test, troubleshoot, anticipate failures — to a workflow in use built from three joined parts.",
       ...builderScene,
     },
   },
