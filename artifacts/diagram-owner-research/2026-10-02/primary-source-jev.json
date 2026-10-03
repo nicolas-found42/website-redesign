@@ -1,0 +1,608 @@
+{
+  "date": "2026-10-02",
+  "purpose": "Audit trail for Jev screening, verification, and source comparison used in the diagram-owner primary-source research note.",
+  "scope": "Public sources only: IBM, Atlassian, Anthropic/Claude Code, W3C.",
+  "capture_note": "The entries below preserve the inputs and result fields available in this research turn for the source-related calls. This is a selective audit record, not a full dump of every screening call in the turn. The research note reports 27 screen calls in total. Results and token usage were not aggregated across calls. No user-provided Drive sources or private materials are included here.",
+  "screen_runs": [
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "IBM illustration guidance: illustrations should have clear purpose, support content and guide understanding; clear and simple illustration; principles engineered, clear, nimble, diverse, delightful. It says essential non-decorative elements should communicate the main idea. Line style conveys precision, honesty and authority; flat style is colorful, bold, graphic; isometric adds depth and space to communicate complex ideas.",
+      "purpose": "Use official design-system and W3C guidance as research evidence for visual identity directions for Found42 homepage diagrams.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.04,
+          "substance": 0.97,
+          "relevance": 0.87
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 608, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Atlassian illustration guidance: illustrations help convey complex ideas simply, should be meaningful and reflect user's context and emotional state. Use to guide users through tasks, explain workflows, or provide context in empty/error states; when applied correctly they add clarity and brand personality.",
+      "purpose": "Use official design-system and W3C guidance as research evidence for visual identity directions for Found42 homepage diagrams.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.04,
+          "substance": 0.97,
+          "relevance": 0.84
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 581, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "W3C Cognitive Accessibility Design Pattern (supplemental, not WCAG-required): Use familiar icons, images and symbols on important content; each should convey one meaning and sit next to related content. Symbols can help users with language comprehension, learning, reading, language or attention difficulties.",
+      "purpose": "Use official design-system and W3C guidance as research evidence for visual identity directions for Found42 homepage diagrams.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.03,
+          "substance": 0.97,
+          "relevance": 0.88
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 587, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "W3C WCAG 2.2 Understanding 1.1.1: visual non-text content needs a text alternative serving an equivalent purpose, except defined cases. Pure decorative/non-informative images may be ignored by assistive tech.",
+      "purpose": "Use selected primary W3C, first-party illustration, icon study, and Anthropic domain sources in visual design research.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.06,
+          "substance": 0.96,
+          "relevance": 0.63
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 591, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "W3C WCAG 2.1 Understanding 1.3.3: operating instructions must not rely solely on shape, size, location, orientation, or sound; refer to a label as well. The example says color/location plus a label is acceptable.",
+      "purpose": "Use selected primary W3C, first-party illustration, icon study, and Anthropic domain sources in visual design research.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.05,
+          "substance": 0.96,
+          "relevance": 0.79
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 587, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Atlassian Design System's illustrations page: use meaningful illustrations reflecting the user's context and emotional state; use illustrations to guide tasks or explain workflows; types include single-concept spots with state/action/next-step/celebration examples.",
+      "purpose": "Use selected primary W3C, first-party illustration, icon study, and Anthropic domain sources in visual design research.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.05,
+          "substance": 0.96,
+          "relevance": 0.7
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 582, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Smith et al. (?) online icon studies: Search snippets report icon comprehension affected by visual complexity, concreteness and familiarity; findings are context-sensitive. Need inspect exact paper authors/results before using.",
+      "purpose": "Use selected primary W3C, first-party illustration, icon study, and Anthropic domain sources in visual design research.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.05,
+          "substance": 0.9,
+          "relevance": 0.38
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 574, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Anthropic official MCP docs: Model Context Protocol standardizes how applications provide context to LLMs; connects AI models to data sources and tools. Anthropic describes it as analogous to USB-C.",
+      "purpose": "Use selected primary W3C, first-party illustration, icon study, and Anthropic domain sources in visual design research.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.02,
+          "substance": 0.95,
+          "relevance": 0.66
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 576, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Claude Code official skills documentation (https://code.claude.com/docs/en/skills) describes skills as a SKILL.md containing instructions, loaded when relevant or invoked, with supporting files and project/team sharing. It says a skill is useful for repeat instructions, checklists, and multi-step procedures.",
+      "purpose": "Screen official Claude Code docs before extracting domain facts for visual metaphor research.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.06,
+          "substance": 0.92,
+          "relevance": 0.9
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 573, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Claude Code official plugins documentation (https://code.claude.com/docs/en/plugins) and hooks reference (https://code.claude.com/docs/en/hooks) are official product documentation. Need inspect details; page titles only.",
+      "purpose": "Screen official Claude Code docs before extracting domain facts for visual metaphor research.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.28,
+          "substance": 0.45,
+          "relevance": 0.72
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "review",
+          "reason": "injection probability 0.28 >= review threshold 0.25"
+        },
+        "usage": { "input_tokens": 557, "output_tokens": 57 }
+      },
+      "manual_review": "The screened item contained only page titles/URLs and a note that details remained to be inspected. No agent-directed instructions were identified. Its low substance/review result was not used as source authority."
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Anthropic official Claude Code skills docs state skills extend Claude capabilities by adding SKILL.md instructions to its toolkit; Claude can use them when relevant or via direct invocation. A skill suits recurring instructions/checklists/procedures, and can contain supporting files and invoke dynamically.",
+      "purpose": "Screen specific first-party Claude Code source extracts to use as research evidence.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.06,
+          "substance": 0.97,
+          "relevance": 0.78
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 565, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Official Claude Code plugins docs: a plugin can bundle skills, agents, hooks, and MCP server; e.g. plugin files supply a namespaced skill, subagent, lifecycle hooks and tools. Plugins are useful when packaging several components as one installable unit.",
+      "purpose": "Screen specific first-party Claude Code source extracts to use as research evidence.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.04,
+          "substance": 0.97,
+          "relevance": 0.87
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 565, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Official Claude Code hooks docs: hooks are user-defined shell commands, HTTP endpoints, MCP tool calls, LLM prompts, or subagents that execute automatically at specific points in Claude Code lifecycle.",
+      "purpose": "Screen specific first-party Claude Code source extracts to use as research evidence.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.11,
+          "substance": 0.97,
+          "relevance": 0.85
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 550, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Official Claude Code MCP docs: connected servers provide Claude Code access to external tools, databases, and APIs, allowing it to read and act on those systems directly.",
+      "purpose": "Screen specific first-party Claude Code source extracts to use as research evidence.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.07,
+          "substance": 0.97,
+          "relevance": 0.86
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 543, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "IBM Design Language first-party illustration guidance (search result excerpt): illustrations should have clear purpose and support content and understanding. It says avoid overburdening illustrations with ideas and include only essential non-decorative elements. IBM's styles include line (precision, honesty, authority), flat (bold/colorful/graphic) and isometric (depth, space).",
+      "purpose": "Screen IBM, Atlassian and W3C official visual guidance before including design rules.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.1,
+          "substance": 0.96,
+          "relevance": 0.87
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 594, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "Atlassian Design System first-party illustration guidance (search result excerpt): illustrations should help explain complex ideas simply, be meaningful, and reflect user context/emotional state; apply them to explain workflows and add clarity/personality.",
+      "purpose": "Screen IBM, Atlassian and W3C official visual guidance before including design rules.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.09,
+          "substance": 0.95,
+          "relevance": 0.87
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 567, "output_tokens": 57 }
+      }
+    },
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "input": "W3C cognitive accessibility supplemental pattern: familiar icons/images/symbols can support important content and headings; each icon should convey one meaning and be near the content it relates to. This is supplemental guidance, not a WCAG conformance requirement.",
+      "purpose": "Screen IBM, Atlassian and W3C official visual guidance before including design rules.",
+      "result": {
+        "tool": "jev_screen",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "probabilities": {
+          "injection": 0.14,
+          "substance": 0.97,
+          "relevance": 0.68
+        },
+        "thresholds": { "block_at": 0.75, "review_at": 0.25 },
+        "recommendation": {
+          "action": "pass",
+          "reason": "no signals above thresholds"
+        },
+        "usage": { "input_tokens": 571, "output_tokens": 57 }
+      }
+    }
+  ],
+  "verify_runs": [
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "claims": [
+        "IBM's illustration guidance recommends purpose, simplicity, essential elements and clear communication; it describes line, flat, and isometric illustration styles as listed in the supplied evidence.",
+        "Atlassian recommends meaningful illustrations that reflect user context and can explain tasks/workflows.",
+        "Claude Code skills can be understood as reusable procedural instructions added to Claude's toolkit and invoked automatically or directly.",
+        "Claude Code plugins package multiple components such as skills, subagents, hooks, and MCP servers as one unit.",
+        "Claude Code hooks are automatic actions at lifecycle points, while MCP connectors provide access to external tools, databases, and APIs.",
+        "WCAG 2.2 Success Criterion 1.1.1 requires text alternatives equivalent in purpose for non-text content, including diagrams, with exceptions including decoration.",
+        "WCAG 2.1 Success Criterion 1.3.3 bars instructions relying only on sensory characteristics such as color, shape, or location; labels can supplement these cues.",
+        "The W3C cognitive accessibility icon pattern is supplemental and recommends familiar, single-meaning icons adjacent to relevant content."
+      ],
+      "evidence": [
+        {
+          "id": "ibm",
+          "text": "IBM Design Language illustration overview: Illustrations should have a clear purpose, support content, and guide users to understand difficult concepts, products or services. It recommends simplicity and essential, non-decorative elements. Its styles include line (precision, honesty, authority), flat (colorful, bold, graphic), and isometric (depth, space). https://www.ibm.com/design/language/illustration/overview/"
+        },
+        {
+          "id": "atlassian",
+          "text": "Atlassian Design System illustrations guidance: illustrations help convey complex ideas simply; they should be meaningful and reflect users' context and emotional state. They can guide users through tasks, explain complex workflows, or provide context. https://atlassian.design/guidelines/brand/illustrations/"
+        },
+        {
+          "id": "skills",
+          "text": "Claude Code skills documentation says skills are SKILL.md instructions added to Claude's toolkit; Claude uses them when relevant or users invoke directly; useful for repeat instructions, checklists, or multi-step procedures. Supporting files and project/plugin distribution also exist. https://code.claude.com/docs/en/skills"
+        },
+        {
+          "id": "plugins",
+          "text": "Claude Code plugin docs describe packaging several skills, subagents, hooks, or MCP servers in one unit; their example plugin combines a namespaced skill, subagent, lifecycle hooks and MCP tools. https://code.claude.com/docs/en/plugins"
+        },
+        {
+          "id": "hooks",
+          "text": "Claude Code hooks are user-defined shell commands, HTTP endpoints, MCP tool calls, LLM prompts, or subagents that execute automatically at specified lifecycle points. https://code.claude.com/docs/en/hooks"
+        },
+        {
+          "id": "mcp",
+          "text": "Claude Code MCP docs say connected servers give access to tools, databases and APIs, letting Claude read and act on those systems directly. MCP's own introduction calls it an open-source standard connecting AI applications to external systems. https://code.claude.com/docs/en/mcp"
+        },
+        {
+          "id": "wcag111",
+          "text": "WCAG 2.2 Understanding 1.1.1 says all non-text content presented to users needs a text alternative serving equivalent purpose (with listed exceptions); charts, diagrams, pictures and animations can use short/long text alternatives; decoration can be ignored by AT. https://www.w3.org/WAI/WCAG22/Understanding/non-text-content"
+        },
+        {
+          "id": "wcag133",
+          "text": "WCAG 2.1 Understanding 1.3.3: instructions must not rely solely on shape, color, size, location, orientation, or sound. Its example says an arrow is identified by label 'Next'; adding labels permits using color/position as additional cues. https://www.w3.org/WAI/WCAG21/Understanding/sensory-characteristics.html"
+        },
+        {
+          "id": "wcag-cog",
+          "text": "W3C Cognitive Accessibility design pattern 'Use Icons that Help the User' is supplemental guidance, not a WCAG requirement: add familiar icons/images/symbols to important content; each icon should convey a single meaning and sit near related content. https://www.w3.org/WAI/WCAG2/supplemental/patterns/o1p07-icons-used/"
+        }
+      ],
+      "result": {
+        "tool": "jev_verify",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "auto_accept": 0.8,
+        "subject_at": 0.5,
+        "summary": {
+          "verified": 8,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0
+        },
+        "claims": [
+          {
+            "id": "claim0",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": "ibm",
+            "same_subject": 0.58
+          },
+          {
+            "id": "claim1",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": "atlassian",
+            "same_subject": 0.46
+          },
+          {
+            "id": "claim2",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": "skills",
+            "same_subject": 0.4
+          },
+          {
+            "id": "claim3",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": "plugins",
+            "same_subject": 0.43
+          },
+          {
+            "id": "claim4",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": null,
+            "same_subject": 0.38
+          },
+          {
+            "id": "claim5",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": "wcag111",
+            "same_subject": 0.49
+          },
+          {
+            "id": "claim6",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": "wcag133",
+            "same_subject": 0.56
+          },
+          {
+            "id": "claim7",
+            "verdict": "verified",
+            "probabilities": {
+              "says_nothing": 0,
+              "supports": 1,
+              "contradicts": 0
+            },
+            "confidence": 1,
+            "action": "auto",
+            "supporting_evidence": "wcag-cog",
+            "same_subject": 0.62
+          }
+        ],
+        "usage": { "input_tokens": 4497, "output_tokens": 1313 }
+      }
+    }
+  ],
+  "compare_runs": [
+    {
+      "capture": "reconstructed_from_tool_call_and_tool_result",
+      "passage_a": "IBM Design Language says illustration should have clear purpose, support understanding, be simple with essential non-decorative elements, and achieve an engineered, clear, nimble, diverse, delightful aesthetic. Styles include line, flat and isometric.",
+      "passage_b": "Atlassian Design System says illustrations should simplify complex ideas, be meaningful and reflect user context and emotional state; they guide tasks and explain complex workflows, adding clarity and brand personality.",
+      "purpose": "Reconcile official illustration-system guidance to identify overlap and differences useful to Found42 diagrams.",
+      "aspects": [
+        "Core communication goal",
+        "Use of context",
+        "Visual specificity/style constraints"
+      ],
+      "result": {
+        "tool": "jev_compare",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "overall": {
+          "relation": "same_fact",
+          "probabilities": {
+            "same_fact": 0.57,
+            "contradicts": 0,
+            "different_facts": 0.43
+          },
+          "confidence": 0.35,
+          "margin": 0.13999999999999996,
+          "decision": "review"
+        },
+        "aspects": [
+          {
+            "aspect": "Core communication goal",
+            "relation": "same_fact",
+            "probabilities": {
+              "same_fact": 0.99,
+              "contradicts": 0,
+              "different_facts": 0.01
+            },
+            "confidence": 0.98,
+            "margin": 0.98,
+            "decision": "auto"
+          },
+          {
+            "aspect": "Use of context",
+            "relation": "different_facts",
+            "probabilities": {
+              "same_fact": 0.01,
+              "contradicts": 0,
+              "different_facts": 0.99
+            },
+            "confidence": 0.99,
+            "margin": 0.98,
+            "decision": "auto"
+          },
+          {
+            "aspect": "Visual specificity/style constraints",
+            "relation": "different_facts",
+            "probabilities": {
+              "same_fact": 0.02,
+              "contradicts": 0,
+              "different_facts": 0.98
+            },
+            "confidence": 0.96,
+            "margin": 0.96,
+            "decision": "auto"
+          }
+        ],
+        "thresholds": { "auto_accept": 0.8, "minimum_margin": 0.5 },
+        "usage": { "input_tokens": 891, "output_tokens": 175 }
+      }
+    }
+  ]
+}

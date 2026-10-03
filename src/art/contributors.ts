@@ -11,9 +11,10 @@ import {
   type LabelPlace,
   type Orientation,
 } from "./kit";
+import { colleague, contents, desk, folio, laptop, paper } from "./work";
 
 /**
- * Individual Contributors and Teams: the gate.
+ * Individual Contributors and Teams: four workstations and a shared review.
  *
  * Four people in one company, each with a ribbon of their own role. Each
  * ribbon runs through a skill cut for that role — its buckle — and onwards
@@ -68,12 +69,7 @@ function buckle(
  * One lane's slot on the gate: an open ring where that lane's ribbon
  * passes through the frame, so every lane has an entry of its own.
  */
-function slotRing(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-): string {
+function slotRing(x: number, y: number, width: number, height: number): string {
   return `<rect class="s-ink" x="${r(x)}" y="${r(y)}" width="${width}" height="${height}" rx="8" fill="none" stroke-width="3"/>`;
 }
 
@@ -105,24 +101,52 @@ const resultPanel = (x: number, y: number, w: number, h: number) =>
   `<rect class="f-sunk" x="${r(x + 5)}" y="${r(y + 6)}" width="${w}" height="${h}" rx="8"/>` +
   `<rect class="f-ink s-ink" x="${x}" y="${y}" width="${w}" height="${h}" rx="8" stroke-width="2.5"/>`;
 
+/** Each role handles a different artifact: deal folder, plan, feedback, account. */
+function workStation(x: number, y: number, w: number, role: number): string {
+  const scale = w / 560;
+  const object =
+    role === 0
+      ? folio(330, 0, 160, "owners")
+      : role === 1
+        ? laptop(320, -8, 180, "plan")
+        : role === 2
+          ? paper(325, 0, 165, 95) +
+            [0, 1, 2]
+              .map(
+                (i) =>
+                  `<rect class="f-${i === 1 ? "warm" : "sunk"} s-ink" x="${340 + i * 43}" y="${18 + i * 8}" width="34" height="48" rx="3" stroke-width="1.5"/>`,
+              )
+              .join("")
+          : folio(335, 0, 150, "priorities");
+  return (
+    `<g transform="translate(${x} ${y}) scale(${scale})">` +
+    colleague([125, 42], 1, role === 1 ? "point" : "read") +
+    paper(180, 56, 85, 40) +
+    `<g transform="translate(190 63) scale(.42)">${contents(0, 0, 160, "owners")}</g>` +
+    object +
+    desk(0, 102, 540) +
+    `</g>`
+  );
+}
+
 function landscape(): Art {
-  const ys = [170, 272, 374, 476];
-  const centre = 330;
+  const ys = [160, 370, 580, 790];
+  const centre = 475;
   const width = 30;
   // The frame stands across all four lanes, so every ribbon meets it
   // straight on at its own height: nothing converges and nothing crosses.
-  const frame = { x: 806, y: 136, w: 84, h: 378 };
+  const frame = { x: 806, y: 126, w: 84, h: 702 };
   // Past the gate the four paths part to ends of their own on the result.
-  const panel = { x: 1060, y: 196, w: 230, h: 268 };
+  const panel = { x: 1060, y: 210, w: 230, h: 530 };
   // The canvas ends a margin past the panel, and the company's backdrop fills
   // it: nothing here is a number of its own to drift from the panel's.
   const canvasWidth = panel.x + panel.w + 50;
-  const gap = 70;
+  const gap = 130;
   const ends = ys.map((_, lane) => centre + (lane - 1.5) * gap);
   const beyond = frame.x + frame.w + 10;
   const labels: Record<string, LabelPlace> = {
     company: place([62, 70], "start", "below", { width: 400 }),
-    human: place([frame.x + frame.w / 2, 552], "center", "middle", {
+    human: place([frame.x + frame.w / 2, 1020], "center", "middle", {
       width: 330,
       ground: "red",
     }),
@@ -152,7 +176,8 @@ function landscape(): Art {
       },
       strip(d, width, FILLS[i]) +
         buckle(360, y, 260, 94, width) +
-        tab(60, y, 270, 58),
+        tab(60, y, 270, 70) +
+        workStation(60, y + 65, 560, i),
     );
   });
   const returns = ys.map((y, i) => {
@@ -176,7 +201,7 @@ function landscape(): Art {
   const parts = [
     part(
       { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(30, 44, canvasWidth - 60, 552),
+      backdrop(30, 44, canvasWidth - 60, 1036),
     ),
     part(
       {
@@ -189,10 +214,16 @@ function landscape(): Art {
       },
       gate(frame) +
         seal([frame.x + frame.w / 2, frame.y - 4], 20, -8) +
-        `<path class="s-red" d="M${frame.x + frame.w / 2} ${frame.y + frame.h} L${frame.x + frame.w / 2} 524" stroke-width="4"/>` +
-        plate(frame.x + frame.w / 2 - 180, 524, 360, 56),
+        `<path class="s-red" d="M${frame.x + frame.w / 2} ${frame.y + frame.h} L${frame.x + frame.w / 2} 990" stroke-width="4"/>` +
+        plate(frame.x + frame.w / 2 - 180, 990, 360, 60),
     ),
     ...rows,
+    part(
+      { name: "human-reviewer", beat: 5, enter: "rise" },
+      colleague([960, 860], 0.9, "review") +
+        folio(875, 885, 94, "owners") +
+        desk(870, 910, 325),
+    ),
     part(
       { name: "lanes", beat: 4, enter: "fade", order: 1 },
       ys.map((y) => slotRing(frame.x - 12, y - 21, 36, 42)).join(""),
@@ -211,20 +242,20 @@ function landscape(): Art {
       resultPanel(panel.x, panel.y, panel.w, panel.h),
     ),
   ];
-  return { width: canvasWidth, height: 620, parts: parts.join(""), labels };
+  return { width: canvasWidth, height: 1100, parts: parts.join(""), labels };
 }
 
 function portrait(): Art {
-  const ys = [160, 292, 424, 556];
+  const ys = [160, 400, 640, 880];
   // Each lane turns down at a line of its own and falls straight to the
   // gate: horizontals sit at different heights and verticals at different
   // lines, so no lane crosses another on its way down.
   const downAt = [594, 566, 538, 510];
   const width = 20;
-  const frame = { x: 470, y: 762, w: 134, h: 74 };
+  const frame = { x: 470, y: 1130, w: 134, h: 74 };
   // Past the gate the four paths part to ends of their own on the result,
   // in the same left-to-right order as their lines above the gate.
-  const panel = { x: 120, y: 1004, w: 470, h: 104 };
+  const panel = { x: 120, y: 1460, w: 470, h: 104 };
   // The canvas ends a margin below the panel, and the company's backdrop fills
   // it: nothing here is a number of its own to drift from the panel's.
   const canvasHeight = panel.y + panel.h + 40;
@@ -232,7 +263,10 @@ function portrait(): Art {
   const ends = [552, 468, 384, 300];
   const labels: Record<string, LabelPlace> = {
     company: place([40, 54], "start", "below", { width: 520 }),
-    human: place([306, 799], "center", "middle", { width: 250, ground: "red" }),
+    human: place([306, 1167], "center", "middle", {
+      width: 250,
+      ground: "red",
+    }),
     result: place(
       [panel.x + panel.w / 2, panel.y + panel.h / 2],
       "center",
@@ -267,7 +301,8 @@ function portrait(): Art {
       },
       strip(d, width, FILLS[i]) +
         buckle(288, y, 188, 92, width) +
-        tab(34, y, 244, 60),
+        tab(34, y, 244, 80) +
+        workStation(34, y + 60, 432, i),
     );
   });
   const returns = ys.map((_, i) => {
@@ -307,6 +342,12 @@ function portrait(): Art {
         plate(172, frame.y + frame.h / 2 - 48, 268, 96),
     ),
     ...rows,
+    part(
+      { name: "human-reviewer", beat: 5, enter: "rise" },
+      colleague([228, 1270], 0.9, "review") +
+        folio(65, 1294, 106, "owners") +
+        desk(40, 1324, 366),
+    ),
     part(
       { name: "lanes", beat: 4, enter: "fade", order: 1 },
       downAt.map((x) => slotRing(x - 16, frame.y - 12, 32, 36)).join(""),

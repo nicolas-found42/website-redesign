@@ -26,6 +26,8 @@ import {
  * design step rather than the brief.
  * Issue #140 lays the Automations drawing out as an ordered process ending in
  * a human approval.
+ * PR #161 updates only the builder's accessible description to match the new
+ * collaborative stations; its words, marks, beats and connections remain.
  */
 
 type Link = { from: string; to: string; weight: string };
@@ -244,6 +246,63 @@ test("each service drawing keeps its words and connections in both shapes", asyn
       id,
       "portrait",
     );
+});
+
+test("the Automation output branch stays clear of the direction and review words", async ({
+  page,
+}) => {
+  for (const text of ["100%", "150%", "200%"]) {
+    await open(page, "/", 1440);
+    await page.evaluate((size) => {
+      document.documentElement.style.fontSize = size;
+    }, text);
+    await page
+      .getByRole("button", { name: "Automations", exact: true })
+      .click();
+    const field = page.locator(".services-art .system-field");
+    await expect(
+      field.getByText("Human direction", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      field.getByText("Human review", { exact: true }),
+    ).toBeVisible();
+    // Read the rendered path and text geometry, rather than pinning a path string.
+    const collisions = await field.evaluate((element) => {
+      const path = element.querySelector<SVGPathElement>(
+        '[data-links~="human>out1"] path',
+      )!;
+      const transform = path.getScreenCTM()!;
+      const labels = [
+        ...element.querySelectorAll(
+          '[data-node="human"] .system-label-text, [data-node="n3"] .system-label-text',
+        ),
+      ].map((label) => {
+        const range = document.createRange();
+        range.selectNodeContents(label);
+        return { text: label.textContent, boxes: [...range.getClientRects()] };
+      });
+      const length = path.getTotalLength();
+      const hits = new Set<string>();
+      for (let distance = 0; distance <= length; distance += 0.5) {
+        const point = path
+          .getPointAtLength(distance)
+          .matrixTransform(transform);
+        for (const label of labels)
+          if (
+            label.boxes.some(
+              (box) =>
+                point.x >= box.left - 1 &&
+                point.x <= box.right + 1 &&
+                point.y >= box.top - 1 &&
+                point.y <= box.bottom + 1,
+            )
+          )
+            hits.add(label.text ?? "");
+      }
+      return [...hits];
+    });
+    expect(collisions, text).toEqual([]);
+  }
 });
 
 test("the Workflows drawing reads as an ordered process with a labelled iteration", async ({
@@ -475,7 +534,7 @@ test("no drawing on any route is textured with dots, stripes or ruled lines", as
   }
 });
 
-test("the builder stair starts at Design and keeps its reviewed steps", async ({
+test("the builder stations start at Design and keep their reviewed steps", async ({
   page,
 }) => {
   await open(page, "/", 1440);
@@ -498,6 +557,10 @@ test("the builder stair starts at Design and keeps its reviewed steps", async ({
   expect(
     drawnMarks(state).filter((mark) => mark.startsWith("check")),
   ).toHaveLength(4);
+  expect(state.describedBy).toMatch(
+    /works with colleagues through four reviewed stations.*design, test, troubleshoot, anticipate failures.*three joined parts/i,
+  );
+  expect(state.describedBy).not.toMatch(/climb|stair/i);
 });
 
 test("the executive day names four ordered cards and keeps the decision illustrative", async ({
@@ -671,8 +734,9 @@ test("each executive sample sits inside its own card with enlarged text", async 
     await expect(fields).toHaveCount(1);
     await fields.first().scrollIntoViewIfNeeded();
     for (const [, text] of cards)
-      await expect(fields.first().getByText(text, { exact: true }))
-        .toBeVisible();
+      await expect(
+        fields.first().getByText(text, { exact: true }),
+      ).toBeVisible();
     await expect
       .poll(() => fields.first().evaluate(outside, cards))
       .toEqual([]);
@@ -894,7 +958,12 @@ test("the teams scene keeps each role lane clear of the others into and out of t
     return { pair, distance, allowance, lanes: lanes.length };
   };
   const expectClear = (
-    clearance: { pair: string; distance: number; allowance: number; lanes: number },
+    clearance: {
+      pair: string;
+      distance: number;
+      allowance: number;
+      lanes: number;
+    },
     where: string,
   ) => {
     expect(clearance.lanes, `${where}: four lanes in, four out`).toBe(8);
@@ -910,7 +979,9 @@ test("the teams scene keeps each role lane clear of the others into and out of t
     .first()
     .click();
   expectClear(
-    await page.locator("#audience-contributors .scene-field").evaluate(clearanceOf),
+    await page
+      .locator("#audience-contributors .scene-field")
+      .evaluate(clearanceOf),
     "portrait at 384px",
   );
   // Landscape: the pinned scene on a wide screen with motion allowed.
@@ -949,23 +1020,34 @@ const gateFrameOf = (root: Element) => {
     count: rects.length,
     thinnest: Math.min(...rects.map((rect) => rect.height)),
     frameTall: rects.filter((rect) => rect.height > viewHeight * 0.5).length,
-    pastFrame: rects.filter((rect) => rect.y + rect.height > viewHeight + 1).length,
+    pastFrame: rects.filter((rect) => rect.y + rect.height > viewHeight + 1)
+      .length,
   };
 };
 
 const expectGateFrame = (
-  frame: { count: number; thinnest: number; frameTall: number; pastFrame: number },
+  frame: {
+    count: number;
+    thinnest: number;
+    frameTall: number;
+    pastFrame: number;
+  },
   where: string,
 ) => {
   expect(frame.count, `${where}: four posts plus the label plate`).toBe(6);
   expect(frame.thinnest, `${where}: posts are thin`).toBeLessThan(40);
   // The wide composition's side posts span the frame; the narrow one's are
   // transposed, so at most two rects may be frame-height.
-  expect(frame.frameTall, `${where}: no third frame-height rect`).toBeLessThanOrEqual(2);
+  expect(
+    frame.frameTall,
+    `${where}: no third frame-height rect`,
+  ).toBeLessThanOrEqual(2);
   expect(frame.pastFrame, `${where}: no rect leaves the drawing`).toBe(0);
 };
 
-test("the teams gate is a frame of posts, not a filled block", async ({ page }) => {
+test("the teams gate is a frame of posts, not a filled block", async ({
+  page,
+}) => {
   // Regression: the gate's bottom post once rendered with the frame's full
   // height, painting a dark bar past the canvas edge (review finding on the
   // October redraw). No gate rect may be frame-height or leave the drawing.
@@ -976,7 +1058,9 @@ test("the teams gate is a frame of posts, not a filled block", async ({ page }) 
     .first()
     .click();
   await expectGateFrame(
-    await page.locator("#audience-contributors .scene-field").evaluate(gateFrameOf),
+    await page
+      .locator("#audience-contributors .scene-field")
+      .evaluate(gateFrameOf),
     "portrait at 384px",
   );
   // Landscape: the pinned scene on a wide screen with motion allowed.
@@ -997,7 +1081,10 @@ test("the teams gate is a frame of posts, not a filled block", async ({ page }) 
       timeout: 20000,
     })
     .toBe(0);
-  await expectGateFrame(await wide.evaluate(gateFrameOf), "landscape at 1638px");
+  await expectGateFrame(
+    await wide.evaluate(gateFrameOf),
+    "landscape at 1638px",
+  );
 });
 
 test("the teams scene carries four separate paths past the gate to one shared result caption", async ({
@@ -1218,12 +1305,12 @@ for (const [width, text] of [
     for (const label of fit)
       expect(label.fontSize, label.text).toBeGreaterThanOrEqual(13);
     const overlaps = await field.evaluate((element) => {
-      const boxes = [
-        ...element.querySelectorAll(".system-label-text"),
-      ].map((label) => ({
-        text: label.textContent,
-        box: label.getBoundingClientRect(),
-      }));
+      const boxes = [...element.querySelectorAll(".system-label-text")].map(
+        (label) => ({
+          text: label.textContent,
+          box: label.getBoundingClientRect(),
+        }),
+      );
       return boxes.flatMap((a, i) =>
         boxes
           .slice(i + 1)

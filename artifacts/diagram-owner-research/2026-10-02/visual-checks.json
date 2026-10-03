@@ -1,0 +1,24 @@
+{
+  "links": [
+    "brief>meeting",
+    "meeting>debrief",
+    "debrief>actions",
+    "direction>actions"
+  ],
+  "labels": [
+    "Claude Daily Brief",
+    "Sample: 3 priorities",
+    "Meeting Brief",
+    "Sample: agenda draft",
+    "Meeting Debrief",
+    "Sample: owners, dates",
+    "Actions from Transcripts",
+    "Sample: tasks from notes",
+    "You decide",
+    "Illustrative example · no live integrations"
+  ],
+  "wideOverflow": false,
+  "narrowOverflow": false,
+  "viewportWidths": [1440, 390],
+  "scope": "Static research option only; no website suite run."
+}

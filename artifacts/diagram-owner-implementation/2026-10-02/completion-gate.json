@@ -1,0 +1,142 @@
+{
+  "scope": "Whole-change summary with bounded source excerpts; not a complete diff or pixel review.",
+  "initialAttempt": {
+    "result": "OpenRouter decisions API 400",
+    "verdict": null
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claim_confidence_low"
+    ],
+    "review": {
+      "safe_to_apply": 0.43,
+      "scores": {
+        "correctness": {
+          "score": 1.72,
+          "confidence": 0.57,
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.19,
+            "2": 0.76
+          }
+        },
+        "spec_match": {
+          "score": 1.75,
+          "confidence": 0.63,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.2,
+            "2": 0.77
+          }
+        },
+        "test_gap": {
+          "score": 0.51,
+          "confidence": 0.23,
+          "probabilities": {
+            "0": 0.57,
+            "1": 0.35,
+            "2": 0.08
+          }
+        },
+        "blast_radius": {
+          "score": 1.87,
+          "confidence": 0.8,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.12,
+            "2": 0.87
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.7280000000000001,
+      "reason_codes": ["confidence_below_review", "safe_to_apply_below_review"],
+      "limiting_rubrics": ["test_gap"]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 4,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The complete local suite passed 826 tests using two workers on implementation e99b83e.",
+          "verdict": "verified",
+          "confidence": 0.35,
+          "probabilities": {
+            "verified": 0.57,
+            "unsupported": 0.33,
+            "contradicted": 0.1
+          },
+          "action": "escalate"
+        },
+        {
+          "claim": "The production build, lint and typecheck passed.",
+          "verdict": "verified",
+          "confidence": 0.98,
+          "probabilities": {
+            "verified": 0.99,
+            "unsupported": 0.01,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "All ten recorded captures contain the existing label strings and connection keys with overflow false.",
+          "verdict": "verified",
+          "confidence": 0.82,
+          "probabilities": {
+            "verified": 0.88,
+            "unsupported": 0.09,
+            "contradicted": 0.03
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "Workshops training.ts, schematic.ts and the original inventory fixture are unchanged.",
+          "verdict": "verified",
+          "confidence": 0.92,
+          "probabilities": {
+            "verified": 0.95,
+            "unsupported": 0.04,
+            "contradicted": 0.01
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 11773,
+      "output_tokens": 238
+    }
+  },
+  "agentDisposition": "Retain escalation for human PR review. No retry after this valid verdict; no merge/deploy. Source unchanged since fully tested e99b83e. Direct logs and CI establish real checks; Jev probabilities remain advisory.",
+  "limitations": "No visitor comprehension study. Text audit does not verify pixels."
+}

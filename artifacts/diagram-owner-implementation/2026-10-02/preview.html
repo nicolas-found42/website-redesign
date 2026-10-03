@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Found42 · diagram review</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #faf9f6;
+        color: #222320;
+        font-family: system-ui, sans-serif;
+      }
+      main {
+        max-width: 1320px;
+        padding: 40px 28px 80px;
+        margin: auto;
+      }
+      header {
+        border-bottom: 1px solid #d8d5cc;
+        padding-bottom: 26px;
+        margin-bottom: 30px;
+      }
+      .eyebrow {
+        color: #c40013;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      h1 {
+        font-size: clamp(30px, 4vw, 48px);
+        letter-spacing: -0.045em;
+        margin: 12px 0;
+      }
+      header p {
+        color: #66655d;
+        max-width: 72ch;
+        line-height: 1.6;
+      }
+      nav {
+        display: flex;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      button {
+        font: inherit;
+        font-weight: 600;
+        padding: 12px 22px;
+        background: transparent;
+        border: 1px solid #ccc9c0;
+        cursor: pointer;
+        color: inherit;
+      }
+      button[aria-pressed="true"] {
+        border-color: #c40013;
+        background: #fff;
+      }
+      section {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 26px;
+      }
+      article {
+        border: 1px solid #d8d5cc;
+        background: #fff;
+        min-width: 0;
+      }
+      .card-head {
+        padding: 22px 24px;
+        border-bottom: 1px solid #e6e3dc;
+      }
+      h2 {
+        font-size: 22px;
+        margin: 0 0 8px;
+        letter-spacing: -0.02em;
+      }
+      .card-head p {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #66655d;
+        margin: 0;
+      }
+      figure {
+        margin: 0;
+        padding: 20px;
+      }
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin: auto;
+        max-width: 669px;
+      }
+      .mobile img {
+        max-width: 390px;
+      }
+      @media (max-width: 850px) {
+        main {
+          padding: 26px 16px;
+        }
+        section {
+          grid-template-columns: 1fr;
+        }
+        figure {
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <span class="eyebrow">Found42 · implementation review</span>
+        <h1>Five scenes, five places of work.</h1>
+        <p>
+          The owner-confirmed direction, rendered from the website's actual
+          drawing modules. Every existing label and connection stays. Workshops
+          remains the visual reference. These captures isolate the artwork from
+          the site's sticky header so you can inspect it clearly.
+        </p>
+        <nav aria-label="Capture layout">
+          <button type="button" data-width="1440" aria-pressed="true">
+            Desktop</button
+          ><button type="button" data-width="390" aria-pressed="false">
+            Mobile
+          </button>
+        </nav>
+      </header>
+      <section>
+        <article>
+          <div class="card-head">
+            <h2>Workflows</h2>
+            <p>
+              Customer delivery: source material, co-design, test, handover and
+              refit.
+            </p>
+          </div>
+          <figure>
+            <img
+              data-scene="workflows"
+              src="workflows-1440.png"
+              alt="Workflows implementation capture"
+              width="669"
+              loading="lazy"
+            />
+          </figure>
+        </article>
+        <article>
+          <div class="card-head">
+            <h2>Automations</h2>
+            <p>
+              Repeated work crosses systems under human direction and review.
+            </p>
+          </div>
+          <figure>
+            <img
+              data-scene="automations"
+              src="automations-1440.png"
+              alt="Automations implementation capture"
+              width="669"
+              loading="lazy"
+            />
+          </figure>
+        </article>
+        <article>
+          <div class="card-head">
+            <h2>C-level executives</h2>
+            <p>Distinct documents and decisions across a working day.</p>
+          </div>
+          <figure>
+            <img
+              data-scene="executives"
+              src="executives-1440.png"
+              alt="C-level executives implementation capture"
+              width="669"
+              loading="lazy"
+            />
+          </figure>
+        </article>
+        <article>
+          <div class="card-head">
+            <h2>Individual Contributors and Teams</h2>
+            <p>Four workstations, four separate lanes, one human review.</p>
+          </div>
+          <figure>
+            <img
+              data-scene="contributors"
+              src="contributors-1440.png"
+              alt="Individual Contributors and Teams implementation capture"
+              width="669"
+              loading="lazy"
+            />
+          </figure>
+        </article>
+        <article>
+          <div class="card-head">
+            <h2>AI builders</h2>
+            <p>
+              Build, test, investigate failures and explain a reusable tool
+              together.
+            </p>
+          </div>
+          <figure>
+            <img
+              data-scene="builders"
+              src="builders-1440.png"
+              alt="AI builders implementation capture"
+              width="669"
+              loading="lazy"
+            />
+          </figure>
+        </article>
+      </section>
+    </main>
+    <script>
+      for (const button of document.querySelectorAll("button"))
+        button.addEventListener("click", () => {
+          const width = button.dataset.width;
+          document.body.classList.toggle("mobile", width === "390");
+          for (const other of document.querySelectorAll("button"))
+            other.setAttribute("aria-pressed", String(other === button));
+          for (const img of document.querySelectorAll("img[data-scene]"))
+            img.src = img.dataset.scene + "-" + width + ".png";
+        });
+    </script>
+  </body>
+</html>

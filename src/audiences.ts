@@ -9,9 +9,9 @@
  *   Meeting Brief, Meeting Debrief and Actions from Transcripts. The final
  *   decision stays with them. These are illustrative, with no live integration.
  * - **Individual Contributors and Teams** each run a ribbon of their own role
- *   through a skill cut for it — four roles in one company — and the four
+ *   through its own work artifact — four roles in one company — and the four
  *   ribbons run as four separate lanes to one gate: the human in the loop.
- * - **Builders** climb a stair folded from card, from a work problem to a
+ * - **Builders** practise together at a workbench, from a work problem to a
  *   workflow in use, with a reviewer's seal on each step: design, test,
  *   troubleshoot, anticipate failures.
  *
@@ -183,7 +183,7 @@ const builderScene: SceneContent = {
     mark("anticipate", "check", 4),
     mark("workflow", "result", 5),
   ],
-  // The workflow in use is three linked parts, joined to the climb that made it.
+  // The workflow in use is three linked parts, joined to the work that made it.
   links: [
     "learner>design",
     "design>test",
@@ -310,7 +310,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "builders",
       description:
-        "Builder illustration: a learner with a work problem climbs four reviewed steps — design, test, troubleshoot, anticipate failures — to a workflow in use.",
+        "Builder illustration: a learner with a work problem works with colleagues through four reviewed stations — design, test, troubleshoot, anticipate failures — to a workflow in use built from three joined parts.",
       ...builderScene,
     },
   },

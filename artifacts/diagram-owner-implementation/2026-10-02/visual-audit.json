@@ -1,0 +1,34 @@
+{
+  "transcript": "Implementation captures inspected by the assistant, not by Jev. Workflows portrait: top Brief / operating problem above a folder and checklist, then Tailored design and build above a shared laptop with two people at a desk, then Test and review above a laptop and reviewer with a red check. Team deploys and uses it is on a red banner above a laptop, a person pointing and a document. The next connector turns left through a small review diamond, then right and down to Review in customer context; the separate caption Review point: does it still fit the work? sits to the right of that diamond. A left-margin return rises from customer review to the design stage and its bottom caption is Iteration back into tailored design and build. Contributors landscape: Your company contains four named rows, Deal team / Deal screening, Operations / Plans and reviews, Product / Feedback triage, Sales / Account planning. Each row has its own seated person, desk and distinct folder, planning laptop, feedback cards or account notes. Red, charcoal, white and red lanes stay separate through four slots in the review frame. All four extend into a dark panel saying Reviewed work returns to each role. A separate reviewer holding a red pen sits beneath the frame beside notes. The red Human in the loop plate is below that person, with no document covering its words in this capture. Builders landscape: A learner with a work problem points toward Design. The sequence is Design, Test, Troubleshoot, Anticipate failures, Workflow in use. Design has planning pages, Test has paired result rows, Troubleshoot has a red fault row and two people, Anticipate failures has three triangular warning cases, Workflow in use has an action list and two people. Four red review checks are on the first four station desks. The final arrow leads to three small joined component documents. These are drawn examples; no visitor interpretation study was performed.",
+  "screen": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.09,\n    \"substance\": 0.98,\n    \"relevance\": 0.96\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"pass\",\n    \"reason\": \"no signals above thresholds\"\n  },\n  \"usage\": {\n    \"input_tokens\": 921,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "workflow_return",
+      "value": "Tailored design and build"
+    },
+    {
+      "id": "contributors_review_label",
+      "value": "No document covers the words."
+    },
+    {
+      "id": "builders_collaboration",
+      "value": "Troubleshoot; Workflow in use"
+    }
+  ],
+  "audit": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_audit\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"action\": \"pass\",\n  \"wrong_at\": 0.7,\n  \"truncated\": false,\n  \"summary\": {\n    \"records\": 3,\n    \"flagged\": 0,\n    \"invalid\": 0\n  },\n  \"records\": [\n    {\n      \"id\": \"workflow_return\",\n      \"value\": \"Tailored design and build\",\n      \"checks\": {\n        \"hallucinated\": 0.06,\n        \"off_target\": 0.09,\n        \"incomplete\": 0.14,\n        \"format\": 0.13\n      },\n      \"p_wrong\": 0.14,\n      \"action\": \"ok\"\n    },\n    {\n      \"id\": \"contributors_review_label\",\n      \"value\": \"No document covers the words.\",\n      \"checks\": {\n        \"hallucinated\": 0.03,\n        \"off_target\": 0.1,\n        \"incomplete\": 0.05,\n        \"format\": 0.14\n      },\n      \"p_wrong\": 0.14,\n      \"action\": \"ok\"\n    },\n    {\n      \"id\": \"builders_collaboration\",\n      \"value\": \"Troubleshoot; Workflow in use\",\n      \"checks\": {\n        \"hallucinated\": 0.04,\n        \"off_target\": 0.05,\n        \"incomplete\": 0.05,\n        \"format\": 0.08\n      },\n      \"p_wrong\": 0.08,\n      \"action\": \"ok\"\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1981,\n    \"output_tokens\": 250\n  }\n}"
+      }
+    ]
+  },
+  "limitation": "Jev audits two text artifacts; it does not inspect pixels or establish visitor comprehension."
+}

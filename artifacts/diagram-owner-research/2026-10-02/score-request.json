@@ -1,0 +1,320 @@
+{
+  "model": "typesafe/jev-1.13",
+  "state": {
+    "limits": "Written scene descriptions only. No pixels or visitor outcomes. Existing diagram words and links remain immutable in any future implementation.",
+    "scenes": [
+      {
+        "id": "t01",
+        "intended": "workflows",
+        "text": "Two people at a table compare a project brief, source documents and a test checklist. A fitted tool packet goes to a third person's desk. A curved return path carries marked-up feedback back to the same table."
+      },
+      {
+        "id": "t02",
+        "intended": "automations",
+        "text": "Three distinct application windows sit beside inbox and archive trays. Work packets pass between the windows. A person points at the next handoff and checks the resulting packet before it enters an output tray."
+      },
+      {
+        "id": "t03",
+        "intended": "executives",
+        "text": "One person moves through a morning desk, meeting table, debrief notebook and action tray. A pen in the person's hand marks the final action slips."
+      },
+      {
+        "id": "t04",
+        "intended": "contributors",
+        "text": "Four adjacent desks hold a deal folder, an operations plan, product feedback cards and account notes. Four people use different small tools and check their own work along separate lanes that meet a shared review frame."
+      },
+      {
+        "id": "t05",
+        "intended": "builders",
+        "text": "One person uses a desk with a simple component layout, test examples, an opened failed component and a failure-case checklist, then hands a connected three-piece tool to a teammate."
+      }
+    ]
+  },
+  "questions": {
+    "scene0_activity": {
+      "type": "score",
+      "instructions": "Rate only scenes[0].text along this dimension. Do not infer unseen labels or pixels. Intended owner is workflows. Dimension activity.",
+      "criteria": [
+        "Only generic office equipment; no owner-specific activity",
+        "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "Several concrete actions and artifacts strongly distinguish the intended owner"
+      ]
+    },
+    "scene0_human": {
+      "type": "score",
+      "instructions": "Rate only scenes[0].text along this dimension. Do not infer unseen labels or pixels. Intended owner is workflows. Dimension human.",
+      "criteria": [
+        "Decisions appear automatic or human agency is absent",
+        "A person is present but their responsibility is ambiguous",
+        "A person visibly performs the relevant decision, review, or test"
+      ]
+    },
+    "scene0_difference": {
+      "type": "score",
+      "instructions": "Rate only scenes[0].text along this dimension. Do not infer unseen labels or pixels. Intended owner is workflows. Dimension difference.",
+      "criteria": [
+        "Could be substituted for Workshops without changing the visible activity",
+        "Some distinction, but principal scene still resembles group instruction",
+        "Principal activity is clearly different from guided workshop learning"
+      ]
+    },
+    "scene0_real": {
+      "type": "score",
+      "instructions": "Rate only scenes[0].text along this dimension. Do not infer unseen labels or pixels. Intended owner is workflows. Dimension real.",
+      "criteria": [
+        "Fantastical or unrelated metaphorical world",
+        "Office-like setting with metaphorical elements dominating",
+        "Plausible business work setting with ordinary recognizable tools"
+      ]
+    },
+    "scene0_owner": {
+      "type": "choice",
+      "instructions": "Which owner best fits scenes[0].text, ignoring the intended field?",
+      "criteria": {
+        "workshops": "People learn together on real work through guided practice and group review. Include classroom/whiteboard/keyboard practice. Exclude individual routine workstations without teaching. Example: facilitator watches a team practise.",
+        "workflows": "Expertise, examples and quality standards become a reusable custom Claude skill or plugin, tested and improved in customer context. Include authoring, packaging and refit loops. Exclude cross-system orchestration as principal story. Example: brief is fitted into a reusable skill.",
+        "automations": "Repetitive work travels between business systems with humans directing or reviewing where judgment matters. Include handoff infrastructure. Exclude building a single reusable task skill as principal story. Example: work passes CRM to productivity system and review.",
+        "executives": "A senior leader receives briefings, meeting preparation/debriefs and suggested actions during a day and makes the final decision. Exclude generic team collaboration without executive agenda. Example: morning briefing meets decision desk.",
+        "contributors": "Different business roles each use a tailored capability for their own recurring work and retain responsibility for quality. Include differentiated role-specific workstations. Exclude teaching session as principal story. Example: deal, operations, product and sales each handle role work.",
+        "builders": "Non-engineer AI champions assemble, test, troubleshoot and anticipate failure in a capability before the team uses it. Include practical proving bench. Exclude generic service-delivery process without failure investigation. Example: builder tests pieces and repairs a fault.",
+        "manual_review": "The scene lacks sufficient cues to distinguish an owner, or combines two principal stories equally. Takes precedence when no dominant work activity exists. Example: generic boxes connected by arrows."
+      }
+    },
+    "scene0_visual_proof": {
+      "type": "noul",
+      "instructions": "Does supplied evidence prove real visitors will recognize rendered artwork for scenes[0]?",
+      "criteria": {
+        "true": "Actual rendered artwork and independent visitor recognition results exist in supplied evidence.",
+        "false": "Only written ideas or model judgments exist."
+      }
+    },
+    "scene1_activity": {
+      "type": "score",
+      "instructions": "Rate only scenes[1].text along this dimension. Do not infer unseen labels or pixels. Intended owner is automations. Dimension activity.",
+      "criteria": [
+        "Only generic office equipment; no owner-specific activity",
+        "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "Several concrete actions and artifacts strongly distinguish the intended owner"
+      ]
+    },
+    "scene1_human": {
+      "type": "score",
+      "instructions": "Rate only scenes[1].text along this dimension. Do not infer unseen labels or pixels. Intended owner is automations. Dimension human.",
+      "criteria": [
+        "Decisions appear automatic or human agency is absent",
+        "A person is present but their responsibility is ambiguous",
+        "A person visibly performs the relevant decision, review, or test"
+      ]
+    },
+    "scene1_difference": {
+      "type": "score",
+      "instructions": "Rate only scenes[1].text along this dimension. Do not infer unseen labels or pixels. Intended owner is automations. Dimension difference.",
+      "criteria": [
+        "Could be substituted for Workshops without changing the visible activity",
+        "Some distinction, but principal scene still resembles group instruction",
+        "Principal activity is clearly different from guided workshop learning"
+      ]
+    },
+    "scene1_real": {
+      "type": "score",
+      "instructions": "Rate only scenes[1].text along this dimension. Do not infer unseen labels or pixels. Intended owner is automations. Dimension real.",
+      "criteria": [
+        "Fantastical or unrelated metaphorical world",
+        "Office-like setting with metaphorical elements dominating",
+        "Plausible business work setting with ordinary recognizable tools"
+      ]
+    },
+    "scene1_owner": {
+      "type": "choice",
+      "instructions": "Which owner best fits scenes[1].text, ignoring the intended field?",
+      "criteria": {
+        "workshops": "People learn together on real work through guided practice and group review. Include classroom/whiteboard/keyboard practice. Exclude individual routine workstations without teaching. Example: facilitator watches a team practise.",
+        "workflows": "Expertise, examples and quality standards become a reusable custom Claude skill or plugin, tested and improved in customer context. Include authoring, packaging and refit loops. Exclude cross-system orchestration as principal story. Example: brief is fitted into a reusable skill.",
+        "automations": "Repetitive work travels between business systems with humans directing or reviewing where judgment matters. Include handoff infrastructure. Exclude building a single reusable task skill as principal story. Example: work passes CRM to productivity system and review.",
+        "executives": "A senior leader receives briefings, meeting preparation/debriefs and suggested actions during a day and makes the final decision. Exclude generic team collaboration without executive agenda. Example: morning briefing meets decision desk.",
+        "contributors": "Different business roles each use a tailored capability for their own recurring work and retain responsibility for quality. Include differentiated role-specific workstations. Exclude teaching session as principal story. Example: deal, operations, product and sales each handle role work.",
+        "builders": "Non-engineer AI champions assemble, test, troubleshoot and anticipate failure in a capability before the team uses it. Include practical proving bench. Exclude generic service-delivery process without failure investigation. Example: builder tests pieces and repairs a fault.",
+        "manual_review": "The scene lacks sufficient cues to distinguish an owner, or combines two principal stories equally. Takes precedence when no dominant work activity exists. Example: generic boxes connected by arrows."
+      }
+    },
+    "scene1_visual_proof": {
+      "type": "noul",
+      "instructions": "Does supplied evidence prove real visitors will recognize rendered artwork for scenes[1]?",
+      "criteria": {
+        "true": "Actual rendered artwork and independent visitor recognition results exist in supplied evidence.",
+        "false": "Only written ideas or model judgments exist."
+      }
+    },
+    "scene2_activity": {
+      "type": "score",
+      "instructions": "Rate only scenes[2].text along this dimension. Do not infer unseen labels or pixels. Intended owner is executives. Dimension activity.",
+      "criteria": [
+        "Only generic office equipment; no owner-specific activity",
+        "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "Several concrete actions and artifacts strongly distinguish the intended owner"
+      ]
+    },
+    "scene2_human": {
+      "type": "score",
+      "instructions": "Rate only scenes[2].text along this dimension. Do not infer unseen labels or pixels. Intended owner is executives. Dimension human.",
+      "criteria": [
+        "Decisions appear automatic or human agency is absent",
+        "A person is present but their responsibility is ambiguous",
+        "A person visibly performs the relevant decision, review, or test"
+      ]
+    },
+    "scene2_difference": {
+      "type": "score",
+      "instructions": "Rate only scenes[2].text along this dimension. Do not infer unseen labels or pixels. Intended owner is executives. Dimension difference.",
+      "criteria": [
+        "Could be substituted for Workshops without changing the visible activity",
+        "Some distinction, but principal scene still resembles group instruction",
+        "Principal activity is clearly different from guided workshop learning"
+      ]
+    },
+    "scene2_real": {
+      "type": "score",
+      "instructions": "Rate only scenes[2].text along this dimension. Do not infer unseen labels or pixels. Intended owner is executives. Dimension real.",
+      "criteria": [
+        "Fantastical or unrelated metaphorical world",
+        "Office-like setting with metaphorical elements dominating",
+        "Plausible business work setting with ordinary recognizable tools"
+      ]
+    },
+    "scene2_owner": {
+      "type": "choice",
+      "instructions": "Which owner best fits scenes[2].text, ignoring the intended field?",
+      "criteria": {
+        "workshops": "People learn together on real work through guided practice and group review. Include classroom/whiteboard/keyboard practice. Exclude individual routine workstations without teaching. Example: facilitator watches a team practise.",
+        "workflows": "Expertise, examples and quality standards become a reusable custom Claude skill or plugin, tested and improved in customer context. Include authoring, packaging and refit loops. Exclude cross-system orchestration as principal story. Example: brief is fitted into a reusable skill.",
+        "automations": "Repetitive work travels between business systems with humans directing or reviewing where judgment matters. Include handoff infrastructure. Exclude building a single reusable task skill as principal story. Example: work passes CRM to productivity system and review.",
+        "executives": "A senior leader receives briefings, meeting preparation/debriefs and suggested actions during a day and makes the final decision. Exclude generic team collaboration without executive agenda. Example: morning briefing meets decision desk.",
+        "contributors": "Different business roles each use a tailored capability for their own recurring work and retain responsibility for quality. Include differentiated role-specific workstations. Exclude teaching session as principal story. Example: deal, operations, product and sales each handle role work.",
+        "builders": "Non-engineer AI champions assemble, test, troubleshoot and anticipate failure in a capability before the team uses it. Include practical proving bench. Exclude generic service-delivery process without failure investigation. Example: builder tests pieces and repairs a fault.",
+        "manual_review": "The scene lacks sufficient cues to distinguish an owner, or combines two principal stories equally. Takes precedence when no dominant work activity exists. Example: generic boxes connected by arrows."
+      }
+    },
+    "scene2_visual_proof": {
+      "type": "noul",
+      "instructions": "Does supplied evidence prove real visitors will recognize rendered artwork for scenes[2]?",
+      "criteria": {
+        "true": "Actual rendered artwork and independent visitor recognition results exist in supplied evidence.",
+        "false": "Only written ideas or model judgments exist."
+      }
+    },
+    "scene3_activity": {
+      "type": "score",
+      "instructions": "Rate only scenes[3].text along this dimension. Do not infer unseen labels or pixels. Intended owner is contributors. Dimension activity.",
+      "criteria": [
+        "Only generic office equipment; no owner-specific activity",
+        "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "Several concrete actions and artifacts strongly distinguish the intended owner"
+      ]
+    },
+    "scene3_human": {
+      "type": "score",
+      "instructions": "Rate only scenes[3].text along this dimension. Do not infer unseen labels or pixels. Intended owner is contributors. Dimension human.",
+      "criteria": [
+        "Decisions appear automatic or human agency is absent",
+        "A person is present but their responsibility is ambiguous",
+        "A person visibly performs the relevant decision, review, or test"
+      ]
+    },
+    "scene3_difference": {
+      "type": "score",
+      "instructions": "Rate only scenes[3].text along this dimension. Do not infer unseen labels or pixels. Intended owner is contributors. Dimension difference.",
+      "criteria": [
+        "Could be substituted for Workshops without changing the visible activity",
+        "Some distinction, but principal scene still resembles group instruction",
+        "Principal activity is clearly different from guided workshop learning"
+      ]
+    },
+    "scene3_real": {
+      "type": "score",
+      "instructions": "Rate only scenes[3].text along this dimension. Do not infer unseen labels or pixels. Intended owner is contributors. Dimension real.",
+      "criteria": [
+        "Fantastical or unrelated metaphorical world",
+        "Office-like setting with metaphorical elements dominating",
+        "Plausible business work setting with ordinary recognizable tools"
+      ]
+    },
+    "scene3_owner": {
+      "type": "choice",
+      "instructions": "Which owner best fits scenes[3].text, ignoring the intended field?",
+      "criteria": {
+        "workshops": "People learn together on real work through guided practice and group review. Include classroom/whiteboard/keyboard practice. Exclude individual routine workstations without teaching. Example: facilitator watches a team practise.",
+        "workflows": "Expertise, examples and quality standards become a reusable custom Claude skill or plugin, tested and improved in customer context. Include authoring, packaging and refit loops. Exclude cross-system orchestration as principal story. Example: brief is fitted into a reusable skill.",
+        "automations": "Repetitive work travels between business systems with humans directing or reviewing where judgment matters. Include handoff infrastructure. Exclude building a single reusable task skill as principal story. Example: work passes CRM to productivity system and review.",
+        "executives": "A senior leader receives briefings, meeting preparation/debriefs and suggested actions during a day and makes the final decision. Exclude generic team collaboration without executive agenda. Example: morning briefing meets decision desk.",
+        "contributors": "Different business roles each use a tailored capability for their own recurring work and retain responsibility for quality. Include differentiated role-specific workstations. Exclude teaching session as principal story. Example: deal, operations, product and sales each handle role work.",
+        "builders": "Non-engineer AI champions assemble, test, troubleshoot and anticipate failure in a capability before the team uses it. Include practical proving bench. Exclude generic service-delivery process without failure investigation. Example: builder tests pieces and repairs a fault.",
+        "manual_review": "The scene lacks sufficient cues to distinguish an owner, or combines two principal stories equally. Takes precedence when no dominant work activity exists. Example: generic boxes connected by arrows."
+      }
+    },
+    "scene3_visual_proof": {
+      "type": "noul",
+      "instructions": "Does supplied evidence prove real visitors will recognize rendered artwork for scenes[3]?",
+      "criteria": {
+        "true": "Actual rendered artwork and independent visitor recognition results exist in supplied evidence.",
+        "false": "Only written ideas or model judgments exist."
+      }
+    },
+    "scene4_activity": {
+      "type": "score",
+      "instructions": "Rate only scenes[4].text along this dimension. Do not infer unseen labels or pixels. Intended owner is builders. Dimension activity.",
+      "criteria": [
+        "Only generic office equipment; no owner-specific activity",
+        "Some recognizable work activity, but plausible for multiple adjacent owners",
+        "Several concrete actions and artifacts strongly distinguish the intended owner"
+      ]
+    },
+    "scene4_human": {
+      "type": "score",
+      "instructions": "Rate only scenes[4].text along this dimension. Do not infer unseen labels or pixels. Intended owner is builders. Dimension human.",
+      "criteria": [
+        "Decisions appear automatic or human agency is absent",
+        "A person is present but their responsibility is ambiguous",
+        "A person visibly performs the relevant decision, review, or test"
+      ]
+    },
+    "scene4_difference": {
+      "type": "score",
+      "instructions": "Rate only scenes[4].text along this dimension. Do not infer unseen labels or pixels. Intended owner is builders. Dimension difference.",
+      "criteria": [
+        "Could be substituted for Workshops without changing the visible activity",
+        "Some distinction, but principal scene still resembles group instruction",
+        "Principal activity is clearly different from guided workshop learning"
+      ]
+    },
+    "scene4_real": {
+      "type": "score",
+      "instructions": "Rate only scenes[4].text along this dimension. Do not infer unseen labels or pixels. Intended owner is builders. Dimension real.",
+      "criteria": [
+        "Fantastical or unrelated metaphorical world",
+        "Office-like setting with metaphorical elements dominating",
+        "Plausible business work setting with ordinary recognizable tools"
+      ]
+    },
+    "scene4_owner": {
+      "type": "choice",
+      "instructions": "Which owner best fits scenes[4].text, ignoring the intended field?",
+      "criteria": {
+        "workshops": "People learn together on real work through guided practice and group review. Include classroom/whiteboard/keyboard practice. Exclude individual routine workstations without teaching. Example: facilitator watches a team practise.",
+        "workflows": "Expertise, examples and quality standards become a reusable custom Claude skill or plugin, tested and improved in customer context. Include authoring, packaging and refit loops. Exclude cross-system orchestration as principal story. Example: brief is fitted into a reusable skill.",
+        "automations": "Repetitive work travels between business systems with humans directing or reviewing where judgment matters. Include handoff infrastructure. Exclude building a single reusable task skill as principal story. Example: work passes CRM to productivity system and review.",
+        "executives": "A senior leader receives briefings, meeting preparation/debriefs and suggested actions during a day and makes the final decision. Exclude generic team collaboration without executive agenda. Example: morning briefing meets decision desk.",
+        "contributors": "Different business roles each use a tailored capability for their own recurring work and retain responsibility for quality. Include differentiated role-specific workstations. Exclude teaching session as principal story. Example: deal, operations, product and sales each handle role work.",
+        "builders": "Non-engineer AI champions assemble, test, troubleshoot and anticipate failure in a capability before the team uses it. Include practical proving bench. Exclude generic service-delivery process without failure investigation. Example: builder tests pieces and repairs a fault.",
+        "manual_review": "The scene lacks sufficient cues to distinguish an owner, or combines two principal stories equally. Takes precedence when no dominant work activity exists. Example: generic boxes connected by arrows."
+      }
+    },
+    "scene4_visual_proof": {
+      "type": "noul",
+      "instructions": "Does supplied evidence prove real visitors will recognize rendered artwork for scenes[4]?",
+      "criteria": {
+        "true": "Actual rendered artwork and independent visitor recognition results exist in supplied evidence.",
+        "false": "Only written ideas or model judgments exist."
+      }
+    }
+  }
+}
