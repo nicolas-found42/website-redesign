@@ -13,7 +13,9 @@ every step.
 This supersedes the dominant object silhouettes in [ADR 0010](0010-october-review-drawings.md)
 and the builder stair in [ADR 0008](0008-text-led-opening-and-solid-drawings.md).
 The ordered stories, decision, iteration, separate contributor lanes, two
-unnamed Automation outputs and all existing labels, marks and beats remain.
+unnamed Automation outputs and all existing labels and connections remain.
+Audience marks and story beats also remain; the Workflow engagement assembles
+its five stations in sequence.
 The solid inks, part-based entrances, separately authored wide/narrow fields
 and complete still states from [ADR 0006](0006-drawings-made-of-material.md) remain.
 
