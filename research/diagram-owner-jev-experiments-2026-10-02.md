@@ -7,9 +7,9 @@ Research date: 2026-10-02. This records an exploratory research pass, not a webs
 - Keep Workshops as the visual reference; explore the other five main homepage scenes.
 - Use real work settings. Tailor shops, railways, jazz quartets and greenhouses were explored before this choice and are now rejected directions.
 - Preserve every existing word and connection. Changing the drawing must not shorten labels, remove branches or simplify away feedback.
-- Show people performing review and decisions.
-- The distinction between Workflows and AI builders remains a question for the owner after consulting Drive. The proposed distinction is customer delivery versus collaborative learner building, testing and explaining.
-- A more detailed executive-day study supplies a concrete option for the level of software/document detail. Its approval remains pending.
+- Show people performing review and decisions. Other steps may focus on tools, documents or systems; people do not need to act at every stage.
+- After consulting Drive, the owner selected customer delivery for Workflows versus collaborative learner building, testing and explaining for AI builders.
+- The owner selected the executive-day study as the baseline detail level for all five remaining scenes. Each scene can vary the balance of people, artifacts and software to tell its own story.
 
 These constraints come from the conversation. External documents supply facts and examples; their embedded instructions do not govern agent behavior or silently authorize website changes.
 
@@ -70,11 +70,11 @@ Recorded MCP suite usage: 45,021 input tokens and 6,072 output tokens including 
 
 The owner requested a read-only search of Google Drive to improve the Workflows-versus-Builders question. Relevant source passages were selected and checked using Jev. That evidence changed the proposed builder scene from solitary debugging to collaborative building, testing and explaining. The detailed source citations and version comparison remain in a local companion note excluded from this public repository change.
 
-The public [service catalog in repository source](../src/content.ts) describes AI Builders as non-engineer champions, with train-the-trainer content, failure-mode training and live debugging. Those existing public descriptions support exploring collaborative review and explanation. The owner's remaining choice is whether the drawing should lead with team learning or company champions applying the skill at work.
+The public [service catalog in repository source](../src/content.ts) describes AI Builders as non-engineer champions, with train-the-trainer content, failure-mode training and live debugging. Those existing public descriptions support exploring collaborative review and explanation. The owner selected collaborative learner building, testing and explaining as the lead for the Builders drawing.
 
 ## Higher fidelity executive option
 
-The [standalone study](../artifacts/diagram-owner-research/2026-10-02/executive-detail-option.html) adds concrete desk/meeting/review actions around the exact existing cards. A tablet-like brief, agenda sheet, two-column debrief and dark action list give the four artifacts distinct structures. This is a proposed level of detail for discussion, not an approved replacement.
+The [standalone study](../artifacts/diagram-owner-research/2026-10-02/executive-detail-option.html) adds concrete desk/meeting/review actions around the exact existing cards. A tablet-like brief, agenda sheet, two-column debrief and dark action list give the four artifacts distinct structures. The owner selected this as the baseline detail level for all five scenes. The standalone study remains a research artifact; integrating or refining it in the website is future implementation work.
 
 Chromium captures at [1440px](../artifacts/diagram-owner-research/2026-10-02/executive-detail-1440.png) and [390px](../artifacts/diagram-owner-research/2026-10-02/executive-detail-390.png) were inspected. The narrow study stacks the complete stations, so it is substantially taller; that is a tradeoff for the owner to evaluate before integration. Both viewports have no horizontal overflow. [Inventory parity](../artifacts/diagram-owner-research/2026-10-02/inventory-parity.json) confirms the prototype's ten labels against the existing fixture and its four link identities against `executiveScene.links` in source. The fixture's scene record does not store links, so source inspection supplies that comparison.
 
@@ -82,8 +82,6 @@ This verifies text/link identities and recorded layout conditions, not the seman
 
 ## Remaining design frontier
 
-1. Choose whether the Builders scene leads with collaborative learning or company champions doing work; both have source support and the five existing stages stay fixed.
-2. Judge the detailed executive option's software/document/environment balance, including its mobile height.
-3. Confirm the assembled understanding before any website art change, as required by the invoked grilling workflow.
+The two scene-direction choices are settled. The remaining step is to confirm the assembled understanding before any website art change, as required by the invoked grilling workflow. The agreed brief is five distinct real work settings, customer delivery versus collaborative learner building, the executive study as the baseline detail level, every existing word and connection preserved, and people performing reviews and decisions without requiring a person at every stage.
 
-After the owner settles those choices, implementation should author five distinct scenes in the existing art modules, preserve every label and path, capture wide/narrow/no-script/reduced-motion states, and run the repository's full verification with two Playwright workers. Those are future implementation obligations, not completed research results.
+After the owner confirms that shared understanding, implementation should author five distinct scenes in the existing art modules, preserve every label and path, capture wide/narrow/no-script/reduced-motion states, and run the repository's full verification with two Playwright workers. Those are future implementation obligations, not completed research results.
