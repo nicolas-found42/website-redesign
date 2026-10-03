@@ -9,9 +9,9 @@
  *   Meeting Brief, Meeting Debrief and Actions from Transcripts. The final
  *   decision stays with them. These are illustrative, with no live integration.
  * - **Individual Contributors and Teams** each run a ribbon of their own role
- *   through a skill cut for it — four roles in one company — and the four
+ *   through its own work artifact — four roles in one company — and the four
  *   ribbons run as four separate lanes to one gate: the human in the loop.
- * - **Builders** climb a stair folded from card, from a work problem to a
+ * - **Builders** practise together at a workbench, from a work problem to a
  *   workflow in use, with a reviewer's seal on each step: design, test,
  *   troubleshoot, anticipate failures.
  *

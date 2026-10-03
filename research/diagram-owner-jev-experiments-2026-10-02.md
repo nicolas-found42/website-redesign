@@ -1,6 +1,6 @@
 # Diagram identity experiments and design decisions
 
-Research date: 2026-10-02. This records an exploratory research pass, not a website implementation or a visitor-comprehension study. Read the [primary-source research](diagram-owner-primary-sources-2026-10-02.md) alongside it.
+Research date: 2026-10-02. This records the exploratory research pass before website implementation, not a visitor-comprehension study. The owner subsequently confirmed the assembled brief; [ADR 0011](../docs/adr/0011-owner-specific-work-settings.md) records the implementation direction. Read the [primary-source research](diagram-owner-primary-sources-2026-10-02.md) alongside it.
 
 ## Decisions established with the owner
 
@@ -78,10 +78,10 @@ The [standalone study](../artifacts/diagram-owner-research/2026-10-02/executive-
 
 Chromium captures at [1440px](../artifacts/diagram-owner-research/2026-10-02/executive-detail-1440.png) and [390px](../artifacts/diagram-owner-research/2026-10-02/executive-detail-390.png) were inspected. The narrow study stacks the complete stations, so it is substantially taller; that is a tradeoff for the owner to evaluate before integration. Both viewports have no horizontal overflow. [Inventory parity](../artifacts/diagram-owner-research/2026-10-02/inventory-parity.json) confirms the prototype's ten labels against the existing fixture and its four link identities against `executiveScene.links` in source. The fixture's scene record does not store links, so source inspection supplies that comparison.
 
-This verifies text/link identities and recorded layout conditions, not the semantic clarity of each visible arrow. The study's accessible description accounts for its four events and the final decision. It is research content outside the application. The website source, current diagrams and fixture remain unchanged. The full website browser suite was not run for this research-only pass; no claim that application tests passed is made.
+This verifies text/link identities and recorded layout conditions, not the semantic clarity of each visible arrow. The study's accessible description accounts for its four events and the final decision. It is research content outside the application. At the end of that research pass, the website source, current diagrams and fixture remained unchanged. The full website browser suite was not run for this research-only pass; no claim that application tests passed is made.
 
 ## Remaining design frontier
 
-The two scene-direction choices are settled. The remaining step is to confirm the assembled understanding before any website art change, as required by the invoked grilling workflow. The agreed brief is five distinct real work settings, customer delivery versus collaborative learner building, the executive study as the baseline detail level, every existing word and connection preserved, and people performing reviews and decisions without requiring a person at every stage.
+The two scene-direction choices are settled, and the owner confirmed the assembled understanding before website art changes, as required by the invoked grilling workflow. The agreed brief is five distinct real work settings, customer delivery versus collaborative learner building, the executive study as the baseline detail level, every existing word and connection preserved, and people performing reviews and decisions without requiring a person at every stage.
 
-After the owner confirms that shared understanding, implementation should author five distinct scenes in the existing art modules, preserve every label and path, capture wide/narrow/no-script/reduced-motion states, and run the repository's full verification with two Playwright workers. Those are future implementation obligations, not completed research results.
+The confirmed implementation brief requires the changes to author five distinct scenes in the existing art modules, preserve every label and path, capture wide/narrow/no-script/reduced-motion states, and run the repository's full verification with two Playwright workers. Those are future implementation obligations, not completed research results.
