@@ -1,10 +1,16 @@
 import { sitePath } from "../paths";
 
+/**
+ * #147: one attribution for Robb Henshaw, shared by the homepage testimonial
+ * and the services catalog quote so the two surfaces cannot drift apart.
+ */
+export const robbHenshawAttribution =
+  "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)";
+
 export const homepageTestimonials = [
   {
     name: "Robb Henshaw",
-    role:
-      "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)",
+    role: robbHenshawAttribution,
     note: "",
     image: "robb-henshaw.jpeg",
     quote:

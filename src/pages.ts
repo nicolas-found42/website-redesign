@@ -193,9 +193,12 @@ export function renderPage(route: string) {
                     "This destination is not part of the Found42 preview.",
                     `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
                   );
+  // #148 scopes the notice to the seven content pages. The 404 opening already
+  // says it is not part of the preview, so the notice would repeat it there.
+  const notice = route === "404" ? "" : previewNotice();
   return (
     siteHeader() +
-    `<main id="main">${previewNotice()}${content}</main>` +
+    `<main id="main">${notice}${content}</main>` +
     siteFooter()
   );
 }

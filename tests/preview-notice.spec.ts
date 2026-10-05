@@ -6,6 +6,9 @@ import { test, expect } from "@playwright/test";
  * invited to act on a preview that sends nothing. This pins the restored
  * notice: one, leading each page's content, naming the preview and the fact
  * that nothing is sent — on all seven public routes, with noindex unchanged.
+ * The notice says only what the preview cannot do (no contact link; the footer
+ * carries contact paths), and the 404 page carries its own "not part of the
+ * Found42 preview" line instead of the notice.
  */
 
 const routes = [
@@ -43,15 +46,19 @@ test("#148: one preview notice opens all seven routes and leads the content", as
   }
 });
 
-test("#148: the preview notice leaves noindex and the live contact route in place", async ({
+test("#148: the notice states the limits only — no contact link inside it", async ({
   page,
 }) => {
+  await page.goto("/resources/");
+  const notice = page.locator("main > .preview-note");
+  await expect(notice).toContainText(noticeCopy);
+  await expect(notice.getByRole("link")).toHaveCount(0);
+});
+
+test("#148: the preview notice leaves noindex in place", async ({ page }) => {
   await page.goto("/resources/");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
     "content",
     "noindex, nofollow",
   );
-  await expect(
-    page.locator("main > .preview-note").getByRole("link"),
-  ).toHaveAttribute("href", "https://www.found42.com/contact");
 });
