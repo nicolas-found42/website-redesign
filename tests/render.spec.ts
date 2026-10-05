@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { renderHomepage } from "../src/homepage";
 import { renderPage } from "../src/pages";
-import { resources, scorecard, services } from "../src/content";
+import { resources, scorecard, serviceCatalog, services } from "../src/content";
 import { homepageTestimonials } from "../src/homepage/testimonials";
 import {
   readinessResult,
@@ -49,6 +49,21 @@ test("source offerings and attributed workshop proof are preserved", () => {
   }
   expect(page).not.toMatch(/8 hours saved weekly|eight hours is a target/i);
   expect(page).not.toContain("measurable results");
+});
+test("Robb Henshaw's attribution is one identical string across both surfaces [#147]", () => {
+  const ROBB_HENSHAW_ATTRIBUTION =
+    "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)";
+  const homepageRole = homepageTestimonials.find(
+    (item) => item.name === "Robb Henshaw",
+  )?.role;
+  const servicesRole = serviceCatalog.quotes.find(
+    (item) => item.name === "Robb Henshaw",
+  )?.role;
+  expect(homepageRole).toBe(ROBB_HENSHAW_ATTRIBUTION);
+  expect(servicesRole).toBe(ROBB_HENSHAW_ATTRIBUTION);
+  expect(homepageRole).toBe(servicesRole);
+  expect(readable(page)).toContain(ROBB_HENSHAW_ATTRIBUTION);
+  expect(readable(renderPage("services"))).toContain(ROBB_HENSHAW_ATTRIBUTION);
 });
 test("all 81 assessment combinations preserve public source thresholds", () => {
   for (let a = 1; a <= 3; a++)

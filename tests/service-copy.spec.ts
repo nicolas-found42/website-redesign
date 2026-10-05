@@ -22,6 +22,33 @@ for (const path of ["/", "/services/"]) {
   });
 }
 
+/**
+ * #147: Robb Henshaw was attributed to two different employers on the homepage
+ * and the services page. Both surfaces now carry the same combined attribution.
+ */
+const ROBB_HENSHAW_ATTRIBUTION =
+  "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)";
+
+test("Robb Henshaw carries one identical attribution on the homepage and services page", async ({
+  page,
+}) => {
+  const attributionOn = async (path: string) => {
+    await page.goto(path);
+    const caption = page
+      .locator("figcaption", { hasText: "Robb Henshaw" })
+      .first();
+    const text = ((await caption.textContent()) ?? "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return text.replace("Robb Henshaw", "").trim();
+  };
+  const homepage = await attributionOn("/");
+  const services = await attributionOn("/services/");
+  expect(homepage).toBe(ROBB_HENSHAW_ATTRIBUTION);
+  expect(services).toBe(ROBB_HENSHAW_ATTRIBUTION);
+  expect(homepage).toBe(services);
+});
+
 test("Services explains the input and result for each distinct engagement", async ({
   page,
 }) => {
