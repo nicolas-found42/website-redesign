@@ -131,7 +131,7 @@ export function formMarkup({
 
     <div class="kind-fields" data-for="wording">
       <p class="label">Current text</p>
-      <blockquote class="current" data-current></blockquote>
+      <blockquote class="current"><p class="current-text" data-current></p><p class="current-where" data-current-where></p></blockquote>
       ${field("proposed", "Change it to", {
         hint: "The saved wording will be exactly what’s in this field. Click in and the current text is selected, ready to replace — or edit it as it is.",
         rows: 4,
@@ -280,9 +280,12 @@ export function applyTarget(
   const previous = form.dataset.shownText ?? "";
   form.dataset.shownText = target.text;
   form.querySelector("[data-target-name]")!.textContent = contextLabel(target);
-  form.querySelector("[data-target-where]")!.textContent =
-    `${target.pageName} › ${sectionGloss(target.section)}`;
+  const where = `${target.pageName} › ${sectionGloss(target.section)}`;
+  form.querySelector("[data-target-where]")!.textContent = where;
   form.querySelector("[data-current]")!.textContent = target.text;
+  // The pinned quote carries where it sits too ("surrounding context"), so the
+  // reviewer places the words without collapsing the sheet.
+  form.querySelector("[data-current-where]")!.textContent = where;
   const proposed = control<HTMLTextAreaElement>(form, "proposed")!;
   if (!proposed.value || proposed.value === previous) {
     proposed.value = target.text;
