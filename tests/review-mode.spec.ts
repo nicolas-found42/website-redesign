@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 
 /**
  * Review mode: the team points at the exact thing on a page and says precisely
- * what should change, then publishes feedback with a receipt. The backup file retains the page,
+ * what should change, then publishes feedback with a receipt. The exported file retains the page,
  * section, element and current text for every item. Visitors never load any of it.
  */
 
@@ -237,10 +237,10 @@ test("the sent file reads plainly and carries data the import script reads", asy
   await expect(panel(page)).toHaveCount(0);
 
   await page.getByRole("button", { name: /My feedback/ }).click();
-  await panel(page).getByRole("button", { name: "Download backup…" }).click();
+  await panel(page).getByRole("button", { name: "Download a copy…" }).click();
   const send = panel(page);
   await expect(send.getByRole("heading", { level: 2 })).toHaveText(
-    "Download a backup",
+    "Download a copy",
   );
   const [download] = await Promise.all([
     page.waitForEvent("download"),
@@ -745,7 +745,7 @@ test("a timestamp-only re-save during delivery leaves no duplicate draft", async
   expect((await saved(page)).items).toEqual([]);
 });
 
-test("a backup opened during delivery survives progress and completion", async ({
+test("a copy opened during delivery survives progress and completion", async ({
   page,
 }) => {
   let release!: () => void;
@@ -764,7 +764,7 @@ test("a backup opened during delivery survives progress and completion", async (
     });
   });
   await page.goto("/?review");
-  await saveWording(page, "Keep my backup open.");
+  await saveWording(page, "Keep my copy open.");
   await sendButton(page).click();
   await started;
   await panel(page)
@@ -772,15 +772,15 @@ test("a backup opened during delivery survives progress and completion", async (
     .first()
     .click();
   await page.getByRole("button", { name: /My feedback/ }).click();
-  await panel(page).getByRole("button", { name: "Download backup…" }).click();
-  const backup = panel(page).getByLabel("Backup contents");
-  await expect(backup).toContainText("Keep my backup open.");
+  await panel(page).getByRole("button", { name: "Download a copy…" }).click();
+  const copy = panel(page).getByLabel("What the file contains");
+  await expect(copy).toContainText("Keep my copy open.");
   release();
   await expect.poll(async () => (await saved(page)).items.length).toBe(0);
   await expect(
-    panel(page).getByRole("heading", { name: "Download a backup" }),
+    panel(page).getByRole("heading", { name: "Download a copy" }),
   ).toBeVisible();
-  await expect(backup).toContainText("Keep my backup open.");
+  await expect(copy).toContainText("Keep my copy open.");
 });
 
 for (const status of ["retryable", "pending"]) {
