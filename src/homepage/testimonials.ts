@@ -3,7 +3,8 @@ import { sitePath } from "../paths";
 export const homepageTestimonials = [
   {
     name: "Robb Henshaw",
-    role: "Former Co-Founder and CMO at Cameyo (acquired by Google)",
+    role:
+      "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)",
     note: "",
     image: "robb-henshaw.jpeg",
     quote:

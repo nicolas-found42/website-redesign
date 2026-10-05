@@ -362,7 +362,8 @@ export const serviceCatalog = {
       quote:
         "C-Level AI is a completely unique approach that cuts through the AI hype.",
       name: "Robb Henshaw",
-      role: "CMO, Edgescale AI",
+      role:
+        "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)",
     },
     {
       quote:
