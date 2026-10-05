@@ -83,7 +83,17 @@ function companyMarks(duplicate = false) {
   return companies
     .map((company) => {
       const image = `<img src="${sitePath(`assets/logos/${company.file}`)}" alt="${duplicate ? "" : company.name}" width="${company.width}" height="${company.height}" decoding="async">`;
-      return `<li class="company-logo company-logo--${company.file.replace(/\.\w+$/, "")}">${"tile" in company ? `<span class="company-logo-tile">${image}</span>` : image}</li>`;
+      const mark =
+        "tile" in company
+          ? `<span class="company-logo-tile">${image}</span>`
+          : image;
+      /* The name is shown, never only implied by the mark. It carries the
+         official entities as written above. The looping copy repeats the marks
+         for the eye alone, so its label is removed from the accessibility tree
+         and the visible list still announces each name once. */
+      const hidden = duplicate ? ' aria-hidden="true"' : "";
+      const name = `<span class="company-logo-name"${hidden}>${company.name}</span>`;
+      return `<li class="company-logo company-logo--${company.file.replace(/\.\w+$/, "")}">${mark}${name}</li>`;
     })
     .join("");
 }

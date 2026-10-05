@@ -1,4 +1,24 @@
 import { test, expect } from "@playwright/test";
+
+// The fifteen owner-confirmed organizations, in the approved order.
+const COMPANY_NAMES = [
+  "Google",
+  "Edgescale AI",
+  "Millsapps, Ballinger & Associates (MB&A)",
+  "Seidler Equity Partners (SEP)",
+  "PeakSpan Capital",
+  "Palladium Security",
+  "Marajá",
+  "Ruruka",
+  "Crown Point Advisory Group",
+  "IDC",
+  "ParaVet.live",
+  "mobile.club",
+  "MINDSi Sports Performance",
+  "MINDS-i Education",
+  "Prelude Solutions",
+];
+
 test("the homepage offers a clear resource and consultation path with near-hero proof", async ({
   page,
 }) => {
@@ -303,6 +323,88 @@ test("the companies row keeps proportions and fits without scrolling at any widt
       () => document.documentElement.scrollWidth <= innerWidth,
     );
     expect(pageFits, `${width}px`).toBe(true);
+  }
+});
+
+test("every company mark carries its company name as visible, wrapping text", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const marks = page.locator("#companies .company-logos:not([aria-hidden]) .company-logo");
+  await expect(marks).toHaveCount(15);
+  const labels = marks.locator(".company-logo-name");
+  await expect(labels).toHaveCount(15);
+  await Promise.all(
+    COMPANY_NAMES.map(async (name, index) => {
+      const label = labels.nth(index);
+      await expect(label).toBeVisible();
+      await expect(label).toHaveText(name);
+    }),
+  );
+  // The name sits inside the mark, reads at the 14px annotation floor and is
+  // allowed to wrap rather than overflow its card.
+  const readings = await labels.evaluateAll((elements) =>
+    elements.map((element) => {
+      const style = getComputedStyle(element);
+      return {
+        size: parseFloat(style.fontSize),
+        wraps: style.whiteSpace === "normal" || style.whiteSpace === "break-spaces",
+        inMark: Boolean(element.closest(".company-logo")),
+      };
+    }),
+  );
+  for (const reading of readings) {
+    expect(reading.size).toBeGreaterThanOrEqual(14);
+    expect(reading.wraps).toBe(true);
+    expect(reading.inMark).toBe(true);
+  }
+});
+
+test("the looping copy repeats the marks without doubling the announced names", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const region = page.getByRole("region", { name: "Teams we have worked with" });
+  // One announced list; the marquee's second list is hidden from the tree.
+  await expect(region.getByRole("list")).toHaveCount(1);
+  await expect(region.locator(".company-logos")).toHaveCount(2);
+  await expect(region.locator('.company-logos[aria-hidden="true"]')).toHaveCount(1);
+  await expect(region.getByRole("listitem")).toHaveCount(15);
+  // The visible list names all fifteen; the looping copy's names are each
+  // removed from the accessibility tree, so none is announced twice.
+  await expect(
+    region.locator(".company-logos:not([aria-hidden]) .company-logo-name"),
+  ).toHaveCount(15);
+  await expect(
+    region.locator(
+      '.company-logos[aria-hidden="true"] .company-logo-name[aria-hidden="true"]',
+    ),
+  ).toHaveCount(15);
+});
+
+test("the named marks fit without sideways overflow at 390px and 1440px", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.evaluate(() => document.fonts.ready);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+      `${width}px`,
+    ).toBe(true);
+    const overflow = await page
+      .locator("#companies .company-logo-name")
+      .evaluateAll((elements) =>
+        elements.map((element) => ({
+          clipped: element.scrollWidth > element.clientWidth + 1,
+        })),
+      );
+    for (const name of overflow) expect(name.clipped, `${width}px`).toBe(false);
   }
 });
 
