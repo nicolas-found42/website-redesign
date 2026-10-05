@@ -633,7 +633,7 @@ test("invalid IDs and missing-page feedback have actionable correlated outcomes"
   expect(result.map((outcome) => outcome.inputIndex)).toEqual([0, 1, 2]);
   expect(result.every((outcome) => outcome.status === "invalid")).toBe(true);
   expect(result[2].reason).toBe("unknown-page");
-  expect(result[2].message).toContain("download a backup");
+  expect(result[2].message).toContain("save a copy from My feedback");
   expect(result[2].message).not.toContain("edit it");
   expect(service.requests).toHaveLength(0);
 });

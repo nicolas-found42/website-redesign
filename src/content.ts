@@ -1,4 +1,5 @@
 export { essays } from "./resource-materials";
+import { robbHenshawAttribution } from "./homepage/testimonials";
 
 /** Every active learning or resource destination the site is allowed to publish. */
 export const destinationRegister = {
@@ -362,7 +363,7 @@ export const serviceCatalog = {
       quote:
         "C-Level AI is a completely unique approach that cuts through the AI hype.",
       name: "Robb Henshaw",
-      role: "CMO, Edgescale AI",
+      role: robbHenshawAttribution,
     },
     {
       quote:

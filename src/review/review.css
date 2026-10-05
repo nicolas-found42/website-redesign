@@ -596,10 +596,25 @@ textarea {
   padding: 10px 12px;
   border-left: 3px solid var(--line-strong);
   background: var(--paper-warm);
-  white-space: pre-wrap;
   overflow-wrap: anywhere;
   max-height: 160px;
   overflow-y: auto;
+}
+
+/* The words the reviewer is rewording, then where they sit (#126): the pinned
+   block keeps both in view, so the source is named, not just quoted. The
+   whitespace that matters is the source's own lines, so pre-wrap lives here
+   rather than on the wrapper (which would render markup indentation). */
+.current-text {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.current-where {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 /* #126: while the wording field is edited the target quote sticks to the top of

@@ -50,8 +50,10 @@ from a meeting.
 If storage is refused, the tool warns that drafts only live on the current page.
 When hosted sending is unavailable, the receipt says so on the spot — “Sending
 isn’t set up on this site yet” — and keeps your words saved. **My feedback →
-Download backup…** opens the text export (**Copy to clipboard** or **Download
-file**) for your own recovery copy. Feedback for the team is tracked in GitHub
+Download a copy…** opens the export panel (**Copy my feedback as text** or
+**Download file**) so you can keep your own recovery copy; the preview under
+**What the file contains** shows exactly what would be saved. Feedback for the
+team is tracked in GitHub
 Issues; retry hosted sending or use the issue tracker directly. Nothing leaves
 the browser until a **Send** is confirmed.
 
@@ -104,8 +106,8 @@ the tools. It also renders the drafts-aware **Resume review** bar in the site's
 own DOM (not the review shadow root) — plain markup and one `<style>`, with no
 review code imported — so the nudge costs a first-time visitor nothing. The UI
 lives in a shadow root, which keeps it out of the site's
-styles and the site's styles out of it. `src/review/export.ts` owns the local
-backup format and its parser.
+styles and the site's styles out of it. `src/review/export.ts` owns the
+exported file's text format and its parser.
 `src/review/submission.ts` sends versioned snapshots to the Worker;
 `worker/index.ts` owns validation, limits and durable recovery.
 `src/review/issue.ts` formats the published GitHub issues.

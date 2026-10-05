@@ -82,6 +82,37 @@ test("reduced-motion visitors can operate the drawing without animated movement"
   ).toBe("solid");
 });
 
+test("the testimonial rail is keyboard-operable and keeps every quote in the DOM", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#testimonials");
+  const cards = page.locator(".testimonial-card");
+  await expect(cards).toHaveCount(5);
+  const names = page.locator(".testimonial-card figcaption strong");
+  const readingOrder = [
+    "Robb Henshaw",
+    "Paul Keely",
+    "Carmen Paredes Ramirez",
+    "Andrew Miller",
+    "Neville Louison",
+  ];
+  await expect(names).toHaveText(readingOrder);
+  const count = page.locator("[data-testimonial-count]");
+  await expect(count).toHaveText("1 / 5");
+  const track = page.locator(".testimonial-track");
+  await track.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(count).toHaveText("2 / 5");
+  await page.keyboard.press("ArrowLeft");
+  await expect(count).toHaveText("1 / 5");
+  // Stepping the rail never removes or reorders a quote: all five stay in the
+  // document in the same reading order the no-script layout gives them.
+  await expect(cards).toHaveCount(5);
+  await expect(names).toHaveText(readingOrder);
+});
+
 /**
  * Entrances are measured after they have finished. A block on its way in is
  * briefly part-way through its opacity, and contrast during a transition is not

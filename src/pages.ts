@@ -9,7 +9,7 @@ import {
   services,
   destinationRegister,
 } from "./content";
-import { siteHeader, siteFooter } from "./homepage/chrome";
+import { previewNotice, siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
 import { servicesSection } from "./homepage/services";
 import { audiencesSection } from "./homepage/audiences";
@@ -193,5 +193,12 @@ export function renderPage(route: string) {
                     "This destination is not part of the Found42 preview.",
                     `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
                   );
-  return siteHeader() + `<main id="main">${content}</main>` + siteFooter();
+  // #148 scopes the notice to the seven content pages. The 404 opening already
+  // says it is not part of the preview, so the notice would repeat it there.
+  const notice = route === "404" ? "" : previewNotice();
+  return (
+    siteHeader() +
+    `<main id="main">${notice}${content}</main>` +
+    siteFooter()
+  );
 }

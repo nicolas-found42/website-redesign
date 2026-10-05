@@ -413,6 +413,35 @@ test("#126: the current target pins to the top of the scrolling form", async ({
   );
 });
 
+test("#126: the pinned quote names the surrounding context, not just the words", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openForm(page);
+  // The quote carries its own words…
+  await expect(page.locator(`${VIEW} .current`)).toContainText(
+    "Train teams. Build useful skills. Automate the work.",
+  );
+  // …and where they sit on the page, so the reviewer can place them without
+  // collapsing the sheet to re-read the dimmed page behind it.
+  const context = page.locator(`${VIEW} [data-current-where]`);
+  await expect(context).toHaveText("Home › Top of the page");
+  expect(
+    await page.evaluate((view) => {
+      const root = document.querySelector(view)!.shadowRoot!;
+      const quote = root.querySelector(".current")!;
+      const where = root.querySelector("[data-current-where]") as HTMLElement;
+      // It is a real, visible part of the pinned block — not a stray node.
+      const style = getComputedStyle(where);
+      return {
+        inside: quote.contains(where),
+        visible: style.display !== "none" && style.visibility !== "hidden",
+        text: where.textContent,
+      };
+    }, VIEW),
+  ).toEqual({ inside: true, visible: true, text: "Home › Top of the page" });
+});
+
 test("#126: pinned/scroll styling keeps the pinned phone geometry", async ({
   page,
 }) => {
