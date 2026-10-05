@@ -1,4 +1,49 @@
 import { test, expect } from "@playwright/test";
+
+/**
+ * #151: the audience skews 45+, so body copy and the small print that carries
+ * attribution and access notes must stay comfortably readable on a phone. The
+ * documented minimums in tokens.css are body copy 16px and small print 16px;
+ * these read the settled page rather than the token text.
+ */
+test("body and small print hold their documented minimums across pages", async ({
+  page,
+}) => {
+  const smallPrint = [
+    "#testimonials .testimonial-card figcaption",
+    "#testimonials .section-label",
+    ".hero-proof figcaption",
+    "#resources .note--plain",
+    "#briefing .briefing-disclosure",
+    ".track-term",
+    ".track-format",
+    "#navigation a",
+  ];
+  for (const route of ["/", "/services/", "/resources/"]) {
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    for (const selector of smallPrint) {
+      const sizes = await page
+        .locator(selector)
+        .evaluateAll((elements) =>
+          elements
+            .filter((element) => (element as HTMLElement).offsetParent)
+            .map((element) => parseFloat(getComputedStyle(element).fontSize)),
+        );
+      for (const size of sizes)
+        expect(size, `${route} ${selector}`).toBeGreaterThanOrEqual(16);
+    }
+  }
+  for (const selector of [".hero-lead", ".body"]) {
+    await page.goto("/");
+    const size = await page
+      .locator(selector)
+      .first()
+      .evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
+    expect(size, `homepage ${selector}`).toBeGreaterThanOrEqual(16);
+  }
+});
+
 test("the homepage offers a clear resource and consultation path with near-hero proof", async ({
   page,
 }) => {

@@ -104,4 +104,32 @@ for (const width of [384, 1455]) {
         .getByRole("link", { name: "Explore the toolkit" }),
     ).toHaveAttribute("href", "https://www.found42.com/toolkit");
   });
+
+  /**
+   * #151: the quotes should be scannable, so more than one is laid out
+   * side-by-side wherever the width allows. The rail scrolls rather than
+   * stacking, and it never pushes the document sideways.
+   */
+  test(`quotes are laid out to be scanned together at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 742 });
+    await page.goto("/#testimonials");
+    const layout = await page.evaluate(() => {
+      const track = document.querySelector(".testimonial-track")!;
+      const cards = [...document.querySelectorAll(".testimonial-card")];
+      const rows = new Set(
+        cards.map((card) => Math.round(card.getBoundingClientRect().top)),
+      );
+      return { rows: rows.size, scrolls: track.scrollWidth > track.clientWidth };
+    });
+    expect(layout.rows, `${width}px rows`).toBe(1);
+    expect(layout.scrolls, `${width}px scrolls`).toBe(true);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+      `${width}px`,
+    ).toBe(true);
+  });
 }
