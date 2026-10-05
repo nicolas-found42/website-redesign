@@ -84,6 +84,11 @@ test("a completed choice rests in the same still composition as a fresh page", a
   await page.goto("/#services");
   await page.evaluate(() => document.fonts.ready);
   await page.getByRole("button", { name: "Workflows", exact: true }).click();
+  // The drawing leans toward the pointer wherever it rests. Park the pointer
+  // outside the drawing's depth zone so both pages are compared at true rest —
+  // where the click happens to land must not decide the reading (#151 moved
+  // the strip onto that boundary when the reading type was raised).
+  await page.mouse.move(0, 0);
 
   const motionlessPage = await context.newPage();
   await motionlessPage.emulateMedia({ reducedMotion: "reduce" });
@@ -92,6 +97,7 @@ test("a completed choice rests in the same still composition as a fresh page", a
   await motionlessPage
     .getByRole("button", { name: "Workflows", exact: true })
     .click();
+  await motionlessPage.mouse.move(0, 0);
   // WebKit suspends animations in background tabs. Capture the fresh still
   // state while its tab is active, then close it before polling the first page.
   await expect
