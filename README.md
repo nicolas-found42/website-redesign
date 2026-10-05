@@ -11,7 +11,9 @@ This is a noindex design preview. Local resource delivery, newsletter subscripti
 course enrollment and local inquiry submission are not connected. The AI
 Readiness Scorecard is answered on the page and sends nothing; the original
 ScoreApp assessment is linked for its emailed report. Every page opens with
-one preview notice saying so, rather than each card repeating it. Forms
+one preview notice — “Design preview: nothing you type here is sent, and
+requested resources are not delivered yet.” — above the opening, rather than
+each card repeating it. Forms
 validate locally and state that nothing was sent. The inquiry dialog leads with
 the established Found42 contact form; its local draft can be checked and copied
 into that form.

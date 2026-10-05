@@ -9,7 +9,7 @@ import {
   services,
   destinationRegister,
 } from "./content";
-import { siteHeader, siteFooter } from "./homepage/chrome";
+import { previewNotice, siteHeader, siteFooter } from "./homepage/chrome";
 import { inquirySection } from "./homepage/inquiry";
 import { servicesSection } from "./homepage/services";
 import { audiencesSection } from "./homepage/audiences";
@@ -193,5 +193,9 @@ export function renderPage(route: string) {
                     "This destination is not part of the Found42 preview.",
                     `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
                   );
-  return siteHeader() + `<main id="main">${content}</main>` + siteFooter();
+  return (
+    siteHeader() +
+    `<main id="main">${previewNotice()}${content}</main>` +
+    siteFooter()
+  );
 }
