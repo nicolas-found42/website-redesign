@@ -14,7 +14,7 @@ const bar = (page: Page) => page.getByRole("region", { name: "Review mode" });
 const notice = (page: Page) => bar(page).locator(".bar-notice");
 /**
  * The text a copy action hands over. Only one element in the shadow root
- * carries the full item at a time — the backup preview, or the receipt's own
+ * carries the full item at a time — the copy preview, or the receipt's own
  * fallback box — and reading it returns the same string the clipboard gets:
  * `copy()` writes `preview.value` verbatim, and `copyAsText()` writes the
  * exported text its caller was handed.
@@ -202,11 +202,16 @@ test("#127 the receipt offers copy-as-text beside any file export", async ({
     .first()
     .click();
 
-  // The backup panel offers the same copy action, and its text is readable.
+  // The copy panel offers the same copy action, and its text is readable. Its
+  // vocabulary is the reviewer's, not the tool's (#127): no "backup".
   await page.getByRole("button", { name: /My feedback/ }).click();
-  await panel(page).getByRole("button", { name: "Download backup…" }).click();
-  const backup = panel(page);
-  await backup
+  await panel(page).getByRole("button", { name: "Download a copy…" }).click();
+  const copyPanel = panel(page);
+  await expect(
+    copyPanel.getByRole("heading", { name: "Download a copy" }),
+  ).toBeVisible();
+  await expect(copyPanel.locator("text=/backup/i")).toHaveCount(0);
+  await copyPanel
     .getByRole("button", { name: "Copy my feedback as text" })
     .click();
   await expect(page.locator("#found42-review .toast")).toContainText(
@@ -264,8 +269,7 @@ test("#127 with no sending configured the bar says so before anything is written
   page,
 }) => {
   // The suite's servers always configure VITE_REVIEW_SUBMISSION_URL, so here
-  // the pre-notice must stay quiet. The configured path is asserted; the
-  // unavailable-endpoint path is a stated verification gap in the PR notes.
+  // the pre-notice must stay quiet.
   await page.goto("/?review");
   await expect(bar(page).locator("[data-sending-warning]")).toBeHidden();
   // Text matchers read hidden text too, so count only what the reviewer sees.

@@ -710,7 +710,7 @@ export function mountReview() {
       .join("")}</div>
 <div class="panel-foot">
   <button type="button" class="primary" data-act="send"${items.length && !submitting ? "" : " disabled"}>${submitting ? "Sending…" : sendLabel(items.length)}</button>
-  <button type="button" data-act="backup"${items.length ? "" : " disabled"}>Download backup…</button>
+  <button type="button" data-act="backup"${items.length ? "" : " disabled"}>Download a copy…</button>
   <p class="hint">${publicNotice}</p>
   ${noticeDetail(panelNoticeStyle)}
   <button type="button" data-act="close">Close</button>
@@ -798,13 +798,13 @@ export function mountReview() {
     sendPanel.dataset.mode = "backup";
     sending = feedbackFile(store.items(), store.reviewer());
     sendPanel.innerHTML = `<div class="panel-head">
-      <h2 id="send-title">Download a backup</h2>
+      <h2 id="send-title">Download a copy</h2>
       <p>This keeps a local copy for you or the team if hosted sending is unavailable.</p>
       <button type="button" class="close" data-act="close" aria-label="Close">×</button>
     </div><div class="panel-body">
       <button type="button" class="primary" data-act="download">Download file</button>
       <button type="button" data-act="copy-text" data-copy-text>Copy my feedback as text</button>
-      <label class="label" for="send-preview">Backup contents</label>
+      <label class="label" for="send-preview">What the file contains</label>
       <textarea id="send-preview" class="preview" readonly rows="12">${esc(sending.text)}</textarea>
     </div><div class="panel-foot"><button type="button" data-act="close">Close</button></div>`;
   }
