@@ -51,6 +51,13 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Page not found.",
   );
+  // #148: the notice is scoped to the seven content pages; the 404 opening
+  // already carries its own preview line.
+  const missingHtml = await (await request.get(base + "/404.html")).text();
+  expect(missingHtml).not.toContain("preview-note");
+  expect(missingHtml).toContain(
+    "This destination is not part of the Found42 preview.",
+  );
   await page.goto(base + "/resources/");
   await page
     .getByRole("link", { name: "Services", exact: true })

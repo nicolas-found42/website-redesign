@@ -24,10 +24,10 @@ for (const path of ["/", "/services/"]) {
 
 /**
  * #147: Robb Henshaw was attributed to two different employers on the homepage
- * and the services page. Both surfaces now carry the same combined attribution.
+ * and the services page. Both surfaces now carry the same combined attribution,
+ * imported from the single shared constant.
  */
-const ROBB_HENSHAW_ATTRIBUTION =
-  "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)";
+import { robbHenshawAttribution as ROBB_HENSHAW_ATTRIBUTION } from "../src/homepage/testimonials";
 
 test("Robb Henshaw carries one identical attribution on the homepage and services page", async ({
   page,

@@ -3,13 +3,26 @@ import { readFileSync } from "node:fs";
 import { renderHomepage } from "../src/homepage";
 import { renderPage } from "../src/pages";
 import { resources, scorecard, serviceCatalog, services } from "../src/content";
-import { homepageTestimonials } from "../src/homepage/testimonials";
+import {
+  homepageTestimonials,
+  robbHenshawAttribution,
+} from "../src/homepage/testimonials";
 import {
   readinessResult,
   scorecardQuestions,
   scorecardResult,
 } from "../src/interactions";
 const page = renderHomepage();
+test("#148: the notice opens the seven content pages and not the 404 route", () => {
+  const notice = '<p class="preview-note wrap">';
+  for (const route of ["", "resources", "services", "about", "blog"])
+    expect(renderPage(route).includes(notice), route).toBe(true);
+  const missing = renderPage("404");
+  expect(missing.includes(notice)).toBe(false);
+  expect(missing).toContain(
+    "This destination is not part of the Found42 preview.",
+  );
+});
 test("the complete resource page owns the current catalog and availability [browser]", async ({
   page,
 }) => {
@@ -51,8 +64,7 @@ test("source offerings and attributed workshop proof are preserved", () => {
   expect(page).not.toContain("measurable results");
 });
 test("Robb Henshaw's attribution is one identical string across both surfaces [#147]", () => {
-  const ROBB_HENSHAW_ATTRIBUTION =
-    "CMO, Edgescale AI; former Co-Founder and CMO, Cameyo (acquired by Google)";
+  const ROBB_HENSHAW_ATTRIBUTION = robbHenshawAttribution;
   const homepageRole = homepageTestimonials.find(
     (item) => item.name === "Robb Henshaw",
   )?.role;

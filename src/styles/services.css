@@ -253,6 +253,9 @@
      into extra rows that push a jumped-to article off a short screen. */
   .services-rail .choice {
     padding-inline: 4px;
+    /* Deliberate exemption from the 16px reading tokens: this compact control
+       strip is interactive chrome, not reading copy, and the raised sizes
+       would wrap it into extra rows. */
     font-size: clamp(0.75rem, 3.6vw, 0.875rem);
     letter-spacing: 0;
   }
@@ -292,6 +295,7 @@
   }
   .services-rail .choice {
     padding-inline: 4px;
+    /* Same deliberate exemption as above: control strip, not reading copy. */
     font-size: clamp(0.75rem, 3.6vw, 0.875rem);
     letter-spacing: 0;
   }
