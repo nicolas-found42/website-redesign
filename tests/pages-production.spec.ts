@@ -25,6 +25,9 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
     await expect(page).toHaveTitle(title);
     const html = await (await request.get(url)).text();
     expect(html).toContain('<main id="main">');
+    // #148: the static pages carry the preview notice in their own HTML.
+    expect(html).toContain("preview-note");
+    expect(html).toContain("Design preview");
     expect(html).toContain("noindex");
     const links = await page
       .locator("a")

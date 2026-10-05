@@ -162,24 +162,28 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
   ]);
 });
 
-test("#35: release-ready journeys no longer carry a global preview notice", async ({
+test("#35, #148: every page opens with one preview notice saying nothing is sent", async ({
   page,
 }) => {
+  // #43 removed this page-wide notice in favour of action-level copy. Issue
+  // #148 restores it by owner decision: the README has always claimed a
+  // per-page notice, and a deployed preview that invites an action it cannot
+  // complete must tell the visitor so before they act. This inverts #43
+  // rather than deleting it, so the reversal stays visible in history.
   for (const route of routes) {
     await page.goto(route);
-    // #43 replaces the page-wide no-send disclaimer with truthful action-level
-    // copy. The launch gate (noindex and production routing) remains unchanged.
-    await expect(page.locator("main > .preview-note"), route).toHaveCount(0);
-    const text = await page.locator("main").innerText();
-    for (const notice of [
-      /Design preview/i,
-      /Design prototype/i,
-      /not connected in this preview/i,
-      /Nothing was sent/i,
-      /nothing you type here is sent/i,
-      /requested resources are not delivered/i,
-    ])
-      expect(text, `${route}: ${notice}`).not.toMatch(notice);
+    const notice = page.locator("main > .preview-note");
+    await expect(notice, route).toHaveCount(1);
+    await expect(notice, route).toBeVisible();
+    await expect(notice, route).toContainText(/design preview/i);
+    await expect(notice, route).toContainText(/nothing .* is sent/i);
+    // The notice leads the content, above the opening it qualifies.
+    const leads = await page
+      .locator("main > *")
+      .evaluateAll((children) =>
+        children[0]?.classList.contains("preview-note"),
+      );
+    expect(leads, route).toBe(true);
   }
   // A toolkit that needs ChatGPT on a Claude site says why.
   await page.goto("/resources/");
