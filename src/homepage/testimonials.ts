@@ -50,7 +50,16 @@ export function testimonialsSection() {
   </div></section>`;
 }
 
-/** Enhance a complete list into a carousel while keeping every quote in the DOM. */
+/**
+ * A scannable rail of testimonials while keeping every quote in the DOM.
+ *
+ * The five quotes stay in one track — the same markup the no-script layout
+ * shows — laid out as a horizontal scroller that reveals several cards at once
+ * wherever the viewport has room, so they can be read together instead of one
+ * press at a time. The `←` / `→` controls and the arrow keys step the rail by
+ * one card and report the position in the live count. Without script, or with
+ * reduced motion, every card is already visible and no movement is needed.
+ */
 export function mountTestimonials(root: HTMLElement) {
   const section = root.querySelector<HTMLElement>("#testimonials");
   if (!section) return () => {};
@@ -59,10 +68,13 @@ export function mountTestimonials(root: HTMLElement) {
   const count = section.querySelector<HTMLElement>("[data-testimonial-count]")!;
   const cards = [...track.querySelectorAll<HTMLElement>(".testimonial-card")];
   let current = 0;
+  /** Bring a card to the rail's leading edge and report the position. */
   const show = (index: number) => {
     current = (index + cards.length) % cards.length;
-    track.replaceChildren(...cards.slice(current), ...cards.slice(0, current));
-    track.scrollLeft = 0;
+    const offset =
+      cards[current].getBoundingClientRect().left -
+      track.getBoundingClientRect().left;
+    track.scrollLeft += offset;
     count.textContent = `${current + 1} / ${cards.length}`;
   };
   const onClick = (event: Event) => {
@@ -82,6 +94,7 @@ export function mountTestimonials(root: HTMLElement) {
   };
   track.classList.add("is-carousel");
   nav.hidden = false;
+  count.textContent = `1 / ${cards.length}`;
   section.addEventListener("click", onClick);
   track.addEventListener("keydown", onKey);
   return () => {

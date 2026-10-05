@@ -248,6 +248,14 @@
   .services-rail {
     margin-bottom: clamp(16px, 4vw, 32px);
   }
+  /* The rail is a control strip, not reading copy: it keeps its tuned compact
+     size at every narrow width, so raising the reading tokens does not wrap it
+     into extra rows that push a jumped-to article off a short screen. */
+  .services-rail .choice {
+    padding-inline: 4px;
+    font-size: clamp(0.75rem, 3.6vw, 0.875rem);
+    letter-spacing: 0;
+  }
   .choice {
     flex: 1 1 auto;
     justify-content: center;
