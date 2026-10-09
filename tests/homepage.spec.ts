@@ -59,7 +59,7 @@ const COMPANY_NAMES = [
   "ParaVet.live",
   "mobile.club",
   "MINDSi Sports Performance",
-  "MINDS-i Education",
+  "Mindsight",
   "Prelude Solutions",
 ];
 
@@ -222,7 +222,7 @@ test("the companies strip announces 15 locally bundled marks once in the approve
     "ParaVet.live",
     "mobile.club",
     "MINDSi Sports Performance",
-    "MINDS-i Education",
+    "Mindsight",
     "Prelude Solutions",
   ];
   await Promise.all(
@@ -230,6 +230,19 @@ test("the companies strip announces 15 locally bundled marks once in the approve
       expect(logos.nth(index)).toHaveAccessibleName(name),
     ),
   );
+  const mindsight = row.getByRole("img", { name: "Mindsight", exact: true });
+  await expect(mindsight).toHaveAttribute("src", "/assets/logos/mindsight.jpg");
+  await expect(mindsight).toHaveAttribute("width", "200");
+  await expect(mindsight).toHaveAttribute("height", "200");
+  await expect(
+    row
+      .locator(".company-logos")
+      .first()
+      .getByText("Mindsight", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    row.getByRole("img", { name: "MINDSi Sports Performance", exact: true }),
+  ).toHaveCount(1);
   const images = await logos.evaluateAll((elements) =>
     elements.map((element) => ({
       complete: (element as HTMLImageElement).complete,

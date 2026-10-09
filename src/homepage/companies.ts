@@ -65,11 +65,10 @@ const companies = [
     height: 200,
   },
   {
-    file: "minds-i-education.jpg",
-    name: "MINDS-i Education",
-    width: 225,
-    height: 62,
-    tile: true,
+    file: "mindsight.jpg",
+    name: "Mindsight",
+    width: 200,
+    height: 200,
   },
   {
     file: "prelude-solutions.avif",
