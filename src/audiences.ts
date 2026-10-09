@@ -143,11 +143,7 @@ const rosterScene: SceneContent = {
     label("human", "Human in the loop", "human", 5),
     label("result", "Reviewed work returns to each role.", "result", 6),
   ],
-  marks: [
-    ...roles.map((_, index) => mark(`role${index + 1}`, "person", index + 1)),
-    mark("human", "human", 5),
-    mark("result", "result", 6),
-  ],
+  marks: [mark("human", "human", 5), mark("result", "result", 6)],
   links: [
     ...roles.flatMap((_, index) => [
       `role${index + 1}>skill${index + 1}`,

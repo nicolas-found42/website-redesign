@@ -11,12 +11,12 @@ import {
   type LabelPlace,
   type Orientation,
 } from "./kit";
-import { colleague, contents, desk, folio, laptop, paper } from "./work";
+import { contents, desk, folio, laptop, paper } from "./work";
 
 /**
  * Individual Contributors and Teams: four workstations and a shared review.
  *
- * Four people in one company, each with a ribbon of their own role. Each
+ * Four roles in one company, each with a ribbon of its own. Each
  * ribbon runs through a skill cut for that role — its buckle — and onwards
  * in its own lane: four smooth top-to-bottom pipelines that never cross.
  * Each lane enters the gate through a slot of its own: the human in the
@@ -36,13 +36,12 @@ const FILLS = [
   "var(--red-strand)",
 ] as const;
 
-/** A role's tab: the ribbon's end, with the person it belongs to. */
+/** A role's tab names the lane without adding another person. */
 function tab(x: number, y: number, width: number, height: number): string {
   const h = height / 2;
   return (
     `<rect class="f-sunk" x="${r(x + 5)}" y="${r(y - h + 6)}" width="${width}" height="${height}" rx="4"/>` +
-    `<path class="f-ink" d="M${r(x)} ${r(y - h)} L${r(x + width)} ${r(y - h)} L${r(x + width)} ${r(y + h)} L${r(x)} ${r(y + h)} L${r(x + 14)} ${r(y)} Z"/>` +
-    figure([x + 40, y + 4], 0.72, "paper")
+    `<path class="f-ink" d="M${r(x)} ${r(y - h)} L${r(x + width)} ${r(y - h)} L${r(x + width)} ${r(y + h)} L${r(x)} ${r(y + h)} L${r(x + 14)} ${r(y)} Z"/>`
   );
 }
 
@@ -120,7 +119,6 @@ function workStation(x: number, y: number, w: number, role: number): string {
           : folio(335, 0, 150, "priorities");
   return (
     `<g transform="translate(${x} ${y}) scale(${scale})">` +
-    colleague([125, 42], 1, role === 1 ? "point" : "read") +
     paper(180, 56, 85, 40) +
     `<g transform="translate(190 63) scale(.42)">${contents(0, 0, 160, "owners")}</g>` +
     object +
@@ -172,7 +170,6 @@ function landscape(): Art {
         origin: [60, y],
         nodes: [`role${n}`, `skill${n}`],
         links: [`role${n}>skill${n}`, `skill${n}>human`],
-        marks: [`person:role${n}`],
       },
       strip(d, width, FILLS[i]) +
         buckle(360, y, 260, 94, width) +
@@ -220,9 +217,7 @@ function landscape(): Art {
     ...rows,
     part(
       { name: "human-reviewer", beat: 5, enter: "rise" },
-      colleague([960, 860], 0.9, "review") +
-        folio(875, 885, 94, "owners") +
-        desk(870, 910, 325),
+      figure([966, 914], 2.5, "red"),
     ),
     part(
       { name: "lanes", beat: 4, enter: "fade", order: 1 },
@@ -297,7 +292,6 @@ function portrait(): Art {
         origin: [34, y],
         nodes: [`role${n}`, `skill${n}`],
         links: [`role${n}>skill${n}`, `skill${n}>human`],
-        marks: [`person:role${n}`],
       },
       strip(d, width, FILLS[i]) +
         buckle(288, y, 188, 92, width) +
@@ -344,9 +338,7 @@ function portrait(): Art {
     ...rows,
     part(
       { name: "human-reviewer", beat: 5, enter: "rise" },
-      colleague([228, 1270], 0.9, "review") +
-        folio(65, 1294, 106, "owners") +
-        desk(40, 1324, 366),
+      figure([290, 1310], 2.8, "red"),
     ),
     part(
       { name: "lanes", beat: 4, enter: "fade", order: 1 },

@@ -19,6 +19,12 @@ its five stations in sequence.
 The solid inks, part-based entrances, separately authored wide/narrow fields
 and complete still states from [ADR 0006](0006-drawings-made-of-material.md) remain.
 
+The accepted October review in #165 removes the contributor role figures and
+uses one genderless head-and-shoulders icon at human review. This supersedes
+the contributor people and reviewer artwork below; the four role artifacts,
+independent lanes and shared return remain. The role-person marks are removed
+from the content inventory by hand to match the intentional change.
+
 ## Scenes
 
 - **Workflows** is a customer engagement: source documents, customer/delivery

@@ -28,6 +28,8 @@ import {
  * a human approval.
  * PR #161 updates only the builder's accessible description to match the new
  * collaborative stations; its words, marks, beats and connections remain.
+ * Issue #165 intentionally removes only the four contributor role-person marks
+ * to match the one neutral human reviewer and absence of role figures.
  */
 
 type Link = { from: string; to: string; weight: string };
@@ -909,6 +911,41 @@ test("the teams scene runs four separate role lanes through a labelled human-rev
     "aria-label",
     /each running its own lane to the human-review gate/,
   );
+});
+
+test("the contributor workflows use one neutral reviewer icon and no role figures", async ({
+  page,
+}) => {
+  for (const width of [628, 1920]) {
+    await open(page, "/", width);
+    await page
+      .getByRole("button", { name: /Individual Contributors and Teams/ })
+      .first()
+      .click();
+    const field = page.locator("#audience-contributors .scene-field");
+    await expect(field.locator('[data-part="role"] circle')).toHaveCount(0);
+    await expect(field.locator('[data-part="role"] ellipse')).toHaveCount(0);
+    await expect(
+      field.locator('[data-part="human-reviewer"] circle'),
+    ).toHaveCount(1);
+    await expect(
+      field.locator('[data-part="human-reviewer"] path'),
+    ).toHaveCount(1);
+    await expect(
+      field.getByText("Human in the loop", { exact: true }),
+    ).toBeVisible();
+    const state = await field.evaluate(readField);
+    expect(
+      state.parts
+        .flatMap((piece) => piece.marks)
+        .filter((mark) => mark.startsWith("person:")),
+    ).toEqual([]);
+    expect(
+      state.parts.filter((piece) =>
+        piece.links.some((link) => link.endsWith(">human")),
+      ),
+    ).toHaveLength(4);
+  }
 });
 
 test("the teams scene keeps each role lane clear of the others into and out of the gate", async ({
