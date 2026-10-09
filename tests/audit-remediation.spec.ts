@@ -103,46 +103,6 @@ test("F03, F17: the live inquiry handoff is accessible and honest", async ({
   expect(result.violations).toEqual([]);
 });
 
-test("F04: the industries dropdown closes on a press elsewhere and when focus moves on", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/");
-  const industries = page.locator(".industry-menu");
-  const summary = industries.locator("summary");
-  await summary.click();
-  await expect(industries).toHaveAttribute("open", "");
-  await page.mouse.click(300, 500);
-  await expect(industries).not.toHaveAttribute("open", "");
-
-  await summary.click();
-  // Moving within the dropdown keeps it open…
-  await industries.getByRole("link", { name: "Private Equity" }).focus();
-  await expect(industries).toHaveAttribute("open", "");
-  // …moving past it closes it.
-  await page
-    .getByRole("navigation", { name: "Main navigation" })
-    .getByRole("link", { name: "About", exact: true })
-    .focus();
-  await expect(industries).not.toHaveAttribute("open", "");
-});
-
-test("F04: in the narrow menu the industries list stays open while the visitor moves around it", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  await page.getByRole("button", { name: "Menu" }).click();
-  const industries = page.locator(".industry-menu");
-  await industries.locator("summary").click();
-  await page
-    .getByRole("navigation", { name: "Main navigation" })
-    .getByRole("link", { name: "About", exact: true })
-    .focus();
-  await page.mouse.click(300, 700);
-  await expect(industries).toHaveAttribute("open", "");
-});
-
 test("F05: the open menu shows how to close it", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -280,6 +240,7 @@ test("F15: page openings do not skip a heading level", async ({ page }) => {
   for (const path of [
     "/resources/",
     "/industries/private-equity/",
+    "/industries/portfolio-companies/",
     "/industries/b2b-saas/",
     "/blog/",
   ]) {

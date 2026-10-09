@@ -103,17 +103,10 @@ export function mountPage(
     }
   };
   const closeOnEscape = (event: KeyboardEvent) => {
-    if (event.key === "Escape")
-      root
-        .querySelectorAll<HTMLDetailsElement>(".industry-menu[open]")
-        .forEach((el) => {
-          el.open = false;
-          el.querySelector("summary")?.focus();
-        });
     if (event.key === "Tab" && menu.getAttribute("aria-expanded") === "true") {
       const controls = [
         menu,
-        ...nav.querySelectorAll<HTMLElement>("a, button, summary"),
+        ...nav.querySelectorAll<HTMLElement>("a, button"),
       ].filter((el) => el.getClientRects().length);
       const first = controls[0],
         last = controls[controls.length - 1];
@@ -133,42 +126,16 @@ export function mountPage(
       menu.focus();
     }
   };
-  const wide = matchMedia("(min-width: 961px)");
+  const wide = matchMedia("(min-width: 1281px)");
   const closeWhenWide = () => closeMenu();
-  /**
-   * On a wide screen the industries list is a dropdown laid over the page, so
-   * it closes once the visitor is done with it: a press elsewhere, or focus
-   * moving on. In the narrow menu it is an inline list and stays as chosen.
-   */
-  const industries = root.querySelector<HTMLDetailsElement>(".industry-menu");
-  const closeIndustriesOnPress = (event: Event) => {
-    if (
-      wide.matches &&
-      industries?.open &&
-      !industries.contains(event.target as Node)
-    )
-      industries.open = false;
-  };
-  const closeIndustriesOnLeave = (event: FocusEvent) => {
-    if (
-      wide.matches &&
-      industries?.open &&
-      !industries.contains(event.relatedTarget as Node | null)
-    )
-      industries.open = false;
-  };
   menu.addEventListener("click", toggleMenu);
   nav.addEventListener("click", followLink);
   document.addEventListener("keydown", closeOnEscape);
-  document.addEventListener("pointerdown", closeIndustriesOnPress);
-  industries?.addEventListener("focusout", closeIndustriesOnLeave);
   wide.addEventListener("change", closeWhenWide);
   disposers.push(() => {
     menu.removeEventListener("click", toggleMenu);
     nav.removeEventListener("click", followLink);
     document.removeEventListener("keydown", closeOnEscape);
-    document.removeEventListener("pointerdown", closeIndustriesOnPress);
-    industries?.removeEventListener("focusout", closeIndustriesOnLeave);
     wide.removeEventListener("change", closeWhenWide);
     document.body.style.removeProperty("overflow");
   });

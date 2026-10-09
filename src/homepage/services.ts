@@ -70,8 +70,8 @@ export function servicesSection({ allServicesLink = false } = {}) {
    <div class="services-industries">
     <p class="note">Built for</p>
     <ul>
-     <li><a class="link" href="${sitePath("industries/private-equity/")}">Private Equity</a></li>
-     <li><a class="link" href="${sitePath("industries/b2b-saas/")}">B2B SaaS</a></li>${allServicesLink ? `\n     <li><a class="link" href="${sitePath("services/")}">See all services</a></li>` : ""}
+     <li><a class="link" href="${sitePath("industries/private-equity/")}">Private equity</a></li>
+     <li><a class="link" href="${sitePath("industries/portfolio-companies/")}">Portfolio companies</a></li><li><a class="link" href="${sitePath("industries/b2b-saas/")}">Software companies</a></li>${allServicesLink ? `\n     <li><a class="link" href="${sitePath("services/")}">See all services</a></li>` : ""}
     </ul>
    </div>
    <a class="link" href="${destinationRegister.liveInquiry}" data-dialog="contact">Discuss your challenge <span class="signal-dot"></span>${arrow}</a>

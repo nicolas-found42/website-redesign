@@ -1,6 +1,6 @@
 # Design decisions
 
-The seven-page preview uses a calm business-site voice around the **Working Drawings** system. [ADR 0007](adr/0007-approved-layout-with-deployed-drawings.md) governs the homepage order and the removal of the manual motion control; [ADR 0006](adr/0006-drawings-made-of-material.md) governs the drawings. [ADRs 0002–0005](adr/0002-working-system-drawing.md) retain the drawing, scene, narrow-layout and visual behavior they document. Earlier expressive and technical treatments remain in `preview/expressive/`, `preview/` and Git history as historical design evidence.
+The eight-page preview uses a calm business-site voice around the **Working Drawings** system. [ADR 0007](adr/0007-approved-layout-with-deployed-drawings.md) governs the homepage order and the removal of the manual motion control; [ADR 0006](adr/0006-drawings-made-of-material.md) governs the drawings. [ADRs 0002–0005](adr/0002-working-system-drawing.md) retain the drawing, scene, narrow-layout and visual behavior they document. Earlier expressive and technical treatments remain in `preview/expressive/`, `preview/` and Git history as historical design evidence.
 
 ## Visual language
 
@@ -33,3 +33,10 @@ Drawings are assembled in stages — each piece placed, never drawn on — then 
 The September 16 migration established the seven routes; [the content sources](CONTENT-SOURCES.md) and [site map](SITE-MAP.md) record their provenance and structure. The September 23 revision changes copy, journeys and presentation across those routes while preserving base-aware static navigation, direct entry and no-script content. Public resources, learning offerings, services and inquiries remain separate concepts in the [context map](../CONTEXT-MAP.md).
 
 The shared dialog explains what the existing live contact form asks and what happens after an inquiry. It never reports a local submission as sent. Service names and the form's interest labels are intentionally distinct; the external HubSpot fields, consent defaults and routing remain owner decisions. Resource requests likewise remain separate from consultations. External destinations and fulfillment need owner-approved verification before release. The preview retains noindex until the separate production launch decision.
+
+The October review (#169) separates Private equity, Portfolio companies and
+Software companies into direct header links. Portfolio companies has its own
+page for existing portfolio-operations, role-training and custom-skills copy;
+Private equity focuses on deals, diligence and firm criteria. Software companies
+keeps the B2B SaaS route. The header hands over to its menu at 1280px and allows
+wrapping under enlarged text; drawing and audience breakpoints remain unchanged.

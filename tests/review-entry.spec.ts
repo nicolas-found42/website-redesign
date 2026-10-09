@@ -36,7 +36,11 @@ function savedList(count: number) {
         state: [],
         viewport: { width: 1280, height: 720 },
       },
-      change: { kind: "wording", current: "Train teams.", proposed: "Help teams." },
+      change: {
+        kind: "wording",
+        current: "Train teams.",
+        proposed: "Help teams.",
+      },
       everywhere: false,
       why: "It should say what it means.",
       priority: "must",
@@ -117,9 +121,8 @@ test("the drafts check and the resume link are defensive about what they read", 
 }) => {
   await page.goto("/");
   const result = await page.evaluate(async () => {
-    const { savedDraftCount, reviewEntryHref, reviewRequested } = await import(
-      "/src/review/activation.ts"
-    );
+    const { savedDraftCount, reviewEntryHref, reviewRequested } =
+      await import("/src/review/activation.ts");
     const key = "found42-review:feedback";
     const write = (value: string) => localStorage.setItem(key, value);
     write(JSON.stringify({ version: 1, reviewer: "", items: [1, 2, 3] }));
@@ -166,7 +169,7 @@ test("with drafts saved after Exit, the way back in returns on the next visit", 
   await expect(reviewHost(page)).toHaveCount(0);
 });
 
-test("?review still mounts the bar on all seven supported routes", async ({
+test("?review still mounts the bar on all eight supported routes", async ({
   page,
 }) => {
   for (const route of sitePages) {

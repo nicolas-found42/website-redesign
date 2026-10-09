@@ -132,3 +132,13 @@ image, whose alt text is `mindsight`. The page links to
 [the official LinkedIn company image](https://media.licdn.com/dms/image/v2/D560BAQGud2XWbl3QPQ/company-logo_200_200/company-logo_200_200/0/1697808229215/mindsighters_logo?e=2147483647&v=beta&t=3F8DDlZlS8dV7XsV3lWXb2SDY7jHKN6-T9V1zzBrRGA).
 The earlier Education asset references in dated migration material are
 superseded identity evidence, not the current relationship list.
+
+## Portfolio companies page and navigation (#169, October 9)
+
+The owner-approved review separates Private equity and Portfolio companies and
+renames the B2B SaaS navigation label to Software companies. The portfolio page
+reuses the existing Portfolio operations and Custom skills descriptions from
+`src/content.ts`, the Individual Contributors and Teams role-training copy from
+`src/audiences.ts`, and the existing Team adoption wording. Private equity keeps
+deal screening, diligence and the firm's criteria. No new offer, price,
+relationship, measured result or integration claim is introduced.

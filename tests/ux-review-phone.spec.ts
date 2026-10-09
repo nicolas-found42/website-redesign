@@ -13,6 +13,7 @@ const routes = [
   "/resources/",
   "/services/",
   "/industries/private-equity/",
+  "/industries/portfolio-companies/",
   "/industries/b2b-saas/",
   "/about/",
   "/blog/",

@@ -1,8 +1,8 @@
 # Website validation
 
-The project now covers seven pages, superseding the former homepage-only scope. The current evidence and precise limits are in [the migration validation report](../artifacts/lovable-migration/2026-09-16/validation.md); source-derived coverage is in [the manifest](../artifacts/lovable-migration/2026-09-16/manifest.json). Historical design evidence remains under `docs/preview/working-drawings/` and in Git history.
+The project now covers eight pages, superseding the former homepage-only scope. The current evidence and precise limits are in [the migration validation report](../artifacts/lovable-migration/2026-09-16/validation.md); source-derived coverage is in [the manifest](../artifacts/lovable-migration/2026-09-16/manifest.json). Historical design evidence remains under `docs/preview/working-drawings/` and in Git history.
 
-Run `npm run build` and `npm test`. The build typechecks, bundles and prerenders seven directory index files plus a real 404. Playwright runs unit assertions and Chromium, Firefox and WebKit checks against both development and strict static production servers. Historical migration run: **120 passed (40.0s)**. Current meeting-implementation validation is recorded below.
+Run `npm run build` and `npm test`. The build typechecks, bundles and prerenders eight directory index files plus a real 404. Playwright runs unit assertions and Chromium, Firefox and WebKit checks against both development and strict static production servers. Historical migration run: **120 passed (40.0s)**. Current meeting-implementation validation is recorded below.
 
 Coverage includes 215 source-derived text records, assessment scoring/branches, form validation and truthful unavailable-delivery states, navigation and dialog keyboard behavior, axe accessibility, mobile/intermediate/desktop reflow, motion pause/reduced motion, no-JavaScript readable content, and GitHub Pages direct entry, refresh, assets, links, back/forward and 404 handling. Static tests use `/website-redesign/`; a development-server fallback is not accepted as route verification.
 
@@ -236,5 +236,4 @@ size 100–200ms after the test doubled the root text, so the box grew from 468p
 to 1,172px after the jump had landed and pushed the chosen article off the
 reading line. The example now sets `--size-body` like every other reading block.
 Afterwards the short-phone check passed 60 of 60 in WebKit, the narrow services
-checks passed 180 of 180 across the three engines, and `npm test` passed 266 of
-266.
+checks passed 180 of 180 across the three engines, and `npm test` passed 266 of 266.

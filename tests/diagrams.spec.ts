@@ -513,6 +513,7 @@ test("no drawing on any route is textured with dots, stripes or ruled lines", as
     "/services/",
     "/resources/",
     "/industries/private-equity/",
+    "/industries/portfolio-companies/",
     "/industries/b2b-saas/",
     "/about/",
     "/blog/",

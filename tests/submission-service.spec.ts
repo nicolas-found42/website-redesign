@@ -9,6 +9,7 @@ import { createSubmissionHandler, type Env } from "../worker/index";
 import {
   publicSite,
   repository,
+  validItem,
   type Outcome,
 } from "../src/review/submission-contract";
 import type { FeedbackItem } from "../src/review/store";
@@ -617,6 +618,19 @@ test("malformed requests consume client limits but rejected clients leave the sh
   );
   expect(response.status).toBe(200);
   expect((await outcomes(response))[0].status).toBe("confirmed");
+});
+
+test("portfolio-company feedback is accepted by the service validator", () => {
+  const feedback = item("portfolio-company-feedback");
+  feedback.target.page = "/industries/portfolio-companies/";
+  feedback.target.pageName = "AI for Portfolio Companies";
+  expect(validItem(feedback)).toBe(true);
+  expect(
+    validItem({
+      ...feedback,
+      target: { ...feedback.target, page: "/industries/unknown-company/" },
+    }),
+  ).toBe(false);
 });
 
 test("invalid IDs and missing-page feedback have actionable correlated outcomes", async ({
