@@ -38,10 +38,15 @@ export const pageMeta: Record<string, { title: string; description: string }> =
     "industries/private-equity": {
       title: "AI for Private Equity | Found42",
       description:
-        "Claude workflows shaped around your firm’s deal screening, diligence and portfolio operations.",
+        "Claude workflows shaped around your firm’s deal screening, diligence and review criteria.",
+    },
+    "industries/portfolio-companies": {
+      title: "AI for Portfolio Companies | Found42",
+      description:
+        "Role-based training and Claude skills for portfolio operations, reviews, plans and team adoption.",
     },
     "industries/b2b-saas": {
-      title: "AI for B2B SaaS Teams | Found42",
+      title: "AI for Software Companies | Found42",
       description:
         "Claude workflows shaped around your customer context, product feedback and go-to-market work.",
     },
@@ -185,15 +190,17 @@ export function renderPage(route: string) {
             ? blogPage()
             : route === "industries/private-equity"
               ? industryPage("private-equity")
-              : route === "industries/b2b-saas"
-                ? industryPage("b2b-saas")
-                : opening(
-                    "404",
-                    "Page not found.",
-                    "This destination is not part of the Found42 preview.",
-                    `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
-                  );
-  // #148 scopes the notice to the seven content pages. The 404 opening already
+              : route === "industries/portfolio-companies"
+                ? industryPage("portfolio-companies")
+                : route === "industries/b2b-saas"
+                  ? industryPage("b2b-saas")
+                  : opening(
+                      "404",
+                      "Page not found.",
+                      "This destination is not part of the Found42 preview.",
+                      `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
+                    );
+  // #148 scopes the notice to the eight content pages. The 404 opening already
   // says it is not part of the preview, so the notice would repeat it there.
   const notice = route === "404" ? "" : previewNotice();
   return (

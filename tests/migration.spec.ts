@@ -4,6 +4,7 @@ const routes = [
   "resources",
   "services",
   "industries/private-equity",
+  "industries/portfolio-companies",
   "industries/b2b-saas",
   "about",
   "blog",
@@ -128,7 +129,7 @@ test("active resources use published destinations and inactive forms make no req
   expect(submissions).toEqual([]);
 });
 
-test("mobile menu stays readable over ink, exposes industries, and traps keyboard focus", async ({
+test("mobile menu stays readable over ink, exposes direct audience links, and traps keyboard focus", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -138,12 +139,11 @@ test("mobile menu stays readable over ink, exposes industries, and traps keyboar
   const menu = page.getByRole("button", { name: "Menu" });
   await menu.click();
   const nav = page.getByRole("navigation");
-  await nav.locator("summary").click();
   const bounds = await nav.boundingBox();
   expect(bounds).not.toBeNull();
   expect(bounds!.y).toBe(0);
   expect(bounds!.height).toBe(844);
-  await expect(nav.getByRole("link", { name: "Private Equity" })).toBeVisible();
+  await expect(nav.getByRole("link", { name: "Private equity" })).toBeVisible();
   const result = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
     .analyze();

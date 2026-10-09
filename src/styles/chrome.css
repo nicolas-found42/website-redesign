@@ -120,14 +120,10 @@
   margin-left: -7.14%;
 }
 
-/* The site header and the industries disclosure keep long labels in bounds. */
+/* Header links keep long labels in bounds, including enlarged text. */
 .site-header,
 #navigation,
-#navigation > *,
-.industry-menu,
-.industry-menu summary,
-.industry-menu > div,
-.industry-menu a {
+#navigation > * {
   min-width: 0;
   max-width: 100%;
 }
@@ -196,7 +192,7 @@
   border: 1px solid var(--line-strong);
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1280px) {
   .menu-toggle {
     display: inline-flex;
   }
@@ -235,6 +231,7 @@
       visibility 0s;
   }
   #navigation a {
+    flex-shrink: 0;
     max-width: 100%;
     min-height: 62px;
     overflow-wrap: anywhere;

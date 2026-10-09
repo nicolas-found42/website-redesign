@@ -13,7 +13,20 @@ import {
   scorecardResult,
 } from "../src/interactions";
 const page = renderHomepage();
-test("#148: the notice opens the seven content pages and not the 404 route", () => {
+test("#168: services lead directly to testimonials without the redundant briefing band", () => {
+  expect(page).not.toContain('id="briefing"');
+  expect(page).not.toContain("From a busy week to a ready briefing");
+  const sections = [...page.matchAll(/<section id="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const servicesIndex = sections.indexOf("services");
+  expect(servicesIndex).toBeGreaterThanOrEqual(0);
+  expect(sections.slice(servicesIndex, servicesIndex + 2)).toEqual([
+    "services",
+    "testimonials",
+  ]);
+});
+test("#148: the notice opens the eight content pages and not the 404 route", () => {
   const notice = '<p class="preview-note wrap">';
   for (const route of ["", "resources", "services", "about", "blog"])
     expect(renderPage(route).includes(notice), route).toBe(true);
@@ -222,12 +235,14 @@ test("the September 23 content delta is handled honestly rather than preserved v
   expect(home).not.toContain("Useful prompts");
 });
 
-test("the industries strip offers all services everywhere but the services page", () => {
+test("the business audience strip offers all services everywhere but the services page", () => {
   const home = readable(page);
   const servicesPage = readable(renderPage("services"));
   for (const text of [home, servicesPage]) {
-    expect(text).toContain("Built for Private Equity B2B SaaS");
-    // #36: the strip names industries; it does not imply completed client work.
+    expect(text).toContain(
+      "Built for Private equity Portfolio companies Software companies",
+    );
+    // #36: the strip names business audiences; it does not imply completed client work.
     expect(text).not.toContain("Delivered for");
   }
   expect(home).toContain("See all services");

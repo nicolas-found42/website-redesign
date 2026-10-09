@@ -513,6 +513,7 @@ test("no drawing on any route is textured with dots, stripes or ruled lines", as
     "/services/",
     "/resources/",
     "/industries/private-equity/",
+    "/industries/portfolio-companies/",
     "/industries/b2b-saas/",
     "/about/",
     "/blog/",
@@ -946,7 +947,7 @@ test("the contributor workflows use one neutral reviewer icon and no role figure
         ? '.audience-art [data-audience-scene="1"] .scene-field'
         : "#audience-contributors .scene-field",
     );
-    await field.scrollIntoViewIfNeeded();
+    await expect(field).toBeVisible();
     await expect
       .poll(async () => (await field.evaluate(readField)).animating)
       .toBe(0);
@@ -993,7 +994,7 @@ test("contributor function labels have open space without enclosing bars", async
         ? '.audience-art [data-audience-scene="1"] .scene-field'
         : "#audience-contributors .scene-field",
     );
-    await field.scrollIntoViewIfNeeded();
+    await expect(field).toBeVisible();
     await expect
       .poll(async () => (await field.evaluate(readField)).animating)
       .toBe(0);

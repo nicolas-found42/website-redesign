@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
  * notice saying so", but the deployed pages carried none, so a visitor was
  * invited to act on a preview that sends nothing. This pins the restored
  * notice: one, leading each page's content, naming the preview and the fact
- * that nothing is sent — on all seven public routes, with noindex unchanged.
+ * that nothing is sent — on all eight public routes, with noindex unchanged.
  * The notice says only what the preview cannot do (no contact link; the footer
  * carries contact paths), and the 404 page carries its own "not part of the
  * Found42 preview" line instead of the notice.
@@ -16,6 +16,7 @@ const routes = [
   "/resources/",
   "/services/",
   "/industries/private-equity/",
+  "/industries/portfolio-companies/",
   "/industries/b2b-saas/",
   "/about/",
   "/blog/",
@@ -25,7 +26,7 @@ const routes = [
 const noticeCopy =
   "Design preview: nothing you type here is sent, and requested resources are not delivered yet.";
 
-test("#148: one preview notice opens all seven routes and leads the content", async ({
+test("#148: one preview notice opens all eight routes and leads the content", async ({
   page,
 }) => {
   for (const route of routes) {

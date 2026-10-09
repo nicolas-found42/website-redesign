@@ -1,19 +1,21 @@
 # Multi-page preview site map
 
 All seven publicly discovered Lovable pages are implemented. Paths are preserved
-and receive a trailing slash for static directory-index hosting.
+and receive a trailing slash for static directory-index hosting. Issue #169 adds
+a distinct Portfolio companies page, making eight current content routes.
 
 | Source path                  | Destination under `/website-redesign/` | Purpose and next steps                                                                                                                                                                                                   |
 | ---------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/`                          | `/`                                    | Direct opening, free resources (the playbook entry with its review figure), three audience articles with its own scenes, services with an industries strip, attributed workshop accounts                                 |
+| `/`                          | `/`                                    | Direct opening, free resources (the playbook entry with its review figure), three audience articles with its own scenes, services with a business-audience strip, attributed workshop accounts                           |
 | `/resources`                 | `/resources/`                          | 18-question AI Readiness Scorecard with a full local report and PDF download, separate workflow preview, failure-mode review figure, four original skill downloads and Strategic Advisor setup with its published lesson |
 | `/services`                  | `/services/`                           | What an engagement looks like (`#engagements`), audience articles, Workshops, Workflows, Automations; scope lists and free/bespoke boundary                                                                              |
-| `/industries/private-equity` | `/industries/private-equity/`          | Deal screening, diligence, portfolio operations and firm-specific criteria; founder band; a first-pass screen example without an unapproved savings figure                                                               |
+| `/industries/private-equity` | `/industries/private-equity/`          | Deal screening, diligence and firm-specific criteria; founder band; a first-pass screen example without an unapproved savings figure                                                                                     |
+| Added in #169                | `/industries/portfolio-companies/`     | Portfolio operations, role-based training, custom skills and team adoption, using already-approved operating-team content                                                                                                |
 | `/industries/b2b-saas`       | `/industries/b2b-saas/`                | Customer success, feedback triage, GTM enablement and team adoption                                                                                                                                                      |
 | `/about`                     | `/about/`                              | Complete founder biography and operating principles                                                                                                                                                                      |
 | `/blog`                      | `/blog/`                               | Three readable draft excerpts from existing essay material; honest newsletter availability                                                                                                                               |
 
-Header, industry disclosure, mobile menu, footer and contextual links stay within
+Header, mobile menu, footer and contextual links stay within
 the deployment prefix. Resource links reach `#scorecard`, `#playbook`, `#library`
 and `#course`, with `#toolkit` also available. Existing homepage anchors remain;
 `#audiences` is the audience sequence
@@ -40,3 +42,8 @@ destinations; those are not additional migrated pages. `/404.html` is an
 additional implementation utility page.
 
 See the migration manifest for the closed discovery queue and all source links.
+
+The header exposes **Private equity**, **Portfolio companies** and
+**Software companies** as separate top-level links; the Industries disclosure
+is removed. Software companies keeps the existing `/industries/b2b-saas/`
+address. The mobile menu begins at 1280px; the drawing breakpoints are unchanged.

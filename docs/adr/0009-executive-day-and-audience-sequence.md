@@ -26,8 +26,10 @@ from ADRs 0003, 0006 and 0008. The inventory is revised by hand.
 The owner confirmed fifteen relationships, shown in this order: Google,
 Edgescale AI, MB&A (Millsapps, Ballinger & Associates), Seidler Equity Partners
 (SEP), PeakSpan Capital, Palladium Security, Marajá, Ruruka, Crown Point Advisory
-Group, IDC, ParaVet.live, mobile.club, MINDSi Sports Performance, MINDS-i
-Education and Prelude Solutions.
+Group, IDC, ParaVet.live, mobile.club, MINDSi Sports Performance, Mindsight
+and Prelude Solutions. Issue #163 corrects the former MINDS-i Education
+identity to the owner-linked Mindsight entity; the Sports Performance entry
+remains independently approved.
 
 Their official marks are bundled locally without redrawing, tracing or
 recolouring. Dark-background marks use tiles and each mark is sized by perceived

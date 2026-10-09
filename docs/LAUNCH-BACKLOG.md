@@ -1,6 +1,7 @@
 # Launch dependencies
 
-The seven-page content migration is implemented as a noindex preview. These
+The original seven-page content migration and the Portfolio companies page
+added in #169 are implemented as a noindex preview. These
 items remain incomplete and must not be represented as delivered:
 
 1. Supply the 12-check Failure Mode Playbook. Four original Claude skill packages
