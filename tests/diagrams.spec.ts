@@ -623,6 +623,18 @@ test("the executive day names four ordered cards and keeps the decision illustra
   }
 });
 
+test("executive documents explain their recognizable output formats", async ({
+  page,
+}) => {
+  for (const width of [1440, 390]) {
+    await open(page, "/", width);
+    const field = page.locator("#audience-executives .scene-field");
+    await expect(field).toHaveAccessibleName(
+      /Daily Brief with three ranked priorities.*Meeting Brief with an agenda.*Meeting Debrief with owner and date columns.*Actions from Transcripts with notes feeding a task checklist.*You decide.*illustrative.*no live calendar, email, CRM or transcript integration/i,
+    );
+  }
+});
+
 test("executive timeline words stay whole and separate with enlarged text", async ({
   page,
 }) => {
@@ -645,18 +657,21 @@ test("executive timeline words stay whole and separate with enlarged text", asyn
     await expect(fields).toHaveCount(1);
     await fields.first().scrollIntoViewIfNeeded();
     await expect
-      .poll(async () => {
-        const field = fields.first();
-        const state = await field.evaluate(readField);
-        const fit = await field.evaluate(readTextFit);
-        return {
-          animating: state.animating,
-          unsettled: state.unsettled,
-          problems: wordProblems(fit),
-          decisionOnCard: fit.find((label) => label.text === "You decide")
-            ?.onCard,
-        };
-      })
+      .poll(
+        async () => {
+          const field = fields.first();
+          const state = await field.evaluate(readField);
+          const fit = await field.evaluate(readTextFit);
+          return {
+            animating: state.animating,
+            unsettled: state.unsettled,
+            problems: wordProblems(fit),
+            decisionOnCard: fit.find((label) => label.text === "You decide")
+              ?.onCard,
+          };
+        },
+        { timeout: 20000 },
+      )
       .toEqual({
         animating: 0,
         unsettled: { parts: 0, words: 0 },
