@@ -11,13 +11,13 @@ import {
   type LabelPlace,
   type Orientation,
 } from "./kit";
-import { contents, desk, folio, laptop, paper } from "./work";
+import { contents, folio, laptop, paper } from "./work";
 
 /**
- * Individual Contributors and Teams: four workstations and a shared review.
+ * Individual Contributors and Teams: four role artifacts and a shared review.
  *
  * Four roles in one company, each with a ribbon of its own. Each
- * ribbon runs through a skill cut for that role — its buckle — and onwards
+ * ribbon passes its named function in open space and continues
  * in its own lane: four smooth top-to-bottom pipelines that never cross.
  * Each lane enters the gate through a slot of its own: the human in the
  * loop, where a person reviews before anything leaves. Past the gate the
@@ -42,25 +42,6 @@ function tab(x: number, y: number, width: number, height: number): string {
   return (
     `<rect class="f-sunk" x="${r(x + 5)}" y="${r(y - h + 6)}" width="${width}" height="${height}" rx="4"/>` +
     `<path class="f-ink" d="M${r(x)} ${r(y - h)} L${r(x + width)} ${r(y - h)} L${r(x + width)} ${r(y + h)} L${r(x)} ${r(y + h)} L${r(x + 14)} ${r(y)} Z"/>`
-  );
-}
-
-/** A skill: the buckle a role's ribbon is threaded through. */
-function buckle(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  ribbon: number,
-): string {
-  const h = height / 2;
-  const slot = (sx: number) =>
-    `<rect class="f-ink" x="${r(sx - 5)}" y="${r(y - ribbon / 2 - 4)}" width="10" height="${ribbon + 8}" rx="2"/>`;
-  return (
-    `<rect class="f-sunk" x="${r(x + 6)}" y="${r(y - h + 7)}" width="${width}" height="${height}" rx="10"/>` +
-    `<rect class="f-paper s-ink" x="${r(x)}" y="${r(y - h)}" width="${width}" height="${height}" rx="10" stroke-width="3"/>` +
-    slot(x + 16) +
-    slot(x + width - 16)
   );
 }
 
@@ -101,7 +82,7 @@ const resultPanel = (x: number, y: number, w: number, h: number) =>
   `<rect class="f-ink s-ink" x="${x}" y="${y}" width="${w}" height="${h}" rx="8" stroke-width="2.5"/>`;
 
 /** Each role handles a different artifact: deal folder, plan, feedback, account. */
-function workStation(x: number, y: number, w: number, role: number): string {
+function roleArtifacts(x: number, y: number, w: number, role: number): string {
   const scale = w / 560;
   const object =
     role === 0
@@ -122,7 +103,6 @@ function workStation(x: number, y: number, w: number, role: number): string {
     paper(180, 56, 85, 40) +
     `<g transform="translate(190 63) scale(.42)">${contents(0, 0, 160, "owners")}</g>` +
     object +
-    desk(0, 102, 540) +
     `</g>`
   );
 }
@@ -161,7 +141,7 @@ function landscape(): Art {
     });
     labels[`skill${n}`] = place([490, y], "center", "middle", { width: 214 });
     // One straight run at the lane's own height, into the gate's edge.
-    const d = `M290 ${y} L${frame.x + 10} ${y}`;
+    const d = `M290 ${y} L360 ${y} M620 ${y} L${frame.x + 10} ${y}`;
     return part(
       {
         name: "role",
@@ -172,9 +152,8 @@ function landscape(): Art {
         links: [`role${n}>skill${n}`, `skill${n}>human`],
       },
       strip(d, width, FILLS[i]) +
-        buckle(360, y, 260, 94, width) +
         tab(60, y, 270, 70) +
-        workStation(60, y + 65, 560, i),
+        roleArtifacts(60, y + 65, 560, i),
     );
   });
   const returns = ys.map((y, i) => {
@@ -283,7 +262,7 @@ function portrait(): Art {
     labels[`skill${n}`] = place([382, y], "center", "middle", { width: 170 });
     // Across at the row's own height, one rounded turn, then straight down
     // to the gate's edge.
-    const d = `M262 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${frame.y + 10}`;
+    const d = `M262 ${y} L288 ${y} M476 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${frame.y + 10}`;
     return part(
       {
         name: "role",
@@ -294,9 +273,8 @@ function portrait(): Art {
         links: [`role${n}>skill${n}`, `skill${n}>human`],
       },
       strip(d, width, FILLS[i]) +
-        buckle(288, y, 188, 92, width) +
         tab(34, y, 244, 80) +
-        workStation(34, y + 60, 432, i),
+        roleArtifacts(34, y + 60, 432, i),
     );
   });
   const returns = ys.map((_, i) => {

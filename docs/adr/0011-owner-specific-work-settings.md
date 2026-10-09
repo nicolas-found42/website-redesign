@@ -24,6 +24,8 @@ uses one genderless head-and-shoulders icon at human review. This supersedes
 the contributor people and reviewer artwork below; the four role artifacts,
 independent lanes and shared return remain. The role-person marks are removed
 from the content inventory by hand to match the intentional change.
+Issue #166 removes the function-label buckles and slot bars, leaving function
+words in open space along the same four lanes. Labels, links and beats remain.
 
 ## Scenes
 
@@ -38,10 +40,11 @@ from the content inventory by hand to match the intentional change.
 - **Executives** use distinct briefing, meeting, debrief and action documents
   through a working day. The illustrative samples, final decision and
   no-live-integrations disclosure remain unchanged.
-- **Individual Contributors and Teams** have four workstations with distinct
-  deal, plan, feedback and account artifacts. Their lanes remain independent
-  through the review frame and into the shared return statement. A person
-  reviews the work alongside the frame.
+- **Individual Contributors and Teams** have four role-specific, distinct
+  deal, plan, feedback and account artifacts. Their function labels sit in
+  open space, and lanes remain independent through the review frame and into
+  the shared return statement. One neutral human icon marks review alongside
+  the frame.
 - **AI builders** build, test, troubleshoot, anticipate failures and explain
   their reusable build together. Test results, fault cases and failure examples
   distinguish their practice from a taught Workshop. All four checks and the

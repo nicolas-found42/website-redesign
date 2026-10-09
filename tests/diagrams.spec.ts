@@ -918,11 +918,23 @@ test("the contributor workflows use one neutral reviewer icon and no role figure
 }) => {
   for (const width of [628, 1920]) {
     await open(page, "/", width);
+    await page.emulateMedia({
+      reducedMotion: width === 1920 ? "no-preference" : "reduce",
+    });
+    await page.goto("/");
     await page
       .getByRole("button", { name: /Individual Contributors and Teams/ })
       .first()
       .click();
-    const field = page.locator("#audience-contributors .scene-field");
+    const field = page.locator(
+      width === 1920
+        ? '.audience-art [data-audience-scene="1"] .scene-field'
+        : "#audience-contributors .scene-field",
+    );
+    await field.scrollIntoViewIfNeeded();
+    await expect
+      .poll(async () => (await field.evaluate(readField)).animating)
+      .toBe(0);
     await expect(field.locator('[data-part="role"] circle')).toHaveCount(0);
     await expect(field.locator('[data-part="role"] ellipse')).toHaveCount(0);
     await expect(
@@ -945,6 +957,60 @@ test("the contributor workflows use one neutral reviewer icon and no role figure
         piece.links.some((link) => link.endsWith(">human")),
       ),
     ).toHaveLength(4);
+  }
+});
+
+test("contributor function labels have open space without enclosing bars", async ({
+  page,
+}) => {
+  for (const width of [628, 1920]) {
+    await open(page, "/", width);
+    await page.emulateMedia({
+      reducedMotion: width === 1920 ? "no-preference" : "reduce",
+    });
+    await page.goto("/");
+    await page
+      .getByRole("button", { name: /Individual Contributors and Teams/ })
+      .first()
+      .click();
+    const field = page.locator(
+      width === 1920
+        ? '.audience-art [data-audience-scene="1"] .scene-field'
+        : "#audience-contributors .scene-field",
+    );
+    await field.scrollIntoViewIfNeeded();
+    await expect
+      .poll(async () => (await field.evaluate(readField)).animating)
+      .toBe(0);
+    const enclosingBars = await field.evaluate((root) => {
+      const labels = [
+        ...root.querySelectorAll('[data-node^="skill"] .system-label-text'),
+      ];
+      return labels.flatMap((label) => {
+        const words = label.getBoundingClientRect();
+        return [...root.querySelectorAll('[data-part="role"] rect')]
+          .filter((shape) => {
+            const box = shape.getBoundingClientRect();
+            return (
+              box.left <= words.left &&
+              box.right >= words.right &&
+              box.top <= words.top &&
+              box.bottom >= words.bottom
+            );
+          })
+          .map(() => label.textContent);
+      });
+    });
+    expect(enclosingBars, `${width}px: functions read as plain labels`).toEqual(
+      [],
+    );
+    for (const text of [
+      "Deal screening",
+      "Plans and reviews",
+      "Feedback triage",
+      "Account planning",
+    ])
+      await expect(field.getByText(text, { exact: true })).toBeVisible();
   }
 });
 
@@ -1220,8 +1286,8 @@ for (const [route, text] of [
 
 /**
  * What a person reads in the contributors scene: no word is broken inside
- * itself, and every skill, role, the gate's plate and the shared result sit
- * within the card, tab, plate or panel the drawing puts them on. The review of
+ * itself. Role tabs, the gate's plate and the result keep their labels;
+ * function labels read in open space without enclosing bars (#166). The review of
  * issue #78 found both failing while the overlap test above passed.
  */
 const wordProblems = (fit: TextFit) =>
@@ -1235,6 +1301,7 @@ const wordProblems = (fit: TextFit) =>
 for (const [route, width, text] of [
   ["/", 384, "150%"],
   ["/", 384, "100%"],
+  ["/", 628, "150%"],
   ["/", 768, "150%"],
   ["/", 860, "150%"],
   ["/", 861, "150%"],
@@ -1244,7 +1311,7 @@ for (const [route, width, text] of [
   ["/", 1440, "150%"],
   ["/services/", 384, "150%"],
 ] as const) {
-  test(`teams scene words stay whole and on their cards on ${route} at ${width}px with ${text} text applied at load`, async ({
+  test(`teams scene words stay whole with open function labels on ${route} at ${width}px with ${text} text applied at load`, async ({
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -1271,7 +1338,12 @@ for (const [route, width, text] of [
     await expect(
       field.getByText("Reviewed work returns to each role."),
     ).toBeVisible();
-    const fit = await field.evaluate(readTextFit);
+    const fit = await field.evaluate(readTextFit, [
+      "skill1",
+      "skill2",
+      "skill3",
+      "skill4",
+    ]);
     expect(fit.map((label) => label.text)).toEqual(
       expect.arrayContaining([
         "Feedback triage",
@@ -1515,7 +1587,12 @@ for (const [width, height] of [
     await expect
       .poll(() => page.evaluate(() => document.fonts.status))
       .toBe("loaded");
-    const fit = await field.evaluate(readTextFit);
+    const fit = await field.evaluate(readTextFit, [
+      "skill1",
+      "skill2",
+      "skill3",
+      "skill4",
+    ]);
     expect(fit.length).toBeGreaterThan(0);
     expect(wordProblems(fit)).toEqual([]);
     // Large enough to read on a narrow screen (docs/DESIGN.md: 13px).
