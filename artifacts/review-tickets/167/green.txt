@@ -1,0 +1,10 @@
+
+Running 2 tests using 1 worker
+
+(node:51525) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/2] [chromium] › tests/service-resize.spec.ts:8:3 › Workflows stays complete and readable after repeated contraction and expansion
+[2/2] [chromium] › tests/service-resize.spec.ts:8:3 › Automations stays complete and readable after repeated contraction and expansion
+  2 passed (1.1m)

@@ -1,0 +1,88 @@
+
+Running 2 tests using 1 worker
+
+(node:45043) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/2] [chromium] › tests/service-resize.spec.ts:8:3 › Workflows stays complete and readable after repeated contraction and expansion
+  1) [chromium] › tests/service-resize.spec.ts:8:3 › Workflows stays complete and readable after repeated contraction and expansion 
+
+    Error: Workflows, cycle 1, 1024px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "Team deploys and uses it / Review point: does it still fit the work?",
+    +   "Review in customer context / Review point: does it still fit the work?",
+    + ]
+
+      28 |           return labels.flatMap((a, i) => labels.slice(i + 1).filter(b => a.box.left < b.box.right - 1 && b.box.left < a.box.right - 1 && a.box.top < b.box.bottom - 1 && b.box.top < a.box.bottom - 1).map(b => `${a.text} / ${b.text}`));
+      29 |         });
+    > 30 |         expect(overlaps, `${name}, cycle ${cycle}, ${width}px`).toEqual([]);
+         |                                                                 ^
+      31 |       }
+      32 |     }
+      33 |   });
+        at /Users/Nicolas/Documents/found42/remaining-ticket-worktrees/167/tests/service-resize.spec.ts:30:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/service-resize-Workflows-s-6212f-d-contraction-and-expansion-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/service-resize-Workflows-s-6212f-d-contraction-and-expansion-chromium/error-context.md
+
+
+(node:45382) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[2/2] [chromium] › tests/service-resize.spec.ts:8:3 › Automations stays complete and readable after repeated contraction and expansion
+  2) [chromium] › tests/service-resize.spec.ts:8:3 › Automations stays complete and readable after repeated contraction and expansion 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 5
+    + Received  + 7
+
+      Array [
+    -   "Repetitive work",
+    -   "System handoffs",
+    -   "Human direction",
+    -   "Human review",
+    -   "Usable output",
+    +   "Brief / operating problem",
+    +   "Tailored design and build",
+    +   "Team deploys and uses it",
+    +   "Test and review",
+    +   "Review in customer context",
+    +   "Review point: does it still fit the work?",
+    +   "Iteration back into tailored design and build",
+      ]
+
+    Call Log:
+    - Timeout 8000ms exceeded while waiting on the predicate
+
+      22 |       for (const width of [1024, 961, 1920]) {
+      23 |         await page.setViewportSize({ width, height: 878 });
+    > 24 |         await expect.poll(async () => (await field.evaluate(readField)).labels.map(label => label.text), { timeout: 8000 }).toEqual(expected);
+         |                                                                                                                             ^
+      25 |         await expect.poll(async () => (await field.evaluate(readField)).unsettled).toEqual({ parts: 0, words: 0 });
+      26 |         const overlaps = await field.evaluate(element => {
+      27 |           const labels = [...element.querySelectorAll(".system-label-text")].map(label => ({ text: label.textContent, box: label.getBoundingClientRect() }));
+        at /Users/Nicolas/Documents/found42/remaining-ticket-worktrees/167/tests/service-resize.spec.ts:24:125
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/service-resize-Automations-fd50d-d-contraction-and-expansion-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/service-resize-Automations-fd50d-d-contraction-and-expansion-chromium/error-context.md
+
+
+  2 failed
+    [chromium] › tests/service-resize.spec.ts:8:3 › Workflows stays complete and readable after repeated contraction and expansion 
+    [chromium] › tests/service-resize.spec.ts:8:3 › Automations stays complete and readable after repeated contraction and expansion 
