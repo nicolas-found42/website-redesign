@@ -145,21 +145,10 @@ test("#46: a visitor can email or call Found42 without the form", async ({
   ).toHaveAttribute("href", "tel:+16463001247");
 });
 
-test("#47: the approved opening and illustrative briefing explain the work", async ({
-  page,
-}) => {
+test("#47: the approved opening explains the work", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".hero-lead")).toContainText(
     "create and use Claude Skills tailored to their roles, and automate repeatable work while judgment stays with your team",
-  );
-  const example = page.locator("#briefing");
-  await expect(example.locator(".briefing-steps strong")).toHaveText([
-    "The skill gathers your week",
-    "It builds a briefing for every call",
-    "You get the summary and decide",
-  ]);
-  await expect(example).toContainText(
-    "Illustrative example. No live Calendar, Email, Drive, Notion or Slack integration.",
   );
 });
 

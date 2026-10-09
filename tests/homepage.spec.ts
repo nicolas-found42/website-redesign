@@ -14,7 +14,6 @@ test("body and small print hold their documented minimums across pages", async (
     "#testimonials .section-label",
     ".hero-proof figcaption",
     "#resources .note--plain",
-    "#briefing .briefing-disclosure",
     ".track-term",
     ".track-format",
     "#navigation a",
@@ -310,33 +309,6 @@ test("the companies heading reads at section-heading scale and wraps above the l
     expect(fit.clipped, label).toBe(false);
     expect(fit.pageFits, label).toBe(true);
   }
-});
-
-test("the weekly briefing message invites a review and stays an illustrative mockup", async ({
-  page,
-}) => {
-  await page.goto("/");
-  const picture = page.locator("#briefing .briefing-picture");
-  const message = picture.locator(".briefing-slack");
-  await expect(message.locator("p")).toHaveText("Ready for your review");
-  await expect(message.locator(".briefing-faux-controls span")).toHaveText([
-    "Review briefing",
-    "Reply",
-  ]);
-  await expect(picture).not.toContainText("Your briefing is ready");
-  await expect(picture).not.toContainText("Open briefing");
-  await expect(picture).toHaveAttribute(
-    "aria-label",
-    "Illustrative weekly briefing and Slack message",
-  );
-  await expect(page.locator("#briefing")).toContainText(
-    "Illustrative example. No live Calendar, Email, Drive, Notion or Slack integration.",
-  );
-  await expect(
-    picture.locator(
-      "a, button, input, select, textarea, [tabindex], [role='button'], [role='link']",
-    ),
-  ).toHaveCount(0);
 });
 
 test("the companies row keeps proportions and fits without scrolling at any width", async ({

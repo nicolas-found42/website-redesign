@@ -5,7 +5,6 @@ import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
 import { audiencesSection } from "./homepage/audiences";
 import { companiesSection } from "./homepage/companies";
-import { briefingSection } from "./homepage/briefing";
 import { founderSection } from "./homepage/founder";
 import {
   mountTestimonials,
@@ -30,7 +29,6 @@ ${hero()}
 ${companiesSection()}
 ${audiencesSection()}
 ${servicesSection({ allServicesLink: true })}
-${briefingSection()}
 ${testimonialsSection()}
 ${founderSection()}
 ${resourcesSection()}
