@@ -13,6 +13,19 @@ import {
   scorecardResult,
 } from "../src/interactions";
 const page = renderHomepage();
+test("#168: services lead directly to testimonials without the redundant briefing band", () => {
+  expect(page).not.toContain('id="briefing"');
+  expect(page).not.toContain("From a busy week to a ready briefing");
+  const sections = [...page.matchAll(/<section id="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const servicesIndex = sections.indexOf("services");
+  expect(servicesIndex).toBeGreaterThanOrEqual(0);
+  expect(sections.slice(servicesIndex, servicesIndex + 2)).toEqual([
+    "services",
+    "testimonials",
+  ]);
+});
 test("#148: the notice opens the seven content pages and not the 404 route", () => {
   const notice = '<p class="preview-note wrap">';
   for (const route of ["", "resources", "services", "about", "blog"])

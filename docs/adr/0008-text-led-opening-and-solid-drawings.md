@@ -70,7 +70,8 @@ history.
   for your review" and its faux control reads "Review briefing", so the
   mockup shows the moment before a person reviews and decides rather than a
   recorded decision. Nothing in the band is interactive or implies a live
-  integration.
+  integration. Superseded by #168 on October 9: this redundant band is removed,
+  and the services sequence leads directly into the testimonials.
 - **AI builders** begins the stair at Design: Design → Test → Troubleshoot →
   Anticipate failures → Workflow in use, each reviewed. This supersedes ADR
   0006's three-step stair.
