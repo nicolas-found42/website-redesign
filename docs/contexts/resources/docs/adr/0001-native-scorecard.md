@@ -1,7 +1,8 @@
 # The AI Readiness Scorecard is answered on the page
 
-**Status:** accepted (stand-up follow-up, 2026-09-23); inquiry handoff updated
-for issue #43; result wording awaits Found42 review
+**Status:** superseded by [ADR 0002](0002-native-readiness-report.md)
+(2026-10-09). The draft questions, four stages and ScoreApp fallback below are
+historical September decisions.
 
 Richard asked on September 18 for the scorecard to be built into the site
 rather than depend on the third-party tool. The resources page now asks the

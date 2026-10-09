@@ -31,6 +31,10 @@ The source's eight-hour service target and qualified PE target remain visible.
 
 ## Access and proof boundaries
 
+The scorecard entry below is historical. The owner-supplied October
+18-question report supersedes the Plan B questions and ScoreApp fallback;
+see [Resources ADR 0002](contexts/resources/docs/adr/0002-native-readiness-report.md).
+
 - AI Readiness Scorecard: answered on the page since the stand-up follow-up.
   Questions from Found42's Plan B draft; stages and advice are drafts awaiting
   Found42 review ([Resources ADR 0001](contexts/resources/docs/adr/0001-native-scorecard.md)).

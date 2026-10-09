@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { renderHomepage } from "../src/homepage";
 import { renderPage } from "../src/pages";
-import { resources, scorecard, serviceCatalog, services } from "../src/content";
+import { resources, serviceCatalog, services } from "../src/content";
 import {
   homepageTestimonials,
   robbHenshawAttribution,
@@ -37,17 +37,17 @@ test("the complete resource page owns the current catalog and availability [brow
   );
   for (const item of resources) {
     const section = page.locator(`#${item.id}`);
-    await expect(section).toContainText(item.title);
-    await expect(section).toContainText(item.description);
     if (item.id === "scorecard") {
       await expect(section).toContainText(
-        "No email required. Your answers stay in this browser and are not sent or stored.",
+        "No email required. Name and role are optional.",
       );
     } else {
+      await expect(section).toContainText(item.title);
+      await expect(section).toContainText(item.description);
       await expect(section).toContainText(item.gate);
     }
   }
-  await expect(page.locator("#scorecard")).toContainText("Question 1 of 12");
+  await expect(page.locator("#scorecard")).toContainText("Question 1 of 18");
 });
 test("source offerings and attributed workshop proof are preserved", () => {
   for (const item of services) {
@@ -101,116 +101,101 @@ const readable = (markup: string) =>
     .replace(/&nbsp;/g, " ")
     .replace(/\s+/g, " ");
 
-test("the scorecard asks the Plan B assessment in the five advertised areas", () => {
-  // Found42's "Scorecard Questions" draft, Plan B, in the order the areas take them.
-  expect(scorecardQuestions.map((question) => question.text)).toEqual([
-    "Do you currently use any AI tools to automate repetitive tasks in your business?",
-    "Have you tried using an AI tool in your business and kept using it past the first week?",
-    "Is your data stored in a centralized location accessible to your team?",
-    "Do you have policies on what data can be shared with AI tools?",
-    "Are your business processes already digitized and standardized?",
-    "Have you identified any specific tasks that could benefit from automation?",
-    "Do you have clear policies on which AI tools can be used at work?",
-    "Is your team trained to utilize AI tools for process improvement?",
-    "If you rolled out one new automation tomorrow, would your team actually use it without you pushing them to?",
-    "Do you have a process for deciding which tasks are worth automating?",
-    "Have you ever decided against trying an AI tool because of the cost?",
-    "Have you ever decided against trying an AI tool because you weren’t sure it would work for your business?",
+test("the supplied Sam answers produce the approved Foundations report", () => {
+  const result = scorecardResult([
+    1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0,
   ]);
-  expect(scorecard.areas.map((area) => area.name)).toEqual([
-    "Current AI use",
-    "Data practices",
-    "Workflow efficiency",
-    "AI integration readiness",
-    "Automation goals",
-  ]);
-  expect(scorecard.open).toBe("What would you like to automate instantly?");
+  expect(result.total).toBe(5);
+  expect(result.pct).toBe(10);
+  expect(result.stage.name).toBe("Foundations");
+  expect(result.areas.map((area) => area.pct)).toEqual([22, 0, 22, 8, 0]);
 });
 
-test("every one of the 4,096 answer sets gets a stage and places to start, never a score", () => {
-  const sizes = scorecard.areas.map((area) => area.questions.length);
-  const failures: string[] = [];
-  const check = (
-    mask: number,
-    name: string,
-    actual: unknown,
-    expected: unknown,
-  ) => {
-    if (
-      JSON.stringify(actual) !== JSON.stringify(expected) &&
-      failures.length < 10
-    )
-      failures.push(
-        `${mask}: ${name}: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`,
-      );
-  };
-  const stageFor = (yes: number) =>
-    yes >= 9
-      ? "Ready to scale"
-      : yes >= 7
-        ? "Ready for a first workflow"
-        : yes >= 4
-          ? "Foundations forming"
-          : "Early days";
-  for (let mask = 0; mask < 1 << 12; mask++) {
-    const answers = Array.from({ length: 12 }, (_, i) =>
-      Boolean(mask & (1 << i)),
-    );
-    const result = scorecardResult(answers);
-    const areaYes = answers.slice(0, 10).filter(Boolean).length;
-    check(mask, "stage", result.stage.title, stageFor(areaYes));
-    let at = 0;
-    result.areas.forEach((area, index) => {
-      const yes = answers.slice(at, at + sizes[index]).filter(Boolean).length;
-      at += sizes[index];
-      check(
-        mask,
-        `area ${index}`,
-        area.status,
-        yes === sizes[index]
-          ? "In place"
-          : yes > 0
-            ? "Partly in place"
-            : "Next to build",
-      );
-    });
-    check(mask, "at most three next steps", result.next.length <= 3, true);
-    check(
-      mask,
-      "next steps are not complete",
-      result.next.every((area) => area.status !== "In place"),
-      true,
-    );
-    const shares = result.next.map((area) => area.share);
-    check(
-      mask,
-      "weakest areas first",
-      shares,
-      [...shares].sort((a, b) => a - b),
-    );
-    check(
-      mask,
-      "barriers",
-      result.barriers.map((barrier) => barrier.id),
-      [answers[10] && "cost", answers[11] && "fit"].filter(Boolean),
-    );
-    check(
-      mask,
-      "no numeric score",
-      /\d/.test(
-        readable(
-          [
-            result.stage.title,
-            result.stage.body,
-            ...result.next.map(({ area }) => area.advice),
-            ...result.barriers.map((barrier) => barrier.advice),
-          ].join(" "),
-        ),
-      ),
-      false,
-    );
+test("the supplied middle and high samples retain exact scores, area percentages and routes", () => {
+  const middle = [0, 2, 2, 1, 1, 1, 1, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1];
+  const ada = scorecardResult(middle, "Sales or business development");
+  expect([ada.total, ada.pct, ada.stage.name]).toEqual([
+    23,
+    45,
+    "Ready to build",
+  ]);
+  expect(ada.areas.map((a) => a.pct)).toEqual([67, 25, 67, 42, 33]);
+  expect(ada.route).toEqual(["builder", "workflows", "starter"]);
+  expect(scorecardResult(middle, "Finance").route).toEqual([
+    "workflows",
+    "builder",
+    "starter",
+  ]);
+  const tunde = scorecardResult(
+    [0, 2, 3, 2, 2, 2, 2, 1, 2, 2, 2, 3, 2, 2, 2, 2, 1, 2],
+    "Founder or executive",
+  );
+  expect([tunde.total, tunde.pct, tunde.stage.name]).toEqual([
+    49,
+    96,
+    "Ready to scale",
+  ]);
+  expect(tunde.areas.map((a) => a.pct)).toEqual([100, 100, 100, 100, 78]);
+  expect(tunde.route).toEqual(["automations", "workflows", "advanced"]);
+});
+
+test("safeguards take priority for tied quick wins and approved access warnings persist independently of stage", () => {
+  const zero = scorecardResult(Array(18).fill(0));
+  expect(zero.wins.map((w) => w.q.id)).toEqual(["4.1", "4.2", "4.3"]);
+  expect(zero.warnings.map((w) => w.title)).toEqual([
+    "Get approved access first",
+    "Fix safeguards before you build more",
+  ]);
+  const high = scorecardResult([
+    1, 1, 3, 2, 2, 2, 2, 1, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+  ]);
+  expect(high.pct).toBe(96);
+  expect(high.warnings.map((w) => w.title)).toEqual([
+    "Get approved access first",
+  ]);
+  expect(high.toolNote).toContain("ChatGPT");
+  expect(
+    scorecardResult([0, 1, 3, 2, 2, 2, 2, 1, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2])
+      .toolNote,
+  ).toBe("");
+});
+
+test("stage thresholds use rounded percentages and every scored option matches the supplied question set", () => {
+  const source = JSON.parse(
+    readFileSync("artifacts/review-tickets/170/source-data.json", "utf8"),
+  ) as { QS: { text: string; opts: (string | [string, number])[] }[] };
+  expect(scorecardQuestions.map((q) => q.text)).toEqual(
+    source.QS.map((q) => q.text),
+  );
+  expect(scorecardQuestions.map((q) => q.opts.map((o) => o.label))).toEqual(
+    source.QS.map((q) => q.opts.map((o) => (typeof o === "string" ? o : o[0]))),
+  );
+  expect(scorecardQuestions.map((q) => q.opts.map((o) => o.points))).toEqual(
+    source.QS.map((q) =>
+      q.opts.map((o) => (typeof o === "string" ? null : o[1])),
+    ),
+  );
+  // Independent literal totals around both rounded stage boundaries.
+  for (const [target, expected] of [
+    [20, "Foundations"],
+    [21, "Ready to build"],
+    [41, "Ready to build"],
+    [42, "Ready to scale"],
+  ] as const) {
+    // Find a valid example totaling target, then check the independent boundary.
+    let states = new Map<number, number[]>([[0, [0]]]);
+    for (const q of scorecardQuestions.slice(1)) {
+      const next = new Map<number, number[]>();
+      for (const [total, a] of states)
+        q.opts.forEach((o, i) => {
+          const sum = total + (o.points ?? 0);
+          if (sum <= target && !next.has(sum)) next.set(sum, [...a, i]);
+        });
+      states = next;
+    }
+    expect(scorecardResult(states.get(target)!).stage.name).toBe(expected);
   }
-  expect(failures).toEqual([]);
+  expect(() => scorecardResult([])).toThrow(/Complete all 18/);
 });
 
 test("the September 23 content delta is handled honestly rather than preserved verbatim", () => {

@@ -9,8 +9,8 @@ for the people doing the work, built around a specific role, industry and compan
 
 This is a noindex design preview. Local resource delivery, newsletter subscriptions,
 course enrollment and local inquiry submission are not connected. The AI
-Readiness Scorecard is answered on the page and sends nothing; the original
-ScoreApp assessment is linked for its emailed report. Each of the seven content
+Readiness Scorecard asks 18 questions and generates its full personalized report
+and PDF locally. It sends nothing; email delivery is deferred until launch. Each of the seven content
 pages opens with one preview notice — “Design preview: nothing you type here is
 sent, and requested resources are not delivered yet.” — above the opening,
 rather than
