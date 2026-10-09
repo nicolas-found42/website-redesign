@@ -37,42 +37,47 @@ export async function downloadReadinessPdf(
       style === "Bold" ? "bold" : "normal",
     );
   }
-  const write = (text: string, kind: "heading" | "body" = "body") => {
-    const size = kind === "heading" ? 13 : 10.5;
-    const lineHeight = kind === "heading" ? 6.5 : 5;
-    doc.setFont("NotoSans", kind === "heading" ? "bold" : "normal");
-    doc.setFontSize(size);
-    doc.setTextColor(32, 33, 31);
+  type TextKind = "heading" | "body";
+  const measureText = (text: string, kind: TextKind) => {
+    const heading = kind === "heading";
+    const lineHeight = heading ? 6.5 : 5;
+    const spacing = heading ? 3 : 2;
+    doc.setFont("NotoSans", heading ? "bold" : "normal");
+    doc.setFontSize(heading ? 13 : 10.5);
     const lines = doc.splitTextToSize(clean(text), 170) as string[];
-    if (y + lines.length * lineHeight + (kind === "heading" ? 12 : 0) > 274) {
+    const textHeight = lines.length * lineHeight;
+    return {
+      lines,
+      lineHeight,
+      spacing,
+      textHeight,
+      height: textHeight + spacing,
+      keepWithNext: heading ? 12 : 0,
+    };
+  };
+  const write = (text: string, kind: TextKind = "body") => {
+    const measured = measureText(text, kind);
+    doc.setTextColor(32, 33, 31);
+    if (y + measured.textHeight + measured.keepWithNext > 274) {
       doc.addPage();
       y = 22;
     }
-    for (const line of lines) {
-      if (y + lineHeight > 274) {
+    for (const line of measured.lines) {
+      if (y + measured.lineHeight > 274) {
         doc.addPage();
         y = 22;
       }
       doc.text(line, 20, y);
-      y += lineHeight;
+      y += measured.lineHeight;
     }
-    y += kind === "heading" ? 3 : 2;
+    y += measured.spacing;
   };
-  const writeBlock = (
-    entries: [string, "heading" | "body"][],
-    sectionTitle?: string,
-  ) => {
+  const writeBlock = (entries: [string, TextKind][], sectionTitle?: string) => {
     if (sectionTitle) entries = [[sectionTitle, "heading"], ...entries];
-    const height = entries.reduce((total, [text, kind]) => {
-      doc.setFont("NotoSans", kind === "heading" ? "bold" : "normal");
-      doc.setFontSize(kind === "heading" ? 13 : 10.5);
-      return (
-        total +
-        (doc.splitTextToSize(clean(text), 170) as string[]).length *
-          (kind === "heading" ? 6.5 : 5) +
-        (kind === "heading" ? 3 : 2)
-      );
-    }, 0);
+    const height = entries.reduce(
+      (total, [text, kind]) => total + measureText(text, kind).height,
+      0,
+    );
     if (y + height + 12 > 274) {
       doc.addPage();
       y = 22;
