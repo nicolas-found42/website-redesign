@@ -18,9 +18,12 @@ test("F01: a wheel over the inquiry dialog scrolls the dialog, not the page behi
 }) => {
   await page.setViewportSize({ width: 1280, height: 560 });
   await page.goto("/resources/");
+  // Use the short viewport's header contact, so opening the dialog does not
+  // first scroll to the footer and change the page position under test.
+  await page.getByRole("button", { name: "Menu", exact: true }).click();
   await page
+    .getByRole("navigation", { name: "Main navigation" })
     .getByRole("link", { name: /Talk to us/ })
-    .first()
     .click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();

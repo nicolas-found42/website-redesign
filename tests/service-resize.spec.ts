@@ -70,6 +70,26 @@ for (const [name, id] of [
       // orientation-change rebuild to repair a broken transition.
       for (const width of [1024, 961, 1920]) {
         await page.setViewportSize({ width, height: 878 });
+        // Reflow can put a different article into the reader band without a
+        // scroll. Keep the requested article at the reading position before
+        // checking its drawing; the first resize still interrupts the morph.
+        const article = page.locator(`#service-${id}`);
+        await article.evaluate((element) =>
+          element.scrollIntoView({ behavior: "instant", block: "center" }),
+        );
+        await expect
+          .poll(() =>
+            article.evaluate((element) => {
+              const box = element.getBoundingClientRect();
+              return (
+                box.top <= innerHeight / 2 && box.bottom >= innerHeight / 2
+              );
+            }),
+          )
+          .toBe(true);
+        await expect(
+          page.getByRole("button", { name, exact: true }),
+        ).toHaveAttribute("aria-pressed", "true");
         await expect
           .poll(
             async () =>

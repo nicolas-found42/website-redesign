@@ -53,6 +53,8 @@ test("visitors never load review mode; a review link does [production]", async (
 });
 
 test("a review link stays on across pages until Exit", async ({ page }) => {
+  // This scenario picks or follows a link in the expanded desktop header.
+  await page.setViewportSize({ width: 1440, height: 720 });
   await page.goto("/?review");
   const bar = page.getByRole("region", { name: "Review mode" });
   await expect(bar).toBeVisible();
@@ -178,6 +180,8 @@ test("vague or unchanged answers are refused with what is missing", async ({
 test("while picking, a press chooses a link instead of following it", async ({
   page,
 }) => {
+  // This scenario picks or follows a link in the expanded desktop header.
+  await page.setViewportSize({ width: 1440, height: 720 });
   await page.goto("/?review");
   const services = page
     .getByRole("navigation", { name: "Main navigation" })
@@ -465,6 +469,8 @@ test("a content conflict offers an explicit new draft independently of message w
 test("a mixed receipt retains the failed draft across pages and reloads", async ({
   page,
 }) => {
+  // This scenario picks or follows a link in the expanded desktop header.
+  await page.setViewportSize({ width: 1440, height: 720 });
   await page.route("https://review-submission.test/submit", async (route) => {
     const result = await confirmedResponse(route.request().postDataJSON());
     result.outcomes[1] = {
