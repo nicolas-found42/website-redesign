@@ -4,7 +4,7 @@ test("the homepage follows the approved story around the deployed drawings", asy
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator("main > section")).toHaveCount(9);
+  await expect(page.locator("main > section")).toHaveCount(8);
   await expect(
     page
       .locator("main > section")
@@ -14,7 +14,6 @@ test("the homepage follows the approved story around the deployed drawings", asy
     "companies",
     "audiences",
     "services",
-    "briefing",
     "testimonials",
     "founder",
     "resources",
@@ -25,6 +24,21 @@ test("the homepage follows the approved story around the deployed drawings", asy
   );
   await expect(page.locator("#companies")).toBeVisible();
   await expect(page.locator(".hero-art")).toHaveCount(0);
+});
+
+test("#168: services lead into complete testimonials without scripting [production]", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto("http://127.0.0.1:4179/website-redesign/");
+  await expect(page.locator("#briefing")).toHaveCount(0);
+  await expect(page.locator("#services + #testimonials")).toHaveCount(1);
+  await expect(page.locator("#testimonials .testimonial-card")).toHaveCount(5);
+  await expect(
+    page.getByRole("heading", { name: "What founders are saying" }),
+  ).toBeVisible();
+  await context.close();
 });
 
 test("audience pills jump to complete articles linked to catalog tracks", async ({

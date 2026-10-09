@@ -170,8 +170,7 @@
 }
 .audiences .section-head,
 .resources .section-head,
-.testimonials .section-head,
-.briefing .section-head {
+.testimonials .section-head {
   align-items: end;
 }
 .services-head {
@@ -186,114 +185,6 @@
 }
 .service {
   min-height: 76svh;
-}
-.briefing {
-  overflow: clip;
-}
-.briefing .section-head {
-  padding-bottom: clamp(32px, 4vw, 64px);
-  border-bottom: 1px solid var(--line);
-}
-.briefing .section-head h2 {
-  max-width: 14ch;
-}
-.briefing-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(32px, 6vw, 88px);
-  align-items: center;
-  padding-top: clamp(32px, 4vw, 64px);
-}
-.briefing-grid > * {
-  min-width: 0;
-}
-.briefing-steps {
-  display: grid;
-  gap: 28px;
-  padding: 0 0 0 1.7em;
-  margin: 0;
-  counter-reset: briefing;
-  list-style: decimal-leading-zero;
-}
-.briefing-steps li {
-  padding-left: 14px;
-  font-size: var(--size-lead);
-}
-.briefing-steps li::marker {
-  font: 600 var(--size-note) var(--font-note);
-  color: var(--red);
-}
-.briefing-steps strong,
-.briefing-steps span {
-  display: block;
-}
-.briefing-steps span {
-  margin-top: 8px;
-  font-size: var(--size-body);
-  color: var(--muted);
-}
-.briefing-picture {
-  display: grid;
-  gap: 16px;
-  padding: clamp(18px, 2.6vw, 36px);
-  color: #20201f;
-  background: #2d2d2b;
-  border: 1px solid rgb(255 255 255 / 14%);
-}
-.briefing-sources {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-.briefing-sources span {
-  padding: 10px 6px;
-  font-size: var(--size-note);
-  text-align: center;
-  background: #f1eee6;
-}
-.briefing-paper,
-.briefing-slack {
-  padding: clamp(18px, 2.2vw, 30px);
-  background: #faf9f6;
-}
-.briefing-paper small,
-.briefing-slack small {
-  font: 600 var(--size-note) var(--font-note);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #5e5e58;
-}
-.briefing-paper h3 {
-  margin-block: 14px;
-  font-size: var(--size-h3);
-}
-.briefing-paper ul {
-  display: grid;
-  gap: 6px;
-  padding-left: 1.3em;
-  margin: 0;
-}
-.briefing-slack {
-  max-width: 80%;
-  margin-left: auto;
-  background: #ece8de;
-}
-.briefing-slack p {
-  margin-block: 8px 14px;
-}
-.briefing-faux-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.briefing-faux-controls span {
-  padding: 6px 10px;
-  font-size: var(--size-note);
-  border: 1px solid #bdb9ad;
-}
-.briefing-disclosure {
-  margin-top: 24px;
-  color: var(--muted);
 }
 .testimonials {
   background: var(--paper-warm);
@@ -405,12 +296,6 @@
   justify-content: space-between;
 }
 @media (max-width: 960px) {
-  .briefing-grid {
-    grid-template-columns: 1fr;
-  }
-  .briefing-picture {
-    width: min(100%, 660px);
-  }
   .testimonial-track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -455,12 +340,6 @@
   }
   .testimonials .section-head {
     align-items: start;
-  }
-  .briefing-sources {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .briefing-slack {
-    max-width: 94%;
   }
   .founder-strip {
     grid-template-columns: 64px minmax(0, 1fr);
