@@ -143,11 +143,7 @@ const rosterScene: SceneContent = {
     label("human", "Human in the loop", "human", 5),
     label("result", "Reviewed work returns to each role.", "result", 6),
   ],
-  marks: [
-    ...roles.map((_, index) => mark(`role${index + 1}`, "person", index + 1)),
-    mark("human", "human", 5),
-    mark("result", "result", 6),
-  ],
+  marks: [mark("human", "human", 5), mark("result", "result", 6)],
   links: [
     ...roles.flatMap((_, index) => [
       `role${index + 1}>skill${index + 1}`,
@@ -258,7 +254,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "executives",
       description:
-        "Executive day: Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts, with a red You decide mark on the last card. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
+        "Executive day: Claude Daily Brief with three ranked priorities → Meeting Brief with an agenda → Meeting Debrief with owner and date columns → Actions from Transcripts with notes feeding a task checklist. A red You decide mark on the last card keeps the decision with the executive. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
       ...executiveScene,
     },
   },

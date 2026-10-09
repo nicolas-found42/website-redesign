@@ -1,0 +1,3720 @@
+{
+  "source_trace": "/Users/Nicolas/Documents/found42/remaining-ticket-evidence/current-ci-traces/test-results/service-resize-Workflows-s-6212f-d-contraction-and-expansion-chromium/trace.zip",
+  "trace_member": "1-trace.trace",
+  "calls": [
+    {
+      "callId": "call@453",
+      "startTime": 29851.353,
+      "method": "setViewportSize",
+      "params": {
+        "viewportSize": {
+          "width": 1920,
+          "height": 878
+        }
+      }
+    },
+    {
+      "callId": "call@463",
+      "startTime": 30611.94,
+      "method": "click",
+      "params": {
+        "selector": "internal:role=button[name=\"Automations\"s]",
+        "strict": true
+      }
+    },
+    {
+      "callId": "call@485",
+      "startTime": 32812.336,
+      "method": "click",
+      "params": {
+        "selector": "internal:role=button[name=\"Workflows\"s]",
+        "strict": true
+      }
+    },
+    {
+      "callId": "call@487",
+      "startTime": 32889.194,
+      "method": "setViewportSize",
+      "params": {
+        "viewportSize": {
+          "width": 1024,
+          "height": 878
+        }
+      }
+    },
+    {
+      "callId": "call@521",
+      "startTime": 34520.81,
+      "method": "setViewportSize",
+      "params": {
+        "viewportSize": {
+          "width": 961,
+          "height": 878
+        }
+      }
+    },
+    {
+      "callId": "call@535",
+      "startTime": 34693.301,
+      "method": "setViewportSize",
+      "params": {
+        "viewportSize": {
+          "width": 1920,
+          "height": 878
+        }
+      }
+    },
+    {
+      "callId": "call@549",
+      "startTime": 34870.618,
+      "method": "click",
+      "params": {
+        "selector": "internal:role=button[name=\"Automations\"s]",
+        "strict": true
+      }
+    },
+    {
+      "callId": "call@571",
+      "startTime": 37013.726,
+      "method": "click",
+      "params": {
+        "selector": "internal:role=button[name=\"Workflows\"s]",
+        "strict": true
+      }
+    },
+    {
+      "callId": "call@573",
+      "startTime": 37101.409,
+      "method": "setViewportSize",
+      "params": {
+        "viewportSize": {
+          "width": 1024,
+          "height": 878
+        }
+      }
+    },
+    {
+      "callId": "call@607",
+      "startTime": 38655.416,
+      "method": "setViewportSize",
+      "params": {
+        "viewportSize": {
+          "width": 961,
+          "height": 878
+        }
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "timestamp": 32786.555,
+      "callId": "call@481",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-current is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 32808.134,
+      "callId": "call@481",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-current is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 32823.874,
+      "callId": "call@485",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-current is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 32862.608,
+      "callId": "call@485",
+      "phase": "action",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-current is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 32888.201,
+      "callId": "call@485",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 32906.903,
+      "callId": "call@487",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 32960.737,
+      "callId": "call@487",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 32982.471,
+      "callId": "call@489",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "5380",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33002.076,
+      "callId": "call@489",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "5260",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33121.894,
+      "callId": "call@493",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4773",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33147.106,
+      "callId": "call@493",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4744",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33421.8,
+      "callId": "call@497",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33445.732,
+      "callId": "call@497",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33471.065,
+      "callId": "call@501",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33493.283,
+      "callId": "call@501",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33617.49,
+      "callId": "call@505",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33633.696,
+      "callId": "call@505",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33906.737,
+      "callId": "call@509",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 33935.676,
+      "callId": "call@509",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34455.595,
+      "callId": "call@513",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34470.14,
+      "callId": "call@513",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34481.122,
+      "callId": "call@517",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34512.812,
+      "callId": "call@517",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34537.002,
+      "callId": "call@521",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34558.095,
+      "callId": "call@521",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34572.289,
+      "callId": "call@523",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34607.857,
+      "callId": "call@523",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34632.707,
+      "callId": "call@527",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34653.24,
+      "callId": "call@527",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34673.829,
+      "callId": "call@531",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34688.813,
+      "callId": "call@531",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34698.947,
+      "callId": "call@535",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34739.451,
+      "callId": "call@535",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34749.277,
+      "callId": "call@537",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34769.209,
+      "callId": "call@537",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34812.458,
+      "callId": "call@541",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34830.27,
+      "callId": "call@541",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34845.002,
+      "callId": "call@545",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34867.265,
+      "callId": "call@545",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34877.675,
+      "callId": "call@549",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34933.682,
+      "callId": "call@549",
+      "phase": "action",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 34946.471,
+      "callId": "call@549",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 34953.267,
+      "callId": "call@551",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 34971.272,
+      "callId": "call@551",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4724",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 35088.128,
+      "callId": "call@555",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4726",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 35110.6,
+      "callId": "call@555",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "4726",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 35380.841,
+      "callId": "call@559",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5261",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 35411.166,
+      "callId": "call@559",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5297",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 35929.356,
+      "callId": "call@563",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 35956.978,
+      "callId": "call@563",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 36981.779,
+      "callId": "call@567",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 37002.054,
+      "callId": "call@567",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 37022.794,
+      "callId": "call@571",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 37081.157,
+      "callId": "call@571",
+      "phase": "action",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 37099.586,
+      "callId": "call@571",
+      "phase": "after",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37109.511,
+      "callId": "call@573",
+      "phase": "before",
+      "viewport": {
+        "width": 1920,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37137.751,
+      "callId": "call@573",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37146.136,
+      "callId": "call@575",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "5362",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37175.367,
+      "callId": "call@575",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "5334",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37302.416,
+      "callId": "call@579",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4866",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37332.53,
+      "callId": "call@579",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4807",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37602.161,
+      "callId": "call@583",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37624.431,
+      "callId": "call@583",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37642.222,
+      "callId": "call@587",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37663.686,
+      "callId": "call@587",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37783.816,
+      "callId": "call@591",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 37795.789,
+      "callId": "call@591",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38067.324,
+      "callId": "call@595",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38086.67,
+      "callId": "call@595",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38606.67,
+      "callId": "call@599",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38620.746,
+      "callId": "call@599",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38637.522,
+      "callId": "call@603",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38651.969,
+      "callId": "call@603",
+      "phase": "after",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38661.612,
+      "callId": "call@607",
+      "phase": "before",
+      "viewport": {
+        "width": 1024,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38690.896,
+      "callId": "call@607",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "true"
+        },
+        {
+          "service": "2",
+          "pressed": "false"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in is-current"
+        },
+        {
+          "service": "2",
+          "class": "service is-in"
+        }
+      ]
+    },
+    {
+      "timestamp": 38725.324,
+      "callId": "call@609",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 38802.179,
+      "callId": "call@609",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 38927.545,
+      "callId": "call@613",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 38948.37,
+      "callId": "call@613",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 39221.623,
+      "callId": "call@617",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 39243.535,
+      "callId": "call@617",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 39758.686,
+      "callId": "call@621",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 39770.957,
+      "callId": "call@621",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 40785.065,
+      "callId": "call@625",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 40795.572,
+      "callId": "call@625",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 41805.699,
+      "callId": "call@629",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 41813.031,
+      "callId": "call@629",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 42822.336,
+      "callId": "call@633",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 42829.698,
+      "callId": "call@633",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 43841.163,
+      "callId": "call@637",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 43849.343,
+      "callId": "call@637",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 44861.042,
+      "callId": "call@641",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 44870.738,
+      "callId": "call@641",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 45884.65,
+      "callId": "call@645",
+      "phase": "before",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    },
+    {
+      "timestamp": 45904.277,
+      "callId": "call@645",
+      "phase": "after",
+      "viewport": {
+        "width": 961,
+        "height": 878
+      },
+      "scrollY": "4740",
+      "choices": [
+        {
+          "service": "0",
+          "pressed": "false"
+        },
+        {
+          "service": "1",
+          "pressed": "false"
+        },
+        {
+          "service": "2",
+          "pressed": "true"
+        }
+      ],
+      "articles": [
+        {
+          "service": "0",
+          "class": "service is-in"
+        },
+        {
+          "service": "1",
+          "class": "service is-in"
+        },
+        {
+          "service": "2",
+          "class": "service is-in is-current"
+        }
+      ]
+    }
+  ]
+}

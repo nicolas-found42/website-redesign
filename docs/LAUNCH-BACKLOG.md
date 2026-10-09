@@ -1,6 +1,7 @@
 # Launch dependencies
 
-The seven-page content migration is implemented as a noindex preview. These
+The original seven-page content migration and the Portfolio companies page
+added in #169 are implemented as a noindex preview. These
 items remain incomplete and must not be represented as delivered:
 
 1. Supply the 12-check Failure Mode Playbook. Four original Claude skill packages
@@ -26,14 +27,15 @@ items remain incomplete and must not be represented as delivered:
 7. Supply the Executive Communications Mini-Course content, destination and launch
    status before inserting it after Strategic Advisor. Confirm the relationship
    between the published AI Failure Modes Playbook and prototype 12-check edition.
-8. Review ScoreApp’s older claims and consent wording; perform an authorized
-   end-to-end assessment/report-delivery check, and decide whether the linked
-   original stays once the on-page scorecard is approved.
-9. Review the on-page scorecard's result wording: its questions are Found42's
-   Plan B draft, but the stages, thresholds, area statuses and advice were
-   written for the follow-up and await Found42's scorecard outcomes. Confirm
-   the live ScoreApp questions match the draft. See
-   [Resources ADR 0001](contexts/resources/docs/adr/0001-native-scorecard.md).
+8. Connect optional scorecard email delivery at launch, with approved consent,
+   delivery confirmation and retry behavior. The full on-page report and local
+   PDF download already work without contact details; no email is collected now.
+9. Publish approved destinations and availability for the source report's
+   bundled starter kit, Communication Intelligence package, Go-to-Market
+   Saturday intensive and Advanced waitlist before advertising enrollment.
+   Current report links use existing resources/training tracks or inquiry
+   handoffs, and state when those specific packages are unavailable. See
+   [Resources ADR 0002](contexts/resources/docs/adr/0002-native-readiness-report.md).
 10. Decide the services section's direction; nothing new was invented there.
 11. Reconfigure the live HubSpot inquiry form (issue #37): start the news and
     updates preference unselected, and make the further-communications

@@ -366,6 +366,7 @@ test("every route removes the manual motion toggle while keeping drawing content
     "/about/",
     "/blog/",
     "/industries/private-equity/",
+    "/industries/portfolio-companies/",
     "/industries/b2b-saas/",
   ]) {
     await page.goto(route);

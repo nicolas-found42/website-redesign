@@ -42,3 +42,13 @@ End-to-end automations connected to a team's CRM, productivity apps and systems
 of record, taking repetitive work off the team while people control decisions
 that need judgment.
 _Avoid_: Everyday task skills and plugins alone
+
+**Portfolio companies**:
+The site audience for operating teams using role-based training and custom
+skills for reviews, plans and recurring work. It has its own page, separate from
+the Private equity page's deal screening, diligence and firm criteria (#169).
+
+**Software companies**:
+The current navigation and page label for the existing B2B SaaS audience and
+`/industries/b2b-saas/` route (#169). The label changes; the approved customer,
+product and go-to-market work remains.

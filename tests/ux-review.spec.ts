@@ -87,6 +87,7 @@ const routes = [
   "/resources/",
   "/services/",
   "/industries/private-equity/",
+  "/industries/portfolio-companies/",
   "/industries/b2b-saas/",
   "/about/",
   "/blog/",
@@ -156,6 +157,7 @@ test("#34: every opening that names Claude says what Claude is, once", async ({
     "/",
     "/resources/",
     "/industries/private-equity/",
+    "/industries/portfolio-companies/",
     "/industries/b2b-saas/",
     "/about/",
     "/blog/",
@@ -359,7 +361,7 @@ test("#41: the scorecard says what its result is, not what it is not", async ({
   await page.goto("/resources/");
   const intro = page.locator(".scorecard-intro");
   await expect(intro).toContainText(
-    "Your result is a readiness stage, a status for each area and where to start.",
+    "Your report includes an overall score, your readiness stage, five area results and practical next steps.",
   );
   await expect(intro).not.toContainText("not a score");
 });

@@ -383,7 +383,7 @@
   "scenes": [
     {
       "id": "executives",
-      "description": "Executive day: Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts, with a red You decide mark on the last card. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
+      "description": "Executive day: Claude Daily Brief with three ranked priorities → Meeting Brief with an agenda → Meeting Debrief with owner and date columns → Actions from Transcripts with notes feeding a task checklist. A red You decide mark on the last card keeps the decision with the executive. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
       "landscape": {
         "labels": [
           {
@@ -600,22 +600,6 @@
         ],
         "marks": [
           {
-            "kind": "person",
-            "beat": 1
-          },
-          {
-            "kind": "person",
-            "beat": 2
-          },
-          {
-            "kind": "person",
-            "beat": 3
-          },
-          {
-            "kind": "person",
-            "beat": 4
-          },
-          {
             "kind": "human",
             "beat": 5
           },
@@ -745,22 +729,6 @@
           }
         ],
         "marks": [
-          {
-            "kind": "person",
-            "beat": 1
-          },
-          {
-            "kind": "person",
-            "beat": 2
-          },
-          {
-            "kind": "person",
-            "beat": 3
-          },
-          {
-            "kind": "person",
-            "beat": 4
-          },
           {
             "kind": "human",
             "beat": 5

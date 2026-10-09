@@ -1,6 +1,6 @@
 # Found42 website preview
 
-A seven-page Found42 site built with Vite and TypeScript. The Lovable content
+An eight-page Found42 site built with Vite and TypeScript. The Lovable content
 baseline is expressed through the existing **Working Drawings** visual system:
 paper and ink, red signals, editorial typography, and responsive schematic
 illustrations. The opening says it plainly: hands-on Claude skills and
@@ -9,8 +9,8 @@ for the people doing the work, built around a specific role, industry and compan
 
 This is a noindex design preview. Local resource delivery, newsletter subscriptions,
 course enrollment and local inquiry submission are not connected. The AI
-Readiness Scorecard is answered on the page and sends nothing; the original
-ScoreApp assessment is linked for its emailed report. Each of the seven content
+Readiness Scorecard asks 18 questions and generates its full personalized report
+and PDF locally. It sends nothing; email delivery is deferred until launch. Each of the eight content
 pages opens with one preview notice — “Design preview: nothing you type here is
 sent, and requested resources are not delivered yet.” — above the opening,
 rather than
@@ -84,7 +84,7 @@ without a development SPA fallback.
 
 ## GitHub Pages
 
-The production base is `/website-redesign/`. Build emits `/index.html`, six
+The production base is `/website-redesign/`. Build emits `/index.html`, seven
 nested directory `index.html` files and `/404.html`, all with real rendered
 content, individual metadata and `noindex, nofollow`. JavaScript enhances those
 pages; normal anchors handle navigation and browser history. Unknown paths

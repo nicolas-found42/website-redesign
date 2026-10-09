@@ -53,7 +53,12 @@ test("the current routes exercise every live migration state", async ({
     const observed = new Set<string>(["initial"]);
 
     if (route === "/") {
-      await page.locator('[data-dialog="contact"]').first().click();
+      await page.getByRole("button", { name: "Menu", exact: true }).click();
+      await page
+        .getByRole("navigation", { name: "Main navigation" })
+        .getByRole("link", { name: /Talk to us/ })
+        .click();
+      await expect(page.getByRole("dialog")).toBeVisible();
       observed.add("contact");
       await page.keyboard.press("Escape");
     }

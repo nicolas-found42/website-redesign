@@ -20,7 +20,7 @@ const resourceCard = (resource: PublicResource) => `
   <article class="resource" data-reveal>
    <h3>${resource.title}</h3>
    <p class="body">${resource.id === "scorecard" ? "Assess your AI use, data practices and workflow readiness before deciding where to focus." : "Workshop video, slides, practice cases and custom GPT links built for executive AI practice."}</p>
-   <p class="note--plain access">${resource.id === "scorecard" ? "12 yes-or-no questions · No email required" : "Public page · Some links need a ChatGPT account"}</p>
+   <p class="note--plain access">${resource.id === "scorecard" ? "18 quick questions · Personal report and PDF · No email required" : "Public page · Some links need a ChatGPT account"}</p>
    ${resourceLink(resource)}
   </article>`;
 

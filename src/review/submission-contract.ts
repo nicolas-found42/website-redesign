@@ -83,6 +83,7 @@ export const pages = [
   "/",
   "/services/",
   "/industries/private-equity/",
+  "/industries/portfolio-companies/",
   "/industries/b2b-saas/",
   "/resources/",
   "/about/",

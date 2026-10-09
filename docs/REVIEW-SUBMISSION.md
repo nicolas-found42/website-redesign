@@ -84,7 +84,7 @@ three feedback records. Bodies are streamed with a 64,000-byte cap; each
 record has a 20,000-byte cap and field-specific text limits. Formatted issue
 bodies have a 60,000-byte cap; oversized formatting is invalid before any
 creation attempt. The schema allows
-only the site's seven page routes, existing element types, kinds, priorities,
+only the site's eight page routes, existing element types, kinds, priorities,
 and kind-specific fields, including an unclassified `comment` with `detail`.
 Optional `kindUncertain: true` preserves the reviewer’s uncertainty; other values
 are refused. Existing classified records without that field remain valid.

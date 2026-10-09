@@ -180,8 +180,6 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
 
   function select(index: number, choice: { animate?: boolean } = {}) {
     if (index === active) return;
-    const previousArt = artOf(active);
-    const previous = schematic();
     active = index;
     const next = schematic();
     const nextArt = artOf(index);
@@ -193,11 +191,27 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
 
     stopMotion();
     const mine = (generation += 1);
-    const labels = [...labelsLayer.children] as HTMLElement[];
+    // Only the five stage labels travel. Composition-specific annotations
+    // (the Workflow decision and iteration) have no stage in another drawing.
+    const labels = [...labelsLayer.children].filter((label) =>
+      next.nodes.some(
+        (node) => node.id === (label as HTMLElement).dataset.node,
+      ),
+    ) as HTMLElement[];
+    [...labelsLayer.children].forEach((label) => {
+      if (!labels.includes(label as HTMLElement)) label.remove();
+    });
     const nextLabels = schematicLabels(next, nextArt);
-    const at = (art: Art, key: string) => art.labels[key].at;
-    const from = previous.nodes.map((node) => at(previousArt, node.id));
-    const to = next.nodes.map((node) => at(nextArt, node.id));
+    // Start from the words actually on screen, including an interrupted
+    // transition. Shares stay valid when the next artwork changes aspect ratio.
+    const from = labels.map((label) => [
+      Number(label.style.getPropertyValue("--x")),
+      Number(label.style.getPropertyValue("--y")),
+    ]);
+    const to = next.nodes.map((node) => [
+      (nextArt.labels[node.id].at[0] / nextArt.width) * 100,
+      (nextArt.labels[node.id].at[1] / nextArt.height) * 100,
+    ]);
 
     // The old object is lifted off before the new one is laid, so the two
     // never overlap into one unreadable picture.
@@ -214,16 +228,8 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
         for (let i = 0; i < labels.length; i += 1) {
           const x = from[i][0] + (to[i][0] - from[i][0]) * progress;
           const y = from[i][1] + (to[i][1] - from[i][1]) * progress;
-          // A field changes shape only with orientation, never between
-          // compositions, so one field's shares serve both ends.
-          labels[i].style.setProperty(
-            "--x",
-            ((x / nextArt.width) * 100).toFixed(3),
-          );
-          labels[i].style.setProperty(
-            "--y",
-            ((y / nextArt.height) * 100).toFixed(3),
-          );
+          labels[i].style.setProperty("--x", x.toFixed(3));
+          labels[i].style.setProperty("--y", y.toFixed(3));
         }
         if (!swapped && progress > 0.5) {
           swapped = true;
@@ -232,7 +238,10 @@ export function mountSystem(host: HTMLElement, options: SystemOptions) {
           [...fresh.children].forEach((label, i) => {
             const target = labels[i];
             const source = label as HTMLElement;
-            if (!target) return;
+            if (!target) {
+              labelsLayer.append(source);
+              return;
+            }
             target.className = source.className;
             target.dataset.node = source.dataset.node;
             target.dataset.beat = source.dataset.beat;

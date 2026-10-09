@@ -7,9 +7,10 @@ const nav = [
   ["About", "about/"],
   ["Blog", "blog/"],
 ] as const;
-const industries = [
-  ["Private Equity", "industries/private-equity/"],
-  ["B2B SaaS", "industries/b2b-saas/"],
+const audiences = [
+  ["Private equity", "industries/private-equity/"],
+  ["Portfolio companies", "industries/portfolio-companies/"],
+  ["Software companies", "industries/b2b-saas/"],
 ] as const;
 const logo = () =>
   `<a class="brand" href="${sitePath()}" aria-label="Found42 home"><img src="${sitePath("assets/found42-logo.png")}" alt="Found42" width="1024" height="1024"></a>`;
@@ -30,7 +31,7 @@ export function siteHeader() {
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(
       "",
-    )}<details class="industry-menu"><summary>Industries</summary><div>${industries.map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`).join("")}</div></details>${nav
+    )}${audiences.map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`).join("")}${nav
     .slice(2)
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(
@@ -47,8 +48,8 @@ export function siteFooter() {
     "Explore",
     nav.map(([t, p]) => [t, sitePath(p)] as const),
   )}${group(
-    "Industries",
-    industries.map(([t, p]) => [t, sitePath(p)] as const),
+    "Who we help",
+    audiences.map(([t, p]) => [t, sitePath(p)] as const),
   )}${group("Contact & legal", [
     ["Contact Found42", destinationRegister.liveInquiry],
     [`Email ${directContact.email}`, `mailto:${directContact.email}`],

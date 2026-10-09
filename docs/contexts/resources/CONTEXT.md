@@ -27,15 +27,15 @@ Found42's prompt offering organized by industry. The published inventory claims 
 Found42's guide offering about AI failure modes, requested through a resource access gate.
 
 **AI Readiness Scorecard**:
-Found42's assessment of a business's current AI use and readiness, presented as a scorecard with personalized recommendations. The preview asks it on the page; the original on ScoreApp adds a lead gate and a PDF report whose scoring and delivery remain unverified.
+Found42's assessment of a person's current AI use and readiness, with a personal report and PDF download. Name and role are optional; the report is available without contact details.
 _Avoid_: Certification, audited ROI measurement
 
 **Readiness stage**:
-The on-page scorecard's result: one of four stages, a status for each area and where to start. Not a score, and distinct from the Readiness report.
-_Avoid_: Score, grade, percentage
+The scorecard's overall readiness band: Foundations, Ready to build or Ready to scale. The stage summarizes the overall score; it does not certify readiness.
+_Avoid_: Certification, audited outcome
 
 **Readiness report**:
-The personalized report promised after completing the AI Readiness Scorecard, distinct from the example report image used to promote it.
+The personal result of the AI Readiness Scorecard: an overall score and stage, five area results, safeguards, quick wins, recommendations and the answers supplied. Available on the page and as a downloadable PDF. Email delivery is a separate future fulfillment option.
 
 **Depth Deficit**:
 Found42's name for the gap between basic AI use and applying it to role-specific work deliverables.

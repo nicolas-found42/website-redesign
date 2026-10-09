@@ -31,6 +31,10 @@ The source's eight-hour service target and qualified PE target remain visible.
 
 ## Access and proof boundaries
 
+The scorecard entry below is historical. The owner-supplied October
+18-question report supersedes the Plan B questions and ScoreApp fallback;
+see [Resources ADR 0002](contexts/resources/docs/adr/0002-native-readiness-report.md).
+
 - AI Readiness Scorecard: answered on the page since the stand-up follow-up.
   Questions from Found42's Plan B draft; stages and advice are drafts awaiting
   Found42 review ([Resources ADR 0001](contexts/resources/docs/adr/0001-native-scorecard.md)).
@@ -105,7 +109,6 @@ recolored, cropped or stretched; each keeps its own proportions.
 | `crown-point-advisory-group.svg` | https://crownpointadvisorygroup.com/favicon.svg                                                                                                                                                  | Official favicon mark on its own navy square; the site wordmark is live text.   |
 | `idc.png`                        | https://cdn.prod.website-files.com/608074cd49c3ef489d9d98b4/654288cdaa31333aead63621_IDC_LogoType_Horizontal_FullColor_Red%20website%20bottom.png                                                | Original official file, bundled unchanged.                                      |
 | `mobile-club.svg`                | https://www.mobile.club/images/logo/logo-default.svg                                                                                                                                             | Original official file, bundled unchanged.                                      |
-| `minds-i-education.jpg`          | https://mindsieducation.com/cdn/shop/t/3/assets/fb-hd-logo.jpg                                                                                                                                   | 225 × 62 opaque black-ground wordmark on a charcoal tile.                       |
 | `prelude-solutions.avif`         | https://preludesolutions.com/wp-content/uploads/2025/05/Prelude-Solutions-Logo_Tagline-2025.avif                                                                                                 | Official 2025 wordmark with tagline, avoiding the dated anniversary lockup.     |
 | `maraja.jpg`                     | https://media.licdn.com/dms/image/v2/D4D0BAQGwaq-XvMH2pg/company-logo_200_200/company-logo_200_200/0/1720753753570?e=2147483647&v=beta&t=lyONwMwlDaucSJKpqc_qtJXB_pBK5wzJnLnMjfXqxdk             | Original official file, bundled unchanged.                                      |
 | `ruruka.jpg`                     | https://media.licdn.com/dms/image/v2/D4D0BAQGhUafJtcMh3A/company-logo_200_200/company-logo_200_200/0/1720753589394/ruruka_logo?e=2147483647&v=beta&t=iv04FCyWedjS9zduFhS3d4oBA6e0pocxEwx2HjTxpNU | Original official file, bundled unchanged.                                      |
@@ -117,3 +120,29 @@ The official company pages were checked again on September 29, 2026:
 [Ruruka](https://www.linkedin.com/company/ruruka/) and
 [MINDSi Sports Performance](https://www.linkedin.com/company/mindsi/).
 The source URLs above identify their published 200px LinkedIn files.
+
+### Mindsight correction (#163, October 9)
+
+The owner corrected the MINDS-i Education entry to **Mindsight**, identified by
+its [official LinkedIn page](https://www.linkedin.com/company/mindsighters/).
+MINDSi Sports Performance remains a separate, independently approved entry.
+`public/assets/logos/mindsight.jpg` replaces the unused Education image;
+its original 200 × 200 JPEG bytes, blue ground and proportions are preserved.
+The visible caption and accessible name are both Mindsight.
+
+The logo was retrieved October 9, 2026 from the official company page's primary
+image, whose alt text is `mindsight`. The page links to
+[Mindsight's website](https://www.mindsight.inc/). The published file is
+[the official LinkedIn company image](https://media.licdn.com/dms/image/v2/D560BAQGud2XWbl3QPQ/company-logo_200_200/company-logo_200_200/0/1697808229215/mindsighters_logo?e=2147483647&v=beta&t=3F8DDlZlS8dV7XsV3lWXb2SDY7jHKN6-T9V1zzBrRGA).
+The earlier Education asset references in dated migration material are
+superseded identity evidence, not the current relationship list.
+
+## Portfolio companies page and navigation (#169, October 9)
+
+The owner-approved review separates Private equity and Portfolio companies and
+renames the B2B SaaS navigation label to Software companies. The portfolio page
+reuses the existing Portfolio operations and Custom skills descriptions from
+`src/content.ts`, the Individual Contributors and Teams role-training copy from
+`src/audiences.ts`, and the existing Team adoption wording. Private equity keeps
+deal screening, diligence and the firm's criteria. No new offer, price,
+relationship, measured result or integration claim is introduced.
