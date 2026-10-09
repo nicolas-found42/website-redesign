@@ -15,7 +15,10 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
     if (r.status() >= 400 && !r.url().includes("missing-route"))
       failures.push(`${r.status()} ${r.url()}`);
   });
-  for (const p of manifest.pages) {
+  for (const p of [
+    ...manifest.pages,
+    { destination: "/industries/portfolio-companies/" },
+  ]) {
     const url = base + p.destination;
     await page.goto(url);
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
@@ -51,7 +54,7 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Page not found.",
   );
-  // #148: the notice is scoped to the seven content pages; the 404 opening
+  // #148: the notice is scoped to the eight content pages; the 404 opening
   // already carries its own preview line.
   const missingHtml = await (await request.get(base + "/404.html")).text();
   expect(missingHtml).not.toContain("preview-note");
@@ -101,6 +104,21 @@ test("prerendered content survives script failure and forms cannot submit accide
       .locator("#audience-builders")
       .getByText("Troubleshoot", { exact: true }),
   ).toBeVisible();
+  await page.goto(base + "/industries/portfolio-companies/");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Useful skills for operating teams.",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Portfolio operations", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("navigation", { name: "Main navigation" })
+      .getByRole("link", { name: "Portfolio companies", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    "/website-redesign/industries/portfolio-companies/",
+  );
   await page.goto(base + "/about/");
   await expect(
     page.getByText(

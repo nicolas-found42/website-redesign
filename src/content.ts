@@ -535,7 +535,7 @@ export const scorecard = {
 } as const;
 export const industries = {
   "private-equity": {
-    name: "Private Equity",
+    name: "Private equity",
     title: "More signal per deal.",
     intro:
       "Claude skills for the work between the data room and the decision, designed around evidence, judgment, and review.",
@@ -554,10 +554,6 @@ export const industries = {
         "Structure source-grounded findings across commercial, operational, and market workstreams.",
       ],
       [
-        "Portfolio operations",
-        "Give operating teams repeatable skills for reviews, plans, and performance narratives.",
-      ],
-      [
         "Custom skills",
         "Encode the firm’s criteria, review steps, and language into the work itself.",
       ],
@@ -568,8 +564,42 @@ export const industries = {
     ctaBody:
       "We’ll map the decision, source material, failure modes, and review points before recommending a build.",
   },
+  "portfolio-companies": {
+    name: "Portfolio companies",
+    title: "Useful skills for operating teams.",
+    intro:
+      "Claude skills and role-based training built around your recurring decisions, documents, terminology and review standards.",
+    heading: "Built around your team's work.",
+    aside: "1",
+    asideTitle: "Start with one live workflow",
+    asideBody:
+      "We’ll map the decision, source material, failure modes, and review points before recommending a build.",
+    items: [
+      [
+        "Portfolio operations",
+        "Give operating teams repeatable skills for reviews, plans, and performance narratives.",
+      ],
+      [
+        "Role-based training",
+        "Training is built around your role, industry and company: your recurring decisions, documents, terminology and review standards.",
+      ],
+      [
+        "Custom skills",
+        "Encode your company’s criteria, review steps, and language into the work itself.",
+      ],
+      [
+        "Team adoption",
+        "Train operators on the same quality bar, then improve it with real examples.",
+      ],
+    ],
+    context:
+      "Use role-based skills to automate important recurring work, freeing attention for judgment and expertise as the human in the loop. Training uses your source material, criteria and decision standards. Human judgment stays with the people accountable for the decision.",
+    cta: "Bring us one live workflow.",
+    ctaBody:
+      "We’ll map the decision, source material, failure modes, and review points before recommending a build.",
+  },
   "b2b-saas": {
-    name: "B2B SaaS",
+    name: "Software companies",
     title: "Make expertise repeatable.",
     intro:
       "Claude skills for customer, product, and go-to-market teams, built to improve throughput without making the work generic.",

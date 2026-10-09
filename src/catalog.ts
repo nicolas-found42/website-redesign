@@ -30,7 +30,7 @@ function tracksBand() {
     )
     .join(
       "",
-    )}</div><div class="services-industries catalog-industries"><p class="note">Built for</p><ul><li><a class="link" href="${sitePath("industries/private-equity/")}">Private Equity</a></li><li><a class="link" href="${sitePath("industries/b2b-saas/")}">B2B SaaS</a></li></ul></div></section>`;
+    )}</div><div class="services-industries catalog-industries"><p class="note">Built for</p><ul><li><a class="link" href="${sitePath("industries/private-equity/")}">Private equity</a></li><li><a class="link" href="${sitePath("industries/portfolio-companies/")}">Portfolio companies</a></li><li><a class="link" href="${sitePath("industries/b2b-saas/")}">Software companies</a></li></ul></div></section>`;
 }
 function formatsBand() {
   return `<section id="formats" class="wrap band catalog-band" aria-labelledby="formats-title">${catalogHead("formats", "Delivery formats", "Choose how your team learns.", "The format changes the group, time and setting. A track can be tailored to the team's work, with light customization for private cohorts.")}${catalogOptions(serviceCatalog.formats)}</section>`;

@@ -121,14 +121,14 @@
 .company-logo--maraja,
 .company-logo--ruruka,
 .company-logo--crown-point-advisory-group,
-.company-logo--mindsi-sports-performance {
+.company-logo--mindsi-sports-performance,
+.company-logo--mindsight {
   --logo-width: 70px;
 }
 .company-logo--idc {
   --logo-width: 116px;
 }
-.company-logo--paravet-live,
-.company-logo--minds-i-education {
+.company-logo--paravet-live {
   --logo-width: 112px;
 }
 .company-logo--mobile-club,
