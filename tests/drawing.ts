@@ -71,7 +71,10 @@ export type FieldState = ReturnType<typeof readField>;
  * itself, how large the words are set and whether each label sits inside the
  * card, tab, panel or plate the drawing puts it on.
  */
-export function readTextFit(field: Element) {
+export function readTextFit(
+  field: Element,
+  openLabels: readonly string[] = [],
+) {
   const card: Record<string, string> = {
     role: "path.f-ink",
     skill: "rect.f-paper",
@@ -111,14 +114,15 @@ export function readTextFit(field: Element) {
       }
       const kind = node.replace(/\d+$/, "");
       const part = field.querySelector(`[data-nodes~="${node}"]`);
-      const shape = card[kind] ? part?.querySelector(card[kind]) : null;
+      const cardSelector = openLabels.includes(node) ? null : card[kind];
+      const shape = cardSelector ? part?.querySelector(cardSelector) : null;
       const box = shape?.getBoundingClientRect();
       return {
         text: text.textContent?.trim() ?? "",
         node,
         fontSize: parseFloat(getComputedStyle(text).fontSize),
         splitWords: words.filter((w) => w.lines > 1).map((w) => w.word),
-        onCard: card[kind] ? !!box : null,
+        onCard: cardSelector ? !!box : null,
         outsideCard: box
           ? left < box.left - tolerance ||
             right > box.right + tolerance ||

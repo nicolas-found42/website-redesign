@@ -11,13 +11,13 @@ import {
   type LabelPlace,
   type Orientation,
 } from "./kit";
-import { colleague, contents, desk, folio, laptop, paper } from "./work";
+import { contents, folio, laptop, paper } from "./work";
 
 /**
- * Individual Contributors and Teams: four workstations and a shared review.
+ * Individual Contributors and Teams: four role artifacts and a shared review.
  *
- * Four people in one company, each with a ribbon of their own role. Each
- * ribbon runs through a skill cut for that role — its buckle — and onwards
+ * Four roles in one company, each with a ribbon of its own. Each
+ * ribbon passes its named function in open space and continues
  * in its own lane: four smooth top-to-bottom pipelines that never cross.
  * Each lane enters the gate through a slot of its own: the human in the
  * loop, where a person reviews before anything leaves. Past the gate the
@@ -36,32 +36,12 @@ const FILLS = [
   "var(--red-strand)",
 ] as const;
 
-/** A role's tab: the ribbon's end, with the person it belongs to. */
+/** A role's tab names the lane without adding another person. */
 function tab(x: number, y: number, width: number, height: number): string {
   const h = height / 2;
   return (
     `<rect class="f-sunk" x="${r(x + 5)}" y="${r(y - h + 6)}" width="${width}" height="${height}" rx="4"/>` +
-    `<path class="f-ink" d="M${r(x)} ${r(y - h)} L${r(x + width)} ${r(y - h)} L${r(x + width)} ${r(y + h)} L${r(x)} ${r(y + h)} L${r(x + 14)} ${r(y)} Z"/>` +
-    figure([x + 40, y + 4], 0.72, "paper")
-  );
-}
-
-/** A skill: the buckle a role's ribbon is threaded through. */
-function buckle(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  ribbon: number,
-): string {
-  const h = height / 2;
-  const slot = (sx: number) =>
-    `<rect class="f-ink" x="${r(sx - 5)}" y="${r(y - ribbon / 2 - 4)}" width="10" height="${ribbon + 8}" rx="2"/>`;
-  return (
-    `<rect class="f-sunk" x="${r(x + 6)}" y="${r(y - h + 7)}" width="${width}" height="${height}" rx="10"/>` +
-    `<rect class="f-paper s-ink" x="${r(x)}" y="${r(y - h)}" width="${width}" height="${height}" rx="10" stroke-width="3"/>` +
-    slot(x + 16) +
-    slot(x + width - 16)
+    `<path class="f-ink" d="M${r(x)} ${r(y - h)} L${r(x + width)} ${r(y - h)} L${r(x + width)} ${r(y + h)} L${r(x)} ${r(y + h)} L${r(x + 14)} ${r(y)} Z"/>`
   );
 }
 
@@ -102,7 +82,7 @@ const resultPanel = (x: number, y: number, w: number, h: number) =>
   `<rect class="f-ink s-ink" x="${x}" y="${y}" width="${w}" height="${h}" rx="8" stroke-width="2.5"/>`;
 
 /** Each role handles a different artifact: deal folder, plan, feedback, account. */
-function workStation(x: number, y: number, w: number, role: number): string {
+function roleArtifacts(x: number, y: number, w: number, role: number): string {
   const scale = w / 560;
   const object =
     role === 0
@@ -120,11 +100,9 @@ function workStation(x: number, y: number, w: number, role: number): string {
           : folio(335, 0, 150, "priorities");
   return (
     `<g transform="translate(${x} ${y}) scale(${scale})">` +
-    colleague([125, 42], 1, role === 1 ? "point" : "read") +
     paper(180, 56, 85, 40) +
     `<g transform="translate(190 63) scale(.42)">${contents(0, 0, 160, "owners")}</g>` +
     object +
-    desk(0, 102, 540) +
     `</g>`
   );
 }
@@ -163,7 +141,7 @@ function landscape(): Art {
     });
     labels[`skill${n}`] = place([490, y], "center", "middle", { width: 214 });
     // One straight run at the lane's own height, into the gate's edge.
-    const d = `M290 ${y} L${frame.x + 10} ${y}`;
+    const d = `M290 ${y} L360 ${y} M620 ${y} L${frame.x + 10} ${y}`;
     return part(
       {
         name: "role",
@@ -172,12 +150,10 @@ function landscape(): Art {
         origin: [60, y],
         nodes: [`role${n}`, `skill${n}`],
         links: [`role${n}>skill${n}`, `skill${n}>human`],
-        marks: [`person:role${n}`],
       },
       strip(d, width, FILLS[i]) +
-        buckle(360, y, 260, 94, width) +
         tab(60, y, 270, 70) +
-        workStation(60, y + 65, 560, i),
+        roleArtifacts(60, y + 65, 560, i),
     );
   });
   const returns = ys.map((y, i) => {
@@ -220,9 +196,7 @@ function landscape(): Art {
     ...rows,
     part(
       { name: "human-reviewer", beat: 5, enter: "rise" },
-      colleague([960, 860], 0.9, "review") +
-        folio(875, 885, 94, "owners") +
-        desk(870, 910, 325),
+      figure([966, 914], 2.5, "red"),
     ),
     part(
       { name: "lanes", beat: 4, enter: "fade", order: 1 },
@@ -288,7 +262,7 @@ function portrait(): Art {
     labels[`skill${n}`] = place([382, y], "center", "middle", { width: 170 });
     // Across at the row's own height, one rounded turn, then straight down
     // to the gate's edge.
-    const d = `M262 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${frame.y + 10}`;
+    const d = `M262 ${y} L288 ${y} M476 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${frame.y + 10}`;
     return part(
       {
         name: "role",
@@ -297,12 +271,10 @@ function portrait(): Art {
         origin: [34, y],
         nodes: [`role${n}`, `skill${n}`],
         links: [`role${n}>skill${n}`, `skill${n}>human`],
-        marks: [`person:role${n}`],
       },
       strip(d, width, FILLS[i]) +
-        buckle(288, y, 188, 92, width) +
         tab(34, y, 244, 80) +
-        workStation(34, y + 60, 432, i),
+        roleArtifacts(34, y + 60, 432, i),
     );
   });
   const returns = ys.map((_, i) => {
@@ -344,9 +316,7 @@ function portrait(): Art {
     ...rows,
     part(
       { name: "human-reviewer", beat: 5, enter: "rise" },
-      colleague([228, 1270], 0.9, "review") +
-        folio(65, 1294, 106, "owners") +
-        desk(40, 1324, 366),
+      figure([290, 1310], 2.8, "red"),
     ),
     part(
       { name: "lanes", beat: 4, enter: "fade", order: 1 },

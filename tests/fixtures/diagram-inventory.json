@@ -600,22 +600,6 @@
         ],
         "marks": [
           {
-            "kind": "person",
-            "beat": 1
-          },
-          {
-            "kind": "person",
-            "beat": 2
-          },
-          {
-            "kind": "person",
-            "beat": 3
-          },
-          {
-            "kind": "person",
-            "beat": 4
-          },
-          {
             "kind": "human",
             "beat": 5
           },
@@ -745,22 +729,6 @@
           }
         ],
         "marks": [
-          {
-            "kind": "person",
-            "beat": 1
-          },
-          {
-            "kind": "person",
-            "beat": 2
-          },
-          {
-            "kind": "person",
-            "beat": 3
-          },
-          {
-            "kind": "person",
-            "beat": 4
-          },
           {
             "kind": "human",
             "beat": 5
