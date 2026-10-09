@@ -258,7 +258,7 @@ export const audiences: readonly Audience[] = [
     scene: {
       id: "executives",
       description:
-        "Executive day: Claude Daily Brief → Meeting Brief → Meeting Debrief → Actions from Transcripts, with a red You decide mark on the last card. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
+        "Executive day: Claude Daily Brief with three ranked priorities → Meeting Brief with an agenda → Meeting Debrief with owner and date columns → Actions from Transcripts with notes feeding a task checklist. A red You decide mark on the last card keeps the decision with the executive. An illustrative Claude example, not a client result, with no live calendar, email, CRM or transcript integration.",
       ...executiveScene,
     },
   },
