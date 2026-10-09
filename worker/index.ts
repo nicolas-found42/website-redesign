@@ -444,7 +444,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
             status: "invalid",
             ...(unknownPage ? { reason: "unknown-page" as const } : {}),
             message: unknownPage
-              ? "This feedback points to a page outside the seven supported website pages, so it can’t be posted here. Your draft is saved; save a copy from My feedback and contact the team to report a missing page."
+              ? "This feedback points to a page outside the supported website pages, so it can’t be posted here. Your draft is saved; save a copy from My feedback and contact the team to report a missing page."
               : "This feedback is incomplete or too long. Your draft is saved; edit it before sending again.",
           });
           continue;
