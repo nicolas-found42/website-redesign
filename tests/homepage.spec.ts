@@ -112,7 +112,7 @@ test("the homepage previews the scorecard and public toolkit in the free resourc
   await expect(page).toHaveURL(/\/resources\/#scorecard$/);
   await expect(
     page.getByRole("group", { name: "AI Readiness Scorecard" }),
-  ).toContainText("Question 1 of 12");
+  ).toContainText("Question 1 of 18");
 });
 test("all three audiences link to their catalog tracks", async ({ page }) => {
   await page.goto("/#audiences");

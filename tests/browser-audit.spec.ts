@@ -82,27 +82,27 @@ for (const width of [384, 1455]) {
     await expect(course).not.toContainText("five");
   });
 
-  test(`the early-days result leads to an available resource at ${width}px`, async ({
+  test(`the Foundations report leads to available resource downloads at ${width}px`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 742 });
     await page.goto("/resources/#scorecard");
     const app = page.getByRole("group", { name: "AI Readiness Scorecard" });
-    for (let question = 0; question < 12; question++)
-      await app.getByRole("button", { name: "No", exact: true }).click();
-    await app.getByRole("button", { name: /See my result/ }).click();
+    for (let question = 0; question < 18; question++)
+      await app.locator("[data-readiness-answer]").first().click();
+    await app.getByRole("button", { name: /See my report/ }).click();
     await expect(
-      app.getByRole("heading", { name: "Early days" }),
+      app.getByRole("heading", { name: "Stage 1 of 3: Foundations" }),
     ).toBeVisible();
-    await app
-      .getByRole("link", { name: "Explore the C-Level AI Toolkit" })
-      .click();
-    await expect(page).toHaveURL(/\/resources\/#toolkit$/);
+    await app.getByRole("link", { name: "Explore the free resources" }).click();
+    await expect(page).toHaveURL(/\/resources\/#library$/);
     await expect(
       page
-        .locator("#toolkit")
-        .getByRole("link", { name: "Explore the toolkit" }),
-    ).toHaveAttribute("href", "https://www.found42.com/toolkit");
+        .locator("#library")
+        .getByRole("link", {
+          name: "Download executive communications reviewer",
+        }),
+    ).toHaveAttribute("href", "/resources/skills/exec-comms-reviewer.skill");
   });
 
   /**
@@ -121,7 +121,10 @@ for (const width of [384, 1455]) {
       const rows = new Set(
         cards.map((card) => Math.round(card.getBoundingClientRect().top)),
       );
-      return { rows: rows.size, scrolls: track.scrollWidth > track.clientWidth };
+      return {
+        rows: rows.size,
+        scrolls: track.scrollWidth > track.clientWidth,
+      };
     });
     expect(layout.rows, `${width}px rows`).toBe(1);
     expect(layout.scrolls, `${width}px scrolls`).toBe(true);

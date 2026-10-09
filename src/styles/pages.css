@@ -624,6 +624,139 @@ button:disabled {
   }
 }
 
+/* Native readiness reports keep the whole result in a readable column. */
+.scorecard-split {
+  grid-template-areas: "intro app";
+  grid-template-rows: auto;
+}
+.scorecard-split.has-report {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "intro" "app";
+}
+.scorecard-intro {
+  max-width: 70ch;
+}
+.scorecard-result {
+  max-width: 1000px;
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+}
+.scorecard .answer-options {
+  grid-template-columns: minmax(0, 1fr);
+}
+.scorecard .answer[aria-pressed="true"] {
+  border-color: var(--red);
+}
+.readiness-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  align-items: center;
+  padding-block: 24px;
+}
+.readiness-percent {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1;
+}
+.readiness-summary h4 {
+  margin-block: 0 8px;
+}
+.readiness-bands {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0;
+  margin-block: 0 24px;
+  list-style: none;
+}
+.readiness-bands li {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 4px solid var(--line-strong);
+}
+.readiness-bands [aria-current] {
+  font-weight: 700;
+  border-color: var(--red);
+}
+.readiness-warning {
+  padding: 20px;
+  margin-block: 20px;
+  border-left: 3px solid var(--red);
+  background: var(--paper-warm);
+}
+.readiness-warning h4 {
+  margin-top: 0;
+}
+.readiness-tool-note {
+  padding-block: 12px;
+  border-block: 1px solid var(--line);
+}
+.readiness-area-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  justify-content: space-between;
+  width: 100%;
+}
+.scorecard-result h5 {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.scorecard-areas li {
+  display: grid;
+  gap: 12px;
+}
+.readiness-bar {
+  height: 6px;
+  background: var(--paper-sunk);
+}
+.readiness-bar span {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+}
+.readiness-recommendations {
+  display: grid;
+  gap: 20px;
+}
+.readiness-offer {
+  display: grid;
+  gap: 14px;
+  padding: clamp(16px, 4vw, 30px);
+  border: 1px solid var(--line);
+}
+.readiness-offer:first-child {
+  border-color: var(--red);
+}
+.readiness-offer ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 20px;
+}
+.readiness-answers {
+  margin-block: 30px;
+}
+.readiness-answers ol {
+  display: grid;
+  gap: 20px;
+  padding-left: 24px;
+  margin-top: 20px;
+}
+.readiness-method {
+  margin-top: 24px;
+}
+@media (max-width: 860px) {
+  .scorecard-split {
+    grid-template-areas: "intro" "app";
+  }
+}
+@media (max-width: 480px) {
+  .readiness-bands {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 1280px) {
   #navigation {
     justify-content: flex-start;

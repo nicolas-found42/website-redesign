@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { readFile } from "node:fs/promises";
 
 /*
  * The stand-up follow-up: the services sequence on a phone, the homepage's
@@ -228,64 +229,82 @@ test("the homepage's published playbook is one click from its full inventory", a
   );
 });
 
-test("the scorecard walks forward and back, keeps what was typed, and never sends it", async ({
+test("the scorecard keeps answers and optional personalization local and downloads the full report", async ({
   page,
 }) => {
   const external: string[] = [];
   page.on("request", (request) => {
-    if (!request.url().startsWith("http://127.0.0.1:4173"))
+    if (!request.url().startsWith("http://127.0.0.1"))
       external.push(request.url());
   });
   await page.goto("/resources/#scorecard");
   const app = page.getByRole("group", { name: "AI Readiness Scorecard" });
-  const yes = app.getByRole("button", { name: "Yes", exact: true });
-  const no = app.getByRole("button", { name: "No", exact: true });
-
-  await yes.click();
-  await expect(app).toContainText("Question 2 of 12");
+  await app.getByRole("button", { name: "ChatGPT", exact: true }).click();
+  await expect(app).toContainText("Question 2 of 18");
   await expect(app.locator("h3")).toBeFocused();
   await app.getByRole("button", { name: "← Back" }).click();
-  await expect(app).toContainText("Question 1 of 12");
-
-  for (let step = 0; step < 12; step++) await no.click();
-  await expect(app).toContainText("Last question");
-  const typed = 'Board pack <img src=x onerror="window.injected=true">';
-  await app.getByRole("textbox").fill(typed);
-  await app.getByRole("button", { name: "← Back" }).click();
-  await expect(app).toContainText("Question 12 of 12");
-  await no.click();
-  await expect(app.getByRole("textbox")).toHaveValue(typed);
-  await app.getByRole("button", { name: /See my result/ }).click();
-
-  await expect(app.locator("h3")).toHaveText("Early days");
   await expect(
-    app.getByRole("link", { name: "Explore the C-Level AI Toolkit" }),
-  ).toHaveAttribute("href", "/resources/#toolkit");
+    app.getByRole("button", { name: "ChatGPT", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await app.getByRole("button", { name: "ChatGPT", exact: true }).click();
+  for (let i = 1; i < 18; i++)
+    await app.locator('[data-readiness-answer="0"]').click();
+  const typed = 'Board pack <img src=x onerror="window.injected=true">';
+  await app.getByLabel("First name (optional)").fill(typed);
+  await app
+    .getByLabel("Your role (optional)")
+    .selectOption("Founder or executive");
+  await app.getByRole("button", { name: "← Back" }).click();
+  await app.locator('[data-readiness-answer="0"]').click();
+  await expect(app.getByLabel("First name (optional)")).toHaveValue(typed);
+  await app.getByRole("button", { name: /See my report/ }).click();
+  await expect(app.locator("h3")).toContainText(typed);
   await expect(app.locator("h3")).toBeFocused();
+  await expect(app).toContainText("Stage 1 of 3: Foundations");
+  await expect(app).toContainText("0 of 51 points");
   await expect(app.locator(".scorecard-areas li")).toHaveCount(5);
   await expect(app.locator(".scorecard-next > li")).toHaveCount(3);
-  await expect(app.locator(".scorecard-echo")).toContainText(typed);
-  await expect(app.locator(".scorecard-echo img")).toHaveCount(0);
+  await expect(app).toContainText("You mostly use ChatGPT");
+  await expect(app.locator("img")).toHaveCount(0);
   expect(await page.evaluate(() => "injected" in window)).toBe(false);
-  expect(
-    await app.locator(".scorecard-result").evaluate((node) => node.textContent),
-  ).not.toMatch(/\d/);
-
-  const result = await new AxeBuilder({ page })
+  const audit = await new AxeBuilder({ page })
     .include("#scorecard")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
     .analyze();
-  expect(result.violations).toEqual([]);
-
-  await app.getByRole("button", { name: /Plan the next step/ }).click();
-  const dialog = page.getByRole("dialog");
-  await expect(dialog.getByText("From your readiness check")).toBeVisible();
-  await expect(dialog).toContainText(typed);
-  await expect(dialog.locator("img")).toHaveCount(0);
-  expect(await page.evaluate(() => "injected" in window)).toBe(false);
-  await page.keyboard.press("Escape");
-  await app.getByRole("button", { name: "Retake" }).click();
-  await expect(app).toContainText("Question 1 of 12");
+  expect(audit.violations).toEqual([]);
+  await app.getByRole("button", { name: "Change my answers" }).click();
+  await expect(
+    app.getByRole("button", { name: "ChatGPT", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await app.locator('[data-readiness-answer="0"]').click();
+  for (let i = 1; i < 18; i++)
+    await app.locator('[data-readiness-answer="0"]').click();
+  await app.getByRole("button", { name: /See my report/ }).click();
+  // A slow PDF chunk must still export the report that was visible when clicked.
+  let releaseChunk!: () => void;
+  const chunkHeld = new Promise<void>((resolve) => (releaseChunk = resolve));
+  let chunkRequested!: () => void;
+  const requested = new Promise<void>((resolve) => (chunkRequested = resolve));
+  await page.route(
+    /\/(?:src\/readiness-pdf\.ts|assets\/readiness-pdf[^/]*\.js)(?:\?|$)/,
+    async (route) => {
+      chunkRequested();
+      await chunkHeld;
+      await route.continue();
+    },
+  );
+  const downloadPromise = page.waitForEvent("download");
+  await app.getByRole("button", { name: /Download my PDF report/ }).click();
+  await requested;
+  await app.getByRole("button", { name: "Start again" }).click();
+  await expect(app).toContainText("Question 1 of 18");
+  releaseChunk();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe("Found42-AI-Readiness-Report.pdf");
+  expect(await download.failure()).toBeNull();
+  const pdfPath = test.info().outputPath("readiness-report.pdf");
+  await download.saveAs(pdfPath);
+  expect((await readFile(pdfPath)).subarray(0, 5).toString()).toBe("%PDF-");
   expect(external).toEqual([]);
 });
 
@@ -323,11 +342,11 @@ test("every scorecard state reflows at 320px with doubled text, before the fonts
     page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
   const app = page.getByRole("group", { name: "AI Readiness Scorecard" });
   expect(await fits()).toBe(true);
-  for (let step = 0; step < 12; step++)
-    await app
-      .getByRole("button", { name: step % 2 ? "Yes" : "No", exact: true })
-      .click();
+  for (let step = 0; step < 18; step++) {
+    await app.locator("[data-readiness-answer]").first().click();
+    expect(await fits()).toBe(true);
+  }
   expect(await fits()).toBe(true);
-  await app.getByRole("button", { name: /See my result/ }).click();
+  await app.getByRole("button", { name: /See my report/ }).click();
   expect(await fits()).toBe(true);
 });
