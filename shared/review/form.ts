@@ -1,4 +1,5 @@
 import { sectionGloss } from "./target-meta";
+import { versionSlug } from "./paths";
 import type { Change, FeedbackItem, Kind, Priority } from "./store";
 import { clean, isMediaKind, isTextKind, type Target } from "./target";
 
@@ -110,7 +111,7 @@ export function formMarkup({
     .join("");
   return `<form class="feedback-form" novalidate>
   <div class="panel-head">
-    <p class="eyebrow">Your feedback on</p>
+    <p class="eyebrow">Your feedback on version ${esc(versionSlug)}</p>
     <h2 id="form-title" data-target-name></h2>
     <p class="where" data-target-where></p>
     <div class="target-tools">
@@ -122,7 +123,7 @@ export function formMarkup({
   </div>
   <div class="panel-body">
     <p class="hint" id="form-errors" role="alert" data-form-errors></p>
-    ${askName ? field("reviewer", "Your name", { input: true, hint: "We save your name in this browser, so you only type it once. A first name is fine — it sits beside your comment so the team knows who to ask." }) : ""}
+    ${askName ? field("reviewer", "Your name", { input: true, hint: "We save your name in this browser, so you only type it once. A first name is fine — it sits beside your comment so the team knows who to ask. It is posted publicly on GitHub with your feedback." }) : ""}
     ${choices("kind", "What kind of change? (optional)", kinds, "kinds")}
     <div class="kind-fields" data-for="comment">
       ${field("comment", "Your comment", { hint: "Just tell us what you would like changed. You can leave the kind to us." })}

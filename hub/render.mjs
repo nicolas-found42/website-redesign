@@ -3,7 +3,7 @@
  * `versions/`. It is static HTML with no scripts, so it works when scripts
  * fail and carries no design of its own that could favour one version.
  */
-import { statusNames } from "../scripts/versions.mjs";
+import { statusMeanings, statusNames } from "../scripts/versions.mjs";
 
 export const repository = "nicolas-found42/website-redesign";
 const escape = (value) =>
@@ -32,11 +32,11 @@ function card(version, previews) {
       : `<span class="no-shot">No preview yet</span>`
   }</a>
   <div class="body">
-    <h3>${escape(name)}${version.baseline ? ' <span class="badge baseline">Baseline</span>' : ""}</h3>
+    <h3>${escape(name)}${version.baseline ? ' <span class="badge baseline" title="The comparison point every other version is measured against">Baseline</span>' : ""}</h3>
     <p class="meta"><code>${escape(slug)}</code> · <span class="badge status-${escape(status)}">${escape(statusNames[status])}</span> · ${escape(created)}${author ? ` · ${escape(author)}` : ""}</p>
     ${summary ? `<p>${escape(summary)}</p>` : ""}
     ${changesFacts ? `<p class="facts"><strong>Changes shared facts:</strong> ${escape(changesFacts)}</p>` : ""}
-    <p class="links"><a class="primary" href="${escape(slug)}/">Open</a> <a href="${escape(slug)}/?review">Review</a> <a href="${escape(issuesUrl(slug))}">Feedback issues</a></p>
+    <p class="links"><a class="primary" href="${escape(slug)}/">Open site</a> <a href="${escape(slug)}/?review">Review and give feedback</a> <a href="${escape(issuesUrl(slug))}">Feedback on GitHub</a></p>
   </div>
 </li>`;
 }
@@ -53,6 +53,7 @@ ul.grid{list-style:none;margin:0;padding:0;display:grid;gap:16px;grid-template-c
 .no-shot{display:grid;place-items:center;height:100%;color:var(--muted)}
 .body{padding:12px 16px 16px}.body h3{margin:0 0 4px;font-size:1.05rem}.body p{margin:6px 0}.meta{color:var(--muted);font-size:.875rem}
 .badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:0 8px;font-size:.75rem}.baseline{border-color:var(--accent)}
+.guide{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:4px 16px 12px;margin:16px 0}.guide summary{font-weight:600;padding:8px 0}.guide h3{font-size:1rem;margin:12px 0 4px}.guide dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:4px 16px}.guide dt{font-weight:600}.guide dd{margin:0}.guide ul{margin:0;padding-left:20px}.guide li{margin:4px 0}.public{font-weight:600}
 .links{display:flex;flex-wrap:wrap;gap:8px 16px}.links a{min-height:24px}.facts{font-size:.875rem}
 details{margin-top:24px}summary{cursor:pointer;min-height:24px}
 `;
@@ -76,6 +77,24 @@ export function renderHub(versions, { previews = new Set() } = {}) {
 <main>
 <h1>Found42 website redesign hub</h1>
 <p class="lede">Each card is a complete version of the site. Open one to explore it, or use Review to leave feedback that is filed against that version.</p>
+<details class="guide" open>
+<summary>How this works</summary>
+<ul>
+<li><strong>Open site</strong> shows a version the way a visitor would see it. A dark bar at the top names the version and brings you back here.</li>
+<li><strong>Review and give feedback</strong> opens the same site with a toolbar: choose the part you would change and say what and why. <span class="public">Your feedback and the name you type are posted publicly on GitHub, where anyone can read them, so leave out anything private.</span></li>
+<li><strong>Feedback on GitHub</strong> lists what has been sent about that version. It stays empty until someone sends feedback.</li>
+</ul>
+<h3>What the labels mean</h3>
+<dl>
+<dt>Baseline</dt><dd>The site as it is today. Every other version is compared against it.</dd>
+${Object.entries(statusNames)
+  .map(
+    ([key, label]) =>
+      `<dt>${escape(label)}</dt><dd>${escape(statusMeanings[key])}</dd>`,
+  )
+  .join("\n")}
+</dl>
+</details>
 <h2>Versions (${active.length})</h2>
 ${active.length ? list(active) : "<p>No active versions.</p>"}
 ${archived.length ? `<details><summary>Archived (${archived.length})</summary>${list(archived)}</details>` : ""}

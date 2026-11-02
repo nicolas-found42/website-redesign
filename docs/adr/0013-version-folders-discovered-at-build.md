@@ -26,6 +26,9 @@ folder, `versions/<slug>/`, and the folders themselves are the only registry.
 - Adding a version is one folder; removing one is deleting it. CI cost is
   bounded because the per-version contract runs only for changed versions
   (all of them when shared code, the hub or tooling changes).
+- The build injects a neutral hub strip (way back to the hub, version name and
+  status) into every built page, so versions need no code for it and cannot
+  omit it. Previews are captured without it.
 - Old root-level paths no longer exist; `/website-redesign/` is the hub.
   Backwards-compatible redirects were explicitly declined.
 - Feedback issues survive deletion of their version on GitHub; that history is

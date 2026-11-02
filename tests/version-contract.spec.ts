@@ -37,6 +37,21 @@ for (const { slug } of versions) {
       await context.close();
     });
 
+    test("every page names its version and leads back to the hub, even with scripts off [production]", async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({ javaScriptEnabled: false });
+      const page = await context.newPage();
+      await page.goto(base);
+      const strip = page.getByRole("navigation", { name: "Redesign hub" });
+      await expect(strip).toBeVisible();
+      await expect(strip).toContainText(slug);
+      await expect(
+        strip.getByRole("link", { name: "All versions" }),
+      ).toHaveAttribute("href", "/website-redesign/");
+      await context.close();
+    });
+
     test("internal links resolve [production]", async ({ page, request }) => {
       await page.goto(base);
       const links = await page
@@ -134,6 +149,8 @@ for (const { slug } of versions) {
       await page.goto(`${base}?review`);
       const bar = page.getByRole("region", { name: "Review mode" });
       await expect(bar).toBeVisible();
+      // A reviewer can always see which version their feedback goes to.
+      await expect(bar).toContainText(`version ${slug}`);
       // Only this version's draft is offered; another version's stays out of sight.
       const send = bar.getByRole("button", { name: /Send/ });
       await expect(send).toHaveText("Send 1 feedback item");

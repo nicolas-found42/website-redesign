@@ -14,6 +14,7 @@ import { join, resolve } from "node:path";
 import { discoverVersions, metadataProblems } from "../scripts/versions.mjs";
 import { renderHub, issuesUrl } from "../hub/render.mjs";
 import { select } from "../scripts/changed-versions.mjs";
+import { hubStrip, injectStrip } from "../hub/strip.mjs";
 
 /**
  * The folders under `versions/` are the only registry. These tests prove the
@@ -242,4 +243,28 @@ test("CI narrows the version contract to the versions a change touches", () => {
   // Documentation alone changes no version.
   expect(select(["docs/DESIGN.md", "README.md"])).toBe("none");
   expect(select([])).toBe("none");
+});
+
+test("the hub strip is injected once, escaped, and names the version", () => {
+  const version = {
+    slug: "bold-owl",
+    title: '<b>Bold</b> "type"',
+    status: "shortlisted",
+    baseline: false,
+  };
+  const page =
+    '<!doctype html><html><body class="x"><div id="app"></div></body></html>';
+  const once = injectStrip(page, version);
+  expect(once).toContain('<body class="x"><nav id="found42-hub-strip"');
+  expect(once).toContain('href="/website-redesign/">← All versions</a>');
+  expect(once).toContain("<code>bold-owl</code>");
+  expect(once).toContain("Shortlisted");
+  expect(once).toContain("&lt;b&gt;Bold&lt;/b&gt; &quot;type&quot;");
+  expect(once).not.toContain("<b>Bold</b>");
+  expect(once).not.toContain("Baseline");
+  // Running the build twice never doubles the strip.
+  expect(injectStrip(once, version)).toBe(once);
+  expect(hubStrip({ ...version, baseline: true })).toContain("· Baseline ·");
+  // A page with no body tag is left alone rather than broken.
+  expect(injectStrip("<p>fragment</p>", version)).toBe("<p>fragment</p>");
 });

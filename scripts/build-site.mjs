@@ -7,12 +7,24 @@
  *   node scripts/build-site.mjs [--require-previews]
  */
 import { execFileSync } from "node:child_process";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { discoverVersions } from "./versions.mjs";
 import { hubNotFound, renderHub } from "../hub/render.mjs";
 import { servePages } from "./serve-pages.mjs";
+import { injectStrip } from "../hub/strip.mjs";
+
+/** Every HTML file a version published, at any depth. */
+async function htmlFiles(dir) {
+  const found = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const path = resolve(dir, entry.name);
+    if (entry.isDirectory()) found.push(...(await htmlFiles(path)));
+    else if (entry.name.endsWith(".html")) found.push(path);
+  }
+  return found;
+}
 
 const requirePreviews =
   process.argv.includes("--require-previews") || !!process.env.CI;
@@ -55,6 +67,10 @@ async function capturePreviews(versions) {
             {
               waitUntil: "load",
             },
+          );
+          // The hub strip is not part of the design being previewed.
+          await page.evaluate(() =>
+            document.getElementById("found42-hub-strip")?.remove(),
           );
           await page.waitForTimeout(600);
           await page.screenshot({
@@ -101,6 +117,10 @@ for (const version of versions) {
     });
   }
 }
+// Every page of every version gets the way back to the hub and its own name.
+for (const version of versions)
+  for (const file of await htmlFiles(resolve(dist, version.slug)))
+    await writeFile(file, injectStrip(await readFile(file, "utf8"), version));
 await writeFile(resolve(dist, "404.html"), hubNotFound);
 const previews = await capturePreviews(versions);
 await writeFile(resolve(dist, "index.html"), renderHub(versions, { previews }));

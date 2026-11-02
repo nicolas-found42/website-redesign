@@ -83,6 +83,12 @@ section identifiers or selectors.
 
 ## One version at a time
 
+Every version page carries a dark bar at the top that names the version, shows
+its status and links back to the hub (**← All versions**). The review bar
+repeats it ("Review mode · version `<slug>`") and the feedback form is headed
+"Your feedback on version `<slug>`", so a reviewer always knows where their
+feedback goes. The name field warns that the name is posted publicly on GitHub.
+
 Every version has its own review link, and feedback belongs to the version it
 was made on. Drafts, **My feedback**, **Resume review** and the last receipt
 are kept per version: another version's drafts are never shown or sent, and
