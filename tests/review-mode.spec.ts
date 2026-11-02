@@ -3,6 +3,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 
+// Each scenario owns its browser context; shard the large file by test.
+test.describe.configure({ mode: "parallel" });
+
 /**
  * Review mode: the team points at the exact thing on a page and says precisely
  * what should change, then publishes feedback with a receipt. The exported file retains the page,

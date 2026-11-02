@@ -63,7 +63,9 @@ for (const [name, id] of [
         })
         .click();
       await expect
-        .poll(async () => (await field.evaluate(readField)).animating)
+        .poll(async () => (await field.evaluate(readField)).animating, {
+          intervals: [100],
+        })
         .toBe(0);
       await page.getByRole("button", { name, exact: true }).click();
       // Resizing within the wide layout must work without relying on an
@@ -96,11 +98,13 @@ for (const [name, id] of [
               (await field.evaluate(readField)).labels.map(
                 (label) => label.text,
               ),
-            { timeout: 8000 },
+            { timeout: 8000, intervals: [100] },
           )
           .toEqual(expected);
         await expect
-          .poll(async () => (await field.evaluate(readField)).unsettled)
+          .poll(async () => (await field.evaluate(readField)).unsettled, {
+            intervals: [100],
+          })
           .toEqual({ parts: 0, words: 0 });
         const layout = await field.evaluate(textLayout);
         expect(layout.overlaps, `${name}, cycle ${cycle}, ${width}px`).toEqual(
@@ -147,12 +151,13 @@ for (const [name, id] of [
         .poll(
           async () =>
             (await field.evaluate(readField)).labels.map((label) => label.text),
-          { timeout: 8000 },
+          { timeout: 8000, intervals: [100] },
         )
         .toEqual(expected);
       await expect
         .poll(async () => (await field.evaluate(readField)).animating, {
           timeout: 8000,
+          intervals: [100],
         })
         .toBe(0);
       const layout = await field.evaluate(textLayout);

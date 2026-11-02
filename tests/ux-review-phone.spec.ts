@@ -19,16 +19,17 @@ const routes = [
   "/blog/",
 ];
 
-/** Scrolls the whole page so every reveal and drawing has settled. */
+/** Visit each reveal and observe its settled text before measuring contrast. */
 async function settle(page: Page) {
-  const height = await page.evaluate(
-    () => document.documentElement.scrollHeight,
-  );
-  for (let y = 0; y < height; y += 700) {
-    await page.evaluate((top) => scrollTo(0, top), y);
-    await page.waitForTimeout(30);
+  await page.evaluate(() => document.fonts.ready);
+  for (const target of await page.locator("[data-reveal]").all()) {
+    await target.evaluate((element) =>
+      element.scrollIntoView({ block: "center", behavior: "instant" }),
+    );
+    await expect(target).toHaveClass(/\bis-in\b/);
+    await expect(target).toHaveCSS("opacity", "1");
   }
-  await page.waitForTimeout(400);
+  await expect(page.locator("[data-reveal]:not(.is-in)")).toHaveCount(0);
 }
 
 /**

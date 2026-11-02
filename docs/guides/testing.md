@@ -59,3 +59,34 @@ Do not use a green `test:quick` or `test:logic` result as evidence that unrun pr
 ## Performance experiments
 
 For worker-count or recording experiments, freeze the commit and test selection; compare the same tests with one setting changed at a time. Report wall time and failures, and measure the test process tree—not only the parent process—when comparing CPU or memory. Keep all browser engines and assertions in the full gate.
+
+For an observable full run without recording-overhead changes:
+
+```sh
+DEBUG=pw:webserver PLAYWRIGHT_JSON_OUTPUT_FILE=/tmp/playwright-results.json \
+  npm run test:full -- --reporter=line,json
+node scripts/summarize-playwright-timings.mjs /tmp/playwright-results.json
+```
+
+Server logs expose startup/build time; JSON includes each attempt, project,
+duration and worker. Test-duration sums overlap across workers and are not wall
+time. For resource comparisons, sample the entire descendant process tree;
+summed RSS can double-count shared pages. Use a temporary step reporter when
+individual browser operations need attribution rather than enabling traces in
+only one comparison arm.
+
+The large, context-isolated drawing and review-mode specs explicitly allow
+test-level sharding. Other CI specs keep file-level scheduling; the worker cap
+and browser coverage are unchanged. Reconcile exact project/test IDs across
+shards when changing scheduling, not only total counts.
+
+Drawing readiness polls use 100ms intervals at measured slow animation waits,
+without shortening their failure timeouts or changing motion. This avoids
+Playwright's increasing polling backoff after a drawing has already settled.
+The phone contrast audit visits every reveal and checks its revealed class and
+full opacity instead of guessing readiness with a timed scroll sweep. Deliberate
+motion-observation windows remain part of their regression scenarios.
+Accessibility scans still observe each reveal entering before scrolling on, but
+verify final opacities together so independent entrance durations overlap.
+Contributor drawing scenarios set the intended motion preference before their
+first navigation rather than loading the same page twice.
