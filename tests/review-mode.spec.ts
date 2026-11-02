@@ -54,6 +54,19 @@ test("visitors never load review mode; a review link does [production]", async (
   expect(requested.some((url) => /\/assets\/review-/.test(url))).toBe(true);
 });
 
+test("the bar and the form say which version the feedback is for and that it is public", async ({
+  page,
+}) => {
+  await page.goto("/?review");
+  const bar = page.getByRole("region", { name: "Review mode" });
+  await expect(bar).toContainText("version current");
+  const form = await pick(page, page.locator("#hero-title"));
+  await expect(form).toContainText("Your feedback on version current");
+  await expect(form).toContainText(
+    "It is posted publicly on GitHub with your feedback.",
+  );
+});
+
 test("a review link stays on across pages until Exit", async ({ page }) => {
   // This scenario picks or follows a link in the expanded desktop header.
   await page.setViewportSize({ width: 1440, height: 720 });

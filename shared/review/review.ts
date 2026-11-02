@@ -83,7 +83,7 @@ export function mountReview() {
 <div class="review">
   <div class="bar" role="region" aria-label="Review mode">
     <div class="bar-idle">
-      <p class="bar-title"><span class="dot" aria-hidden="true"></span>Review mode</p>
+      <p class="bar-title"><span class="dot" aria-hidden="true"></span>Review mode<span class="bar-version"> · version <strong>${esc(versionSlug)}</strong></span></p>
       <button type="button" class="primary" data-act="pick">Add feedback</button>
       <button type="button" data-act="list">My feedback <span class="count" data-count>0</span></button>
       <button type="button" data-act="send" disabled>Send 0 feedback items</button>
@@ -679,7 +679,7 @@ export function mountReview() {
     const items = store.items();
     const pages = [...new Set(items.map(({ target }) => target.page))];
     listPanel.innerHTML = `<div class="panel-head">
-  <p class="eyebrow">Review mode</p>
+  <p class="eyebrow">Review mode · ${esc(versionSlug)}</p>
   <h2 id="list-title">Your feedback</h2>
   <p>${items.length ? `${items.length} ${items.length === 1 ? "item is" : "items are"} saved in this browser until you send ${items.length === 1 ? "it" : "them"}.` : "Nothing yet. Choose Add feedback, then click the part of the page you want to change."}</p>
   <button type="button" class="close" data-act="close" aria-label="Close">×</button>
@@ -724,7 +724,7 @@ export function mountReview() {
     if (sendPanel.dataset.mode !== "receipt") {
       sendPanel.dataset.mode = "receipt";
       sendPanel.innerHTML = `<div class="panel-head">
-        <p class="eyebrow">Review mode</p>
+        <p class="eyebrow">Review mode · ${esc(versionSlug)}</p>
         <h2 id="send-title" tabindex="-1">Feedback receipt</h2>
         <button type="button" class="close" data-act="close" aria-label="Close">×</button>
       </div>

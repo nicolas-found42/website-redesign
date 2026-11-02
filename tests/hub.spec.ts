@@ -32,7 +32,7 @@ test("the hub lists every version folder and nothing else [production]", async (
     "content",
     "noindex, nofollow",
   );
-  await expect(page.getByText("Baseline", { exact: true })).toHaveCount(1);
+  await expect(page.locator("li.card .badge.baseline")).toHaveCount(1);
   await expect(
     page.getByRole("heading", {
       level: 2,
@@ -49,14 +49,13 @@ test("each card opens its full site, review link and filtered issues [production
   for (const { slug } of versions) {
     const card = page.locator(`li.card[data-version="${slug}"]`);
     await expect(
-      card.getByRole("link", { name: "Open", exact: true }),
+      card.getByRole("link", { name: "Open site", exact: true }),
     ).toHaveAttribute("href", `${slug}/`);
-    await expect(card.getByRole("link", { name: "Review" })).toHaveAttribute(
-      "href",
-      `${slug}/?review`,
-    );
+    await expect(
+      card.getByRole("link", { name: "Review and give feedback" }),
+    ).toHaveAttribute("href", `${slug}/?review`);
     const issues = await card
-      .getByRole("link", { name: "Feedback issues" })
+      .getByRole("link", { name: "Feedback on GitHub" })
       .getAttribute("href");
     expect(decodeURIComponent(issues!)).toContain(`label:"version:${slug}"`);
     const site = await request.get(`${hub}${slug}/`);
@@ -90,7 +89,7 @@ test("the hub works without scripts and a phone can use it [production]", async 
   await page.goto(hub);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Open", exact: true }).first(),
+    page.getByRole("link", { name: "Open site", exact: true }).first(),
   ).toBeVisible();
   const overflow = await page.evaluate(
     () =>
@@ -109,4 +108,26 @@ test("a missing path lands on the hub's own not-found page [production]", async 
   await expect(
     page.getByRole("link", { name: "Back to the hub" }),
   ).toBeVisible();
+});
+
+test("a first-time visitor is told what Open, Review and the labels mean [production]", async ({
+  page,
+}) => {
+  await page.goto(hub);
+  const guide = page.locator("details.guide");
+  await expect(guide).toHaveAttribute("open", "");
+  await expect(guide).toContainText("A dark bar at the top names the version");
+  await expect(guide).toContainText("posted publicly on GitHub");
+  await expect(guide).toContainText(
+    "It stays empty until someone sends feedback",
+  );
+  for (const label of [
+    "Baseline",
+    "Draft",
+    "In review",
+    "Shortlisted",
+    "Chosen",
+    "Archived",
+  ])
+    await expect(guide.locator("dt", { hasText: label })).toHaveCount(1);
 });

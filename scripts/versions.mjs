@@ -22,6 +22,14 @@ export const statusNames = {
   chosen: "Chosen",
   archived: "Archived",
 };
+export const statusMeanings = {
+  draft: "Still being built; may be rough or incomplete.",
+  "in-review": "Ready for the team to look at and give feedback on.",
+  shortlisted: "A contender for the final choice.",
+  chosen:
+    "The team picked this one. Making it the live site is a separate step.",
+  archived: "Set aside; kept for reference.",
+};
 export const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /** Returns the problems with a parsed `version.json`; empty means valid. */

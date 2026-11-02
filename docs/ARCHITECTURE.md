@@ -26,7 +26,9 @@ workflow lives in [CONTRIBUTING.md](../CONTRIBUTING.md); design decisions in
   version), export, issue formatting and hosted submission.
 - `shared/content/`: facts every version shares: destinations, contact details,
   biography, principles, testimonials and resource inventory.
-- `hub/`: renders the hub index (static HTML, no scripts, neutral styling).
+- `hub/`: renders the hub index (static HTML, no scripts, neutral styling, a
+  "How this works" guide) and the hub strip (`strip.mjs`) that the build injects
+  after `<body>` in every built page of every version.
 - `worker/`: the Cloudflare Worker and D1 migrations for review receipts and
   screenshot storage. `worker/index.ts` owns validation, limits and recovery.
 
