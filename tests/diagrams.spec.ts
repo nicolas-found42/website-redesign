@@ -639,6 +639,9 @@ test("executive documents explain their recognizable output formats", async ({
 test("executive timeline words stay whole and separate with enlarged text", async ({
   page,
 }) => {
+  // Three widths, each a reload plus a 20 s settle poll: the default 30 s
+  // cannot hold even one slow Firefox iteration on a loaded CI runner.
+  test.slow();
   for (const width of [384, 1024, 1440]) {
     await page.setViewportSize({ width, height: 742 });
     await page.goto("/");
