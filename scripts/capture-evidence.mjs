@@ -14,7 +14,7 @@ try {
     for (const [group, origin, routes] of [
       [
         "destination",
-        "http://127.0.0.1:4179/website-redesign",
+        "http://127.0.0.1:4179/website-redesign/current",
         [
           "",
           "resources",
@@ -79,7 +79,9 @@ try {
         });
       }
     }
-    await page.goto("http://127.0.0.1:4179/website-redesign/resources/");
+    await page.goto(
+      "http://127.0.0.1:4179/website-redesign/current/resources/",
+    );
     for (const [choice, label] of [
       [0, "clarify"],
       [1, "guardrails"],
@@ -87,11 +89,9 @@ try {
     ]) {
       for (let step = 0; step < 4; step++)
         await page.locator("#assessment [data-answer]").nth(choice).click();
-      await page
-        .locator("#assessment")
-        .screenshot({
-          path: `${root}/destination/assessment-${label}-${width}.png`,
-        });
+      await page.locator("#assessment").screenshot({
+        path: `${root}/destination/assessment-${label}-${width}.png`,
+      });
       await page.getByRole("button", { name: "Retake", exact: true }).click();
     }
     await page.locator('[data-dialog="course"]').click();
@@ -111,7 +111,7 @@ try {
     await page.keyboard.press("Escape");
     if (width === 390) {
       await page.goto(
-        "http://127.0.0.1:4179/website-redesign/industries/private-equity/",
+        "http://127.0.0.1:4179/website-redesign/current/industries/private-equity/",
       );
       await page.locator(".industry-grid").scrollIntoViewIfNeeded();
       await page.getByRole("button", { name: "Menu" }).click();

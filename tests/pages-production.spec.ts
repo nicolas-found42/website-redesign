@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 const manifest = JSON.parse(
   readFileSync("artifacts/lovable-migration/2026-09-16/manifest.json", "utf8"),
 );
-const base = "http://127.0.0.1:4179/website-redesign";
+const base = "http://127.0.0.1:4179/website-redesign/current";
 test("static GitHub Pages routes survive direct entry, refresh, links and missing paths [production]", async ({
   page,
   request,
@@ -51,9 +51,14 @@ test("static GitHub Pages routes survive direct entry, refresh, links and missin
   }
   const missing = await page.goto(base + "/missing-route");
   expect(missing?.status()).toBe(404);
+  // GitHub Pages serves only the site-root 404.html, which is the hub's, so a
+  // missing path under a version lands on the hub's own not-found page.
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Page not found.",
+    "Page not found",
   );
+  await expect(
+    page.getByRole("link", { name: "Back to the hub" }),
+  ).toHaveAttribute("href", "/website-redesign/");
   // #148: the notice is scoped to the eight content pages; the 404 opening
   // already carries its own preview line.
   const missingHtml = await (await request.get(base + "/404.html")).text();
@@ -117,7 +122,7 @@ test("prerendered content survives script failure and forms cannot submit accide
       .getByRole("link", { name: "Portfolio companies", exact: true }),
   ).toHaveAttribute(
     "href",
-    "/website-redesign/industries/portfolio-companies/",
+    "/website-redesign/current/industries/portfolio-companies/",
   );
   await page.goto(base + "/about/");
   await expect(

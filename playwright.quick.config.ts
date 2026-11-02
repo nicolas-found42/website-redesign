@@ -27,7 +27,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      testIgnore: /(?:render|submission-service)\.spec\.ts/,
+      testIgnore: /(?:render|submission-service|versions)\.spec\.ts/,
       use: { browserName: "chromium" },
     },
   ],

@@ -10,6 +10,10 @@ Report validation against the tested commit, including commands, outcomes, and a
 
 ## Task routes
 
+### Redesign hub and versions
+
+The repository is a redesign hub: every iteration of the website is a folder under `versions/`, discovered at build, and the site root is the hub index. Before adding, changing or deleting a version, or changing the hub, the build, the version contract or version-scoped feedback, read `docs/contexts/hub/CONTEXT.md` and ADRs 0013 and 0014. Start a version with `npm run version:new`. Keep everything unique to a version inside its folder; shared code never imports from a version. `docs/DESIGN.md` and ADRs 0001-0012 describe the `current` version only; other versions may depart from them, but not from shared facts unless their `version.json` declares `changesFacts`.
+
 ### Issue tracker
 
 Track issues and specs in GitHub Issues. Before reading or publishing tickets, read `docs/agents/issue-tracker.md`.
@@ -32,11 +36,11 @@ Before exploring application behavior, read `docs/agents/domain.md`. It routes t
 
 ### Presentation and content
 
-Before changing layout, drawings, motion, or visual behavior, read `docs/DESIGN.md` and its applicable ADRs. Before changing copy, offers, or visitor journeys, read the relevant domain contexts and `docs/CONTENT-SOURCES.md`; distinguish current decisions from dated migration evidence.
+Before changing layout, drawings, motion, or visual behavior of the `current` version, read `docs/DESIGN.md` and its applicable ADRs (other versions follow their own folder notes). Before changing copy, offers, or visitor journeys, read the relevant domain contexts and `docs/CONTENT-SOURCES.md`; distinguish current decisions from dated migration evidence.
 
 ### Static hosting
 
-Before changing routes, asset paths, prerendering, or hosting, read the production-preview rules in `README.md`, `docs/SITE-MAP.md`, and `docs/guides/testing.md`. Validate the built Pages output, including direct entry, redirects, missing paths, and content when scripts fail.
+Before changing routes, asset paths, prerendering, or hosting, read the production-preview rules in `README.md`, `docs/SITE-MAP.md`, and `docs/guides/testing.md`. Validate the built Pages output, including the hub, direct entry to each version, missing paths, and content when scripts fail. Old root-level site paths intentionally no longer resolve.
 
 ## Diagnostic references
 

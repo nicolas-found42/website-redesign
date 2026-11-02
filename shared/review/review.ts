@@ -3,9 +3,10 @@ import { reviewTabCapture, screenshotFile } from "./screenshot";
 import type { Screenshot } from "./model";
 import css from "./review.css?inline";
 import { submitDrafts, sendLabel, submissionUrl } from "./submission";
-import { sitePath } from "../paths";
+import { sitePath } from "./paths";
 import { endReviewSession } from "./activation";
-import { publicSite } from "./submission-contract";
+import { versionSite } from "./submission-contract";
+import { versionSlug } from "./paths";
 import { createStore, storageKey, newId, type FeedbackItem } from "./store";
 import {
   currentPage,
@@ -775,7 +776,7 @@ export function mountReview() {
     if (!sendPanel.open) sendPanel.showModal();
     sendPanel.querySelector<HTMLElement>("h2")?.focus();
     try {
-      await submitDrafts(store, publicSite, (done, total) => {
+      await submitDrafts(store, versionSite(versionSlug), (done, total) => {
         sentCount = done;
         sendTotal = total;
         if (sendPanel.open && sendPanel.dataset.mode === "receipt")

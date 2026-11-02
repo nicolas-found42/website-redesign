@@ -3,6 +3,11 @@
  *
  *   npm run feedback:issues -- <file.md>            prints the issues it would open
  *   npm run feedback:issues -- <file.md> --create   opens them with `gh`
+ *   npm run feedback:issues -- <file.md> --version <slug>
+ *
+ * Every issue names the version it is about. A file exported from a published
+ * version already says so; one exported from a local server does not, so pass
+ * the version with `--version`.
  *
  * The repository is public and so are its issues: read the dry run first. Each
  * issue carries its item's id, so running it twice never opens one twice.
@@ -11,13 +16,20 @@ import { createServer } from "vite";
 import { execFileSync } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 const args = process.argv.slice(2);
 const create = args.includes("--create");
-const file = args.find((arg) => !arg.startsWith("--"));
+const versionAt = args.indexOf("--version");
+const versionArg = versionAt === -1 ? undefined : args[versionAt + 1];
+const file = args.find(
+  (arg, index) =>
+    !arg.startsWith("--") && (versionAt === -1 || index !== versionAt + 1),
+);
 if (!file) {
-  console.error("Usage: npm run feedback:issues -- <feedback file> [--create]");
+  console.error(
+    "Usage: npm run feedback:issues -- <feedback file> [--create] [--version <slug>]",
+  );
   process.exit(1);
 }
 
@@ -36,23 +48,30 @@ const server = await createServer({
 });
 try {
   const { parseFeedbackFile } = await server.ssrLoadModule(
-    "/src/review/export.ts",
+    "/@fs" + resolve("shared/review/export.ts"),
   );
-  const { feedbackIssue } = await server.ssrLoadModule("/src/review/issue.ts");
-  const { fingerprint } = await server.ssrLoadModule(
-    "/src/review/submission-contract.ts",
+  const { feedbackIssue } = await server.ssrLoadModule(
+    "/@fs" + resolve("shared/review/issue.ts"),
   );
+  const { fingerprint, slugOfSite, versionSite, isSlug } =
+    await server.ssrLoadModule(
+      "/@fs" + resolve("shared/review/submission-contract.ts"),
+    );
   const record = parseFeedbackFile(await readFile(file, "utf8"));
+  if (versionArg !== undefined && !isSlug(versionArg))
+    throw new Error(`"${versionArg}" is not a valid version name.`);
+  // A version flag wins; otherwise the file's own site must name a version.
+  const site = versionArg ? versionSite(versionArg) : record.site;
+  if (!slugOfSite(site))
+    throw new Error(
+      `This file's site (${record.site}) does not name a version. Pass --version <slug>.`,
+    );
   const issues = await Promise.all(
     record.items.map(async (raw) => {
       const item = { ...raw, reviewer: raw.reviewer || record.reviewer };
       return {
         id: item.id,
-        ...feedbackIssue(
-          item,
-          record.site,
-          await fingerprint(record.site, item),
-        ),
+        ...feedbackIssue(item, site, await fingerprint(site, item)),
       };
     }),
   );
@@ -76,6 +95,18 @@ try {
       "Sent by the team through the preview's review mode",
       "--force",
     );
+    for (const label of new Set(issues.flatMap((issue) => issue.labels)))
+      if (label.startsWith("version:"))
+        gh(
+          "label",
+          "create",
+          label,
+          "--color",
+          "BFD4F2",
+          "--description",
+          "Feedback about this version of the website",
+          "--force",
+        );
     const dir = await mkdtemp(join(tmpdir(), "found42-feedback-"));
     try {
       for (const issue of issues) {

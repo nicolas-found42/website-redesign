@@ -19,7 +19,7 @@ export default tseslint.config(
     extends: [js.configs.recommended, tseslint.configs.recommended],
   },
   {
-    files: ["src/**/*.ts"],
+    files: ["versions/*/src/**/*.ts", "shared/**/*.ts"],
     extends: [tseslint.configs.recommendedTypeChecked],
     languageOptions: {
       globals: globals.browser,

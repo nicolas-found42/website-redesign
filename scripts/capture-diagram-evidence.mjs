@@ -9,7 +9,7 @@
  *
  * `origin` is the site root with its base path, for example the deployed
  * `https://nicolas-found42.github.io/website-redesign/` or the local
- * production preview `http://127.0.0.1:4179/website-redesign/`.
+ * production preview `http://127.0.0.1:4179/website-redesign/current/`.
  */
 import { chromium } from "@playwright/test";
 import { mkdir, readFile, writeFile } from "node:fs/promises";

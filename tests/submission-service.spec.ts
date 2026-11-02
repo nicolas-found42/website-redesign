@@ -8,11 +8,15 @@ import { join } from "node:path";
 import { createSubmissionHandler, type Env } from "../worker/index";
 import {
   publicSite,
+  versionSite,
   repository,
   validItem,
   type Outcome,
-} from "../src/review/submission-contract";
-import type { FeedbackItem } from "../src/review/store";
+} from "../shared/review/submission-contract";
+import type { FeedbackItem } from "../shared/review/store";
+
+/** Feedback is always for one version; the baseline stands in for any. */
+const site = versionSite("current");
 
 const item = (id = "service-feedback-1"): FeedbackItem => ({
   id,
@@ -118,8 +122,8 @@ const test = base.extend<{ service: Service }>({
               "CF-Connecting-IP": "192.0.2.1",
             },
             body: JSON.stringify({
-              version: 1,
-              site: publicSite,
+              version: 2,
+              site,
               items,
               ...extra,
             }),
@@ -238,8 +242,8 @@ test("the deployed Worker runtime creates and retries through its native fetch",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          version: 1,
-          site: publicSite,
+          version: 2,
+          site,
           items: [
             {
               ...item("runtime-feedback"),
@@ -284,7 +288,11 @@ test("the service returns a durable receipt and creates one safe issue per item"
     issue: { number: 1200 },
   });
   const issue = service.requests[0].body!;
-  expect(issue.labels).toEqual(["needs-triage", "review-feedback"]);
+  expect(issue.labels).toEqual([
+    "needs-triage",
+    "review-feedback",
+    "version:current",
+  ]);
   expect(issue).not.toHaveProperty("assignees");
   expect(issue.body).toContain("@\u200bnicolas\\-found42 &lt;img src\\=x&gt;");
   expect(issue.body).toContain("**Importance:** Should change");
@@ -456,6 +464,46 @@ test("service-side request limits apply even with a forged allowed Origin", asyn
   expect(service.requests.filter((request) => request.body)).toHaveLength(1);
 });
 
+test("any well-formed version is accepted with no Worker change and its issue is scoped to it", async ({
+  service,
+}) => {
+  const feedback = item("amber-heron-feedback");
+  const result = await outcomes(
+    await service.send([feedback], { site: versionSite("amber-heron") }),
+  );
+  expect(result[0].status).toBe("confirmed");
+  const issue = service.requests[0].body!;
+  expect(issue.labels).toEqual([
+    "needs-triage",
+    "review-feedback",
+    "version:amber-heron",
+  ]);
+  expect(issue.title).toMatch(/^\[amber-heron\] /);
+  expect(issue.body).toContain("Version: **amber-heron**");
+  // The same feedback for another version is a different submission, so it
+  // cannot be confused with this one: the fingerprint binds the site.
+  const other = await outcomes(
+    await service.send([feedback], { site: versionSite("silver-owl") }),
+  );
+  expect(other[0].status).toBe("invalid");
+  expect(other[0].reason).toBe("content-conflict");
+});
+
+test("feedback without a well-formed version is refused", async ({
+  service,
+}) => {
+  for (const bad of [
+    publicSite,
+    `${publicSite}Not_A_Slug/`,
+    `${publicSite}a/b/`,
+    `${publicSite}current`,
+    `${publicSite}${"a".repeat(49)}/`,
+    "https://other.test/current/",
+  ])
+    expect((await service.send([item()], { site: bad })).status, bad).toBe(400);
+  expect(service.requests).toHaveLength(0);
+});
+
 test("clients cannot choose destinations, labels, site context or larger batches", async ({
   service,
 }) => {
@@ -475,11 +523,14 @@ test("clients cannot choose destinations, labels, site context or larger batches
   expect(service.requests).toHaveLength(0);
 });
 
-test("unrecognized pages and incomplete kind-specific changes stay invalid", async ({
+test("malformed pages and incomplete kind-specific changes stay invalid", async ({
   service,
 }) => {
   const invalid = [
-    { ...item("wrong-page"), target: { ...item().target, page: "/other/" } },
+    {
+      ...item("wrong-page"),
+      target: { ...item().target, page: "/Has Space/" },
+    },
     {
       ...item("bad-layout"),
       change: { kind: "layout", action: "move", detail: "" },
@@ -612,7 +663,7 @@ test("malformed requests consume client limits but rejected clients leave the sh
         "Content-Type": "application/json",
         "CF-Connecting-IP": "192.0.2.2",
       },
-      body: JSON.stringify({ version: 1, site: publicSite, items: [item()] }),
+      body: JSON.stringify({ version: 2, site, items: [item()] }),
     }),
     service.env,
   );
@@ -628,12 +679,12 @@ test("portfolio-company feedback is accepted by the service validator", () => {
   expect(
     validItem({
       ...feedback,
-      target: { ...feedback.target, page: "/industries/unknown-company/" },
+      target: { ...feedback.target, page: "/industries/../etc/" },
     }),
   ).toBe(false);
 });
 
-test("invalid IDs and missing-page feedback have actionable correlated outcomes", async ({
+test("invalid IDs and malformed-page feedback have actionable correlated outcomes", async ({
   service,
 }) => {
   const feedback = item();
@@ -641,14 +692,13 @@ test("invalid IDs and missing-page feedback have actionable correlated outcomes"
     await service.send([
       { ...feedback, id: undefined },
       { ...feedback, id: "x".repeat(81) },
-      { ...feedback, target: { ...feedback.target, page: "/missing/" } },
+      { ...feedback, target: { ...feedback.target, page: "missing" } },
     ]),
   );
   expect(result.map((outcome) => outcome.inputIndex)).toEqual([0, 1, 2]);
   expect(result.every((outcome) => outcome.status === "invalid")).toBe(true);
-  expect(result[2].reason).toBe("unknown-page");
-  expect(result[2].message).toContain("save a copy from My feedback");
-  expect(result[2].message).not.toContain("edit it");
+  expect(result[2].reason).toBeUndefined();
+  expect(result[2].message).toContain("edit it");
   expect(service.requests).toHaveLength(0);
 });
 
@@ -671,10 +721,10 @@ test("calendar-invalid timestamps are refused and valid leap days are accepted",
 
 test("fingerprints use the same JSON representation before and after transport", async () => {
   const { fingerprint, canonical } =
-    await import("../src/review/submission-contract");
+    await import("../shared/review/submission-contract");
   const feedback = { ...item(), updated: undefined };
-  expect(await fingerprint(publicSite, feedback)).toBe(
-    await fingerprint(publicSite, JSON.parse(JSON.stringify(feedback))),
+  expect(await fingerprint(site, feedback)).toBe(
+    await fingerprint(site, JSON.parse(JSON.stringify(feedback))),
   );
   expect(
     canonical({
@@ -736,18 +786,19 @@ test("refused creation allowance resets the claim for safe later delivery", asyn
 });
 
 test("unknown tag names always classify as an Area", async () => {
-  const { kindForTag } = await import("../src/review/elements");
+  const { kindForTag } = await import("../shared/review/elements");
   for (const tag of ["constructor", "__proto__", "toString", "custom-element"])
     expect(kindForTag(tag)).toBe("Area");
   expect(kindForTag("p")).toBe("Paragraph");
 });
 
 test("the shared formatter neutralizes imported metadata and refuses unsafe markers", async () => {
-  const { feedbackIssue } = await import("../src/review/issue");
-  const { fingerprint } = await import("../src/review/submission-contract");
-  const feedback = item();
-  const site =
-    "https://example.test/@team/[click](javascript:alert(1))<img src=x>/";
+  const { feedbackIssue } = await import("../shared/review/issue");
+  const { fingerprint } = await import("../shared/review/submission-contract");
+  const feedback = {
+    ...item(),
+    reviewer: "@team [click](javascript:alert(1))<img src=x>",
+  };
   const issue = feedbackIssue(
     feedback,
     site,
@@ -756,16 +807,28 @@ test("the shared formatter neutralizes imported metadata and refuses unsafe mark
   expect(issue.body).toContain("Page: https\\:");
   expect(issue.body).toContain("@\u200bteam");
   expect(issue.body).toContain("&lt;img");
+  expect(issue.labels).toContain("version:current");
+  expect(issue.title).toMatch(/^\[current\] /);
   expect(() =>
     feedbackIssue({ ...feedback, id: "--><img src=x>" }, site, "a".repeat(64)),
   ).toThrow("Invalid feedback marker");
   expect(() => feedbackIssue(feedback, site, "--><img src=x>")).toThrow(
     "Invalid feedback marker",
   );
+  // An issue always says which version it is about; other sites are refused.
+  for (const stranger of [
+    "https://example.test/@team/<img src=x>/",
+    publicSite,
+    `${publicSite}Not_A_Slug/`,
+    `${publicSite}a/b/`,
+  ])
+    expect(() => feedbackIssue(feedback, stranger, "a".repeat(64))).toThrow(
+      "name the version",
+    );
 });
 
 test("receipts merge monotonically and retiring an ID protects stale tab edits", async () => {
-  const { createStore } = await import("../src/review/store");
+  const { createStore } = await import("../shared/review/store");
   const original = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
   const data = new Map<string, string>();
   Object.defineProperty(globalThis, "localStorage", {
@@ -821,7 +884,7 @@ test("manual import uses the backup reviewer fallback and shared labels", async 
         JSON.stringify({
           format: "found42-review-feedback",
           version: 1,
-          site: publicSite,
+          site,
           reviewer: "Backup reviewer",
           items,
         }) +
@@ -835,9 +898,9 @@ test("manual import uses the backup reviewer fallback and shared labels", async 
     expect(output.match(/Reported by \*\*Backup reviewer\*\*/g)).toHaveLength(
       2,
     );
-    expect(output.match(/labels: needs-triage, review-feedback/g)).toHaveLength(
-      2,
-    );
+    expect(
+      output.match(/labels: needs-triage, review-feedback, version:current/g),
+    ).toHaveLength(2);
     expect(output).not.toContain("**undefined**");
   } finally {
     rmSync(directory, { recursive: true, force: true });
@@ -1061,7 +1124,7 @@ test("screenshot uploads enforce origin and free request limits", async ({
 test("screenshot formatting overflow is editable before any durable claim", async ({
   service,
 }) => {
-  const { feedbackIssue } = await import("../src/review/issue");
+  const { feedbackIssue } = await import("../shared/review/issue");
   const png = await screenshotPng();
   const { hash } = await upload(service, png);
   const feedback = item();
@@ -1087,20 +1150,18 @@ test("screenshot formatting overflow is editable before any durable claim", asyn
     const mid = Math.ceil((low + high) / 2);
     setLength(mid);
     try {
-      feedbackIssue(feedback, publicSite, "a".repeat(64));
+      feedbackIssue(feedback, site, "a".repeat(64));
       low = mid;
     } catch {
       high = mid - 1;
     }
   }
   setLength(low);
-  expect(() =>
-    feedbackIssue(feedback, publicSite, "a".repeat(64)),
-  ).not.toThrow();
+  expect(() => feedbackIssue(feedback, site, "a".repeat(64))).not.toThrow();
   expect(() =>
     feedbackIssue(
       feedback,
-      publicSite,
+      site,
       "a".repeat(64),
       `https://service.test/screenshots/${hash}`,
     ),

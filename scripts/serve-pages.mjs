@@ -2,7 +2,7 @@
 import http from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, extname } from "node:path";
-const root = resolve("dist");
+
 const base = "/website-redesign";
 const types = {
   ".html": "text/html",
@@ -13,8 +13,10 @@ const types = {
   ".svg": "image/svg+xml",
   ".txt": "text/plain",
 };
-http
-  .createServer(async (req, res) => {
+
+/** Serves `dist/` the way GitHub Pages would; resolves with the listening server. */
+export function servePages({ root = resolve("dist"), port = 4179 } = {}) {
+  const server = http.createServer(async (req, res) => {
     try {
       const path = decodeURIComponent(
         new URL(req.url, "http://localhost").pathname,
@@ -41,9 +43,14 @@ http
       res.writeHead(404, { "Content-Type": "text/html" });
       res.end(await readFile(root + "/404.html"));
     }
-  })
-  .listen(4179, "127.0.0.1", () =>
-    console.log(
-      "Static Pages preview: http://127.0.0.1:4179/website-redesign/",
-    ),
-  );
+  });
+  return new Promise((done, fail) => {
+    server.once("error", fail);
+    server.listen(port, "127.0.0.1", () => done(server));
+  });
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  await servePages();
+  console.log("Static Pages preview: http://127.0.0.1:4179/website-redesign/");
+}

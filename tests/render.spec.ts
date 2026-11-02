@@ -1,17 +1,21 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { renderHomepage } from "../src/homepage";
-import { renderPage } from "../src/pages";
-import { resources, serviceCatalog, services } from "../src/content";
+import { renderHomepage } from "../versions/current/src/homepage";
+import { renderPage } from "../versions/current/src/pages";
+import {
+  resources,
+  serviceCatalog,
+  services,
+} from "../versions/current/src/content";
 import {
   homepageTestimonials,
   robbHenshawAttribution,
-} from "../src/homepage/testimonials";
+} from "../versions/current/src/homepage/testimonials";
 import {
   readinessResult,
   scorecardQuestions,
   scorecardResult,
-} from "../src/interactions";
+} from "../versions/current/src/interactions";
 const page = renderHomepage();
 test("#168: services lead directly to testimonials without the redundant briefing band", () => {
   expect(page).not.toContain('id="briefing"');

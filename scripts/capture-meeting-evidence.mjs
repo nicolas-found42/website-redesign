@@ -8,7 +8,7 @@
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 const base =
-  process.env.EVIDENCE_URL || "http://127.0.0.1:4179/website-redesign/";
+  process.env.EVIDENCE_URL || "http://127.0.0.1:4179/website-redesign/current/";
 const group = process.env.EVIDENCE_GROUP || "after";
 const dir = `artifacts/meeting-2026-09-16/${group}`;
 await mkdir(dir, { recursive: true });
@@ -80,7 +80,11 @@ try {
       })
       .waitFor();
     await page.waitForTimeout(600);
-    await frame.getByText("Enter your details below to start the scorecard", { exact: true }).scrollIntoViewIfNeeded();
+    await frame
+      .getByText("Enter your details below to start the scorecard", {
+        exact: true,
+      })
+      .scrollIntoViewIfNeeded();
     await page.screenshot({ path: `${dir}/scorecard-gate-${width}.png` });
     report.push({
       interaction: "real ScoreApp lead gate opened without submission",

@@ -1,4 +1,4 @@
-import { routeFromPath } from "../paths";
+import { routeFromPath } from "./paths";
 import { kindForTag } from "./elements";
 
 import type { Target } from "./model";

@@ -18,7 +18,7 @@ export default defineConfig({
   projects: [
     {
       name: "logic",
-      testMatch: /(?:render|submission-service)\.spec\.ts/,
+      testMatch: /(?:render|submission-service|versions)\.spec\.ts/,
     },
   ],
 });

@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build && node scripts/prerender.mjs",
+    "build": "tsc --noEmit && node scripts/build-site.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json && tsc --noEmit -p tests/tsconfig.json",
     "lint": "npm run lint:code && npm run lint:styles && npm run lint:docs",
     "lint:code": "eslint . --max-warnings 0",
-    "lint:styles": "stylelint \"src/**/*.css\"",
+    "lint:styles": "stylelint \"versions/*/src/**/*.css\" \"shared/**/*.css\"",
     "lint:docs": "markdownlint-cli2 \"*.md\" \"docs/**/*.md\" \"research/**/*.md\" \"artifacts/**/*.md\"",
     "lint:actions": "actionlint",
     "test": "playwright test",
@@ -23,7 +23,8 @@
     "feedback:issues": "node scripts/feedback-to-issues.mjs",
     "prepare": "husky",
     "worker:check": "wrangler deploy --config worker/wrangler.jsonc --dry-run --outdir .worker-dist",
-    "worker:deploy": "node scripts/deploy-review-service.mjs"
+    "worker:deploy": "node scripts/deploy-review-service.mjs",
+    "version:new": "node scripts/new-version.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",

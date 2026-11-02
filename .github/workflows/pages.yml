@@ -67,6 +67,13 @@ jobs:
       - run: npm run typecheck
       - run: npm run worker:check
         if: matrix.shard == 1
+      - name: Limit the version contract to the versions this change touches
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch --no-tags --unshallow origin 2>/dev/null || git fetch --no-tags origin
+          echo "VERSIONS=$(node scripts/changed-versions.mjs "origin/$BASE_REF")" >> "$GITHUB_ENV"
       - run: xvfb-run -a npm test -- --workers=2 --shard=${{ matrix.shard }}/4
       - name: Summarize browser timings
         if: ${{ !cancelled() }}

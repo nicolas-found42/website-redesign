@@ -119,8 +119,8 @@ test("portfolio-company review selection saves the eighth page's context", async
   await form.getByRole("button", { name: "Save feedback" }).click();
   const target = await page.evaluate(
     () =>
-      JSON.parse(localStorage.getItem("found42-review:feedback")!).items[0]
-        .target,
+      JSON.parse(localStorage.getItem("found42-review:feedback:current")!)
+        .items[0].target,
   );
   expect(target.page).toBe("/industries/portfolio-companies/");
   expect(target.pageName).toBe("AI for Portfolio Companies");

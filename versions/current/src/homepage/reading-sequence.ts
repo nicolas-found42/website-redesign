@@ -243,7 +243,8 @@ export function mountReadingSequence({
     // Land after those layout changes, rather than releasing a stale target.
     jumpFrame = requestAnimationFrame(() => {
       if (expecting !== requested || !motionPreference.matches) {
-        if (expecting === requested && !motionPreference.matches) expecting = undefined;
+        if (expecting === requested && !motionPreference.matches)
+          expecting = undefined;
         return;
       }
       updateRail();

@@ -34,13 +34,14 @@ The development server is at <http://127.0.0.1:4173/>.
 
 | Command                   | Purpose                                                                                                                           |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`             | Vite development server.                                                                                                          |
-| `npm run build`           | Typecheck, bundle and prerender every route into `dist/`.                                                                         |
-| `npm run preview:pages`   | Strict static server for the built Pages output at <http://127.0.0.1:4179/website-redesign/>.                                     |
+| `npm run dev`             | Vite development server for `current`; use `VERSION=<slug> npm run dev` for another version.                                      |
+| `npm run version:new`     | Scaffold a draft version with a generated name (`-- --blank`, `-- --from <slug>`, `-- --title "…"`).                              |
+| `npm run build`           | Typecheck, build every version into `dist/<slug>/`, capture previews and render the hub.                                          |
+| `npm run preview:pages`   | Strict static server for the built Pages output; the hub is at <http://127.0.0.1:4179/website-redesign/>.                         |
 | `npm run preview`         | Vite's own preview; it adds a development SPA fallback, so it does not verify static routing.                                     |
 | `npm run lint`            | `lint:code` + `lint:styles` + `lint:docs`.                                                                                        |
 | `npm run lint:code`       | ESLint over TypeScript and JavaScript, including the Playwright test rules.                                                       |
-| `npm run lint:styles`     | Stylelint over `src/**/*.css`.                                                                                                    |
+| `npm run lint:styles`     | Stylelint over version and shared CSS.                                                                                            |
 | `npm run lint:docs`       | markdownlint-cli2 over repository Markdown.                                                                                       |
 | `npm run lint:actions`    | actionlint over `.github/workflows/`. Install the binary first (`brew install actionlint` on macOS); CI runs the versioned image. |
 | `npm run typecheck`       | `tsc --noEmit` for the site, the Worker and the tests.                                                                            |

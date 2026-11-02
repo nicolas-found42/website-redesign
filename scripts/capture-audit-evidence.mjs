@@ -13,7 +13,8 @@
 import { chromium, firefox, webkit } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 
-const base = process.env.AUDIT_URL || "http://127.0.0.1:4179/website-redesign/";
+const base =
+  process.env.AUDIT_URL || "http://127.0.0.1:4179/website-redesign/current/";
 const dir = process.env.AUDIT_DIR || "artifacts/site-audit/latest";
 const engine = { chromium, firefox, webkit }[
   process.env.AUDIT_ENGINE || "chromium"

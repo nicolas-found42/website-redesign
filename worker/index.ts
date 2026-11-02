@@ -5,15 +5,14 @@ import {
   maxItemBytes,
   maxRequestBytes,
   publicSite,
-  pages,
   repository,
   validEnvelope,
   validIssue,
   validItem,
   type Outcome,
-} from "../src/review/submission-contract";
-import type { FeedbackItem } from "../src/review/model";
-import { feedbackIssue, issueMarker } from "../src/review/issue";
+} from "../shared/review/submission-contract";
+import type { FeedbackItem } from "../shared/review/model";
+import { feedbackIssue, issueMarker } from "../shared/review/issue";
 
 export interface Env {
   DB: D1Database;
@@ -175,6 +174,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
   async function deliver(
     env: Env,
     item: FeedbackItem,
+    site: string,
     hash: string,
     imageOrigin: string,
   ): Promise<Outcome> {
@@ -205,7 +205,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
     }
     const issue = feedbackIssue(
       item,
-      publicSite,
+      site,
       hash,
       item.screenshot
         ? `${imageOrigin}/screenshots/${item.screenshot.sha256}`
@@ -428,24 +428,13 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
             ? value.id.slice(0, 80)
             : "unknown";
         if (!validItem(value) || bytes(JSON.stringify(value)) > maxItemBytes) {
-          const unknownPage =
-            value &&
-            typeof value === "object" &&
-            "target" in value &&
-            value.target &&
-            typeof value.target === "object" &&
-            "page" in value.target &&
-            typeof value.target.page === "string" &&
-            !pages.includes(value.target.page);
           outcomes.push({
             id,
             inputIndex,
             fingerprint: "",
             status: "invalid",
-            ...(unknownPage ? { reason: "unknown-page" as const } : {}),
-            message: unknownPage
-              ? "This feedback points to a page outside the supported website pages, so it can’t be posted here. Your draft is saved; save a copy from My feedback and contact the team to report a missing page."
-              : "This feedback is incomplete or too long. Your draft is saved; edit it before sending again.",
+            message:
+              "This feedback is incomplete or too long. Your draft is saved; edit it before sending again.",
           });
           continue;
         }
@@ -453,7 +442,7 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
         try {
           feedbackIssue(
             value,
-            publicSite,
+            payload.site,
             hash,
             value.screenshot
               ? `${url.origin}/screenshots/${value.screenshot.sha256}`
@@ -471,7 +460,9 @@ export function createSubmissionHandler(githubFetch: typeof fetch = fetch) {
           continue;
         }
         try {
-          outcomes.push(await deliver(env, value, hash, url.origin));
+          outcomes.push(
+            await deliver(env, value, payload.site, hash, url.origin),
+          );
         } catch {
           outcomes.push({
             id,

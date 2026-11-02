@@ -50,7 +50,7 @@ test.describe("native tab screenshot", () => {
     await form.getByRole("button", { name: "Save feedback" }).click();
     const image = (
       await page.evaluate(() =>
-        JSON.parse(localStorage.getItem("found42-review:feedback")!),
+        JSON.parse(localStorage.getItem("found42-review:feedback:current")!),
       )
     ).items[0].screenshot;
     expect(image.source).toBe("tab");
@@ -111,7 +111,7 @@ for (const change of ["offscreen", "detached", "scroll"] as const) {
   }) => {
     await page.goto("/");
     const result = await page.evaluate(async (change) => {
-      const modulePath = "/src/review/screenshot.ts";
+      const modulePath = "/shared/review/screenshot.ts";
       const { reviewTabCapture } = await import(modulePath);
       const canvas = document.createElement("canvas");
       const stream = canvas.captureStream();
@@ -173,7 +173,7 @@ test("capture waits for the hidden page to paint before consuming queued video f
 }) => {
   await page.goto("/");
   const result = await page.evaluate(async () => {
-    const modulePath = "/src/review/screenshot.ts";
+    const modulePath = "/shared/review/screenshot.ts";
     const { reviewTabCapture } = await import(modulePath);
     const stream = document.createElement("canvas").captureStream();
     const track = stream.getVideoTracks()[0];

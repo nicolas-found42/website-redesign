@@ -26,6 +26,19 @@ Export `OPENROUTER_API_KEY` in your calling environment before running `test:jev
 
 `test:jev` lists the eligible Chromium quick-test candidates, sends only changed file paths and test filenames/titles (never source contents) to Jev through the [OpenRouter TypeSafe System One endpoint](https://openrouter.ai/docs/guides/community/typesafe-sdk), and runs directly changed eligible specs plus up to three Jev-ranked relevant specs. It reports changed specs outside its quick scope (for example, built-production or logic-project tests); run those through the appropriate full or logic command. It uses `typesafe/jev-1.13`; a request failure stops before tests start, and reported latency/cost are visible when available. The scores are relevance judgments, not correctness guarantees. This command is intentionally a small **partial** feedback loop; it cannot waive full verification.
 
+## Hub and version contract
+
+The built Pages output has three extra specs: `tests/hub.spec.ts` (the hub
+lists exactly the folders under `versions/`, each opens, previews exist, it
+works without scripts), `tests/version-contract.spec.ts` (the small contract
+every version must pass: `noindex`, readable with scripts off, internal links
+resolve, accessibility smoke, review mode loads and sends feedback scoped to the
+version) and `tests/versions.spec.ts` (discovery, the scaffold, the import
+rules and CI selection; it needs no server). Set `VERSIONS=slug-a,slug-b`
+(`all` or `none` also work) to narrow the contract to some versions, as CI does
+for changes that only touch version folders. `npm run build` captures the hub
+previews with Chromium; it needs the browsers installed.
+
 ## Full local verification
 
 ```sh

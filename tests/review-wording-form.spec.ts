@@ -11,7 +11,9 @@ import { test, expect, type Page } from "@playwright/test";
 const panel = (page: Page) => page.getByRole("dialog");
 const saved = (page: Page) =>
   page.evaluate(() =>
-    JSON.parse(localStorage.getItem("found42-review:feedback") ?? "null"),
+    JSON.parse(
+      localStorage.getItem("found42-review:feedback:current") ?? "null",
+    ),
   );
 
 /** Starts picking and chooses `target`; returns the open feedback form. */

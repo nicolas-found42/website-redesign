@@ -9,6 +9,7 @@ This map organizes the Found42 website's domain vocabulary. The contexts describ
 - [Services](docs/contexts/services/CONTEXT.md): tailored training, workflow automation, product differentiation, and growth platforms.
 - [Inquiries](docs/contexts/inquiries/CONTEXT.md): consultation requests, discovery, service interests, and communication choices.
 - [Credibility](docs/contexts/credibility/CONTEXT.md): founder identity, testimonials, reported outcomes, and brand assets.
+- [Redesign hub](docs/contexts/hub/CONTEXT.md): versions of the whole website, their status, previews and review feedback. It describes the iterations, not the offering.
 
 ## Relationships
 
@@ -19,6 +20,8 @@ This map organizes the Found42 website's domain vocabulary. The contexts describ
 - **Learning → Inquiries**: the C-Level AI sequence promotes discovery after workshop and scorecard activity. That narrative does not establish an enforced prerequisite for making an inquiry.
 - **Learning ↔ Services**: a free workshop can introduce tailored team training, but the C-Level AI sequence and the 3-Step ROI Accelerator describe different engagements.
 - **Credibility → Learning / Services / Resources**: biography, testimonials, and reported results support specific accounts. Fictional exercises and promotional examples are not customer outcome evidence.
+
+- **Redesign hub → all others**: every version presents the same shared facts those contexts own. A version may change presentation, and must declare any change to a fact. Feedback from review mode is scoped to a version.
 
 ## Current implementation scope
 

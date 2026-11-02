@@ -130,8 +130,16 @@ export const schematics: readonly Schematic[] = [
       "Team deploys and uses it",
     ),
     annotations: [
-      { key: "decision", text: "Review point: does it still fit the work?", kind: "caption" },
-      { key: "iteration", text: "Iteration back into tailored design and build", kind: "caption" },
+      {
+        key: "decision",
+        text: "Review point: does it still fit the work?",
+        kind: "caption",
+      },
+      {
+        key: "iteration",
+        text: "Iteration back into tailored design and build",
+        kind: "caption",
+      },
     ],
     // The review in context feeds back into the design and build, on both
     // the wide sheet and the narrow one.

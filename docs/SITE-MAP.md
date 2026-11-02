@@ -1,19 +1,26 @@
 # Multi-page preview site map
 
+This map describes the **current** version, published at
+`/website-redesign/current/`. The site root, `/website-redesign/`, is the
+redesign hub ([hub context](contexts/hub/CONTEXT.md)); other versions publish at
+`/website-redesign/<slug>/` with their own structure. Old root-level paths such
+as `/resources/` no longer resolve. In the table below, destinations are
+relative to `/website-redesign/current/`.
+
 All seven publicly discovered Lovable pages are implemented. Paths are preserved
 and receive a trailing slash for static directory-index hosting. Issue #169 adds
 a distinct Portfolio companies page, making eight current content routes.
 
-| Source path                  | Destination under `/website-redesign/` | Purpose and next steps                                                                                                                                                                                                   |
-| ---------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/`                          | `/`                                    | Direct opening, free resources (the playbook entry with its review figure), three audience articles with its own scenes, services with a business-audience strip, attributed workshop accounts                           |
-| `/resources`                 | `/resources/`                          | 18-question AI Readiness Scorecard with a full local report and PDF download, separate workflow preview, failure-mode review figure, four original skill downloads and Strategic Advisor setup with its published lesson |
-| `/services`                  | `/services/`                           | What an engagement looks like (`#engagements`), audience articles, Workshops, Workflows, Automations; scope lists and free/bespoke boundary                                                                              |
-| `/industries/private-equity` | `/industries/private-equity/`          | Deal screening, diligence and firm-specific criteria; founder band; a first-pass screen example without an unapproved savings figure                                                                                     |
-| Added in #169                | `/industries/portfolio-companies/`     | Portfolio operations, role-based training, custom skills and team adoption, using already-approved operating-team content                                                                                                |
-| `/industries/b2b-saas`       | `/industries/b2b-saas/`                | Customer success, feedback triage, GTM enablement and team adoption                                                                                                                                                      |
-| `/about`                     | `/about/`                              | Complete founder biography and operating principles                                                                                                                                                                      |
-| `/blog`                      | `/blog/`                               | Three readable draft excerpts from existing essay material; honest newsletter availability                                                                                                                               |
+| Source path                  | Destination under `/website-redesign/current/` | Purpose and next steps                                                                                                                                                                                                   |
+| ---------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/`                          | `/`                                            | Direct opening, free resources (the playbook entry with its review figure), three audience articles with its own scenes, services with a business-audience strip, attributed workshop accounts                           |
+| `/resources`                 | `/resources/`                                  | 18-question AI Readiness Scorecard with a full local report and PDF download, separate workflow preview, failure-mode review figure, four original skill downloads and Strategic Advisor setup with its published lesson |
+| `/services`                  | `/services/`                                   | What an engagement looks like (`#engagements`), audience articles, Workshops, Workflows, Automations; scope lists and free/bespoke boundary                                                                              |
+| `/industries/private-equity` | `/industries/private-equity/`                  | Deal screening, diligence and firm-specific criteria; founder band; a first-pass screen example without an unapproved savings figure                                                                                     |
+| Added in #169                | `/industries/portfolio-companies/`             | Portfolio operations, role-based training, custom skills and team adoption, using already-approved operating-team content                                                                                                |
+| `/industries/b2b-saas`       | `/industries/b2b-saas/`                        | Customer success, feedback triage, GTM enablement and team adoption                                                                                                                                                      |
+| `/about`                     | `/about/`                                      | Complete founder biography and operating principles                                                                                                                                                                      |
+| `/blog`                      | `/blog/`                                       | Three readable draft excerpts from existing essay material; honest newsletter availability                                                                                                                               |
 
 Header, mobile menu, footer and contextual links stay within
 the deployment prefix. Resource links reach `#scorecard`, `#playbook`, `#library`

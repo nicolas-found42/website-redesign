@@ -248,10 +248,10 @@ test("#127 copy and retry are disabled when the receipt has no drafts left", asy
   // than leave them looking live.
   await page.evaluate(() => {
     const saved = JSON.parse(
-      localStorage.getItem("found42-review:feedback") ?? "{}",
+      localStorage.getItem("found42-review:feedback:current") ?? "{}",
     );
     localStorage.setItem(
-      "found42-review:feedback",
+      "found42-review:feedback:current",
       JSON.stringify({ ...saved, items: [] }),
     );
   });

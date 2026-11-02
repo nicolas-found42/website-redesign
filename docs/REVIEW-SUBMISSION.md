@@ -51,7 +51,11 @@ worker/wrangler.jsonc` through its private prompt/stdin. Generate an unrelated
    gh label create review-feedback --color C2E0C6 --repo nicolas-found42/website-redesign
    ```
 
-   Run each command only if its label is absent. Runtime requests cannot set labels or assignees. The
+   Run each command only if its label is absent. Each issue also carries
+   `version:<slug>` for the version it is about; the Worker supplies it, and
+   GitHub is expected to create it on first use. Confirm this in the synthetic
+   release check and pre-create the label with `gh label create` if it is not
+   created. Runtime requests cannot set labels or assignees. The
    service does not need label-management calls during ordinary submission.
 
 7. Export `WORKERS_FREE_VERIFIED_ACCOUNT` equal to `CLOUDFLARE_ACCOUNT_ID`, and
@@ -79,20 +83,23 @@ service and never deploys it with credentials.
 
 ## Contract and protection
 
-`POST /submit` accepts version 1, the exact published site URL, and at most
-three feedback records. Bodies are streamed with a 64,000-byte cap; each
+`POST /submit` accepts contract version 2, a `site` that is one version's own
+published URL (`https://nicolas-found42.github.io/website-redesign/<slug>/`, the
+slug matching `[a-z0-9]+(-[a-z0-9]+)*`), and at most
+three feedback records. Version 1 is no longer accepted. The slug is checked by
+pattern, never against a list, so adding or deleting a version needs no Worker
+deployment ([ADR 0014](adr/0014-feedback-scoped-per-version.md)). Bodies are streamed with a 64,000-byte cap; each
 record has a 20,000-byte cap and field-specific text limits. Formatted issue
 bodies have a 60,000-byte cap; oversized formatting is invalid before any
 creation attempt. The schema allows
-only the site's eight page routes, existing element types, kinds, priorities,
+only safe site-relative page paths (versions differ in structure, so there is
+no page list), existing element types, kinds, priorities,
 and kind-specific fields, including an unclassified `comment` with `detail`.
 Optional `kindUncertain: true` preserves the reviewer’s uncertainty; other values
 are refused. Existing classified records without that field remain valid.
 Additional repository, label, assignee or command
 fields are refused. Invalid records receive separate invalid outcomes correlated by input index
-when the ID is unusable. Unsupported page paths receive a distinct
-`unknown-page` reason and backup instructions, because editing cannot change
-where an item was captured.
+when the ID is unusable.
 
 The service fixes the repository, issue labels and issue operation. An allowed
 Origin is checked for browser use, but anyone can forge it: D1 limits also
@@ -164,7 +171,7 @@ worker-count policy.
 After hosted secrets and storage are configured, perform one clearly named
 **synthetic release check for #108** from the published review site context.
 Submit one test item, inspect its public issue for every recorded field,
-self-reported attribution, safe literal formatting, both labels and no
+self-reported attribution, safe literal formatting, all three labels (including `version:<slug>`) and no
 assignee. Repeat the same request and confirm the identical issue receipt
 with no second issue. Close that test issue. Record its link, Worker address,
 Free-plan verification date and the receipt evidence in the implementation PR.

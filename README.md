@@ -1,4 +1,21 @@
-# Found42 website preview
+# Found42 website redesign hub
+
+This repository holds every iteration of the Found42 website so the team can
+choose which to review, test and decide on. The site root,
+<https://nicolas-found42.github.io/website-redesign/>, is the **hub**: one card
+per **version**, each with a generated preview, its status and links to open
+the full site, review it and read its feedback issues. The hub is public but
+unlisted (`noindex`), shared by link. Today's site is the baseline version,
+`current`, at `/website-redesign/current/`.
+
+Each version is a folder under `versions/<slug>/` that owns everything unique
+to it; deleting the folder removes the version and every trace of it from the
+site. Start one with `npm run version:new` (a copy of `current` by default, or
+`-- --blank`). See [the hub context](docs/contexts/hub/CONTEXT.md),
+[ADR 0013](docs/adr/0013-version-folders-discovered-at-build.md) and
+[ADR 0014](docs/adr/0014-feedback-scoped-per-version.md).
+
+## The current version
 
 An eight-page Found42 site built with Vite and TypeScript. The Lovable content
 baseline is expressed through the existing **Working Drawings** visual system:
@@ -21,7 +38,7 @@ can be checked and copied into that form.
 ## Review mode
 
 Reviewers open the review link,
-**https://nicolas-found42.github.io/website-redesign/?review**. The `?review`
+**https://nicolas-found42.github.io/website-redesign/current/?review** (each version has its own, linked from the hub). The `?review`
 parameter stays on while they move between pages in that tab; `?review=off` or
 the toolbar's **Exit** ends it. The site deliberately does not advertise the
 mode, so whoever runs a review round sends the link out of band. **Add
@@ -30,7 +47,7 @@ change request, **Save feedback** keeps a local draft, and **Send** posts each
 saved item as a separate public GitHub issue through the hosted Worker. Drafts
 and receipts stay in the reviewer's browser until Send.
 
-`src/review/activation.ts` is the only review code in the main bundle: it reads
+Feedback is filed against the version it was made on. `shared/review/activation.ts` is the only review code in a version's main bundle: it reads
 `?review` and loads the tool on demand, so ordinary visitors never fetch it.
 Guide for reviewers and triage: [review mode](docs/REVIEW-MODE.md).
 

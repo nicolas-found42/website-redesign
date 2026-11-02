@@ -1,5 +1,5 @@
 import type { FeedbackItem } from "./model";
-import { sitePath } from "../paths";
+import { sitePath } from "./paths";
 import { itemMarkdown } from "./markdown";
 export { itemMarkdown, kindNames, priorityNames, summarize } from "./markdown";
 
