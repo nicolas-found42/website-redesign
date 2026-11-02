@@ -6,41 +6,42 @@ workflow lives in [CONTRIBUTING.md](../CONTRIBUTING.md); design decisions in
 
 ## Structure
 
-- `src/content.ts`: source offerings, resources, biography, industry scopes,
-  forthcoming essays and assessment wording.
-- `src/homepage.ts`: homepage rendering and shared page mounting; navigation,
-  adaptive header, motion controls, reveal and drawing lifecycles.
-- `src/homepage/`: homepage bands and reusable site header/footer/inquiry,
-  including the three-audience gallery (`audiences.ts`, `audiences-behaviour.ts`).
-- `src/audiences.ts`, `src/scene.ts`: the audience scenes (executives install and
-  use a system; contributors get a skill per role; builders climb to a workflow
-  in use) and the failure-mode review figure, with their live engine.
-- `src/art/`: authored landscape/portrait drawing material and the shared motion
-  engine (`kit.ts`, `field.ts`, `motion.ts`).
-- `src/schematic.ts`, `src/system.ts`: what each working-system drawing says and
-  the engine that switches between compositions.
-- `src/pages.ts`: dedicated resource, services, industry, biography and blog
-  layouts, plus route metadata. Plain render functions match existing conventions.
-- `src/interactions.ts`: assessment state, native dialogs and local validation.
-  No form sends or stores visitor data.
-- `src/readiness*.ts`: the native AI Readiness Scorecard — questions, scoring,
-  result view and locally generated PDF (`readiness-pdf.ts`).
-- `src/catalog.ts`, `src/resource-materials.ts`: services catalog and the
-  downloadable `.skill` packages.
-- `src/paths.ts`: deployment-aware internal routes and assets.
-- `src/review/`: the invited review tool — activation, form, target capture,
-  local store, export, issue formatting and hosted submission. Loads only from
-  `?review`; the Worker validates and records it.
+- `versions/<slug>/`: one folder per version of the website. Each holds
+  `version.json` (status, title, summary, author, created date), its
+  `index.html`, `src/`, `public/`, an optional `prerender.mjs` and any of its
+  own tests. Deleting a folder removes the version. See
+  [ADR 0013](adr/0013-version-folders-discovered-at-build.md).
+- `versions/current/`: today's site, the baseline. Inside it, `src/content.ts`
+  holds offerings, resources, industry scopes and assessment wording;
+  `src/homepage.ts` and `src/homepage/` the pages and bands; `src/pages.ts` the
+  dedicated layouts and route metadata; `src/interactions.ts` and
+  `src/readiness*.ts` the dialogs and the AI Readiness Scorecard;
+  `src/audiences.ts`, `src/scene.ts`, `src/schematic.ts`, `src/system.ts` and
+  `src/art/` the drawings and motion engine; `src/styles/` the tokens and band
+  styles; `src/paths.ts` deployment-aware routes; `public/` its assets and the
+  four static `.skill` packages. Design records for it are `docs/DESIGN.md` and
+  ADRs 0001–0012.
+- `shared/review/`: the invited review tool, shared by every version and loaded
+  only from `?review`: activation, form, target capture, local store (per
+  version), export, issue formatting and hosted submission.
+- `shared/content/`: facts every version shares: destinations, contact details,
+  biography, principles, testimonials and resource inventory.
+- `hub/`: renders the hub index (static HTML, no scripts, neutral styling).
 - `worker/`: the Cloudflare Worker and D1 migrations for review receipts and
   screenshot storage. `worker/index.ts` owns validation, limits and recovery.
-- `src/styles/`: tokens and band styles, imported in order by `src/style.css`,
-  with `motion.css` last so reduced-motion preferences take precedence.
-- `public/assets/`: logo, founder portrait and license notices.
-- `public/resources/skills/`: the four static `.skill` packages.
+
+Shared code never imports from a version, and a version never imports from
+another; a test enforces it. Versions reach shared code through the `@shared`
+alias.
 
 ## Build and scripts
 
-- `scripts/prerender.mjs`: generates the HTML for every route after Vite builds.
+- `scripts/versions.mjs`: discovers and validates `versions/*/version.json`.
+- `scripts/build-site.mjs`: builds every version to `dist/<slug>/` (running its
+  `prerender.mjs` if present), captures previews, and renders the hub index.
+- `scripts/new-version.mjs`: `npm run version:new` scaffolds a draft version
+  with a generated, never-reused name.
+- `scripts/changed-versions.mjs`: tells CI which versions a change touches.
 - `scripts/serve-pages.mjs`: strict local static server for production checks.
 - `scripts/deploy-review-service.mjs`: applies Worker migrations and enables the
   hosted review service after a fresh Workers Free check.
@@ -52,9 +53,11 @@ workflow lives in [CONTRIBUTING.md](../CONTRIBUTING.md); design decisions in
 
 ## GitHub Pages
 
-The production base is `/website-redesign/`. The build emits `/index.html`,
-seven nested directory `index.html` files and `/404.html`, all with real
-rendered content, individual metadata and `noindex, nofollow`. JavaScript
+The production base is `/website-redesign/`. The hub is `/index.html`; each
+version publishes under `/website-redesign/<slug>/`, and Pages serves the hub's
+own `/404.html` for every missing path. The build also emits `versions.json`
+and `previews/`. The hub and each version's rendered pages carry
+`noindex, nofollow`. JavaScript
 enhances those pages; normal anchors handle navigation and browser history.
 Unknown paths render a dedicated missing-page view rather than the homepage.
 Forms are disabled until their validation handlers are attached, preventing
@@ -70,7 +73,12 @@ production endpoint on PRs and before publication.
 
 ## Tests
 
-`tests/` covers source-manifest coverage, browser journeys, assessment branches,
+`tests/hub.spec.ts` checks the built hub against the version folders,
+`tests/version-contract.spec.ts` runs the small contract every version must
+pass (CI limits it to changed versions through `VERSIONS`), and
+`tests/versions.spec.ts` covers discovery, the scaffold and the import rules.
+The rest of `tests/` protects the `current` version, the shared review tool and
+the Worker: it covers source-manifest coverage, browser journeys, assessment branches,
 accessibility, motion, reflow, static routing and script-failure checks;
 `review-*.spec.ts` covers the review tool and `submission-service.spec.ts`
 covers the Worker boundary against local D1; `audit-remediation.spec.ts`,

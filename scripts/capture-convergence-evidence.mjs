@@ -10,7 +10,7 @@ import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 
 const base =
-  process.env.EVIDENCE_URL || "http://127.0.0.1:4179/website-redesign/";
+  process.env.EVIDENCE_URL || "http://127.0.0.1:4179/website-redesign/current/";
 const dir = process.env.EVIDENCE_DIR || "artifacts/standup-convergence";
 await mkdir(dir, { recursive: true });
 

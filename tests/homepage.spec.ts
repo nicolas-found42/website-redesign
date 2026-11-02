@@ -454,7 +454,7 @@ test("the companies strip moves without script at phone and desktop widths [prod
       viewport: { width, height: 742 },
     });
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:4179/website-redesign/");
+    await page.goto("http://127.0.0.1:4179/website-redesign/current/");
     const region = page.getByRole("region", {
       name: "Teams we have worked with",
     });

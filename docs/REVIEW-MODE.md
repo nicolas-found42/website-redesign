@@ -7,7 +7,7 @@ from a meeting.
 
 ## For reviewers
 
-1. Open the review link: `https://nicolas-found42.github.io/website-redesign/?review`.
+1. Open a version's review link (the hub's **Review** button on its card): `https://nicolas-found42.github.io/website-redesign/<version>/?review`.
    It stays on while you move between pages in that tab. The site owner — or
    whoever is running the review round — sends this link to reviewers out of
    band (chat or email), because the site deliberately does not advertise review
@@ -61,7 +61,7 @@ the browser until a **Send** is confirmed.
 
 Review mode is invited, not advertised: the site owner (or the person who
 collects the feedback) sends each reviewer their own link,
-`https://nicolas-found42.github.io/website-redesign/?review`, by chat or email,
+`https://nicolas-found42.github.io/website-redesign/<version>/?review`, by chat or email,
 and tells them what to do once it opens:
 
 1. **Add feedback**, then click the thing that should change.
@@ -80,6 +80,17 @@ suggested category remains provisional through editing and issue formatting.
 An unclassified comment uses `change.kind: "comment"` with its text in `detail`;
 existing classified drafts keep their shape. Display glosses do not change stored
 section identifiers or selectors.
+
+## One version at a time
+
+Every version has its own review link, and feedback belongs to the version it
+was made on. Drafts, **My feedback**, **Resume review** and the last receipt
+are kept per version: another version's drafts are never shown or sent, and
+**Send** posts one version's items. Each published issue is titled `[slug] …`,
+says which version it is about, and carries a `version:<slug>` label next to
+`needs-triage` and `review-feedback`. Filter by that label (the hub's
+**Feedback issues** link does) to see everything about one version. Deleting a
+version removes it from the site; its issues stay on GitHub as history.
 
 ## For whoever acts on it
 
@@ -100,16 +111,16 @@ or journeys an item touches.
 
 ## How it's built
 
-`src/review/activation.ts` is the only part in the main bundle: it reads
-`?review` and loads `src/review/review.ts` on demand, so visitors never fetch
+`shared/review/activation.ts` is the only part in the main bundle: it reads
+`?review` and loads `shared/review/review.ts` on demand, so visitors never fetch
 the tools. It also renders the drafts-aware **Resume review** bar in the site's
 own DOM (not the review shadow root) — plain markup and one `<style>`, with no
 review code imported — so the nudge costs a first-time visitor nothing. The UI
 lives in a shadow root, which keeps it out of the site's
-styles and the site's styles out of it. `src/review/export.ts` owns the
+styles and the site's styles out of it. `shared/review/export.ts` owns the
 exported file's text format and its parser.
-`src/review/submission.ts` sends versioned snapshots to the Worker;
+`shared/review/submission.ts` sends versioned snapshots to the Worker;
 `worker/index.ts` owns validation, limits and durable recovery.
-`src/review/issue.ts` formats the published GitHub issues.
+`shared/review/issue.ts` formats the published GitHub issues.
 `tests/review-mode.spec.ts` covers the browser journeys, and
 `tests/submission-service.spec.ts` covers the service boundary with local D1.

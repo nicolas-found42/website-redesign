@@ -125,7 +125,7 @@ for (const mode of ["reduced motion", "without scripting"] as const) {
     await page.goto(
       mode === "without scripting"
         ? (process.env.PW_AUDIENCE_STATIC_URL ??
-            "http://127.0.0.1:4179/website-redesign/") + "#audiences"
+            "http://127.0.0.1:4179/website-redesign/current/") + "#audiences"
         : "/#audiences",
     );
     await expect(page.locator(".audience-panel h3")).toHaveText(names);

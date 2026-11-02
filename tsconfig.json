@@ -6,7 +6,9 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "noEmit": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": { "@shared/*": ["shared/*"] }
   },
-  "include": ["src"]
+  "include": ["versions/*/src", "shared", "hub"]
 }

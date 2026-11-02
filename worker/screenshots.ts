@@ -3,7 +3,7 @@ import {
   maxScreenshotBytes,
   maxScreenshotDimension,
   maxScreenshotPixels,
-} from "../src/review/submission-contract";
+} from "../shared/review/submission-contract";
 
 const crcTable = Array.from({ length: 256 }, (_, n) => {
   for (let i = 0; i < 8; i++) n = n & 1 ? 0xedb88320 ^ (n >>> 1) : n >>> 1;

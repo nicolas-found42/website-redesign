@@ -1,25 +1,22 @@
-export { essays } from "./resource-materials";
-import { robbHenshawAttribution } from "./homepage/testimonials";
+import {
+  biography,
+  catalogBiography,
+  destinationRegister,
+  directContact,
+  principles,
+  robbHenshawAttribution,
+} from "@shared/content/facts";
 
-/** Every active learning or resource destination the site is allowed to publish. */
-export const destinationRegister = {
-  executiveCourse: "https://maven.com/richard-achee/four-hour-ai",
-  strategicAdvisorLesson:
-    "https://maven.com/p/fc1def/build-a-strategic-advisor-in-claude",
-  toolkit: "https://www.found42.com/toolkit",
-  failureModePlaybook: "https://www.found42.com/ai-failure-modes-playbook",
-  liveInquiry: "https://www.found42.com/contact",
-} as const;
-
-/**
- * The direct channels found42.com/contact already publishes, so a visitor
- * ready to talk can reach a person without going through the form.
- */
-export const directContact = {
-  email: "richard@found42.com",
-  phone: "(646) 300-1247",
-  tel: "+16463001247",
-} as const;
+// The facts every version shares live in `shared/content`; this module keeps
+// the names the current site already imports.
+export { essays } from "@shared/content/resource-materials";
+export {
+  biography,
+  catalogBiography,
+  destinationRegister,
+  directContact,
+  principles,
+};
 
 /**
  * The public free-resource inventory. Availability and destination are owned
@@ -372,12 +369,6 @@ export const serviceCatalog = {
     },
   ],
 } as const;
-/** Founder account supplied with the catalog, adapted for a public reader. */
-export const catalogBiography = [
-  "Richard Achée spent over 15 years at Google in business development across Enterprise, Education and Infrastructure. He founded Found42 to bring operator discipline to AI adoption for business leaders and their teams.",
-  "He also serves as Head of Partnerships at Edgescale AI, where he works on AI in edge infrastructure, and founded BreakBeatCode, a nonprofit that has taught coding through music to more than 56,000 students in 51 countries.",
-  "Richard has advised founders through three company exits since 2020. He brings an educator’s voice to each engagement: clear, direct and built around what the team needs to change in its work.",
-] as const;
 export const questions = [
   {
     text: "How repeatable is the work you want to improve?",
@@ -513,14 +504,6 @@ export const industries = {
       "We’ll show you where Claude can add speed, where judgment stays human, and what a safe first build looks like.",
   },
 };
-export const biography = [
-  "Richard has over two decades of experience leading teams and driving innovation in enterprise across three continents.",
-  "As an M&A business sponsor, he closed two successful strategic acquisitions at Google: Cameyo and Neverware.",
-  "As a business development leader, he helped dozens of start-ups grow from solopreneurs to category leaders.",
-  "As a board advisor and fractional GTM lead, he has supported lean start-ups in the US, EMEA, and APAC.",
-  "Richard now channels his business expertise, lifelong love of coaching and mentoring, and teacher’s mindset to help everyone learn how to use AI effectively to address their most pressing challenges.",
-  "His expansive network of founders, fractional CxOs, domain experts, and strategic partners creates opportunities to bring the right skills and experience to meet each person at their point of need.",
-];
 /**
  * The founder biography lines an industry page quotes: the published
  * experience closest to that reader's work. They stay biography, not a client
@@ -531,14 +514,3 @@ export const industryFounder: Partial<
 > = {
   "private-equity": [biography[1], biography[0]],
 };
-export const principles = [
-  ["Start narrow", "One meaningful workflow beats twenty shallow demos."],
-  [
-    "Design for failure",
-    "A skill is only useful when the team knows where it can break.",
-  ],
-  [
-    "Leave capability",
-    "The people doing the work should understand, own, and improve the system.",
-  ],
-];

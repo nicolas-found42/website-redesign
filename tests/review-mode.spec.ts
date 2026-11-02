@@ -9,13 +9,15 @@ import { readFileSync } from "node:fs";
  * section, element and current text for every item. Visitors never load any of it.
  */
 
-const production = "http://127.0.0.1:4179/website-redesign";
+const production = "http://127.0.0.1:4179/website-redesign/current";
 const panel = (page: Page) => page.getByRole("dialog");
 const toast = (page: Page) =>
   page.locator("#found42-review").getByRole("status");
 const saved = (page: Page) =>
   page.evaluate(() =>
-    JSON.parse(localStorage.getItem("found42-review:feedback") ?? "null"),
+    JSON.parse(
+      localStorage.getItem("found42-review:feedback:current") ?? "null",
+    ),
   );
 
 /** Starts picking and chooses `target`; returns the open feedback form. */
@@ -267,11 +269,21 @@ test("the sent file reads plainly and carries data the import script reads", asy
   if (browserName !== "chromium") return;
   const dryRun = execFileSync(
     "node",
-    ["scripts/feedback-to-issues.mjs", file],
+    ["scripts/feedback-to-issues.mjs", file, "--version", "current"],
     { encoding: "utf8" },
   );
   expect(dryRun).toContain(
-    "━━ Wording: Home › Heading “Train teams. Build useful skills. Automate the work.”",
+    "labels: needs-triage, review-feedback, version:current",
+  );
+  // A file from a local server names no version, so the import refuses it.
+  expect(() =>
+    execFileSync("node", ["scripts/feedback-to-issues.mjs", file], {
+      encoding: "utf8",
+      stdio: "pipe",
+    }),
+  ).toThrow(/does not name a version/);
+  expect(dryRun).toContain(
+    "━━ [current] Wording: Home › Heading “Train teams. Build useful skills. Automate the work.”",
   );
   expect(dryRun).toContain("Reported by **Adejoke Test**");
   expect(dryRun).toContain("1 issue would be opened");
@@ -347,12 +359,13 @@ test("Send publishes a saved draft in one click and shows its public receipt", a
   await page.route("https://review-submission.test/submit", async (route) => {
     deliveries++;
     const request = route.request().postDataJSON();
-    const { fingerprint } = await import("../src/review/submission-contract");
+    const { fingerprint } =
+      await import("../shared/review/submission-contract");
     await route.fulfill({
       json: {
         outcomes: await Promise.all(
           request.items.map(
-            async (item: import("../src/review/store").FeedbackItem) => ({
+            async (item: import("../shared/review/store").FeedbackItem) => ({
               id: item.id,
               fingerprint: await fingerprint(request.site, item),
               status: "confirmed",
@@ -403,9 +416,9 @@ const sendButton = (page: Page) =>
     .getByRole("button", { name: /Send/ });
 async function confirmedResponse(request: {
   site: string;
-  items: import("../src/review/store").FeedbackItem[];
+  items: import("../shared/review/store").FeedbackItem[];
 }) {
-  const { fingerprint } = await import("../src/review/submission-contract");
+  const { fingerprint } = await import("../shared/review/submission-contract");
   return {
     outcomes: await Promise.all(
       request.items.map(async (item, i) => ({
@@ -907,7 +920,7 @@ test("invalid overlong IDs retain the service validation message using input ind
   await page.goto("/?review");
   await saveWording(page, "Fix this invalid record.");
   await page.evaluate(() => {
-    const key = "found42-review:feedback";
+    const key = "found42-review:feedback:current";
     const saved = JSON.parse(localStorage.getItem(key)!);
     saved.items[0].id = "x".repeat(81);
     localStorage.setItem(key, JSON.stringify(saved));
@@ -1168,7 +1181,7 @@ test("image storage exhaustion saves written feedback and permits persistent lat
     const original = Storage.prototype.setItem;
     Storage.prototype.setItem = function (key, value) {
       if (
-        key === "found42-review:feedback" &&
+        key === "found42-review:feedback:current" &&
         JSON.parse(value).items.some(
           (item: { screenshot?: unknown }) => item.screenshot,
         )

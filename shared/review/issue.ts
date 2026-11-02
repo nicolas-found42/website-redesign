@@ -1,9 +1,10 @@
-import { submissionItem } from "./submission-contract";
+import { slugOfSite, submissionItem } from "./submission-contract";
 import type { FeedbackItem } from "./model";
 import { itemMarkdown, kindNames, priorityNames } from "./markdown";
 import { sectionGloss, targetLabel } from "./target-meta";
 
 export const issueLabels = ["needs-triage", "review-feedback"];
+export const versionLabel = (slug: string) => `version:${slug}`;
 export const maxIssueBodyBytes = 60_000;
 export const issueMarker = (id: string, hash: string) => {
   if (!/^[a-zA-Z0-9-]{1,80}$/.test(id) || !/^[a-f0-9]{64}$/.test(hash))
@@ -40,6 +41,8 @@ export function feedbackIssue(
   hash: string,
   imageUrl?: string,
 ) {
+  const slug = slugOfSite(site);
+  if (!slug) throw new Error("Feedback must name the version it is about.");
   item = submissionItem(item);
   // Gloss display context before escaping punctuation; keep the stored record
   // unchanged for the structured payload below.
@@ -57,7 +60,7 @@ export function feedbackIssue(
   );
   const fence = "`".repeat(longest + 1);
   const title =
-    `${kindNames[item.change.kind]}: ${item.target.pageName} › ${targetLabel(item.target)}`
+    `[${slug}] ${kindNames[item.change.kind]}: ${item.target.pageName} › ${targetLabel(item.target)}`
       .replace(/@/g, "@\u200b")
       .replace(/[\r\n]/g, " ")
       .slice(0, 120);
@@ -68,9 +71,11 @@ export function feedbackIssue(
       .join("\n");
   const issue = {
     title,
-    labels: issueLabels,
+    labels: [...issueLabels, versionLabel(slug)],
     body: [
       `Reported by **${safe.reviewer}** (self-reported name) on ${literal(item.created.slice(0, 10))} through review mode.`,
+      "",
+      `Version: **${slug}**`,
       "",
       `Page: ${literal(site + item.target.page.replace(/^\//, ""))}`,
       "",

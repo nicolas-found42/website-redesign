@@ -27,7 +27,7 @@ for (const path of ["/", "/services/"]) {
  * and the services page. Both surfaces now carry the same combined attribution,
  * imported from the single shared constant.
  */
-import { robbHenshawAttribution as ROBB_HENSHAW_ATTRIBUTION } from "../src/homepage/testimonials";
+import { robbHenshawAttribution as ROBB_HENSHAW_ATTRIBUTION } from "../versions/current/src/homepage/testimonials";
 
 test("Robb Henshaw carries one identical attribution on the homepage and services page", async ({
   page,

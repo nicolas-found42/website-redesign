@@ -186,7 +186,7 @@ async function sendSnapshot(
         continue;
       }
       const proposed: Submission = {
-        version: 1,
+        version: 2,
         site,
         items: [...items, next].map(submissionItem),
       };
@@ -212,7 +212,7 @@ async function sendSnapshot(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          version: 1,
+          version: 2,
           site,
           items: items.map(submissionItem),
         }),

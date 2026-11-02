@@ -3,6 +3,22 @@ import { elementNames } from "./elements";
 
 export const repository = "nicolas-found42/website-redesign";
 export const publicSite = "https://nicolas-found42.github.io/website-redesign/";
+
+/** A version's folder name: its URL segment, feedback label and manifest key. */
+export const isSlug = (value: unknown): value is string =>
+  typeof value === "string" &&
+  value.length <= 48 &&
+  /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+/** The site a version publishes to; feedback is always scoped to it. */
+export const versionSite = (slug: string) => `${publicSite}${slug}/`;
+/** The slug a submitted `site` belongs to, or null when it is not a version. */
+export function slugOfSite(site: unknown): string | null {
+  if (typeof site !== "string" || !site.startsWith(publicSite)) return null;
+  const rest = site.slice(publicSite.length);
+  if (!rest.endsWith("/")) return null;
+  const slug = rest.slice(0, -1);
+  return isSlug(slug) ? slug : null;
+}
 export const maxScreenshotBytes = 512 * 1024;
 export const maxScreenshotPixels = 2_000_000;
 export const maxScreenshotDimension = 1600;
@@ -20,7 +36,8 @@ export const maxRequestBytes = 64_000;
 export const maxItemBytes = 20_000;
 
 export interface Submission {
-  version: 1;
+  version: 2;
+  /** The version's own site URL (`versionSite(slug)`). */
   site: string;
   items: FeedbackItem[];
 }
@@ -29,7 +46,7 @@ export interface Outcome {
   fingerprint: string;
   status: "confirmed" | "retryable" | "invalid" | "pending";
   message: string;
-  reason?: "content-conflict" | "unknown-page" | "screenshot";
+  reason?: "content-conflict" | "screenshot";
   inputIndex?: number;
   issue?: { number: number; url: string };
 }
@@ -79,16 +96,11 @@ const date = (value: unknown) =>
   text(value, 40) &&
   Number.isFinite(Date.parse(value)) &&
   new Date(value).toISOString() === value;
-export const pages = [
-  "/",
-  "/services/",
-  "/industries/private-equity/",
-  "/industries/portfolio-companies/",
-  "/industries/b2b-saas/",
-  "/resources/",
-  "/about/",
-  "/blog/",
-];
+/** Versions differ in structure, so a page is any safe site-relative path. */
+const validPage = (value: unknown): value is string =>
+  typeof value === "string" &&
+  value.length <= 200 &&
+  /^\/(?:(?!\.{1,2}\/)[a-z0-9._~-]+\/)*$/i.test(value);
 
 /** Reject unknown fields at every level, including arbitrary GitHub commands. */
 export function validItem(value: unknown): value is FeedbackItem {
@@ -151,7 +163,7 @@ export function validItem(value: unknown): value is FeedbackItem {
       "state",
       "viewport",
     ]) ||
-    !oneOf(target.page, pages) ||
+    !validPage(target.page) ||
     !text(target.pageName, 100) ||
     !text(target.section, 300) ||
     !oneOf(target.element, elementNames) ||
@@ -256,11 +268,11 @@ export function validItem(value: unknown): value is FeedbackItem {
 
 export function validEnvelope(
   value: unknown,
-): value is { version: 1; site: string; items: unknown[] } {
+): value is { version: 2; site: string; items: unknown[] } {
   return (
     object(value, ["version", "site", "items"]) &&
-    value.version === 1 &&
-    value.site === publicSite &&
+    value.version === 2 &&
+    slugOfSite(value.site) !== null &&
     Array.isArray(value.items) &&
     value.items.length > 0 &&
     value.items.length <= maxBatch

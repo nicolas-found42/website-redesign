@@ -1,6 +1,16 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { pages as sitePages } from "../src/review/submission-contract";
+/** The current version's routes: a version's pages are its own business. */
+const sitePages = [
+  "/",
+  "/services/",
+  "/industries/private-equity/",
+  "/industries/portfolio-companies/",
+  "/industries/b2b-saas/",
+  "/resources/",
+  "/about/",
+  "/blog/",
+];
 
 /**
  * #120: review mode is undiscoverable without the magic `?review` link. A
@@ -12,7 +22,7 @@ import { pages as sitePages } from "../src/review/submission-contract";
  * page's own bundle runs, which is the only state the entry point can see.
  */
 
-const draftKey = "found42-review:feedback";
+const draftKey = "found42-review:feedback:current";
 const entry = (page: Page) => page.locator("[data-entry-resume]");
 const reviewHost = (page: Page) => page.locator("#found42-review");
 const reviewChunk = (url: string) => /\/review\/review\.ts/.test(url);
@@ -122,8 +132,8 @@ test("the drafts check and the resume link are defensive about what they read", 
   await page.goto("/");
   const result = await page.evaluate(async () => {
     const { savedDraftCount, reviewEntryHref, reviewRequested } =
-      await import("/src/review/activation.ts");
-    const key = "found42-review:feedback";
+      await import("/shared/review/activation.ts");
+    const key = "found42-review:feedback:current";
     const write = (value: string) => localStorage.setItem(key, value);
     write(JSON.stringify({ version: 1, reviewer: "", items: [1, 2, 3] }));
     const saved = savedDraftCount();

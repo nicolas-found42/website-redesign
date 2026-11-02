@@ -43,13 +43,16 @@ export default defineConfig({
   projects: [
     // Rendering assertions cross the homepage module's own interface and need no
     // engine, so they run once instead of once per browser.
-    { name: "unit", testMatch: /(?:render|submission-service)\.spec\.ts/ },
+    {
+      name: "unit",
+      testMatch: /(?:render|submission-service|versions)\.spec\.ts/,
+    },
     ...["chromium", "firefox", "webkit"].map((name) => ({
       name,
       testIgnore:
         name === "chromium"
-          ? /(?:render|submission-service)\.spec\.ts/
-          : /(?:render|submission-service|review-capture)\.spec\.ts/,
+          ? /(?:render|submission-service|versions)\.spec\.ts/
+          : /(?:render|submission-service|versions|review-capture)\.spec\.ts/,
       use: { browserName: name },
     })),
   ],

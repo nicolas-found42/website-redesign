@@ -9,6 +9,8 @@
  * already holds unsent drafts. It deliberately loads no review code, so a
  * first-time visitor still fetches nothing and sees nothing.
  */
+import { versionSlug } from "./paths";
+
 const flag = "found42-review:active";
 
 export function reviewRequested(url = new URL(location.href)) {
@@ -34,7 +36,7 @@ export function endReviewSession() {
  * The list `store.ts` writes; read defensively because it is on disk and only
  * "unreadable means none" keeps a corrupted list from breaking the site.
  */
-const savedKey = "found42-review:feedback";
+const savedKey = `found42-review:feedback:${versionSlug}`;
 
 /** How many unsent drafts this browser holds; 0 when none or unreadable. */
 export function savedDraftCount(): number {

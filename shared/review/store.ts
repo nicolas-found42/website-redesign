@@ -1,4 +1,5 @@
 import { canonical, type Outcome } from "./submission-contract";
+import { versionSlug } from "./paths";
 import type { FeedbackItem } from "./model";
 export type { Kind, Priority, Change, FeedbackItem } from "./model";
 
@@ -13,7 +14,8 @@ interface Saved {
   uploadedScreenshots?: string[];
 }
 
-export const storageKey = "found42-review:feedback";
+/** Every version shares one origin, so drafts are kept apart by version. */
+export const storageKey = `found42-review:feedback:${versionSlug}`;
 const key = storageKey;
 const content = (item: FeedbackItem) => {
   const fields: Partial<FeedbackItem> = { ...item };
