@@ -24,5 +24,5 @@ Review mode serves many versions from one origin and one Worker.
 - The Worker cannot reject a page that does not exist in a version; the page,
   selector and text are still recorded for whoever triages it.
 - A reviewer who moves between versions keeps separate drafts for each.
-- GitHub creates the `version:<slug>` label on first use; verify this in the
-  synthetic release check described in `docs/REVIEW-SUBMISSION.md`.
+- GitHub creates the `version:<slug>` label on first use. Verified on the live
+  site with synthetic issue #179 (see `docs/REVIEW-SUBMISSION.md`).

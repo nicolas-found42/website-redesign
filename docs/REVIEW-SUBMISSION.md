@@ -53,9 +53,12 @@ worker/wrangler.jsonc` through its private prompt/stdin. Generate an unrelated
 
    Run each command only if its label is absent. Each issue also carries
    `version:<slug>` for the version it is about; the Worker supplies it, and
-   GitHub is expected to create it on first use. Confirm this in the synthetic
-   release check and pre-create the label with `gh label create` if it is not
-   created. Runtime requests cannot set labels or assignees. The
+   GitHub creates the label on first use (verified on November 2, 2026: issue
+   [#179](https://github.com/nicolas-found42/website-redesign/issues/179)
+   created `version:current` with the Worker's token, with no assignee). The
+   auto-created label has no description or colour; add them with
+   `gh label create "version:<slug>" --color BFD4F2 --description "Feedback about this version of the website" --force`.
+   Runtime requests cannot set labels or assignees. The
    service does not need label-management calls during ordinary submission.
 
 7. Export `WORKERS_FREE_VERIFIED_ACCOUNT` equal to `CLOUDFLARE_ACCOUNT_ID`, and
