@@ -125,8 +125,18 @@ async function settle(page: import("@playwright/test").Page) {
   // reveal before advancing, then all final opacities, without forcing state.
   const targets = await page.locator("[data-reveal]").all();
   for (const target of targets) {
-    await target.scrollIntoViewIfNeeded();
-    await expect(target).toHaveClass(/\bis-in\b/);
+    // Re-center while observing: earlier entrances can still move this target.
+    // No actionability wait is needed for scrolling an otherwise hidden reveal.
+    await expect
+      .poll(
+        () =>
+          target.evaluate((element) => {
+            element.scrollIntoView({ block: "center", behavior: "instant" });
+            return element.classList.contains("is-in");
+          }),
+        { timeout: 5000, intervals: [100] },
+      )
+      .toBe(true);
     // Do not serialize entrance durations: visit the next reveal while this
     // one animates, then verify every target's actual final opacity below.
   }

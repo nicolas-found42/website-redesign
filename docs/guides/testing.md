@@ -97,9 +97,10 @@ Playwright's increasing polling backoff after a drawing has already settled.
 The phone contrast audit visits every reveal and checks its revealed class and
 full opacity instead of guessing readiness with a timed scroll sweep. Deliberate
 motion-observation windows remain part of their regression scenarios.
-Accessibility scans wait for stable target geometry before scrolling, observe
-each reveal entering before scrolling on, and verify final opacities together
-so independent entrance durations overlap.
+Accessibility scans re-center each target while polling its actual revealed
+state, so earlier entrances moving the layout cannot strand a target outside
+the observation band. Final opacities are verified together so independent
+entrance durations overlap; no reveal state is forced.
 Contributor drawing scenarios set the intended motion preference before their
 first navigation rather than loading the same page twice.
 Resize-during-transition scenarios let a wide rail jump land at its selected
