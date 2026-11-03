@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { fits, productionBase } from "./page";
 
 const names = [
   "C-level executives",
@@ -104,11 +105,7 @@ test("phone visitors read each audience beside its own scene and operate a compa
         destinations[index],
       );
     }
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    expect(await fits(page)).toBe(true);
   }
 });
 
@@ -124,8 +121,7 @@ for (const mode of ["reduced motion", "without scripting"] as const) {
     const page = await context.newPage();
     await page.goto(
       mode === "without scripting"
-        ? (process.env.PW_AUDIENCE_STATIC_URL ??
-            "http://127.0.0.1:4179/website-redesign/current/") + "#audiences"
+        ? (process.env.PW_AUDIENCE_STATIC_URL ?? productionBase) + "#audiences"
         : "/#audiences",
     );
     await expect(page.locator(".audience-panel h3")).toHaveText(names);

@@ -4,6 +4,12 @@
  * fail and carries no design of its own that could favour one version.
  */
 import { statusMeanings, statusNames } from "../scripts/versions.mjs";
+import {
+  previewHref,
+  reviewHref,
+  siteBase,
+  versionHref,
+} from "../scripts/publish.mjs";
 
 export const repository = "nicolas-found42/website-redesign";
 const escape = (value) =>
@@ -26,9 +32,9 @@ function card(version, previews) {
   const name = title === slug ? slug : `${title}`;
   const hasPreview = previews.has(slug);
   return `<li class="card" data-version="${escape(slug)}" data-status="${escape(status)}">
-  <a class="shot" href="${escape(slug)}/" aria-label="Open ${escape(name)}">${
+  <a class="shot" href="${escape(versionHref(slug))}" aria-label="Open ${escape(name)}">${
     hasPreview
-      ? `<picture><source media="(max-width: 600px)" srcset="previews/${escape(slug)}-mobile.png"><img src="previews/${escape(slug)}.png" alt="Preview of the ${escape(name)} home page" width="640" height="400" loading="lazy"></picture>`
+      ? `<picture><source media="(max-width: 600px)" srcset="${escape(previewHref(slug, "-mobile"))}"><img src="${escape(previewHref(slug))}" alt="Preview of the ${escape(name)} home page" width="640" height="400" loading="lazy"></picture>`
       : `<span class="no-shot">No preview yet</span>`
   }</a>
   <div class="body">
@@ -36,7 +42,7 @@ function card(version, previews) {
     <p class="meta"><code>${escape(slug)}</code> · <span class="badge status-${escape(status)}">${escape(statusNames[status])}</span> · ${escape(created)}${author ? ` · ${escape(author)}` : ""}</p>
     ${summary ? `<p>${escape(summary)}</p>` : ""}
     ${changesFacts ? `<p class="facts"><strong>Changes shared facts:</strong> ${escape(changesFacts)}</p>` : ""}
-    <p class="links"><a class="primary" href="${escape(slug)}/">Open site</a> <a href="${escape(slug)}/?review">Review and give feedback</a> <a href="${escape(issuesUrl(slug))}">Feedback on GitHub</a></p>
+    <p class="links"><a class="primary" href="${escape(versionHref(slug))}">Open site</a> <a href="${escape(reviewHref(slug))}">Review and give feedback</a> <a href="${escape(issuesUrl(slug))}">Feedback on GitHub</a></p>
   </div>
 </li>`;
 }
@@ -106,5 +112,5 @@ ${archived.length ? `<details><summary>Archived (${archived.length})</summary>${
 
 export const hubNotFound = `<!doctype html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><title>Page not found | Found42 redesign hub</title></head>
-<body style="font:16px/1.5 system-ui,sans-serif;max-width:40rem;margin:48px auto;padding:0 16px"><h1>Page not found</h1><p>That page isn't part of any version here. The version may have been removed.</p><p><a href="/website-redesign/">Back to the hub</a></p></body></html>
+<body style="font:16px/1.5 system-ui,sans-serif;max-width:40rem;margin:48px auto;padding:0 16px"><h1>Page not found</h1><p>That page isn't part of any version here. The version may have been removed.</p><p><a href="${siteBase}">Back to the hub</a></p></body></html>
 `;

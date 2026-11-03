@@ -18,49 +18,107 @@ import { schematicFigure, masterSchematic } from "./schematic";
 import { sitePath } from "./paths";
 import { catalogSections } from "./catalog";
 import { starterSkills } from "./resource-materials";
-export const pageMeta: Record<string, { title: string; description: string }> =
-  {
-    "": {
-      title: "Found42 — Hands-on Claude skills and training for business",
-      description:
-        "Found42 helps non-technical teams use AI in the work they already own: role-specific training, tailored skills and workflows, and automation of repeatable work.",
-    },
-    resources: {
-      title: "Free Claude Resources | Found42",
-      description:
-        "Assess one workflow and explore playbooks, skills and practical training shaped around real work.",
-    },
-    services: {
-      title: "Training Tracks, Formats & Services | Found42",
-      description:
-        "Explore five training tracks, six delivery formats, custom builds, advisory services and no-charge starting sessions.",
-    },
-    "industries/private-equity": {
-      title: "AI for Private Equity | Found42",
-      description:
-        "Claude workflows shaped around your firm’s deal screening, diligence and review criteria.",
-    },
-    "industries/portfolio-companies": {
-      title: "AI for Portfolio Companies | Found42",
-      description:
-        "Role-based training and Claude skills for portfolio operations, reviews, plans and team adoption.",
-    },
-    "industries/b2b-saas": {
-      title: "AI for Software Companies | Found42",
-      description:
-        "Claude workflows shaped around your customer context, product feedback and go-to-market work.",
-    },
-    about: {
-      title: "About Found42 | Richard Achée, Founder and CEO",
-      description:
-        "Meet Richard Achée and the business experience behind Found42’s practical, customized AI work.",
-    },
-    blog: {
-      title: "Operator Notes | Found42",
-      description:
-        "Preview essays on role-specific Claude skills, workflow design and human review.",
-    },
+/** A navigation group's label and the route it opens. */
+export type NavItem = readonly [label: string, path: string];
+export interface SiteNavigation {
+  explore: readonly NavItem[];
+  audiences: readonly NavItem[];
+}
+
+export interface SitePage {
+  title: string;
+  description: string;
+  /** The page body, without chrome. The home page is composed by `homepage.ts`. */
+  content?: () => string;
+  /** Where this page appears in the site's navigation, if it does. */
+  nav?: {
+    group: keyof SiteNavigation;
+    label: string;
+    order: number;
   };
+}
+
+/**
+ * Every route the site publishes: its metadata, its body and where it appears
+ * in navigation. Adding a page is one entry here; the router, document head,
+ * header and footer all read this table.
+ */
+export const pages: Record<string, SitePage> = {
+  "": {
+    title: "Found42 — Hands-on Claude skills and training for business",
+    description:
+      "Found42 helps non-technical teams use AI in the work they already own: role-specific training, tailored skills and workflows, and automation of repeatable work.",
+  },
+  resources: {
+    title: "Free Claude Resources | Found42",
+    description:
+      "Assess one workflow and explore playbooks, skills and practical training shaped around real work.",
+    content: resourcesPage,
+    nav: { group: "explore", label: "Free resources", order: 1 },
+  },
+  services: {
+    title: "Training Tracks, Formats & Services | Found42",
+    description:
+      "Explore five training tracks, six delivery formats, custom builds, advisory services and no-charge starting sessions.",
+    content: servicesPage,
+    nav: { group: "explore", label: "Services", order: 2 },
+  },
+  "industries/private-equity": {
+    title: "AI for Private Equity | Found42",
+    description:
+      "Claude workflows shaped around your firm’s deal screening, diligence and review criteria.",
+    content: () => industryPage("private-equity"),
+    nav: { group: "audiences", label: "Private equity", order: 1 },
+  },
+  "industries/portfolio-companies": {
+    title: "AI for Portfolio Companies | Found42",
+    description:
+      "Role-based training and Claude skills for portfolio operations, reviews, plans and team adoption.",
+    content: () => industryPage("portfolio-companies"),
+    nav: { group: "audiences", label: "Portfolio companies", order: 2 },
+  },
+  "industries/b2b-saas": {
+    title: "AI for Software Companies | Found42",
+    description:
+      "Claude workflows shaped around your customer context, product feedback and go-to-market work.",
+    content: () => industryPage("b2b-saas"),
+    nav: { group: "audiences", label: "Software companies", order: 3 },
+  },
+  about: {
+    title: "About Found42 | Richard Achée, Founder and CEO",
+    description:
+      "Meet Richard Achée and the business experience behind Found42’s practical, customized AI work.",
+    content: aboutPage,
+    nav: { group: "explore", label: "About", order: 3 },
+  },
+  blog: {
+    title: "Operator Notes | Found42",
+    description:
+      "Preview essays on role-specific Claude skills, workflow design and human review.",
+    content: blogPage,
+    nav: { group: "explore", label: "Blog", order: 4 },
+  },
+};
+
+export const pageMeta: Record<string, { title: string; description: string }> =
+  Object.fromEntries(
+    Object.entries(pages).map(([route, { title, description }]) => [
+      route,
+      { title, description },
+    ]),
+  );
+
+const navItems = (group: keyof SiteNavigation): NavItem[] =>
+  Object.entries(pages)
+    .filter(([, page]) => page.nav?.group === group)
+    .sort(([, a], [, b]) => (a.nav?.order ?? 0) - (b.nav?.order ?? 0))
+    .map(([route, page]) => [page.nav!.label, `${route}/`] as const);
+
+/** The header and footer order, read from the same table as the routes. */
+export const siteNavigation: SiteNavigation = {
+  explore: navItems("explore"),
+  audiences: navItems("audiences"),
+};
 const sectionLabel = (label: string) =>
   `<p class="note section-label">${label}</p>`;
 /** An opening's lead, followed by what Claude is whenever the lead names it. */
@@ -180,30 +238,19 @@ function blogPage() {
 }
 export function renderPage(route: string) {
   const content =
-    route === "resources"
-      ? resourcesPage()
-      : route === "services"
-        ? servicesPage()
-        : route === "about"
-          ? aboutPage()
-          : route === "blog"
-            ? blogPage()
-            : route === "industries/private-equity"
-              ? industryPage("private-equity")
-              : route === "industries/portfolio-companies"
-                ? industryPage("portfolio-companies")
-                : route === "industries/b2b-saas"
-                  ? industryPage("b2b-saas")
-                  : opening(
-                      "404",
-                      "Page not found.",
-                      "This destination is not part of the Found42 preview.",
-                      `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
-                    );
+    pages[route]?.content?.() ??
+    opening(
+      "404",
+      "Page not found.",
+      "This destination is not part of the Found42 preview.",
+      `<a class="link" href="${sitePath()}">Return home&nbsp;→</a>`,
+    );
   // #148 scopes the notice to the eight content pages. The 404 opening already
   // says it is not part of the preview, so the notice would repeat it there.
   const notice = route === "404" ? "" : previewNotice();
   return (
-    siteHeader() + `<main id="main">${notice}${content}</main>` + siteFooter()
+    siteHeader(siteNavigation) +
+    `<main id="main">${notice}${content}</main>` +
+    siteFooter(siteNavigation)
   );
 }

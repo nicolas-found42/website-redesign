@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit, previewOrigin } from "./page";
 import { discoverVersions } from "../scripts/versions.mjs";
+import { deployUrl, siteBase } from "../scripts/publish.mjs";
 
 /**
  * The version contract: what every version must do so a draft can never break
@@ -9,7 +10,7 @@ import { discoverVersions } from "../scripts/versions.mjs";
  * versions a change touches by setting VERSIONS (comma-separated slugs, `all` or `none`).
  */
 
-const origin = "http://127.0.0.1:4179";
+const origin = previewOrigin;
 // `all` or unset runs every version; `none` runs none; otherwise a slug list.
 const selection = process.env.VERSIONS || "all";
 const only = selection === "all" ? undefined : selection.split(",");
@@ -48,7 +49,7 @@ for (const { slug } of versions) {
       await expect(strip).toContainText(slug);
       await expect(
         strip.getByRole("link", { name: "All versions" }),
-      ).toHaveAttribute("href", "/website-redesign/");
+      ).toHaveAttribute("href", siteBase);
       await context.close();
     });
 
@@ -71,10 +72,8 @@ for (const { slug } of versions) {
     }) => {
       await page.goto(base);
       await page.waitForLoadState("load");
-      const audit = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-        .analyze();
-      expect(audit.violations).toEqual([]);
+      const result = await audit(page);
+      expect(result.violations).toEqual([]);
     });
 
     test("review mode loads only from a review link and sends feedback scoped to this version [production]", async ({
@@ -157,9 +156,7 @@ for (const { slug } of versions) {
       await send.click();
       await expect.poll(() => submitted).toBeTruthy();
       expect(submitted!.version).toBe(2);
-      expect(submitted!.site).toBe(
-        `https://nicolas-found42.github.io/website-redesign/${slug}/`,
-      );
+      expect(submitted!.site).toBe(deployUrl(`${slug}/`));
       expect(submitted!.items.map((i) => i.id)).toEqual(["own-draft"]);
       const untouched = await page.evaluate(
         (key) => localStorage.getItem(key),

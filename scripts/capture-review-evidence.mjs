@@ -13,8 +13,7 @@
  * `http://127.0.0.1:4173/`. Pages are captured under reduced motion, so every
  * drawing is at rest. Shots of parts a version does not have are skipped.
  */
-import { chromium } from "@playwright/test";
-import { mkdir } from "node:fs/promises";
+import { capturePages, shoot, shootElement, visit } from "./lib/capture.mjs";
 
 const [origin, out] = process.argv.slice(2);
 if (!origin || !out) {
@@ -34,62 +33,41 @@ const audiences = [
   ["builders", "AI builders"],
 ];
 
-const settle = (page) =>
-  page.evaluate(async () => {
-    await document.fonts.ready;
-    await new Promise((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(resolve)),
-    );
-  });
-
-const browser = await chromium.launch();
-try {
-  await mkdir(out, { recursive: true });
-  for (const viewport of viewports) {
-    const context = await browser.newContext({
-      viewport: { width: viewport.width, height: viewport.height },
-      deviceScaleFactor: viewport.scale,
-      reducedMotion: "reduce",
-    });
-    const page = await context.newPage();
-    const shoot = async (locator, name) => {
-      if (!(await locator.count())) return;
-      await locator.first().scrollIntoViewIfNeeded();
-      await settle(page);
-      await locator.first().screenshot({
-        path: `${out}/${viewport.name}-${name}.png`,
+await capturePages({
+  dir: out,
+  report: null,
+  viewports,
+  reducedMotion: "reduce",
+  async each({ page, viewport }) {
+    const capture = (locator, name) =>
+      shootElement(page, locator, `${out}/${viewport.name}-${name}.png`, {
+        first: true,
+        settle: true,
         // The target can be taller than a phone viewport. Keep the fixed
         // header out of its cropped evidence image while preserving the target.
         style: ".site-header, .skip-link { visibility: hidden !important; }",
       });
-    };
 
-    await page.goto(root);
-    await settle(page);
-    await page.screenshot({ path: `${out}/${viewport.name}-opening.png` });
-    await shoot(page.locator("#companies"), "organizations");
+    await visit(page, root);
+    await shoot(page, `${out}/${viewport.name}-opening.png`);
+    await capture(page.locator("#companies"), "organizations");
 
     for (const [id, name] of audiences) {
       await page
         .getByRole("button", { name: new RegExp(name, "i") })
         .first()
         .click();
-      await settle(page);
-      await shoot(page.locator(".audience-stage"), `audience-${id}`);
+      await capture(page.locator(".audience-stage"), `audience-${id}`);
     }
 
-    await shoot(
+    await capture(
       viewport.width < 900
         ? page.locator("#service-training .service-figure")
         : page.locator(".services-art"),
       "workshops",
     );
 
-    await page.goto(`${root}resources/`);
-    await settle(page);
-    await shoot(page.locator(".review-figure"), "resources-review");
-    await context.close();
-  }
-} finally {
-  await browser.close();
-}
+    await visit(page, `${root}resources/`);
+    await capture(page.locator(".review-figure"), "resources-review");
+  },
+});

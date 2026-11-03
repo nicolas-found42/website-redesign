@@ -828,7 +828,7 @@ test("the shared formatter neutralizes imported metadata and refuses unsafe mark
 });
 
 test("receipts merge monotonically and retiring an ID protects stale tab edits", async () => {
-  const { createStore } = await import("../shared/review/store");
+  const { createDraftLedger } = await import("../shared/review/store");
   const original = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
   const data = new Map<string, string>();
   Object.defineProperty(globalThis, "localStorage", {
@@ -840,10 +840,10 @@ test("receipts merge monotonically and retiring an ID protects stale tab edits",
     },
   });
   try {
-    const first = createStore();
-    const second = createStore();
+    const first = createDraftLedger();
+    const second = createDraftLedger();
     const feedback = item();
-    first.save(feedback);
+    first.apply({ kind: "save", item: feedback });
     const receipt = {
       id: feedback.id,
       fingerprint: "hash",
@@ -855,19 +855,145 @@ test("receipts merge monotonically and retiring an ID protects stale tab edits",
       message: "Published",
       label: "Test",
     };
-    first.setReceipts([receipt]);
-    second.setReceipts([{ ...receipt, status: "pending", issue: undefined }]);
-    second.setReceipts([]);
-    expect(first.receipts()).toEqual([receipt]);
-    expect(first.saveAsNew(feedback.id)).toBe(true);
-    expect(first.saveAsNew(feedback.id)).toBe(false);
-    second.save({ ...feedback, why: "An old editor saved this." });
-    expect(first.items()).toHaveLength(2);
-    expect(first.items().every((draft) => draft.id !== feedback.id)).toBe(true);
+    first.apply({ kind: "set-receipts", receipts: [receipt] });
+    second.apply({
+      kind: "set-receipts",
+      receipts: [{ ...receipt, status: "pending", issue: undefined }],
+    });
+    second.apply({ kind: "set-receipts", receipts: [] });
+    expect(first.snapshot().receipts).toEqual([receipt]);
+    expect(first.apply({ kind: "save-as-new", id: feedback.id }).found).toBe(
+      true,
+    );
+    expect(first.apply({ kind: "save-as-new", id: feedback.id }).found).toBe(
+      false,
+    );
+    second.apply({
+      kind: "save",
+      item: { ...feedback, why: "An old editor saved this." },
+    });
+    expect(first.snapshot().items).toHaveLength(2);
+    expect(
+      first.snapshot().items.every((draft) => draft.id !== feedback.id),
+    ).toBe(true);
   } finally {
     if (original) Object.defineProperty(globalThis, "localStorage", original);
     else Reflect.deleteProperty(globalThis, "localStorage");
   }
+});
+
+test("a full browser keeps the words and reports what storage refused", async () => {
+  const { createDraftLedger } = await import("../shared/review/store");
+  type DraftRecord = import("../shared/review/drafts").DraftRecord;
+  const feedback = item();
+  const screenshot = {
+    sha256: "a".repeat(64),
+    width: 800,
+    height: 600,
+    source: "file" as const,
+    captured: "2026-09-30T12:00:00.000Z",
+    dataUrl: "data:image/png;base64,AAAA",
+  };
+  let saved: DraftRecord | null = null;
+  let persistent = true;
+  const storage = {
+    get persistent() {
+      return persistent;
+    },
+    read: () => saved,
+    write(record: DraftRecord, fallback?: DraftRecord) {
+      if (record.items.some(({ screenshot }) => screenshot)) {
+        if (!fallback) {
+          persistent = false;
+          return null;
+        }
+        saved = fallback;
+        return fallback;
+      }
+      saved = record;
+      return record;
+    },
+  };
+  const ledger = createDraftLedger(storage);
+  const result = ledger.apply({
+    kind: "save",
+    item: { ...feedback, screenshot },
+  });
+  expect(result).toMatchObject({ persisted: true, imageOmitted: true });
+  expect(saved!.items[0].screenshot).toBeUndefined();
+  expect(ledger.snapshot().items[0].screenshot).toBeUndefined();
+  expect(ledger.snapshot().persistent).toBe(true);
+
+  // A browser that refuses even the words still keeps them for this page.
+  const refusing = createDraftLedger({
+    get persistent() {
+      return persistent;
+    },
+    read: () => saved,
+    write() {
+      persistent = false;
+      return null;
+    },
+  });
+  expect(
+    refusing.apply({ kind: "save", item: { ...feedback, id: "memory-only" } })
+      .persisted,
+  ).toBe(false);
+  expect(refusing.snapshot().items.map(({ id }) => id)).toContain(
+    "memory-only",
+  );
+  expect(refusing.snapshot().persistent).toBe(false);
+});
+
+test("a timestamp-only resubmission does not count as a revision", async () => {
+  const { createDraftLedger } = await import("../shared/review/store");
+  const { memoryDraftStorage } = await import("../shared/review/drafts");
+  const storage = memoryDraftStorage();
+  const ledger = createDraftLedger(storage);
+  const feedback = item();
+  ledger.apply({ kind: "save", item: feedback });
+
+  const reopened = { ...feedback, updated: "2026-10-01T00:00:00.000Z" };
+  const unchanged = ledger.apply({
+    kind: "confirm-submitted",
+    item: reopened,
+  });
+  expect(unchanged.revised).toBe(false);
+  expect(ledger.snapshot().items).toEqual([]);
+
+  const fresh = { ...feedback, id: "edited-item" };
+  ledger.apply({ kind: "save", item: fresh });
+  const edited = ledger.apply({
+    kind: "confirm-submitted",
+    item: { ...fresh, why: "A different request." },
+  });
+  expect(edited.revised).toBe(true);
+  expect(ledger.snapshot().items).toHaveLength(1);
+  expect(ledger.snapshot().items[0].id).not.toBe(fresh.id);
+});
+
+test("fingerprints ignore draft bookkeeping and local pixels", async () => {
+  const { fingerprint } = await import("../shared/review/submission-contract");
+  const saved = item();
+  const screenshot = {
+    sha256: "a".repeat(64),
+    width: 800,
+    height: 600,
+    source: "file" as const,
+    captured: "2026-09-30T12:00:00.000Z",
+    dataUrl: "data:image/png;base64,AAAA",
+  };
+  const withPixels = await fingerprint(site, { ...saved, screenshot });
+  const reopened = await fingerprint(site, {
+    ...saved,
+    screenshot: { ...screenshot, dataUrl: undefined },
+    updated: "2026-10-01T00:00:00.000Z",
+  });
+  expect(reopened).toBe(withPixels);
+  expect(reopened).not.toBe(await fingerprint(site, saved));
+  expect(
+    await fingerprint(site, { ...saved, why: "A different request." }),
+  ).not.toBe(reopened);
 });
 
 test("manual import uses the backup reviewer fallback and shared labels", async () => {

@@ -28,7 +28,7 @@ _Avoid_: Stage, state, phase
 A status meaning the team picked this version. It does not ship anything; making a version the real found42.com site is a separate decision outside the hub.
 
 **Version contract**:
-The small set of checks every version must pass whatever its design: it builds, is `noindex`, reads with scripts off, shows the hub strip, has no broken internal links, passes an accessibility smoke test, and loads review mode and sends feedback scoped to itself.
+The small set of checks every version must pass whatever its design: it builds, is `noindex`, reads with scripts off, shows the hub strip, has no broken internal links, passes an accessibility smoke test, and loads review mode and sends feedback scoped to itself. Its `version.json` also declares `prerender` truthfully, so the build never infers it from whether a file happens to exist.
 
 **Shared facts**:
 The structured content about Found42's offering that every version draws from one place: destinations, contact details, biography, principles, resource inventory and testimonials with their attribution. A version changes how facts are presented, not what they say, unless its `version.json` declares `changesFacts`.

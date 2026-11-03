@@ -1,17 +1,11 @@
 import { arrow, icon } from "../icons";
 import { destinationRegister, directContact } from "../content";
 import { sitePath } from "../paths";
-const nav = [
-  ["Free resources", "resources/"],
-  ["Services", "services/"],
-  ["About", "about/"],
-  ["Blog", "blog/"],
-] as const;
-const audiences = [
-  ["Private equity", "industries/private-equity/"],
-  ["Portfolio companies", "industries/portfolio-companies/"],
-  ["Software companies", "industries/b2b-saas/"],
-] as const;
+export type NavItem = readonly [label: string, path: string];
+export interface SiteNavigation {
+  explore: readonly NavItem[];
+  audiences: readonly NavItem[];
+}
 const logo = () =>
   `<a class="brand" href="${sitePath()}" aria-label="Found42 home"><img src="${sitePath("assets/found42-logo.png")}" alt="Found42" width="1024" height="1024"></a>`;
 /**
@@ -25,20 +19,20 @@ const logo = () =>
 export function previewNotice() {
   return `<p class="preview-note wrap"><span>Design preview: nothing you type here is sent, and requested resources are not delivered yet.</span></p>`;
 }
-export function siteHeader() {
-  return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header wrap">${logo()}<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation"><span class="menu-toggle-label">Menu</span>${icon("menu")}${icon("close")}</button><nav id="navigation" aria-label="Main navigation">${nav
+export function siteHeader(navigation: SiteNavigation) {
+  return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header wrap">${logo()}<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation"><span class="menu-toggle-label">Menu</span>${icon("menu")}${icon("close")}</button><nav id="navigation" aria-label="Main navigation">${navigation.explore
     .slice(0, 2)
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(
       "",
-    )}${audiences.map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`).join("")}${nav
+    )}${navigation.audiences.map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`).join("")}${navigation.explore
     .slice(2)
     .map(([t, p]) => `<a href="${sitePath(p)}">${t}</a>`)
     .join(
       "",
     )}<a class="nav-contact" href="${destinationRegister.liveInquiry}" data-dialog="contact">Talk to us ${arrow}</a></nav></header>`;
 }
-export function siteFooter() {
+export function siteFooter(navigation: SiteNavigation) {
   const group = (
     title: string,
     links: readonly (readonly [string, string])[],
@@ -46,10 +40,10 @@ export function siteFooter() {
     `<div class="footer-group"><h2>${title}</h2><ul>${links.map(([t, p]) => `<li><a href="${p}">${t}</a></li>`).join("")}</ul></div>`;
   return `<footer class="site-footer on-ink" data-ground="ink"><div class="wrap"><div class="footer-grid"><div class="footer-mark">${logo()}<p>Practical AI. Built around the work.</p></div>${group(
     "Explore",
-    nav.map(([t, p]) => [t, sitePath(p)] as const),
+    navigation.explore.map(([t, p]) => [t, sitePath(p)] as const),
   )}${group(
     "Who we help",
-    audiences.map(([t, p]) => [t, sitePath(p)] as const),
+    navigation.audiences.map(([t, p]) => [t, sitePath(p)] as const),
   )}${group("Contact & legal", [
     ["Contact Found42", destinationRegister.liveInquiry],
     [`Email ${directContact.email}`, `mailto:${directContact.email}`],

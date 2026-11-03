@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit, fits, open } from "./page";
 
 test("mobile menu supports keyboard navigation and returns focus to the chosen section", async ({
   page,
@@ -118,56 +118,14 @@ test("the testimonial rail is keyboard-operable and keeps every quote in the DOM
  * briefly part-way through its opacity, and contrast during a transition is not
  * what a reader is given — the settled page is.
  */
-async function settle(page: import("@playwright/test").Page) {
-  await page.evaluate(() => document.fonts.ready);
-  // A timed scroll sweep can leave a viewport before WebKit delivers its
-  // intersection callback on a busy runner. Observe each target's actual
-  // reveal before advancing, then all final opacities, without forcing state.
-  const targets = await page.locator("[data-reveal]").all();
-  for (const target of targets) {
-    // Re-center while observing: earlier entrances can still move this target.
-    // No actionability wait is needed for scrolling an otherwise hidden reveal.
-    await expect
-      .poll(
-        () =>
-          target.evaluate((element) => {
-            element.scrollIntoView({ block: "center", behavior: "instant" });
-            return element.classList.contains("is-in");
-          }),
-        { timeout: 5000, intervals: [100] },
-      )
-      .toBe(true);
-    // Do not serialize entrance durations: visit the next reveal while this
-    // one animates, then verify every target's actual final opacity below.
-  }
-  await Promise.all(
-    targets.map((target) => expect(target).toHaveCSS("opacity", "1")),
-  );
-  await expect(page.locator("[data-reveal]:not(.is-in)")).toHaveCount(0);
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-  await page.evaluate(
-    () =>
-      new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      ),
-  );
-}
 
 for (const width of [390, 768, 1440])
   test(`accessible content and layout at ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto("/");
-    await settle(page);
+    await open(page, { path: "/", width });
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-    const result = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-      .analyze();
+    const result = await audit(page);
     expect(result.violations).toEqual([]);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    expect(await fits(page)).toBe(true);
   });
 
 test("enlarged text keeps mobile resource disclosures and controls within the viewport", async ({
@@ -185,11 +143,7 @@ test("enlarged text keeps mobile resource disclosures and controls within the vi
         requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
       ),
   );
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
+  expect(await fits(page)).toBe(true);
   const start = page.locator("#resources");
   await expect(start).toContainText("C-Level AI Toolkit");
   await expect(start).toContainText(
@@ -217,12 +171,7 @@ test("no document overflow at the narrow widths, at default and doubled text", a
             requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
           ),
       );
-      expect(
-        await page.evaluate(
-          () => document.documentElement.scrollWidth <= innerWidth,
-        ),
-        `${width}px at ${scale} root text`,
-      ).toBe(true);
+      expect(await fits(page), `${width}px at ${scale} root text`).toBe(true);
     }
   }
 });

@@ -7,11 +7,18 @@ import {
   r,
   seal,
   strip,
-  type Art,
+  type Entrance,
   type LabelPlace,
-  type Orientation,
+  type Pt,
 } from "./kit";
 import { contents, folio, laptop, paper } from "./work";
+import {
+  drawn,
+  type Anchor,
+  type Plan,
+  type Rect,
+  type Staged,
+} from "./compose";
 
 /**
  * Individual Contributors and Teams: four role artifacts and a shared review.
@@ -26,6 +33,10 @@ import { contents, folio, laptop, paper } from "./work";
  * role. The ribbons alternate the owner's red, charcoal and white, each
  * with a charcoal outline, and every lane is named by its role and skill —
  * no lane depends on its colour alone to be told apart.
+ *
+ * The four roles, the gate, the reviewer and the shared result are stated
+ * once. The wide sheet runs the frame across the lanes and sends the returns
+ * sideways; the narrow one turns each lane down into a frame below them.
  */
 
 /** Red, charcoal, white, red: one per role, alternating along the lanes. */
@@ -54,7 +65,7 @@ function slotRing(x: number, y: number, width: number, height: number): string {
 }
 
 /** The gate: four charcoal posts framing the lanes, with a reviewer's seal on it. */
-function gate(frame: { x: number; y: number; w: number; h: number }): string {
+function gate(frame: Rect): string {
   const { x, y, w, h } = frame;
   const post = 16;
   return (
@@ -107,237 +118,291 @@ function roleArtifacts(x: number, y: number, w: number, role: number): string {
   );
 }
 
-function landscape(): Art {
-  const ys = [160, 370, 580, 790];
-  const centre = 475;
-  const width = 30;
-  // The frame stands across all four lanes, so every ribbon meets it
-  // straight on at its own height: nothing converges and nothing crosses.
-  const frame = { x: 806, y: 126, w: 84, h: 702 };
-  // Past the gate the four paths part to ends of their own on the result.
-  const panel = { x: 1060, y: 210, w: 230, h: 530 };
-  // The canvas ends a margin past the panel, and the company's backdrop fills
-  // it: nothing here is a number of its own to drift from the panel's.
-  const canvasWidth = panel.x + panel.w + 50;
-  const gap = 130;
-  const ends = ys.map((_, lane) => centre + (lane - 1.5) * gap);
-  const beyond = frame.x + frame.w + 10;
-  const labels: Record<string, LabelPlace> = {
-    company: place([62, 70], "start", "below", { width: 400 }),
-    human: place([frame.x + frame.w / 2, 1020], "center", "middle", {
-      width: 330,
-      ground: "red",
-    }),
-    result: place([panel.x + panel.w / 2, centre], "center", "middle", {
-      width: panel.w - 30,
-      ground: "ink",
-    }),
-  };
-  const rows = ys.map((y, i) => {
-    const n = i + 1;
-    labels[`role${n}`] = place([124, y], "start", "middle", {
-      width: 200,
-      ground: "ink",
-    });
-    labels[`skill${n}`] = place([490, y], "center", "middle", { width: 214 });
-    // One straight run at the lane's own height, into the gate's edge.
-    const d = `M290 ${y} L360 ${y} M620 ${y} L${frame.x + 10} ${y}`;
-    return part(
-      {
-        name: "role",
-        beat: n,
-        enter: "slide-right",
-        origin: [60, y],
-        nodes: [`role${n}`, `skill${n}`],
-        links: [`role${n}>skill${n}`, `skill${n}>human`],
-      },
-      strip(d, width, FILLS[i]) +
-        tab(60, y, 270, 70) +
-        roleArtifacts(60, y + 65, 560, i),
-    );
-  });
-  const returns = ys.map((y, i) => {
-    const tail = `L${beyond + 30} ${y} ${easeX([beyond + 30, y], [panel.x + 30, ends[i]], 0.5)}`;
-    return part(
-      {
-        name: "return",
-        beat: 6,
-        enter: "slide-right",
-        origin: [beyond, y],
-        order: i,
-        links: ["human>result"],
-      },
-      // The paper starts a little before the edge, so it meets the ribbon
-      // that arrived at the gate without a seam.
-      strip(`M${beyond - 2} ${y} ${tail}`, width, FILLS[i], {
-        fillPath: `M${beyond - 3.5} ${y} ${tail}`,
-      }),
-    );
-  });
-  const parts = [
-    part(
-      { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(30, 44, canvasWidth - 60, 1036),
-    ),
-    part(
-      {
-        name: "gate",
-        beat: 5,
-        enter: "wrap",
-        origin: [frame.x + frame.w / 2, centre],
-        nodes: ["human"],
-        marks: ["human:human"],
-      },
-      gate(frame) +
-        seal([frame.x + frame.w / 2, frame.y - 4], 20, -8) +
-        `<path class="s-red" d="M${frame.x + frame.w / 2} ${frame.y + frame.h} L${frame.x + frame.w / 2} 990" stroke-width="4"/>` +
-        plate(frame.x + frame.w / 2 - 180, 990, 360, 60),
-    ),
-    ...rows,
-    part(
-      { name: "human-reviewer", beat: 5, enter: "rise" },
-      figure([966, 914], 2.5, "red"),
-    ),
-    part(
-      { name: "lanes", beat: 4, enter: "fade", order: 1 },
-      ys.map((y) => slotRing(frame.x - 12, y - 21, 36, 42)).join(""),
-    ),
-    ...returns,
-    part(
-      {
-        name: "result",
-        beat: 6,
-        enter: "unfold-x",
-        origin: [panel.x, centre],
-        order: 4,
-        nodes: ["result"],
-        marks: ["result:result"],
-      },
-      resultPanel(panel.x, panel.y, panel.w, panel.h),
-    ),
-  ];
-  return { width: canvasWidth, height: 1100, parts: parts.join(""), labels };
-}
+type RolePlacement = {
+  path: string;
+  origin: Pt;
+  tab: Rect;
+  artifact: { x: number; y: number; w: number };
+  role: Anchor;
+  skill: Anchor;
+};
 
-function portrait(): Art {
-  const ys = [160, 400, 640, 880];
-  // Each lane turns down at a line of its own and falls straight to the
-  // gate: horizontals sit at different heights and verticals at different
-  // lines, so no lane crosses another on its way down.
-  const downAt = [594, 566, 538, 510];
-  const width = 20;
-  const frame = { x: 470, y: 1130, w: 134, h: 74 };
-  // Past the gate the four paths part to ends of their own on the result,
-  // in the same left-to-right order as their lines above the gate.
-  const panel = { x: 120, y: 1460, w: 470, h: 104 };
-  // The canvas ends a margin below the panel, and the company's backdrop fills
-  // it: nothing here is a number of its own to drift from the panel's.
-  const canvasHeight = panel.y + panel.h + 40;
-  const beyond = frame.y + frame.h + 10;
-  const ends = [552, 468, 384, 300];
-  const labels: Record<string, LabelPlace> = {
-    company: place([40, 54], "start", "below", { width: 520 }),
-    human: place([306, 1167], "center", "middle", {
-      width: 250,
-      ground: "red",
-    }),
-    result: place(
-      [panel.x + panel.w / 2, panel.y + panel.h / 2],
-      "center",
-      "middle",
-      {
-        width: panel.w - 32,
-        ground: "ink",
-      },
-    ),
-  };
-  const rows = ys.map((y, i) => {
-    const n = i + 1;
-    const x = downAt[i];
+type ReturnPlacement = {
+  path: string;
+  fillPath: string;
+  origin: Pt;
+  enter: Entrance;
+};
+
+type Gate = {
+  origin: Pt;
+  sealAt: Pt;
+  sealRadius: number;
+  stem: string;
+  plate: Rect;
+};
+
+type ContributorsGeometry = {
+  /** The ribbon width: thinner on the narrow sheet. */
+  width: number;
+  company: { rect: Rect; label: Anchor };
+  frame: Rect;
+  gate: Gate;
+  roles: readonly RolePlacement[];
+  reviewer: { at: Pt; scale: number };
+  lanes: string;
+  returns: readonly ReturnPlacement[];
+  panel: Rect;
+  result: { origin: Pt; enter: Entrance; label: Anchor };
+  human: Anchor;
+};
+
+const landscapeYs = [160, 370, 580, 790];
+const landscapeCentre = 475;
+const landscapeFrame: Rect = { x: 806, y: 126, w: 84, h: 702 };
+const landscapePanel: Rect = { x: 1060, y: 210, w: 230, h: 530 };
+const landscapeGap = 130;
+const landscapeEnds = landscapeYs.map(
+  (_, lane) => landscapeCentre + (lane - 1.5) * landscapeGap,
+);
+const landscapeBeyond = landscapeFrame.x + landscapeFrame.w + 10;
+
+const landscape: ContributorsGeometry = {
+  width: 30,
+  company: {
+    rect: {
+      x: 30,
+      y: 44,
+      w: landscapePanel.x + landscapePanel.w + 50 - 60,
+      h: 1036,
+    },
+    label: { at: [62, 70], width: 400 },
+  },
+  frame: landscapeFrame,
+  gate: {
+    origin: [landscapeFrame.x + landscapeFrame.w / 2, landscapeCentre],
+    sealAt: [landscapeFrame.x + landscapeFrame.w / 2, landscapeFrame.y - 4],
+    sealRadius: 20,
+    stem: `<path class="s-red" d="M${landscapeFrame.x + landscapeFrame.w / 2} ${landscapeFrame.y + landscapeFrame.h} L${landscapeFrame.x + landscapeFrame.w / 2} 990" stroke-width="4"/>`,
+    plate: {
+      x: landscapeFrame.x + landscapeFrame.w / 2 - 180,
+      y: 990,
+      w: 360,
+      h: 60,
+    },
+  },
+  roles: landscapeYs.map((y) => ({
+    path: `M290 ${y} L360 ${y} M620 ${y} L${landscapeFrame.x + 10} ${y}`,
+    origin: [60, y],
+    tab: { x: 60, y, w: 270, h: 70 },
+    artifact: { x: 60, y: y + 65, w: 560 },
+    role: { at: [124, y], width: 200 },
+    skill: { at: [490, y], width: 214 },
+  })),
+  reviewer: { at: [966, 914], scale: 2.5 },
+  lanes: landscapeYs
+    .map((y) => slotRing(landscapeFrame.x - 12, y - 21, 36, 42))
+    .join(""),
+  returns: landscapeYs.map((y, lane) => {
+    const tail = `L${landscapeBeyond + 30} ${y} ${easeX([landscapeBeyond + 30, y], [landscapePanel.x + 30, landscapeEnds[lane]], 0.5)}`;
+    return {
+      path: `M${landscapeBeyond - 2} ${y} ${tail}`,
+      fillPath: `M${landscapeBeyond - 3.5} ${y} ${tail}`,
+      origin: [landscapeBeyond, y],
+      enter: "slide-right",
+    };
+  }),
+  panel: landscapePanel,
+  result: {
+    origin: [landscapePanel.x, landscapeCentre],
+    enter: "unfold-x",
+    label: {
+      at: [landscapePanel.x + landscapePanel.w / 2, landscapeCentre],
+      width: landscapePanel.w - 30,
+    },
+  },
+  human: { at: [landscapeFrame.x + landscapeFrame.w / 2, 1020], width: 330 },
+};
+
+const portraitYs = [160, 400, 640, 880];
+// Each lane turns down at a line of its own and falls straight to the
+// gate: horizontals sit at different heights and verticals at different
+// lines, so no lane crosses another on its way down.
+const portraitDownAt = [594, 566, 538, 510];
+const portraitFrame: Rect = { x: 470, y: 1130, w: 134, h: 74 };
+const portraitPanel: Rect = { x: 120, y: 1460, w: 470, h: 104 };
+const portraitCanvas = portraitPanel.y + portraitPanel.h + 40;
+const portraitBeyond = portraitFrame.y + portraitFrame.h + 10;
+const portraitEnds = [552, 468, 384, 300];
+const portraitCentre = portraitFrame.y + portraitFrame.h / 2;
+
+const portrait: ContributorsGeometry = {
+  width: 20,
+  company: {
+    rect: { x: 14, y: 30, w: 592, h: portraitCanvas - 60 },
+    label: { at: [40, 54], width: 520 },
+  },
+  frame: portraitFrame,
+  gate: {
+    origin: [portraitFrame.x + portraitFrame.w / 2, portraitCentre],
+    sealAt: [portraitFrame.x - 4, portraitFrame.y + 4],
+    sealRadius: 18,
+    stem: `<path class="s-red" d="M${portraitFrame.x} ${portraitCentre} L440 ${portraitCentre}" stroke-width="4"/>`,
+    plate: { x: 172, y: portraitCentre - 48, w: 268, h: 96 },
+  },
+  roles: portraitYs.map((y, lane) => {
+    const x = portraitDownAt[lane];
     const radius = Math.min(24, x - 480);
-    labels[`role${n}`] = place([88, y], "start", "middle", {
-      width: 188,
-      ground: "ink",
-    });
-    labels[`skill${n}`] = place([382, y], "center", "middle", { width: 170 });
-    // Across at the row's own height, one rounded turn, then straight down
-    // to the gate's edge.
-    const d = `M262 ${y} L288 ${y} M476 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${frame.y + 10}`;
-    return part(
-      {
-        name: "role",
-        beat: n,
-        enter: "slide-right",
-        origin: [34, y],
-        nodes: [`role${n}`, `skill${n}`],
-        links: [`role${n}>skill${n}`, `skill${n}>human`],
-      },
-      strip(d, width, FILLS[i]) +
-        tab(34, y, 244, 80) +
-        roleArtifacts(34, y + 60, 432, i),
-    );
-  });
-  const returns = ys.map((_, i) => {
-    const x = downAt[i];
-    const tail = `L${x} ${beyond + 26} ${easeY([x, beyond + 26], [ends[i], panel.y + 30], 0.5)}`;
-    return part(
-      {
-        name: "return",
-        beat: 6,
-        enter: "slide-down",
-        origin: [x, beyond],
-        order: i,
-        links: ["human>result"],
-      },
-      strip(`M${x} ${beyond - 2} ${tail}`, width, FILLS[i], {
-        fillPath: `M${x} ${beyond - 3.5} ${tail}`,
-      }),
-    );
-  });
-  const parts = [
-    part(
-      { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
-      backdrop(14, 30, 592, canvasHeight - 60),
-    ),
-    part(
-      {
-        name: "gate",
-        beat: 5,
-        enter: "wrap",
-        origin: [frame.x + frame.w / 2, frame.y + frame.h / 2],
-        nodes: ["human"],
-        marks: ["human:human"],
-      },
-      gate(frame) +
-        seal([frame.x - 4, frame.y + 4], 18, -8) +
-        `<path class="s-red" d="M${frame.x} ${frame.y + frame.h / 2} L440 ${frame.y + frame.h / 2}" stroke-width="4"/>` +
-        plate(172, frame.y + frame.h / 2 - 48, 268, 96),
-    ),
-    ...rows,
-    part(
-      { name: "human-reviewer", beat: 5, enter: "rise" },
-      figure([290, 1310], 2.8, "red"),
-    ),
-    part(
-      { name: "lanes", beat: 4, enter: "fade", order: 1 },
-      downAt.map((x) => slotRing(x - 16, frame.y - 12, 32, 36)).join(""),
-    ),
-    ...returns,
-    part(
-      {
-        name: "result",
-        beat: 6,
-        enter: "unfold-y",
-        origin: [panel.x + panel.w / 2, panel.y],
-        order: 4,
-        nodes: ["result"],
-        marks: ["result:result"],
-      },
-      resultPanel(panel.x, panel.y, panel.w, panel.h),
-    ),
-  ];
-  return { width: 620, height: canvasHeight, parts: parts.join(""), labels };
-}
+    return {
+      path: `M262 ${y} L288 ${y} M476 ${y} L${x - radius} ${y} Q${x} ${y} ${x} ${y + radius} L${x} ${portraitFrame.y + 10}`,
+      origin: [34, y],
+      tab: { x: 34, y, w: 244, h: 80 },
+      artifact: { x: 34, y: y + 60, w: 432 },
+      role: { at: [88, y], width: 188 },
+      skill: { at: [382, y], width: 170 },
+    };
+  }),
+  reviewer: { at: [290, 1310], scale: 2.8 },
+  lanes: portraitDownAt
+    .map((x) => slotRing(x - 16, portraitFrame.y - 12, 32, 36))
+    .join(""),
+  returns: portraitYs.map((_, lane) => {
+    const x = portraitDownAt[lane];
+    const tail = `L${x} ${portraitBeyond + 26} ${easeY([x, portraitBeyond + 26], [portraitEnds[lane], portraitPanel.y + 30], 0.5)}`;
+    return {
+      path: `M${x} ${portraitBeyond - 2} ${tail}`,
+      fillPath: `M${x} ${portraitBeyond - 3.5} ${tail}`,
+      origin: [x, portraitBeyond],
+      enter: "slide-down",
+    };
+  }),
+  panel: portraitPanel,
+  result: {
+    origin: [portraitPanel.x + portraitPanel.w / 2, portraitPanel.y],
+    enter: "unfold-y",
+    label: {
+      at: [
+        portraitPanel.x + portraitPanel.w / 2,
+        portraitPanel.y + portraitPanel.h / 2,
+      ],
+      width: portraitPanel.w - 32,
+    },
+  },
+  human: { at: [306, 1167], width: 250 },
+};
 
-export const contributorsArt = (orientation: Orientation): Art =>
-  orientation === "portrait" ? portrait() : landscape();
+const plan: Plan<ContributorsGeometry> = {
+  size: {
+    landscape: {
+      width: landscapePanel.x + landscapePanel.w + 50,
+      height: 1100,
+    },
+    portrait: { width: 620, height: portraitCanvas },
+  },
+  geometry: { landscape, portrait },
+  build: (g): Staged => {
+    const rows = g.roles.map((role, lane) => {
+      const n = lane + 1;
+      return part(
+        {
+          name: "role",
+          beat: n,
+          enter: "slide-right",
+          origin: role.origin,
+          nodes: [`role${n}`, `skill${n}`],
+          links: [`role${n}>skill${n}`, `skill${n}>human`],
+        },
+        strip(role.path, g.width, FILLS[lane]) +
+          tab(role.tab.x, role.tab.y, role.tab.w, role.tab.h) +
+          roleArtifacts(
+            role.artifact.x,
+            role.artifact.y,
+            role.artifact.w,
+            lane,
+          ),
+      );
+    });
+    const returns = g.returns.map((back, lane) =>
+      part(
+        {
+          name: "return",
+          beat: 6,
+          enter: back.enter,
+          origin: back.origin,
+          order: lane,
+          links: ["human>result"],
+        },
+        strip(back.path, g.width, FILLS[lane], { fillPath: back.fillPath }),
+      ),
+    );
+    const labels: Record<string, LabelPlace> = {
+      company: place(g.company.label.at, "start", "below", {
+        width: g.company.label.width,
+      }),
+      human: place(g.human.at, "center", "middle", {
+        width: g.human.width,
+        ground: "red",
+      }),
+      result: place(g.result.label.at, "center", "middle", {
+        width: g.result.label.width,
+        ground: "ink",
+      }),
+    };
+    g.roles.forEach((role, lane) => {
+      labels[`role${lane + 1}`] = place(role.role.at, "start", "middle", {
+        width: role.role.width,
+        ground: "ink",
+      });
+      labels[`skill${lane + 1}`] = place(role.skill.at, "center", "middle", {
+        width: role.skill.width,
+      });
+    });
+    const parts = [
+      part(
+        { name: "company", beat: 0, enter: "fade", nodes: ["company"] },
+        backdrop(
+          g.company.rect.x,
+          g.company.rect.y,
+          g.company.rect.w,
+          g.company.rect.h,
+        ),
+      ),
+      part(
+        {
+          name: "gate",
+          beat: 5,
+          enter: "wrap",
+          origin: g.gate.origin,
+          nodes: ["human"],
+          marks: ["human:human"],
+        },
+        gate(g.frame) +
+          seal(g.gate.sealAt, g.gate.sealRadius, -8) +
+          g.gate.stem +
+          plate(g.gate.plate.x, g.gate.plate.y, g.gate.plate.w, g.gate.plate.h),
+      ),
+      ...rows,
+      part(
+        { name: "human-reviewer", beat: 5, enter: "rise" },
+        figure(g.reviewer.at, g.reviewer.scale, "red"),
+      ),
+      part({ name: "lanes", beat: 4, enter: "fade", order: 1 }, g.lanes),
+      ...returns,
+      part(
+        {
+          name: "result",
+          beat: 6,
+          enter: g.result.enter,
+          origin: g.result.origin,
+          order: 4,
+          nodes: ["result"],
+          marks: ["result:result"],
+        },
+        resultPanel(g.panel.x, g.panel.y, g.panel.w, g.panel.h),
+      ),
+    ];
+    return { parts, labels };
+  },
+};
+
+export const contributorsArt = drawn(plan);

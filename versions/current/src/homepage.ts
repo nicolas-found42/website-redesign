@@ -1,18 +1,15 @@
 import { mountInteractions } from "./interactions";
 import { previewNotice, siteHeader, siteFooter } from "./homepage/chrome";
+import { siteNavigation } from "./pages";
 import { hero } from "./homepage/hero";
 import { resourcesSection } from "./homepage/resources";
 import { servicesSection } from "./homepage/services";
 import { audiencesSection } from "./homepage/audiences";
 import { companiesSection } from "./homepage/companies";
 import { founderSection } from "./homepage/founder";
-import {
-  mountTestimonials,
-  testimonialsSection,
-} from "./homepage/testimonials";
+import { testimonialsSection } from "./homepage/testimonials";
 import { inquirySection } from "./homepage/inquiry";
-import { mountServices } from "./homepage/services-behaviour";
-import { mountAudiences } from "./homepage/audiences-behaviour";
+import { bandMounts } from "./homepage/bands";
 import { mountReveals } from "./reveal";
 import { mountSmoothScroll } from "./scroll";
 import type { PageMotion } from "./motion-preference";
@@ -22,7 +19,7 @@ import type { PageMotion } from "./motion-preference";
  * its own renderer. Callers and tests read the page through this function.
  */
 export function renderHomepage() {
-  return `${siteHeader()}
+  return `${siteHeader(siteNavigation)}
 <main id="main">
 ${previewNotice()}
 ${hero()}
@@ -34,7 +31,7 @@ ${founderSection()}
 ${resourcesSection()}
 ${inquirySection()}
 </main>
-${siteFooter()}`;
+${siteFooter(siteNavigation)}`;
 }
 
 /**
@@ -205,16 +202,10 @@ export function mountPage(
     removeEventListener("resize", readGround);
   });
 
-  /* ── The scroll-linked services sequence ── */
-  if (root.querySelector(".services-art"))
-    disposers.push(mountServices(root, { motionPreference }));
-
-  /* ── The audience gallery and any scene drawn on its own ── */
-  if (root.querySelector("[data-scene-host]"))
-    disposers.push(mountAudiences(root, { motionPreference }));
-
-  if (root.querySelector("#testimonials"))
-    disposers.push(mountTestimonials(root));
+  /* ── Bands that come alive after their still markup ── */
+  for (const band of bandMounts)
+    if (root.querySelector(band.selector))
+      disposers.push(band.mount(root, { motionPreference }));
 
   /* ── Page-wide entrances and scroll feel ── */
   disposers.push(mountReveals(root, { motionPreference }));

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit, fits } from "./page";
 const routes = [
   "resources",
   "services",
@@ -16,16 +16,9 @@ for (const width of [390, 768, 1440])
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`/${route}/`);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-      const result = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-        .analyze();
+      const result = await audit(page);
       expect(result.violations, route).toEqual([]);
-      expect(
-        await page.evaluate(
-          () => document.documentElement.scrollWidth <= innerWidth,
-        ),
-        route,
-      ).toBe(true);
+      expect(await fits(page), route).toBe(true);
     });
 test("all pages reflow at 360px with doubled text", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -53,12 +46,7 @@ test("all pages reflow at 360px with doubled text", async ({ page }) => {
         }))
         .slice(0, 10),
     );
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-      JSON.stringify({ route, overflow }),
-    ).toBe(true);
+    expect(await fits(page), JSON.stringify({ route, overflow })).toBe(true);
   }
 });
 test("assessment branches, Back and Retake preserve source behavior", async ({
@@ -98,9 +86,7 @@ test("inquiry handoff explains the live form, traps focus and restores its trigg
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
-  const violations = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
+  const violations = await audit(page);
   expect(violations.violations).toEqual([]);
 });
 
@@ -144,9 +130,7 @@ test("mobile menu stays readable over ink, exposes direct audience links, and tr
   expect(bounds!.y).toBe(0);
   expect(bounds!.height).toBe(844);
   await expect(nav.getByRole("link", { name: "Private equity" })).toBeVisible();
-  const result = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
+  const result = await audit(page);
   expect(result.violations).toEqual([]);
   await menu.focus();
   await page.keyboard.press("Shift+Tab");

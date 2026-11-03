@@ -1,5 +1,5 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit, previewBase } from "./page";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 
@@ -12,7 +12,7 @@ test.describe.configure({ mode: "parallel" });
  * section, element and current text for every item. Visitors never load any of it.
  */
 
-const production = "http://127.0.0.1:4179/website-redesign/current";
+const production = previewBase("current");
 const panel = (page: Page) => page.getByRole("dialog");
 const toast = (page: Page) =>
   page.locator("#found42-review").getByRole("status");
@@ -358,14 +358,10 @@ test("on a phone the bar and form fit the screen", async ({ page }) => {
 test("review mode meets the site's accessibility bar", async ({ page }) => {
   await page.goto("/?review");
   await expect(page.getByRole("region", { name: "Review mode" })).toBeVisible();
-  const audit = () =>
-    new AxeBuilder({ page })
-      .include("#found42-review")
-      .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-      .analyze();
-  expect((await audit()).violations).toEqual([]);
+  const scan = () => audit(page, { include: "#found42-review" });
+  expect((await scan()).violations).toEqual([]);
   await pick(page, page.locator("#hero-title"));
-  expect((await audit()).violations).toEqual([]);
+  expect((await scan()).violations).toEqual([]);
 });
 
 test("Send publishes a saved draft in one click and shows its public receipt", async ({
@@ -633,12 +629,7 @@ for (const failure of [
     ).toHaveCount(0);
     expect((await saved(page)).items).toHaveLength(1);
     expect(
-      (
-        await new AxeBuilder({ page })
-          .include("#found42-review")
-          .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-          .analyze()
-      ).violations,
+      (await audit(page, { include: "#found42-review" })).violations,
     ).toEqual([]);
     await context.setOffline(false);
     await page.reload();

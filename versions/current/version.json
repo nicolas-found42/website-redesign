@@ -3,5 +3,6 @@
   "summary": "The Found42 preview as it stands today: the comparison point every other version is measured against.",
   "status": "in-review",
   "created": "2026-09-16",
-  "author": "Found42"
+  "author": "Found42",
+  "prerender": true
 }

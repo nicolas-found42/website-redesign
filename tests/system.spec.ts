@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { readField } from "./drawing";
+import { devBase } from "./page";
 
 /**
  * The working-system drawing.
@@ -315,7 +316,7 @@ test("a visitor on a phone gets each service's own drawing and can jump between 
     hasTouch: true,
   });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4173/#services");
+  await page.goto(`${devBase}/#services`);
 
   // The narrow layout gives every article its own drawing rather than one
   // sticky pane, so all three are on the page at once.
@@ -503,7 +504,7 @@ test("the service drawings are three different drawings, not one repeated", asyn
     viewport: { width: 390, height: 844 },
   });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4173/#services");
+  await page.goto(`${devBase}/#services`);
   await page.evaluate(() => document.fonts.ready);
 
   const figures = page.locator(".service-figure .system-field");

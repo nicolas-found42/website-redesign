@@ -7,7 +7,8 @@ import { sitePath } from "./paths";
 import { endReviewSession } from "./activation";
 import { versionSite } from "./submission-contract";
 import { versionSlug } from "./paths";
-import { createStore, storageKey, newId, type FeedbackItem } from "./store";
+import { createDraftLedger, newId, type FeedbackItem } from "./store";
+import { draftStorageKey } from "./drafts";
 import {
   currentPage,
   describe,
@@ -21,15 +22,7 @@ import {
   type Target,
 } from "./target";
 import { feedbackFile, kindNames, priorityNames, summarize } from "./export";
-import {
-  applyTarget,
-  esc,
-  fillForm,
-  formMarkup,
-  readForm,
-  showErrors,
-  syncForm,
-} from "./form";
+import { esc, FeedbackForm } from "./form";
 
 const phone = matchMedia("(max-width: 700px)");
 
@@ -63,8 +56,6 @@ const whereLine = (target: FeedbackItem["target"]) =>
     .filter(Boolean)
     .join(" · ");
 
-const targetReason = "tool-reason";
-
 /**
  * Review mode: the team points at the exact thing on the page they mean and
  * says precisely what should change. It lives in its own shadow root so the
@@ -72,7 +63,7 @@ const targetReason = "tool-reason";
  * Returns a disposer that removes all of it; saved feedback stays saved.
  */
 export function mountReview() {
-  const store = createStore();
+  const ledger = createDraftLedger();
   const capture = reviewTabCapture();
   const host = document.createElement("div");
   host.id = "found42-review";
@@ -122,7 +113,7 @@ export function mountReview() {
   const listPanel = $<HTMLDialogElement>('[data-panel="list"]');
   const sendPanel = $<HTMLDialogElement>('[data-panel="send"]');
   const pickButton = $<HTMLButtonElement>('[data-act="pick"]');
-  $("[data-warning]").hidden = store.persistent;
+  $("[data-warning]").hidden = ledger.snapshot().persistent;
   // Said in the bar before anything is written, so the fallback never surprises.
   $("[data-sending-warning]").hidden = !!submissionUrl;
   const page = currentPage();
@@ -169,28 +160,28 @@ export function mountReview() {
     shadow
       .querySelectorAll<HTMLButtonElement>('[data-act="send"]')
       .forEach((button) => {
-        button.disabled = submitting || !store.items().length;
+        button.disabled = submitting || !ledger.snapshot().items.length;
         button.textContent = submitting
           ? "Sending…"
-          : sendLabel(store.items().length);
+          : sendLabel(ledger.snapshot().items.length);
       });
-    $('[data-act="receipt"]').hidden = !store.receipts().length;
+    $('[data-act="receipt"]').hidden = !ledger.snapshot().receipts.length;
     shadow
       .querySelectorAll<HTMLButtonElement>('[data-act="retry"]')
       .forEach((button) => {
-        button.disabled = submitting || !store.items().length;
+        button.disabled = submitting || !ledger.snapshot().items.length;
       });
     shadow
       .querySelectorAll<HTMLButtonElement>('[data-act="copy-text"]')
       .forEach((button) => {
-        button.disabled = !store.items().length;
+        button.disabled = !ledger.snapshot().items.length;
       });
-    $("[data-warning]").hidden = store.persistent;
+    $("[data-warning]").hidden = ledger.snapshot().persistent;
   };
 
   /* ── Pins: where saved feedback on this page points ── */
   const drawPins = () => {
-    const items = store.items();
+    const items = ledger.snapshot().items;
     $("[data-count]").textContent = String(items.length);
     syncSendButtons();
     pins.innerHTML = items
@@ -335,11 +326,8 @@ export function mountReview() {
   let trail: Element[] = [];
   let target: Target | undefined;
   let editing: FeedbackItem | undefined;
-  let form: HTMLFormElement | null = null;
-  let screenshot: Screenshot | undefined;
-  let imageBusy = false;
+  let form: FeedbackForm | null = null;
   let imageGeneration = 0;
-  let stopFormLayout: (() => void) | undefined;
   const viewport = window.visualViewport;
   const sizeViewport = () => {
     host.style.setProperty(
@@ -361,77 +349,6 @@ export function mountReview() {
     repick: editing ? editing.target.page === page : true,
   });
 
-  /**
-   * Names each target tool by its effect and never leaves a dead grey button:
-   * an impossible tool is renamed for the reviewer, described by its reason and
-   * explained on screen, while keeping the stable accessible name the shipped
-   * journey looks for.
-   */
-  function showTools() {
-    if (!form) return;
-    const can = pointTools();
-    let reason = form.querySelector<HTMLElement>(
-      `[data-reason="${targetReason}"]`,
-    );
-    if (!reason) {
-      reason = document.createElement("p");
-      reason.className = "tool-reason";
-      reason.dataset.reason = targetReason;
-      reason.id = targetReason;
-      reason.style.cssText =
-        "margin:6px 0 0;color:#5e5e58;font-size:13px;display:none";
-      form.querySelector(".target-tools")?.after(reason);
-    }
-    const tools: { act: string; name: string; impossible: string }[] = [
-      {
-        act: "wider",
-        name: "Larger area — select a bigger part of the page",
-        impossible: "nothing larger to select here",
-      },
-      {
-        act: "narrower",
-        name: "Smaller area — go back to the smaller part",
-        impossible: "already the smallest part of this selection",
-      },
-      {
-        act: "repick",
-        name: "Pick again — choose a different part of the page",
-        impossible: "this page isn’t open for picking",
-      },
-    ];
-    for (const tool of tools) {
-      const button = form.querySelector<HTMLButtonElement>(
-        `[data-act="${tool.act}"]`,
-      );
-      if (!button) continue;
-      const enabled =
-        tool.act === "wider"
-          ? can.widen
-          : tool.act === "narrower"
-            ? can.narrow
-            : can.repick;
-      button.disabled = !enabled;
-      button.setAttribute(
-        "aria-label",
-        enabled ? tool.name : `${tool.name} — ${tool.impossible}`,
-      );
-      // #125: an impossible tool is never a silent grey pill. It stays put and
-      // self-explaining instead of vanishing, so the shipped journey can still
-      // find it, name it and assert its disabled state.
-      if (enabled) button.removeAttribute("aria-describedby");
-      else button.setAttribute("aria-describedby", targetReason);
-    }
-    reason.textContent =
-      !can.widen && !can.narrow
-        ? "You’ve reached the smallest and largest part of this selection."
-        : !can.widen
-          ? "There’s nothing larger around this to select."
-          : !can.narrow
-            ? "Already the smallest part of this selection."
-            : "";
-    reason.style.display = !can.widen || !can.narrow ? "block" : "none";
-  }
-
   /** Brings the chosen element into view beside the panel, not under it. */
   const reveal = (el: Element) => {
     const box = el.getBoundingClientRect();
@@ -451,143 +368,54 @@ export function mountReview() {
     if (!keepTrail) trail = [];
     selected = el;
     target = describe(el);
-    screenshot = undefined;
     imageGeneration++;
     if (!form || !resume) newForm();
     resume = false;
-    applyTarget(form!, target, pointTools());
-    showTools();
-    showScreenshot();
+    form!.screenshot = undefined;
+    form!.applyTarget(target, pointTools());
     showForm();
   }
 
   function newForm(item?: FeedbackItem) {
-    stopFormLayout?.();
     editing = item;
-    screenshot = item?.screenshot;
     imageGeneration++;
-    formPanel.innerHTML = formMarkup({
-      askName: !store.reviewer(),
+    form = new FeedbackForm(formPanel, {
+      askName: !ledger.snapshot().reviewer,
       sections: pageSections(),
+      onSubmit: save,
+      onScreenshotFile: (file) =>
+        void changeScreenshot(() => screenshotFile(file)),
     });
-    form = formPanel.querySelector("form")!;
-    form.querySelector(".current")!.classList.add("is-pinned");
-    const body = form.querySelector<HTMLElement>(".panel-body")!;
-    const showMore = () =>
-      body.classList.toggle(
-        "has-more",
-        body.scrollTop + body.clientHeight < body.scrollHeight - 1,
-      );
-    const resizing = new ResizeObserver(showMore);
-    resizing.observe(body);
-    const changing = new MutationObserver(showMore);
-    changing.observe(body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      characterData: true,
-    });
-    body.addEventListener("scroll", showMore);
-    stopFormLayout = () => {
-      resizing.disconnect();
-      changing.disconnect();
-      body.removeEventListener("scroll", showMore);
-    };
-    form.addEventListener("change", (event) => {
-      if ((event.target as HTMLInputElement).name === "kind")
-        form!.dataset.kindChosen = "yes";
-      syncForm(form!);
-    });
-    // An answered field stops saying what it was missing.
-    const answered = (event: Event) => {
-      const { name } = event.target as HTMLInputElement;
-      const error = form!.querySelector(`#e-${name}`);
-      if (error) error.textContent = "";
-      (event.target as Element).removeAttribute("aria-invalid");
-    };
-    form.addEventListener("input", answered);
-    form.addEventListener("change", answered);
-    form.addEventListener("submit", save);
-    form
-      .querySelector<HTMLInputElement>("#f-screenshot")!
-      .addEventListener("change", (event) => {
-        const file = (event.target as HTMLInputElement).files?.[0];
-        if (file) void changeScreenshot(() => screenshotFile(file));
-      });
-    form.querySelector<HTMLButtonElement>('[data-act="capture"]')!.disabled =
-      !capture.available || !selected;
-    if (!capture.available)
-      form.querySelector<HTMLElement>("[data-capture-hint]")!.textContent =
-        "Native tab capture is unavailable here. Attach a screenshot file or continue with written feedback.";
-    showScreenshot();
-  }
-
-  function showScreenshot() {
-    if (!form || !target) return;
-    const preview = form.querySelector<HTMLElement>(
-      "[data-screenshot-preview]",
-    )!;
-    preview.replaceChildren();
-    if (screenshot?.dataUrl) {
-      const image = document.createElement("img");
-      image.src = screenshot.dataUrl;
-      image.alt = `Screenshot of ${target.element} in ${sectionGloss(target.section)} on ${target.pageName}`;
-      preview.append(image);
-      const caption = document.createElement("p");
-      caption.className = "hint";
-      caption.textContent = `${screenshot.source === "tab" ? "Native tab capture" : "Attached screenshot — check that target and reviewed state match"}. ${screenshot.width} × ${screenshot.height}.`;
-      preview.append(caption);
-    }
-    form.querySelector<HTMLButtonElement>(
-      '[data-act="remove-screenshot"]',
-    )!.hidden = !screenshot;
+    form.screenshot = item?.screenshot;
+    form.setCanCapture(capture.available && !!selected);
   }
 
   async function changeScreenshot(load: () => Promise<Screenshot>) {
-    if (!form || imageBusy) return;
+    if (!form || form.busyWithImage) return;
     const current = form;
     const generation = ++imageGeneration;
-    imageBusy = true;
-    const status = current.querySelector<HTMLElement>(
-      "[data-screenshot-status]",
-    )!;
-    status.textContent = "Preparing screenshot…";
-    current
-      .querySelectorAll<HTMLButtonElement | HTMLInputElement>(
-        "button, #f-screenshot",
-      )
-      .forEach((control) => {
-        control.dataset.wasDisabled = String(control.disabled);
-        control.disabled = true;
-      });
+    current.screenshotBusy = true;
+    current.setScreenshotStatus("Preparing screenshot…");
     try {
       const next = await load();
       if (generation !== imageGeneration || form !== current) return;
-      screenshot = next;
       if (next.source === "tab" && selected) {
         target = describe(selected);
-        applyTarget(current, target, pointTools());
+        current.applyTarget(target, pointTools());
       }
-      showScreenshot();
-      status.textContent =
-        "Screenshot ready. Inspect it before saving and sending.";
+      current.screenshot = next;
+      current.setScreenshotStatus(
+        "Screenshot ready. Inspect it before saving and sending.",
+      );
     } catch (error) {
       if (form === current)
-        status.textContent =
+        current.setScreenshotStatus(
           error instanceof Error
             ? error.message
-            : "Screenshot failed. Your written feedback is unchanged; continue without it.";
+            : "Screenshot failed. Your written feedback is unchanged; continue without it.",
+        );
     } finally {
-      imageBusy = false;
-      current
-        .querySelectorAll<HTMLButtonElement | HTMLInputElement>(
-          "[data-was-disabled]",
-        )
-        .forEach((control) => {
-          control.disabled = control.dataset.wasDisabled === "true";
-          delete control.dataset.wasDisabled;
-        });
-      current.querySelector<HTMLInputElement>("#f-screenshot")!.value = "";
+      current.screenshotBusy = false;
     }
   }
 
@@ -596,23 +424,12 @@ export function mountReview() {
       reveal(selected);
       showHighlight(selected, true);
     }
-    if (!formPanel.open) formPanel.showModal();
-    // The name first, once; then the new words when rewording; else the kind.
-    const kind = form?.querySelector<HTMLInputElement>(
-      'input[name="kind"]:checked',
-    );
-    (
-      form?.querySelector<HTMLElement>('[name="reviewer"]') ??
-      (kind?.value === "wording"
-        ? form?.querySelector<HTMLElement>('[name="proposed"]')
-        : null) ??
-      kind ??
-      form?.querySelector<HTMLElement>('input[name="kind"]:not(:disabled)')
-    )?.focus();
+    form?.show();
+    form?.focusInitial();
   }
 
   function edit(id: string) {
-    const item = store.items().find((saved) => saved.id === id);
+    const item = ledger.snapshot().items.find((saved) => saved.id === id);
     if (!item) return;
     listPanel.close();
     const onPage =
@@ -621,33 +438,36 @@ export function mountReview() {
     trail = [];
     target = item.target;
     newForm(item);
-    applyTarget(form!, target, pointTools());
-    showTools();
-    fillForm(form!, item);
+    form!.applyTarget(target, pointTools());
+    form!.fill(item);
     showForm();
   }
 
   function save(event: SubmitEvent) {
     event.preventDefault();
-    if (!form || !target || imageBusy) return;
-    const { errors, value } = readForm(form, target);
-    const first = showErrors(form, errors);
+    if (!form || !target || form.busyWithImage) return;
+    const { errors, value } = form.read();
+    const first = form.showErrors(errors);
     if (!value) return first?.focus();
-    if (value.reviewer) store.setReviewer(value.reviewer);
+    if (value.reviewer)
+      ledger.apply({ kind: "set-reviewer", reviewer: value.reviewer });
     const now = new Date().toISOString();
     const { reviewer, ...answer } = value;
-    const imageOmitted = store.save({
-      id: editing?.id ?? newId(),
-      created: editing?.created ?? now,
-      ...(editing ? { updated: now } : {}),
-      reviewer: reviewer ?? editing?.reviewer ?? store.reviewer(),
-      target,
-      ...(screenshot ? { screenshot } : {}),
-      ...answer,
-    });
-    const count = store.items().length;
+    const imageOmitted = ledger.apply({
+      kind: "save",
+      item: {
+        id: editing?.id ?? newId(),
+        created: editing?.created ?? now,
+        ...(editing ? { updated: now } : {}),
+        reviewer: reviewer ?? editing?.reviewer ?? ledger.snapshot().reviewer,
+        target,
+        ...(form.screenshot ? { screenshot: form.screenshot } : {}),
+        ...answer,
+      },
+    }).imageOmitted;
+    const count = ledger.snapshot().items.length;
     const wasEditing = !!editing;
-    formPanel.close();
+    form.close();
     drawPins();
     say(
       imageOmitted
@@ -660,14 +480,12 @@ export function mountReview() {
 
   formPanel.addEventListener("close", () => {
     if (resume) return;
-    stopFormLayout?.();
-    stopFormLayout = undefined;
+    form?.dispose();
     showHighlight(null);
     selected = null;
     target = undefined;
     editing = undefined;
     form = null;
-    screenshot = undefined;
     imageGeneration++;
     formPanel.replaceChildren();
     // The native dialog restores focus. Its deferred close event must not
@@ -676,7 +494,7 @@ export function mountReview() {
 
   /* ── Your feedback ── */
   function renderList() {
-    const items = store.items();
+    const items = ledger.snapshot().items;
     const pages = [...new Set(items.map(({ target }) => target.page))];
     listPanel.innerHTML = `<div class="panel-head">
   <p class="eyebrow">Review mode · ${esc(versionSlug)}</p>
@@ -737,20 +555,20 @@ export function mountReview() {
       </div>
       <div class="panel-foot">
         <button type="button" class="primary" data-act="send"></button>
-        <button type="button" data-act="retry"${store.items().length && !submitting ? "" : " disabled"}>Try again</button>
-        <button type="button" data-act="copy-text" data-copy-text${store.items().length ? "" : " disabled"}>Copy my feedback as text</button>
-        <button type="button" data-act="download"${store.items().length ? "" : " disabled"}>Download a copy</button>
+        <button type="button" data-act="retry"${ledger.snapshot().items.length && !submitting ? "" : " disabled"}>Try again</button>
+        <button type="button" data-act="copy-text" data-copy-text${ledger.snapshot().items.length ? "" : " disabled"}>Copy my feedback as text</button>
+        <button type="button" data-act="download"${ledger.snapshot().items.length ? "" : " disabled"}>Download a copy</button>
         <button type="button" data-act="close">Close</button>
       </div>`;
     }
-    const receipts = store.receipts();
+    const receipts = ledger.snapshot().receipts;
     const confirmed = receipts.filter(
       (item) => item.status === "confirmed",
     ).length;
     sendPanel.querySelector<HTMLElement>("[data-progress]")!.textContent =
       submitting
         ? `Sending feedback: ${sentCount} of ${sendTotal} checked. Please keep this page open.`
-        : `${confirmed} ${confirmed === 1 ? "item" : "items"} published. ${store.items().length} ${store.items().length === 1 ? "draft remains" : "drafts remain"} saved in this browser.`;
+        : `${confirmed} ${confirmed === 1 ? "item" : "items"} published. ${ledger.snapshot().items.length} ${ledger.snapshot().items.length === 1 ? "draft remains" : "drafts remain"} saved in this browser.`;
     sendPanel.querySelector<HTMLElement>("[data-receipts]")!.innerHTML =
       receipts
         .map(
@@ -758,8 +576,8 @@ export function mountReview() {
       <p class="item-head">${esc(receipt.label)}</p>
       <p>${esc(receipt.message)}</p>
       ${receipt.status === "confirmed" && receipt.issue ? `<a class="chip" href="${esc(receipt.issue.url)}" target="_blank" rel="noopener noreferrer">Issue #${receipt.issue.number} on GitHub</a>` : ""}
-      ${receipt.reason === "screenshot" && store.items().some((item) => item.id === receipt.id && item.screenshot) ? `<button type="button" class="chip" data-without-image="${esc(receipt.id)}"${submitting ? " disabled" : ""}>Send text without screenshot</button>` : ""}
-      ${receipt.status === "invalid" && receipt.reason === "content-conflict" && store.items().some((item) => item.id === receipt.id) ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
+      ${receipt.reason === "screenshot" && ledger.snapshot().items.some((item) => item.id === receipt.id && item.screenshot) ? `<button type="button" class="chip" data-without-image="${esc(receipt.id)}"${submitting ? " disabled" : ""}>Send text without screenshot</button>` : ""}
+      ${receipt.status === "invalid" && receipt.reason === "content-conflict" && ledger.snapshot().items.some((item) => item.id === receipt.id) ? `<button type="button" class="chip" data-new="${esc(receipt.id)}">Save as new feedback</button>` : ""}
     </li>`,
         )
         .join("");
@@ -767,16 +585,16 @@ export function mountReview() {
   }
 
   async function send() {
-    if (submitting || !store.items().length) return;
+    if (submitting || !ledger.snapshot().items.length) return;
     submitting = true;
     sentCount = 0;
-    sendTotal = store.items().length;
+    sendTotal = ledger.snapshot().items.length;
     listPanel.close();
     renderReceipt();
     if (!sendPanel.open) sendPanel.showModal();
     sendPanel.querySelector<HTMLElement>("h2")?.focus();
     try {
-      await submitDrafts(store, versionSite(versionSlug), (done, total) => {
+      await submitDrafts(ledger, versionSite(versionSlug), (done, total) => {
         sentCount = done;
         sendTotal = total;
         if (sendPanel.open && sendPanel.dataset.mode === "receipt")
@@ -797,7 +615,7 @@ export function mountReview() {
 
   function renderBackup() {
     sendPanel.dataset.mode = "backup";
-    sending = feedbackFile(store.items(), store.reviewer());
+    sending = feedbackFile(ledger.snapshot().items, ledger.snapshot().reviewer);
     sendPanel.innerHTML = `<div class="panel-head">
       <h2 id="send-title">Download a copy</h2>
       <p>This keeps a local copy for you or the team if hosted sending is unavailable.</p>
@@ -812,7 +630,11 @@ export function mountReview() {
 
   function download() {
     const file =
-      sending ?? (sending = feedbackFile(store.items(), store.reviewer()));
+      sending ??
+      (sending = feedbackFile(
+        ledger.snapshot().items,
+        ledger.snapshot().reviewer,
+      ));
     const url = URL.createObjectURL(
       new Blob([file.text], { type: "text/markdown" }),
     );
@@ -828,7 +650,8 @@ export function mountReview() {
 
   /** The reviewer's own words as text, for a receipt or a backup panel. */
   function feedbackText() {
-    return feedbackFile(store.items(), store.reviewer()).text;
+    return feedbackFile(ledger.snapshot().items, ledger.snapshot().reviewer)
+      .text;
   }
 
   async function copy() {
@@ -890,24 +713,21 @@ export function mountReview() {
         ),
       );
     else if (act === "remove-screenshot") {
-      screenshot = undefined;
+      if (!form) return;
+      form.screenshot = undefined;
       imageGeneration++;
-      showScreenshot();
-      form?.querySelector<HTMLInputElement>("#f-screenshot")?.focus();
-      const status = form?.querySelector<HTMLElement>(
-        "[data-screenshot-status]",
+      form.focusScreenshot();
+      form.setScreenshotStatus(
+        "Screenshot removed. Written feedback is ready to save.",
       );
-      if (status)
-        status.textContent =
-          "Screenshot removed. Written feedback is ready to save.";
     } else if (button.dataset.withoutImage) {
-      const item = store
-        .items()
-        .find((item) => item.id === button.dataset.withoutImage);
+      const item = ledger
+        .snapshot()
+        .items.find((item) => item.id === button.dataset.withoutImage);
       if (item && !submitting) {
         const text = { ...item };
         delete text.screenshot;
-        store.save(text);
+        ledger.apply({ kind: "save", item: text });
         void send();
       }
     } else if (act === "pick") startPicking();
@@ -947,19 +767,24 @@ export function mountReview() {
     else if (act === "copy-text") void copy();
     else if (act === "clear") {
       if (!confirmed(button as HTMLButtonElement, "Delete all of it?")) return;
-      store.clear();
+      ledger.apply({ kind: "clear" });
       drawPins();
       sendPanel.close();
       say("Cleared. This browser has no feedback saved.");
     } else if (button.dataset.new) {
-      const renamed = store.saveAsNew(button.dataset.new);
+      const renamed = ledger.apply({
+        kind: "save-as-new",
+        id: button.dataset.new,
+      }).found;
       drawPins();
       renderReceipt();
       if (renamed) say("Revision saved as new feedback. Send it when ready.");
     } else if (button.dataset.edit) edit(button.dataset.edit);
     else if (button.dataset.pin) edit(button.dataset.pin);
     else if (button.dataset.show) {
-      const item = store.items().find(({ id }) => id === button.dataset.show);
+      const item = ledger
+        .snapshot()
+        .items.find(({ id }) => id === button.dataset.show);
       const el = item && resolve(item.target.selector);
       listPanel.close();
       if (el) flash(el);
@@ -967,7 +792,7 @@ export function mountReview() {
         say("That part of the page has changed since, so it can’t be found.");
     } else if (button.dataset.delete) {
       if (!confirmed(button as HTMLButtonElement, "Delete it?")) return;
-      store.remove(button.dataset.delete);
+      ledger.apply({ kind: "remove", id: button.dataset.delete });
       drawPins();
       renderList();
       listPanel.querySelector<HTMLElement>("h2")?.focus();
@@ -975,7 +800,7 @@ export function mountReview() {
   }
   shadow.addEventListener("click", onPress);
   const onStorage = (event: StorageEvent) => {
-    if (event.key !== null && event.key !== storageKey) return;
+    if (event.key !== null && event.key !== draftStorageKey) return;
     drawPins();
     if (listPanel.open) renderList();
     if (sendPanel.open && sendPanel.dataset.mode === "receipt") renderReceipt();
@@ -1001,7 +826,7 @@ export function mountReview() {
   }
 
   function dispose() {
-    stopFormLayout?.();
+    form?.dispose();
     viewport?.removeEventListener("resize", sizeViewport);
     viewport?.removeEventListener("scroll", sizeViewport);
     stopPicking();
@@ -1021,7 +846,7 @@ export function mountReview() {
   drawPins();
   /** A link from "Open page" arrives with the item to show. */
   const shown = new URL(location.href).searchParams.get("item");
-  const item = shown && store.items().find(({ id }) => id === shown);
+  const item = shown && ledger.snapshot().items.find(({ id }) => id === shown);
   if (item) {
     const el = resolve(item.target.selector);
     if (el) requestAnimationFrame(() => flash(el));

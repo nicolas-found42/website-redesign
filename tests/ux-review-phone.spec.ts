@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { settle } from "./page";
 
 /**
  * Regression checks for the second September 23 adversarial UX review: a
@@ -18,19 +19,6 @@ const routes = [
   "/about/",
   "/blog/",
 ];
-
-/** Visit each reveal and observe its settled text before measuring contrast. */
-async function settle(page: Page) {
-  await page.evaluate(() => document.fonts.ready);
-  for (const target of await page.locator("[data-reveal]").all()) {
-    await target.evaluate((element) =>
-      element.scrollIntoView({ block: "center", behavior: "instant" }),
-    );
-    await expect(target).toHaveClass(/\bis-in\b/);
-    await expect(target).toHaveCSS("opacity", "1");
-  }
-  await expect(page.locator("[data-reveal]:not(.is-in)")).toHaveCount(0);
-}
 
 /**
  * Every visible text node against the first opaque ground behind it: 4.5:1,

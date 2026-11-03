@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit } from "./page";
 
 /**
  * Regression checks for the September 22 site audit. Each one reproduces a
@@ -99,10 +99,7 @@ test("F03, F17: the live inquiry handoff is accessible and honest", async ({
   await expect(
     dialog.getByRole("link", { name: "Open the live inquiry form" }),
   ).toHaveClass(/\baction\b/);
-  const result = await new AxeBuilder({ page })
-    .include("dialog")
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
+  const result = await audit(page, { include: "dialog" });
   expect(result.violations).toEqual([]);
 });
 
@@ -248,9 +245,7 @@ test("F15: page openings do not skip a heading level", async ({ page }) => {
     "/blog/",
   ]) {
     await page.goto(path);
-    const result = await new AxeBuilder({ page })
-      .withRules(["heading-order"])
-      .analyze();
+    const result = await audit(page, { rules: ["heading-order"] });
     expect(result.violations, path).toEqual([]);
   }
 });

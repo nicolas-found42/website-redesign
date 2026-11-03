@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit } from "./page";
 
 /**
  * Regression checks for the September 23 adversarial UX review. Each test is
@@ -29,10 +29,7 @@ test("#32: the inquiry dialog leads to the live form and carries service context
   await expect(dialog.locator(".note").first()).toHaveText(
     "Start with the bottleneck",
   );
-  const result = await new AxeBuilder({ page })
-    .include("dialog")
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
+  const result = await audit(page, { include: "dialog" });
   expect(result.violations).toEqual([]);
 });
 

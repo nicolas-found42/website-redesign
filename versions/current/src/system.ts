@@ -1,7 +1,4 @@
-import { animate, type AnimationPlaybackControls } from "motion";
-import { artInner, labelsHtml } from "./art/field";
-import type { Art } from "./art/kit";
-import { assemble, BEAT, cancelAll, clear, whenDone } from "./art/motion";
+import { mountLive, type LiveDrawing } from "./art/live";
 import {
   fieldMarkup,
   schematicArt,
@@ -23,7 +20,8 @@ import type { MotionPreference } from "./motion-preference";
  *
  * Every state is reachable without animation. A still composition is always the
  * resting state, so an interrupted, reduced-motion or script-free drawing shows
- * the same complete picture as a finished one.
+ * the same complete picture as a finished one. The lifecycle lives in
+ * `art/live.ts`, shared with the audience scenes.
  */
 
 export type SystemOptions = {
@@ -50,293 +48,40 @@ export type SystemOptions = {
   drawIn?: boolean;
 };
 
-const PORTRAIT = "(max-width: 860px)";
-/** The beat of a transition: the same story, told briskly. */
-const QUICK = 0.14;
-/** How long the lifted pieces take to leave before the new ones arrive. */
-const LIFT = 300;
-/** How long the named pieces' words take to reach their new places. */
-const TRAVEL = 0.78;
-
-const orientationOf = (matches: boolean): Orientation =>
-  matches ? "portrait" : "landscape";
-
 /**
  * Mounts a live drawing in `host`, replacing whatever still markup was there
  * with the same composition, and returns its controls: `select` to change
  * composition, `settle` to rest on one at once, and `dispose`.
  */
-export function mountSystem(host: HTMLElement, options: SystemOptions) {
-  const {
-    motionPreference,
-    compositions,
-    initial = 0,
-    live = true,
-    drawIn = true,
-  } = options;
-  const portrait = matchMedia(options.portrait ?? PORTRAIT);
-
-  let active = initial;
-  let orientation = options.orientation ?? orientationOf(portrait.matches);
-  let animations: Animation[] = [];
-  let travel: AnimationPlaybackControls | undefined;
-  let frame = 0;
-  let visible = false;
-  let revealed = !drawIn;
-  /** Bumped by every settle, so a transition's late steps know they are stale. */
-  let generation = 0;
-  let pointer = { x: 0, y: 0 };
-  const eased = { x: 0, y: 0 };
-  const timers = new Set<number>();
-
-  const schematic = () => compositions[active];
-  const still = () => motionPreference.matches;
-  const artOf = (index: number): Art =>
-    schematicArt(compositions[index], orientation);
-
-  host.innerHTML = `<div class="system" data-system>${fieldMarkup(schematic(), orientation)}</div>`;
-
-  const frameEl = host.querySelector<HTMLElement>(".system-field")!;
-  const svg = host.querySelector<SVGSVGElement>(".system-svg")!;
-  const labelsLayer = host.querySelector<HTMLElement>(".system-labels")!;
-
-  /**
-   * Stops everything in flight, including the timeout that swaps a
-   * transition's pieces in. Left running, that timeout fires after a pause or
-   * an orientation change and starts an entrance the drawing has already
-   * settled out of.
-   */
-  function stopMotion() {
-    cancelAll(animations);
-    travel?.stop();
-    travel = undefined;
-    timers.forEach((timer) => clearTimeout(timer));
-    timers.clear();
-  }
-
-  function paint(art: Art) {
-    svg.setAttribute("viewBox", `0 0 ${art.width} ${art.height}`);
-    frameEl.style.setProperty("--ratio", `${art.width} / ${art.height}`);
-    svg.innerHTML = artInner(art);
-  }
-
-  /** Rebuilds every layer from the current composition, with nothing running. */
-  function build() {
-    const art = artOf(active);
-    paint(art);
-    labelsLayer.innerHTML = labelsHtml(art, schematicLabels(schematic(), art));
-    frameEl.setAttribute("aria-label", schematic().description);
-  }
-
-  /* ── Pointer depth ── */
-  const fine = matchMedia("(hover: hover) and (pointer: fine)");
-  const depthEnabled = () => live && fine.matches && !still();
-
-  function tick() {
-    frame = requestAnimationFrame(tick);
-    eased.x += (pointer.x - eased.x) * 0.08;
-    eased.y += (pointer.y - eased.y) * 0.08;
-    frameEl.style.setProperty("--lean-x", eased.x.toFixed(3));
-    frameEl.style.setProperty("--lean-y", eased.y.toFixed(3));
-  }
-  function runLoop() {
-    if (!depthEnabled() || !visible || frame) return;
-    frame = requestAnimationFrame(tick);
-  }
-  function pauseLoop() {
-    if (!frame) return;
-    cancelAnimationFrame(frame);
-    frame = 0;
-  }
-  function onPointerMove(event: PointerEvent) {
-    if (!depthEnabled()) return;
-    const box = frameEl.getBoundingClientRect();
-    pointer = {
-      x: (event.clientX - box.left) / box.width - 0.5,
-      y: (event.clientY - box.top) / box.height - 0.5,
-    };
-  }
-  function onPointerLeave() {
-    pointer = { x: 0, y: 0 };
-  }
-
-  /** Assembles the drawing, once, when it first comes into view. */
-  function reveal() {
-    if (revealed) return;
-    revealed = true;
-    if (still()) return;
-    animations = assemble(frameEl, { beat: BEAT });
-  }
-
-  /** The complete still composition of `index`, with nothing left running. */
-  function settle(index = active) {
-    active = index;
-    generation += 1;
-    stopMotion();
-    build();
-    revealed = true;
-    runLoop();
-  }
-
-  function select(index: number, choice: { animate?: boolean } = {}) {
-    if (index === active) return;
-    active = index;
-    const next = schematic();
-    const nextArt = artOf(index);
-
-    if (still() || choice.animate === false || !revealed) {
-      settle(index);
-      return;
-    }
-
-    stopMotion();
-    const mine = (generation += 1);
-    // Only the five stage labels travel. Composition-specific annotations
-    // (the Workflow decision and iteration) have no stage in another drawing.
-    const labels = [...labelsLayer.children].filter((label) =>
-      next.nodes.some(
-        (node) => node.id === (label as HTMLElement).dataset.node,
-      ),
-    ) as HTMLElement[];
-    [...labelsLayer.children].forEach((label) => {
-      if (!labels.includes(label as HTMLElement)) label.remove();
-    });
-    const nextLabels = schematicLabels(next, nextArt);
-    // Start from the words actually on screen, including an interrupted
-    // transition. Shares stay valid when the next artwork changes aspect ratio.
-    const from = labels.map((label) => [
-      Number(label.style.getPropertyValue("--x")),
-      Number(label.style.getPropertyValue("--y")),
-    ]);
-    const to = next.nodes.map((node) => [
-      (nextArt.labels[node.id].at[0] / nextArt.width) * 100,
-      (nextArt.labels[node.id].at[1] / nextArt.height) * 100,
-    ]);
-
-    // The old object is lifted off before the new one is laid, so the two
-    // never overlap into one unreadable picture.
-    animations = clear(svg, LIFT);
-
-    // Words travel with their node and change at the midpoint of their own
-    // travel, so no word is ever read in the wrong place.
-    let swapped = false;
-    travel = animate(0, 1, {
-      duration: TRAVEL,
-      ease: [0.65, 0, 0.35, 1],
-      onUpdate(progress) {
-        if (generation !== mine) return;
-        for (let i = 0; i < labels.length; i += 1) {
-          const x = from[i][0] + (to[i][0] - from[i][0]) * progress;
-          const y = from[i][1] + (to[i][1] - from[i][1]) * progress;
-          labels[i].style.setProperty("--x", x.toFixed(3));
-          labels[i].style.setProperty("--y", y.toFixed(3));
-        }
-        if (!swapped && progress > 0.5) {
-          swapped = true;
-          const fresh = document.createElement("div");
-          fresh.innerHTML = labelsHtml(nextArt, nextLabels);
-          [...fresh.children].forEach((label, i) => {
-            const target = labels[i];
-            const source = label as HTMLElement;
-            if (!target) {
-              labelsLayer.append(source);
-              return;
-            }
-            target.className = source.className;
-            target.dataset.node = source.dataset.node;
-            target.dataset.beat = source.dataset.beat;
-            target.style.setProperty(
-              "--w",
-              source.style.getPropertyValue("--w"),
-            );
-            target.querySelector("i")!.textContent = source.textContent;
-          });
-        }
-      },
-    });
-
-    // Once the old pieces have gone, the new object is laid under the words.
-    const swap = window.setTimeout(() => {
-      timers.delete(swap);
-      if (generation !== mine) return;
-      if (still()) {
-        settle(index);
-        return;
-      }
-      cancelAll(animations);
-      paint(nextArt);
-      animations = assemble(svg, { beat: QUICK });
-      const entrance = [...animations];
-      void Promise.all([whenDone(entrance), travel?.finished]).then(() => {
-        if (generation === mine) settle(index);
-      });
-    }, LIFT);
-    timers.add(swap);
-
-    frameEl.setAttribute("aria-label", next.description);
-  }
-
-  build();
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        visible = entry.isIntersecting;
-        if (visible) {
-          reveal();
-          runLoop();
-        } else {
-          pauseLoop();
-        }
-      }
+export function mountSystem(
+  host: HTMLElement,
+  options: SystemOptions,
+): SystemDrawing {
+  return mountLive(host, {
+    motionPreference: options.motionPreference,
+    states: options.compositions,
+    initial: options.initial,
+    orientation: options.orientation,
+    portrait: options.portrait,
+    live: options.live ?? true,
+    drawIn: options.drawIn,
+    markup: (schematic, orientation) =>
+      `<div class="system" data-system>${fieldMarkup(schematic, orientation)}</div>`,
+    frame: (schematic, orientation) => {
+      const art = schematicArt(schematic, orientation);
+      return {
+        art,
+        labels: schematicLabels(schematic, art),
+        description: schematic.description,
+      };
     },
-    { threshold: 0.12 },
-  );
-  observer.observe(frameEl);
-
-  const onPreference = () => {
-    if (still()) {
-      pauseLoop();
-      frameEl.style.removeProperty("--lean-x");
-      frameEl.style.removeProperty("--lean-y");
-      settle();
-    } else {
-      runLoop();
-    }
-  };
-  /** Recomposes for the new shape, unless the drawing was given a fixed one. */
-  const onOrientation = () => {
-    if (options.orientation) return;
-    const next = orientationOf(portrait.matches);
-    if (next === orientation) return;
-    orientation = next;
-    settle();
-  };
-
-  motionPreference.addEventListener("change", onPreference);
-  portrait.addEventListener("change", onOrientation);
-  if (live) {
-    frameEl.addEventListener("pointermove", onPointerMove);
-    frameEl.addEventListener("pointerleave", onPointerLeave);
-  }
-
-  return {
-    select,
-    settle,
-    get active() {
-      return active;
-    },
-    dispose() {
-      generation += 1;
-      stopMotion();
-      pauseLoop();
-      observer.disconnect();
-      motionPreference.removeEventListener("change", onPreference);
-      portrait.removeEventListener("change", onOrientation);
-      frameEl.removeEventListener("pointermove", onPointerMove);
-      frameEl.removeEventListener("pointerleave", onPointerLeave);
-    },
-  };
+    travel: (next, art) =>
+      next.nodes.map((node) => ({
+        key: node.id,
+        x: (art.labels[node.id].at[0] / art.width) * 100,
+        y: (art.labels[node.id].at[1] / art.height) * 100,
+      })),
+  });
 }
 
-export type SystemDrawing = ReturnType<typeof mountSystem>;
+export type SystemDrawing = LiveDrawing;

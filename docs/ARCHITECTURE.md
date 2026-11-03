@@ -7,8 +7,8 @@ workflow lives in [CONTRIBUTING.md](../CONTRIBUTING.md); design decisions in
 ## Structure
 
 - `versions/<slug>/`: one folder per version of the website. Each holds
-  `version.json` (status, title, summary, author, created date), its
-  `index.html`, `src/`, `public/`, an optional `prerender.mjs` and any of its
+  `version.json` (status, title, summary, author, created date, and whether it
+  prerenders), its `index.html`, `src/`, `public/`, an optional `prerender.mjs` and any of its
   own tests. Deleting a folder removes the version. See
   [ADR 0013](adr/0013-version-folders-discovered-at-build.md).
 - `versions/current/`: today's site, the baseline. Inside it, `src/content.ts`
@@ -38,7 +38,8 @@ alias.
 
 ## Build and scripts
 
-- `scripts/versions.mjs`: discovers and validates `versions/*/version.json`.
+- `scripts/versions.mjs`: discovers and validates `versions/*/version.json`, including the declared `prerender` flag and its matching file.
+- `scripts/publish.mjs`: names the site base, deploy origin, version output and preview paths once for the build, the hub and the contract tests.
 - `scripts/build-site.mjs`: builds every version to `dist/<slug>/` (running its
   `prerender.mjs` if present), captures previews, and renders the hub index.
 - `scripts/new-version.mjs`: `npm run version:new` scaffolds a draft version

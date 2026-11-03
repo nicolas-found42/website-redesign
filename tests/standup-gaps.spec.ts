@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit, fits } from "./page";
 import { readFile } from "node:fs/promises";
 
 /*
@@ -131,11 +131,7 @@ for (const [width, text] of [
     expect(rail.top).toBeGreaterThanOrEqual(header.bottom - 1);
     expect(rail.top).toBeLessThan(header.bottom + 2);
     expect(article.top).toBeGreaterThanOrEqual(rail.bottom - 1);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    expect(await fits(page)).toBe(true);
     await context.close();
   });
 
@@ -267,11 +263,8 @@ test("the scorecard keeps answers and optional personalization local and downloa
   await expect(app).toContainText("You mostly use ChatGPT");
   await expect(app.locator("img")).toHaveCount(0);
   expect(await page.evaluate(() => "injected" in window)).toBe(false);
-  const audit = await new AxeBuilder({ page })
-    .include("#scorecard")
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
-  expect(audit.violations).toEqual([]);
+  const result = await audit(page, { include: "#scorecard" });
+  expect(result.violations).toEqual([]);
   await app.getByRole("button", { name: "Change my answers" }).click();
   await expect(
     app.getByRole("button", { name: "ChatGPT", exact: true }),
@@ -338,15 +331,14 @@ test("every scorecard state reflows at 320px with doubled text, before the fonts
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/resources/");
   await page.evaluate(() => (document.documentElement.style.fontSize = "200%"));
-  const fits = () =>
-    page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+
   const app = page.getByRole("group", { name: "AI Readiness Scorecard" });
-  expect(await fits()).toBe(true);
+  expect(await fits(page)).toBe(true);
   for (let step = 0; step < 18; step++) {
     await app.locator("[data-readiness-answer]").first().click();
-    expect(await fits()).toBe(true);
+    expect(await fits(page)).toBe(true);
   }
-  expect(await fits()).toBe(true);
+  expect(await fits(page)).toBe(true);
   await app.getByRole("button", { name: /See my report/ }).click();
-  expect(await fits()).toBe(true);
+  expect(await fits(page)).toBe(true);
 });

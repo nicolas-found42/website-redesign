@@ -13,7 +13,13 @@ import { pathToFileURL } from "node:url";
 import { discoverVersions } from "./versions.mjs";
 import { hubNotFound, renderHub } from "../hub/render.mjs";
 import { servePages } from "./serve-pages.mjs";
-import { injectStrip } from "../hub/strip.mjs";
+import { injectStrip, stripId } from "../hub/strip.mjs";
+import {
+  siteBase,
+  previewHref,
+  versionHref,
+  versionOutput,
+} from "./publish.mjs";
 
 /** Every HTML file a version published, at any depth. */
 async function htmlFiles(dir) {
@@ -51,7 +57,7 @@ async function capturePreviews(versions) {
   try {
     for (const { slug } of versions) {
       try {
-        for (const [suffix, width, height, scale] of [
+        for (const [variant, width, height, scale] of [
           ["", 1280, 800, 0.5],
           ["-mobile", 390, 640, 1],
         ]) {
@@ -63,18 +69,19 @@ async function capturePreviews(versions) {
           });
           const page = await context.newPage();
           await page.goto(
-            `http://127.0.0.1:${port}/website-redesign/${slug}/`,
+            `http://127.0.0.1:${port}${siteBase}${versionHref(slug)}`,
             {
               waitUntil: "load",
             },
           );
           // The hub strip is not part of the design being previewed.
-          await page.evaluate(() =>
-            document.getElementById("found42-hub-strip")?.remove(),
+          await page.evaluate(
+            (id) => document.getElementById(id)?.remove(),
+            stripId,
           );
           await page.waitForTimeout(600);
           await page.screenshot({
-            path: resolve(dist, "previews", `${slug}${suffix}.png`),
+            path: resolve(dist, previewHref(slug, variant)),
             animations: "disabled",
           });
           await context.close();
@@ -107,33 +114,25 @@ for (const version of versions) {
     stdio: "inherit",
     env: { ...process.env, VERSION: version.slug },
   });
-  if (version.hasPrerender) {
+  if (version.prerender) {
     const { default: prerender } = await import(
       pathToFileURL(resolve("versions", version.slug, "prerender.mjs")).href
     );
     await prerender({
       slug: version.slug,
-      outDir: resolve(dist, version.slug),
+      outDir: versionOutput(version.slug),
     });
   }
 }
 // Every page of every version gets the way back to the hub and its own name.
 for (const version of versions)
-  for (const file of await htmlFiles(resolve(dist, version.slug)))
+  for (const file of await htmlFiles(versionOutput(version.slug)))
     await writeFile(file, injectStrip(await readFile(file, "utf8"), version));
 await writeFile(resolve(dist, "404.html"), hubNotFound);
 const previews = await capturePreviews(versions);
 await writeFile(resolve(dist, "index.html"), renderHub(versions, { previews }));
 await writeFile(
   resolve(dist, "versions.json"),
-  JSON.stringify(
-    versions.map((version) =>
-      Object.fromEntries(
-        Object.entries(version).filter(([key]) => key !== "hasPrerender"),
-      ),
-    ),
-    null,
-    2,
-  ),
+  JSON.stringify(versions, null, 2),
 );
 console.log(`Built ${versions.length} version(s) into dist/`);
