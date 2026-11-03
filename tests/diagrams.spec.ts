@@ -7,6 +7,9 @@ import {
   type TextFit,
 } from "./drawing";
 
+// Keep this large, isolated matrix divisible at CI shard boundaries.
+test.describe.configure({ mode: "parallel" });
+
 /**
  * The redesigned drawings keep everything the deployed ones said, except
  * where the September 29 review (issue #74) changed it on purpose.
@@ -108,9 +111,14 @@ const drawnMarks = (state: FieldState) =>
     )
     .sort();
 
-async function open(page: Page, path: string, width: number) {
+async function open(
+  page: Page,
+  path: string,
+  width: number,
+  reducedMotion: "reduce" | "no-preference" = "reduce",
+) {
   await page.setViewportSize({ width, height: width < 700 ? 844 : 900 });
-  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.emulateMedia({ reducedMotion });
   await page.goto(path);
   await page.evaluate(() => document.fonts.ready);
 }
@@ -674,7 +682,7 @@ test("executive timeline words stay whole and separate with enlarged text", asyn
               ?.onCard,
           };
         },
-        { timeout: 20000 },
+        { timeout: 20000, intervals: [100] },
       )
       .toEqual({
         animating: 0,
@@ -936,11 +944,7 @@ test("the contributor workflows use one neutral reviewer icon and no role figure
   page,
 }) => {
   for (const width of [628, 1920]) {
-    await open(page, "/", width);
-    await page.emulateMedia({
-      reducedMotion: width === 1920 ? "no-preference" : "reduce",
-    });
-    await page.goto("/");
+    await open(page, "/", width, width === 1920 ? "no-preference" : "reduce");
     await page
       .getByRole("button", { name: /Individual Contributors and Teams/ })
       .first()
@@ -952,7 +956,9 @@ test("the contributor workflows use one neutral reviewer icon and no role figure
     );
     await expect(field).toBeVisible();
     await expect
-      .poll(async () => (await field.evaluate(readField)).animating)
+      .poll(async () => (await field.evaluate(readField)).animating, {
+        intervals: [100],
+      })
       .toBe(0);
     await expect(field.locator('[data-part="role"] circle')).toHaveCount(0);
     await expect(field.locator('[data-part="role"] ellipse')).toHaveCount(0);
@@ -983,11 +989,7 @@ test("contributor function labels have open space without enclosing bars", async
   page,
 }) => {
   for (const width of [628, 1920]) {
-    await open(page, "/", width);
-    await page.emulateMedia({
-      reducedMotion: width === 1920 ? "no-preference" : "reduce",
-    });
-    await page.goto("/");
+    await open(page, "/", width, width === 1920 ? "no-preference" : "reduce");
     await page
       .getByRole("button", { name: /Individual Contributors and Teams/ })
       .first()
@@ -999,7 +1001,9 @@ test("contributor function labels have open space without enclosing bars", async
     );
     await expect(field).toBeVisible();
     await expect
-      .poll(async () => (await field.evaluate(readField)).animating)
+      .poll(async () => (await field.evaluate(readField)).animating, {
+        intervals: [100],
+      })
       .toBe(0);
     const enclosingBars = await field.evaluate((root) => {
       const labels = [
@@ -1122,6 +1126,7 @@ test("the teams scene keeps each role lane clear of the others into and out of t
   await expect
     .poll(async () => (await wide.evaluate(readField)).animating, {
       timeout: 20000,
+      intervals: [100],
     })
     .toBe(0);
   expectClear(await wide.evaluate(clearanceOf), "landscape at 1638px");
@@ -1201,6 +1206,7 @@ test("the teams gate is a frame of posts, not a filled block", async ({
   await expect
     .poll(async () => (await wide.evaluate(readField)).animating, {
       timeout: 20000,
+      intervals: [100],
     })
     .toBe(0);
   await expectGateFrame(
@@ -1521,7 +1527,7 @@ for (const [width, text] of [
               animating: element.getAnimations({ subtree: true }).length,
             };
           }),
-        { timeout: 20000 },
+        { timeout: 20000, intervals: [100] },
       )
       .toEqual({ parts: 0, words: 0, animating: 0 });
     const fit = await field.evaluate(readTextFit);

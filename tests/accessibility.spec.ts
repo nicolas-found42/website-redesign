@@ -121,15 +121,28 @@ test("the testimonial rail is keyboard-operable and keeps every quote in the DOM
 async function settle(page: import("@playwright/test").Page) {
   await page.evaluate(() => document.fonts.ready);
   // A timed scroll sweep can leave a viewport before WebKit delivers its
-  // intersection callback on a busy runner. Visit each target and observe its
-  // actual reveal/opacity before advancing, without forcing application state.
-  for (const target of await page.locator("[data-reveal]").all()) {
-    await target.evaluate((element) =>
-      element.scrollIntoView({ block: "center", behavior: "instant" }),
-    );
-    await expect(target).toHaveClass(/\bis-in\b/);
-    await expect(target).toHaveCSS("opacity", "1");
+  // intersection callback on a busy runner. Observe each target's actual
+  // reveal before advancing, then all final opacities, without forcing state.
+  const targets = await page.locator("[data-reveal]").all();
+  for (const target of targets) {
+    // Re-center while observing: earlier entrances can still move this target.
+    // No actionability wait is needed for scrolling an otherwise hidden reveal.
+    await expect
+      .poll(
+        () =>
+          target.evaluate((element) => {
+            element.scrollIntoView({ block: "center", behavior: "instant" });
+            return element.classList.contains("is-in");
+          }),
+        { timeout: 5000, intervals: [100] },
+      )
+      .toBe(true);
+    // Do not serialize entrance durations: visit the next reveal while this
+    // one animates, then verify every target's actual final opacity below.
   }
+  await Promise.all(
+    targets.map((target) => expect(target).toHaveCSS("opacity", "1")),
+  );
   await expect(page.locator("[data-reveal]:not(.is-in)")).toHaveCount(0);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.evaluate(
