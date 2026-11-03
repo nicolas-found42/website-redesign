@@ -75,7 +75,9 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git fetch --no-tags --unshallow origin 2>/dev/null || git fetch --no-tags origin
           echo "VERSIONS=$(node scripts/changed-versions.mjs "origin/$BASE_REF")" >> "$GITHUB_ENV"
-      - run: xvfb-run -a npm test -- --workers=2 --shard=${{ matrix.shard }}/4
+      - name: Prepare an engine-balanced shard
+        run: node scripts/list-project-shard.mjs ${{ matrix.shard }}/4 /tmp/playwright-shard.txt
+      - run: xvfb-run -a npm test -- --workers=2 --test-list=/tmp/playwright-shard.txt
       - name: Summarize browser timings
         if: ${{ !cancelled() }}
         run: |

@@ -75,10 +75,20 @@ summed RSS can double-count shared pages. Use a temporary step reporter when
 individual browser operations need attribution rather than enabling traces in
 only one comparison arm.
 
-The large, context-isolated drawing and review-mode specs explicitly allow
-test-level sharding. Other CI specs keep file-level scheduling; the worker cap
-and browser coverage are unchanged. Reconcile exact project/test IDs across
-shards when changing scheduling, not only total counts.
+CI prepares each shard with `scripts/list-project-shard.mjs`: it applies native
+sharding within each configured project and combines the selected tests into
+one native test list. This keeps every engine represented across runners rather
+than concentrating WebKit on the last runner. Native file/serial groups remain
+intact; only the large, context-isolated drawing and review-mode specs explicitly
+allow test-level sharding. The selector round-trips the test list and checks
+exact test IDs before execution. The worker cap and browser coverage are unchanged.
+
+To exercise the same selection locally:
+
+```sh
+node scripts/list-project-shard.mjs 1/4 /tmp/playwright-shard.txt
+npm test -- --workers=2 --test-list=/tmp/playwright-shard.txt
+```
 
 Drawing readiness polls use 100ms intervals at measured slow animation waits,
 without shortening their failure timeouts or changing motion. This avoids
