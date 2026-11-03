@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { test, expect, type Page } from "@playwright/test";
+import { fits, previewBase } from "./page";
 import {
   readField,
   readTextFit,
@@ -784,7 +785,7 @@ for (const [width, height] of [
       viewport: { width, height },
     });
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:4179/website-redesign/current/");
+    await page.goto(`${previewBase("current")}/`);
     const field = page.locator("#audience-executives .scene-field:visible");
     for (const text of [
       "Claude Daily Brief",
@@ -833,11 +834,7 @@ for (const [width, height] of [
     expect(
       await field.evaluate((element) => element.getBoundingClientRect().width),
     ).toBeGreaterThan(300);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    expect(await fits(page)).toBe(true);
     await context.close();
   });
 }
@@ -1598,7 +1595,7 @@ for (const [width, height] of [
     });
     const page = await context.newPage();
     // The production preview serves the prerendered pages as built.
-    await page.goto("http://127.0.0.1:4179/website-redesign/current/");
+    await page.goto(`${previewBase("current")}/`);
     const panel = page.locator("#audience-contributors");
     const field = panel.locator(".scene-field:visible");
     await expect(field).toHaveCount(1);
@@ -1626,11 +1623,7 @@ for (const [width, height] of [
     // The words are set on a drawing large enough to hold them.
     const size = await field.evaluate((el) => el.getBoundingClientRect().width);
     expect(size).toBeGreaterThan(300);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    expect(await fits(page)).toBe(true);
     await context.close();
   });
 }

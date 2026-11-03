@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit } from "./page";
 /** The current version's routes: a version's pages are its own business. */
 const sitePages = [
   "/",
@@ -119,11 +119,8 @@ test("the entry bar meets the site's accessibility bar", async ({ page }) => {
   await seedDrafts(page, 3);
   await page.goto("/");
   await expect(entry(page)).toBeVisible();
-  const audit = await new AxeBuilder({ page })
-    .include("[data-entry-resume]")
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
-  expect(audit.violations).toEqual([]);
+  const result = await audit(page, { include: "[data-entry-resume]" });
+  expect(result.violations).toEqual([]);
 });
 
 test("the drafts check and the resume link are defensive about what they read", async ({

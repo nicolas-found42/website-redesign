@@ -9,7 +9,7 @@
  * already holds unsent drafts. It deliberately loads no review code, so a
  * first-time visitor still fetches nothing and sees nothing.
  */
-import { versionSlug } from "./paths";
+import { readSavedDrafts } from "./drafts";
 
 const flag = "found42-review:active";
 
@@ -32,29 +32,9 @@ export function endReviewSession() {
   }
 }
 
-/**
- * The list `store.ts` writes; read defensively because it is on disk and only
- * "unreadable means none" keeps a corrupted list from breaking the site.
- */
-const savedKey = `found42-review:feedback:${versionSlug}`;
-
 /** How many unsent drafts this browser holds; 0 when none or unreadable. */
 export function savedDraftCount(): number {
-  try {
-    const saved: unknown = JSON.parse(localStorage.getItem(savedKey) ?? "null");
-    if (
-      saved &&
-      typeof saved === "object" &&
-      "version" in saved &&
-      saved.version === 1 &&
-      "items" in saved &&
-      Array.isArray(saved.items)
-    )
-      return saved.items.length;
-  } catch {
-    /* Unreadable or refused storage is the same as no drafts. */
-  }
-  return 0;
+  return readSavedDrafts()?.items.length ?? 0;
 }
 
 /**

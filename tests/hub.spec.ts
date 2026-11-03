@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { discoverVersions } from "../scripts/versions.mjs";
+import { hubBase } from "./page";
 
 /**
  * The hub index at the site root, checked against the built Pages artifact. It
@@ -7,7 +8,7 @@ import { discoverVersions } from "../scripts/versions.mjs";
  * working site, and must work without scripts.
  */
 
-const hub = "http://127.0.0.1:4179/website-redesign/";
+const hub = hubBase;
 const versions = await discoverVersions();
 const active = versions.filter((v) => v.status !== "archived");
 

@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { fits, previewBase } from "./page";
 import { readFileSync } from "node:fs";
 const manifest = JSON.parse(
   readFileSync("artifacts/lovable-migration/2026-09-16/manifest.json", "utf8"),
 );
-const base = "http://127.0.0.1:4179/website-redesign/current";
+const base = previewBase("current");
 test("static GitHub Pages routes survive direct entry, refresh, links and missing paths [production]", async ({
   page,
   request,
@@ -173,10 +174,6 @@ test("a phone without script can reach the complete homepage and catalog [produc
     );
   }
   await expect(page.locator("main button[data-dialog]")).toHaveCount(0);
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
+  expect(await fits(page)).toBe(true);
   await context.close();
 });

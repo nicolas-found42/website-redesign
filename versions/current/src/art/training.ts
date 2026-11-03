@@ -1,17 +1,26 @@
 import {
   figure,
-  part,
   place,
   r,
   seal,
   stander,
   strip,
   tag,
-  type Art,
-  type LabelPlace,
-  type Orientation,
+  type Align,
+  type Baseline,
+  type Entrance,
+  type Ground,
   type Pt,
 } from "./kit";
+import {
+  drawn,
+  stageRun,
+  type Anchor,
+  type Plan,
+  type Rect,
+  type Staged,
+  type Stage,
+} from "./compose";
 
 /**
  * Workshops: people designing, practising and reviewing together.
@@ -22,6 +31,10 @@ import {
  * review, and leave with a reusable skill they apply afterwards, back at the
  * work they started from. People are charcoal, red and white cut paper with
  * charcoal outlines; the ribbon that joins the stages is solid.
+ *
+ * The seven stages, their words and their connections are stated once. The
+ * wide sheet runs them roughly left to right and the narrow one carries the
+ * same loop down and around; only the placements come from geometry.
  */
 
 const RIBBON = "var(--paper-warm)";
@@ -90,218 +103,254 @@ const takeaway = (at: Pt, width: number, height: number) =>
   tag(at, width, height, { tone: "ink" }) +
   seal([at[0] + width - 28, at[1]], 17, -8);
 
-function landscape(): Art {
-  const labels: Record<string, LabelPlace> = {
-    n1: place([50, 126], "start", "above", { width: 400, beat: 0 }),
-    n2: place([380, 246], "start", "above", { width: 270, beat: 1 }),
-    human: place([758, 222], "center", "middle", {
-      width: 196,
-      ground: "red",
-      beat: 1,
-    }),
-    n3: place([924, 396], "center", "below", { width: 130, beat: 2 }),
-    n4: place([500, 594], "center", "middle", { width: 380, beat: 3 }),
-  };
-  const parts = [
-    part(
-      {
-        name: "whiteboard",
-        beat: 0,
-        enter: "unfold-y",
-        origin: [50, 150],
-        nodes: ["n1"],
-      },
-      whiteboard(50, 150, 270, 170),
-    ),
-    part(
-      {
-        name: "designers",
-        beat: 0,
-        order: 1,
-        enter: "rise",
-        origin: [180, 440],
-      },
-      stander([110, 440], 1, "ink", "right") +
-        stander([260, 440], 1, "paper", "left"),
-    ),
-    part(
-      {
-        name: "desk",
-        beat: 1,
-        enter: "slide-right",
-        origin: [370, 300],
-        nodes: ["n2"],
-        links: ["n2>human"],
-      },
-      desk(370, 270, 250),
-    ),
-    part(
-      {
-        name: "flow",
-        beat: 1,
-        order: 1,
-        enter: "slide-right",
-        origin: [40, 470],
-        links: ["n1>human"],
-      },
-      strip("M40 470 L860 470", 16, RIBBON, { edge: 2.5 }),
-    ),
-    part(
-      {
-        name: "review",
-        beat: 1,
-        order: 2,
-        enter: "swing",
-        origin: [758, 200],
-        nodes: ["human"],
-        links: ["human>n3"],
-      },
-      banner(646, 200, 224, 44, 200) +
-        stander([715, 440], 0.96, "strand") +
-        stander([765, 440], 1, "paper") +
-        stander([815, 440], 0.96, "ink") +
-        seal([866, 204], 18, -8),
-    ),
-    part(
-      {
-        name: "takeaway",
-        beat: 2,
-        enter: "swing",
-        origin: [866, 350],
-        nodes: ["n3"],
-        links: ["n3>n4"],
-      },
-      strip("M860 470 L880 470", 16, RIBBON, { edge: 2.5 }) +
-        takeaway([868, 350], 112, 64),
-    ),
-    part(
-      {
-        name: "return",
-        beat: 3,
-        enter: "unfold-y",
-        origin: [900, 480],
-        nodes: ["n4"],
-        links: ["n4>n1"],
-      },
-      strip(
-        "M900 490 L900 540 C900 556 890 566 870 566 L110 566 C90 566 80 556 80 540 L80 490",
-        16,
-        RIBBON,
-        { edge: 2.5 },
-      ),
-    ),
-  ];
-  return { width: 1000, height: 620, parts: parts.join(""), labels };
-}
+const STAGES: readonly Stage[] = [
+  { key: "n1", name: "whiteboard", beat: 0, enter: "unfold-y", nodes: ["n1"] },
+  { key: "designers", name: "designers", beat: 0, order: 1, enter: "rise" },
+  {
+    key: "n2",
+    name: "desk",
+    beat: 1,
+    enter: "slide-right",
+    nodes: ["n2"],
+    links: ["n2>human"],
+  },
+  {
+    key: "flow",
+    name: "flow",
+    beat: 1,
+    order: 1,
+    enter: "slide-right",
+    links: ["n1>human"],
+  },
+  {
+    key: "human",
+    name: "review",
+    beat: 1,
+    order: 2,
+    enter: "swing",
+    nodes: ["human"],
+    links: ["human>n3"],
+  },
+  {
+    key: "n3",
+    name: "takeaway",
+    beat: 2,
+    enter: "swing",
+    nodes: ["n3"],
+    links: ["n3>n4"],
+  },
+  {
+    key: "n4",
+    name: "return",
+    beat: 3,
+    enter: "unfold-y",
+    nodes: ["n4"],
+    links: ["n4>n1"],
+  },
+];
 
-function portrait(): Art {
-  const labels: Record<string, LabelPlace> = {
-    n1: place([30, 132], "start", "above", { width: 290, beat: 0 }),
-    n2: place([340, 190], "start", "above", { width: 260, beat: 1 }),
-    human: place([160, 562], "center", "middle", {
-      width: 210,
-      ground: "red",
-      beat: 1,
-    }),
-    n3: place([470, 596], "center", "above", { width: 220, beat: 2 }),
-    n4: place([310, 824], "center", "middle", { width: 400, beat: 3 }),
-  };
-  const parts = [
-    part(
-      {
-        name: "whiteboard",
-        beat: 0,
-        enter: "unfold-y",
-        origin: [30, 150],
-        nodes: ["n1"],
-      },
-      whiteboard(30, 150, 270, 150),
-    ),
-    part(
-      {
-        name: "designers",
-        beat: 0,
-        order: 1,
-        enter: "rise",
-        origin: [150, 420],
-      },
-      stander([84, 420], 0.9, "ink", "right") +
-        stander([230, 420], 0.9, "paper", "left"),
-    ),
-    part(
-      {
-        name: "desk",
-        beat: 1,
-        enter: "slide-left",
-        origin: [340, 260],
-        nodes: ["n2"],
-        links: ["n2>human"],
-      },
-      desk(340, 232, 250),
-    ),
-    part(
-      {
-        name: "flow",
-        beat: 1,
-        order: 1,
-        enter: "slide-right",
-        origin: [30, 446],
-        links: ["n1>human"],
-      },
-      strip(
-        "M30 446 L572 446 C596 446 606 460 606 478 C606 496 596 510 572 510 L60 510",
-        16,
-        RIBBON,
-        { edge: 2.5 },
-      ),
-    ),
-    part(
-      {
-        name: "review",
-        beat: 1,
-        order: 2,
-        enter: "swing",
-        origin: [160, 534],
-        nodes: ["human"],
-        links: ["human>n3"],
-      },
-      banner(30, 540, 260, 44, 160) +
-        stander([80, 744], 0.96, "strand") +
-        stander([160, 744], 1, "paper") +
-        stander([240, 744], 0.96, "ink") +
-        seal([286, 544], 18, -8),
-    ),
-    part(
-      {
-        name: "takeaway",
-        beat: 2,
-        enter: "swing",
-        origin: [370, 640],
-        nodes: ["n3"],
-        links: ["n3>n4"],
-      },
-      strip("M330 510 L330 640 L360 640", 16, RIBBON, { edge: 2.5 }) +
-        takeaway([370, 640], 200, 64),
-    ),
-    part(
-      {
-        name: "return",
-        beat: 3,
-        enter: "unfold-y",
-        origin: [560, 700],
-        nodes: ["n4"],
-        links: ["n4>n1"],
-      },
-      strip(
-        "M520 690 L520 770 C520 786 510 796 494 796 L50 796 C32 796 22 786 22 770 L22 320",
-        16,
-        RIBBON,
-        { edge: 2.5 },
-      ),
-    ),
-  ];
-  return { width: 620, height: 840, parts: parts.join(""), labels };
-}
+type LabelKey = "n1" | "n2" | "human" | "n3" | "n4";
 
-export const trainingArt = (orientation: Orientation): Art =>
-  orientation === "portrait" ? portrait() : landscape();
+type Word = {
+  readonly align: Align;
+  readonly baseline: Baseline;
+  readonly ground?: Ground;
+  readonly beat: number;
+};
+
+/** The words themselves: how each is set, wherever the sheet places it. */
+const LABELS: Record<LabelKey, Word> = {
+  n1: { align: "start", baseline: "above", beat: 0 },
+  n2: { align: "start", baseline: "above", beat: 1 },
+  human: { align: "center", baseline: "middle", ground: "red", beat: 1 },
+  n3: { align: "center", baseline: "below", beat: 2 },
+  n4: { align: "center", baseline: "middle", beat: 3 },
+};
+
+/** A narrow sheet may set a word above where the wide one sets it below. */
+type TrainingAnchor = Anchor & { readonly baseline?: Baseline };
+
+type Placement = { readonly origin: Pt; readonly enter?: Entrance };
+
+type Group = { readonly at: Pt; readonly scale: number };
+
+type Banner = {
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+  readonly h: number;
+  readonly drop: number;
+};
+
+type TrainingGeometry = {
+  readonly whiteboard: Rect;
+  readonly designers: readonly Group[];
+  readonly desk: { readonly x: number; readonly y: number; readonly w: number };
+  readonly flow: { readonly path: string };
+  readonly review: {
+    readonly banner: Banner;
+    readonly people: readonly (Group & {
+      readonly tone: "ink" | "strand" | "paper";
+    })[];
+    readonly sealAt: Pt;
+  };
+  readonly takeaway: {
+    readonly path: string;
+    readonly at: Pt;
+    readonly width: number;
+    readonly height: number;
+  };
+  readonly back: { readonly path: string };
+  readonly places: Readonly<Record<string, Placement>>;
+  readonly labels: Readonly<Record<LabelKey, TrainingAnchor>>;
+};
+
+const landscape: TrainingGeometry = {
+  whiteboard: { x: 50, y: 150, w: 270, h: 170 },
+  designers: [
+    { at: [110, 440], scale: 1 },
+    { at: [260, 440], scale: 1 },
+  ],
+  desk: { x: 370, y: 270, w: 250 },
+  flow: { path: "M40 470 L860 470" },
+  review: {
+    banner: { x: 646, y: 200, w: 224, h: 44, drop: 200 },
+    people: [
+      { at: [715, 440], scale: 0.96, tone: "strand" },
+      { at: [765, 440], scale: 1, tone: "paper" },
+      { at: [815, 440], scale: 0.96, tone: "ink" },
+    ],
+    sealAt: [866, 204],
+  },
+  takeaway: {
+    path: "M860 470 L880 470",
+    at: [868, 350],
+    width: 112,
+    height: 64,
+  },
+  back: {
+    path: "M900 490 L900 540 C900 556 890 566 870 566 L110 566 C90 566 80 556 80 540 L80 490",
+  },
+  places: {
+    n1: { origin: [50, 150] },
+    designers: { origin: [180, 440] },
+    n2: { origin: [370, 300] },
+    flow: { origin: [40, 470] },
+    human: { origin: [758, 200] },
+    n3: { origin: [866, 350] },
+    n4: { origin: [900, 480] },
+  },
+  labels: {
+    n1: { at: [50, 126], width: 400 },
+    n2: { at: [380, 246], width: 270 },
+    human: { at: [758, 222], width: 196 },
+    n3: { at: [924, 396], width: 130 },
+    n4: { at: [500, 594], width: 380 },
+  },
+};
+
+const portrait: TrainingGeometry = {
+  whiteboard: { x: 30, y: 150, w: 270, h: 150 },
+  designers: [
+    { at: [84, 420], scale: 0.9 },
+    { at: [230, 420], scale: 0.9 },
+  ],
+  desk: { x: 340, y: 232, w: 250 },
+  flow: {
+    path: "M30 446 L572 446 C596 446 606 460 606 478 C606 496 596 510 572 510 L60 510",
+  },
+  review: {
+    banner: { x: 30, y: 540, w: 260, h: 44, drop: 160 },
+    people: [
+      { at: [80, 744], scale: 0.96, tone: "strand" },
+      { at: [160, 744], scale: 1, tone: "paper" },
+      { at: [240, 744], scale: 0.96, tone: "ink" },
+    ],
+    sealAt: [286, 544],
+  },
+  takeaway: {
+    path: "M330 510 L330 640 L360 640",
+    at: [370, 640],
+    width: 200,
+    height: 64,
+  },
+  back: {
+    path: "M520 690 L520 770 C520 786 510 796 494 796 L50 796 C32 796 22 786 22 770 L22 320",
+  },
+  places: {
+    n1: { origin: [30, 150] },
+    designers: { origin: [150, 420] },
+    n2: { origin: [340, 260], enter: "slide-left" },
+    flow: { origin: [30, 446] },
+    human: { origin: [160, 534] },
+    n3: { origin: [370, 640] },
+    n4: { origin: [560, 700] },
+  },
+  labels: {
+    n1: { at: [30, 132], width: 290 },
+    n2: { at: [340, 190], width: 260 },
+    human: { at: [160, 562], width: 210 },
+    n3: { at: [470, 596], width: 220, baseline: "above" },
+    n4: { at: [310, 824], width: 400 },
+  },
+};
+
+const plan: Plan<TrainingGeometry> = {
+  size: {
+    landscape: { width: 1000, height: 620 },
+    portrait: { width: 620, height: 840 },
+  },
+  geometry: { landscape, portrait },
+  build: (g): Staged => {
+    const bodies: Record<string, string> = {
+      n1: whiteboard(
+        g.whiteboard.x,
+        g.whiteboard.y,
+        g.whiteboard.w,
+        g.whiteboard.h,
+      ),
+      designers:
+        stander(g.designers[0].at, g.designers[0].scale, "ink", "right") +
+        stander(g.designers[1].at, g.designers[1].scale, "paper", "left"),
+      n2: desk(g.desk.x, g.desk.y, g.desk.w),
+      flow: strip(g.flow.path, 16, RIBBON, { edge: 2.5 }),
+      human:
+        banner(
+          g.review.banner.x,
+          g.review.banner.y,
+          g.review.banner.w,
+          g.review.banner.h,
+          g.review.banner.drop,
+        ) +
+        g.review.people
+          .map((person) => stander(person.at, person.scale, person.tone))
+          .join("") +
+        seal(g.review.sealAt, 18, -8),
+      n3:
+        strip(g.takeaway.path, 16, RIBBON, { edge: 2.5 }) +
+        takeaway(g.takeaway.at, g.takeaway.width, g.takeaway.height),
+      n4: strip(g.back.path, 16, RIBBON, { edge: 2.5 }),
+    };
+    return stageRun(
+      STAGES,
+      (stage) => {
+        const anchor = g.labels[stage.key as LabelKey];
+        const word = LABELS[stage.key as LabelKey];
+        return {
+          origin: g.places[stage.key].origin,
+          enter: g.places[stage.key].enter,
+          label: anchor
+            ? place(anchor.at, word.align, anchor.baseline ?? word.baseline, {
+                width: anchor.width,
+                ground: word.ground,
+                beat: word.beat,
+              })
+            : undefined,
+        };
+      },
+      (stage) => bodies[stage.key],
+    );
+  },
+};
+
+export const trainingArt = drawn(plan);

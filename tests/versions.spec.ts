@@ -15,6 +15,7 @@ import { discoverVersions, metadataProblems } from "../scripts/versions.mjs";
 import { renderHub, issuesUrl } from "../hub/render.mjs";
 import { select } from "../scripts/changed-versions.mjs";
 import { hubStrip, injectStrip } from "../hub/strip.mjs";
+import { siteBase } from "../scripts/publish.mjs";
 
 /**
  * The folders under `versions/` are the only registry. These tests prove the
@@ -56,6 +57,9 @@ test("metadata is validated field by field", () => {
   expect(metadataProblems("a", meta({ changesFacts: " " }))[0]).toContain(
     "changesFacts",
   );
+  expect(metadataProblems("a", meta({ prerender: "yes" }))[0]).toContain(
+    "prerender",
+  );
   expect(metadataProblems("a", [])).toEqual(["version.json must be an object"]);
 });
 
@@ -91,6 +95,11 @@ test("a version folder without valid metadata fails the build loudly", async () 
     add("bad-one", meta({ status: "nope" }));
     await expect(discoverVersions(versions)).rejects.toThrow(
       /bad-one\/version\.json: status must be one of/,
+    );
+    rmSync(join(versions, "bad-one"), { recursive: true });
+    add("claims-prerender", meta({ prerender: true }));
+    await expect(discoverVersions(versions)).rejects.toThrow(
+      /claims-prerender\/version\.json: prerender is true but/,
     );
   } finally {
     rmSync(dir, { recursive: true, force: true });
@@ -256,7 +265,7 @@ test("the hub strip is injected once, escaped, and names the version", () => {
     '<!doctype html><html><body class="x"><div id="app"></div></body></html>';
   const once = injectStrip(page, version);
   expect(once).toContain('<body class="x"><nav id="found42-hub-strip"');
-  expect(once).toContain('href="/website-redesign/">← All versions</a>');
+  expect(once).toContain(`href="${siteBase}">← All versions</a>`);
   expect(once).toContain("<code>bold-owl</code>");
   expect(once).toContain("Shortlisted");
   expect(once).toContain("&lt;b&gt;Bold&lt;/b&gt; &quot;type&quot;");
@@ -265,6 +274,8 @@ test("the hub strip is injected once, escaped, and names the version", () => {
   // Running the build twice never doubles the strip.
   expect(injectStrip(once, version)).toBe(once);
   expect(hubStrip({ ...version, baseline: true })).toContain("· Baseline ·");
-  // A page with no body tag is left alone rather than broken.
-  expect(injectStrip("<p>fragment</p>", version)).toBe("<p>fragment</p>");
+  // A built page must have a body, so a fragment fails instead of shipping bare.
+  expect(() => injectStrip("<p>fragment</p>", version)).toThrow(
+    /has no <body>/,
+  );
 });

@@ -35,6 +35,24 @@ export function submissionItem(item: FeedbackItem): FeedbackItem {
 export const maxRequestBytes = 64_000;
 export const maxItemBytes = 20_000;
 
+/**
+ * What makes two versions of the same feedback item the same submission.
+ * Timestamps and local screenshot pixels do not: reopening a draft rewrites
+ * `updated`, and the pixels travel in their own upload. Everything a reviewer
+ * typed is included, so a real edit still changes the fingerprint.
+ */
+export type Revision = Omit<FeedbackItem, "created" | "updated">;
+
+export function revisionOf(item: FeedbackItem): Revision {
+  const revision: Revision &
+    Partial<Pick<FeedbackItem, "created" | "updated">> = { ...item };
+  delete revision.created;
+  delete revision.updated;
+  if (revision.screenshot)
+    revision.screenshot = { ...revision.screenshot, dataUrl: undefined };
+  return revision;
+}
+
 export interface Submission {
   version: 2;
   /** The version's own site URL (`versionSite(slug)`). */
@@ -51,7 +69,7 @@ export interface Outcome {
   issue?: { number: number; url: string };
 }
 
-/** Property order is irrelevant; every submitted field is part of its version. */
+/** Property order is irrelevant; every stable field is part of its version. */
 export function canonical(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
   if (value && typeof value === "object") {
@@ -66,7 +84,7 @@ export function canonical(value: unknown): string {
 }
 export async function fingerprint(site: string, item: FeedbackItem) {
   const bytes = new TextEncoder().encode(
-    canonical({ site, item: submissionItem(item) }),
+    canonical({ site, item: revisionOf(item) }),
   );
   return Array.from(
     new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),

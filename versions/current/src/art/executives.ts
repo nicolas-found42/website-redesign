@@ -1,19 +1,78 @@
-import {
-  part,
-  place,
-  type Art,
-  type LabelPlace,
-  type Orientation,
-} from "./kit";
+import { part, place, type LabelPlace, type Pt } from "./kit";
 import { arrow, paper } from "./work";
+import {
+  chain,
+  drawn,
+  stageRun,
+  type Connector,
+  type Plan,
+  type Rect,
+  type Staged,
+  type Stage,
+} from "./compose";
 
-/** Four output documents, rather than people illustrating their working day. */
-const cards = ["brief", "meeting", "debrief", "actions"] as const;
+/**
+ * C-level executives: four output documents, rather than people illustrating
+ * their working day.
+ *
+ * The four cards are stated once — brief, meeting brief, debrief and actions
+ * from transcripts — each with the sample it produces. The wide sheet sets
+ * them two by two and the narrow one stacks them; only their positions, the
+ * connectors between them and the decision's size come from geometry.
+ */
+
+const CARDS: readonly Stage[] = [
+  {
+    key: "brief",
+    name: "brief",
+    beat: 0,
+    enter: "rise",
+    nodes: ["brief"],
+    marks: ["source:brief"],
+  },
+  {
+    key: "meeting",
+    name: "meeting",
+    beat: 1,
+    enter: "rise",
+    nodes: ["meeting"],
+    marks: ["result:meeting"],
+  },
+  {
+    key: "debrief",
+    name: "debrief",
+    beat: 2,
+    enter: "rise",
+    nodes: ["debrief"],
+    marks: ["result:debrief"],
+  },
+  {
+    key: "actions",
+    name: "actions",
+    beat: 3,
+    enter: "rise",
+    nodes: ["actions"],
+    marks: ["result:actions"],
+  },
+];
+
+type TimelineGeometry = {
+  xs: readonly number[];
+  ys: readonly number[];
+  w: number;
+  connectors: readonly Connector[];
+  decision: {
+    at: Pt;
+    box: Rect;
+    arrow: { d: string; tip: Pt };
+  };
+};
 
 /** Content blocks are fields in each output, never a decorative ruled texture. */
 const field = (x: number, y: number, w: number, h = 8) =>
   `<rect class="f-muted" x="${x}" y="${y}" width="${w}" height="${h}" rx="2"/>`;
 
+/** The recognizable output each card produces. */
 function output(index: number, x: number, y: number, w: number): string {
   if (index === 0) {
     // Three priorities, each with a rank badge, summary and supporting detail.
@@ -91,94 +150,124 @@ function output(index: number, x: number, y: number, w: number): string {
   );
 }
 
-function timeline(orientation: Orientation): Art {
-  const wide = orientation === "landscape";
-  const width = wide ? 1000 : 600;
-  const pitch = wide ? 510 : 560;
-  const height = wide ? 1260 : 2450;
-  const w = wide ? 440 : 520;
-  const labels: Record<string, LabelPlace> = {};
-  const parts: string[] = [];
-  cards.forEach((key, index) => {
-    const x = wide ? 30 + (index % 2) * 500 : 40;
-    const y = 24 + (wide ? Math.floor(index / 2) : index) * pitch;
-    const last = index === 3;
-    const cx = x + w / 2;
-    labels[key] = place([cx, y + 78], "center", "middle", {
-      width: w - 24,
-      ground: last ? "ink" : "paper",
-    });
-    labels[`${key}-sample`] = place([cx, y + 208], "center", "middle", {
-      width: w - 24,
-      ground: last ? "ink" : "paper",
-    });
-    parts.push(
-      part(
-        {
-          name: key,
-          beat: index,
-          enter: "rise",
+const landscape: TimelineGeometry = {
+  xs: [30, 530, 30, 530],
+  ys: [24, 24, 534, 534],
+  w: 440,
+  connectors: [
+    { d: "M476 174 H524", tip: [524, 174], dir: "right" },
+    { d: "M750 504 V522 H14 V684 H24", tip: [24, 684], dir: "right" },
+    { d: "M476 684 H524", tip: [524, 684], dir: "right" },
+  ],
+  decision: {
+    at: [750, 962],
+    box: { x: 554, y: 924, w: 392, h: 76 },
+    arrow: { d: "M960 962 H982 V850 H960", tip: [960, 850] },
+  },
+};
+
+const portraitColumn = [24, 584, 1144, 1704];
+const portrait: TimelineGeometry = {
+  xs: [40, 40, 40, 40],
+  ys: portraitColumn,
+  w: 520,
+  connectors: portraitColumn.slice(0, -1).map((y, i) => ({
+    d: `M300 ${y + 486} V${portraitColumn[i + 1] - 8}`,
+    tip: [300, portraitColumn[i + 1] - 8],
+    dir: "down" as const,
+  })),
+  decision: {
+    at: [300, 2132],
+    box: { x: 64, y: 2094, w: 472, h: 76 },
+    arrow: { d: "M550 2132 H572 V2020 H550", tip: [550, 2020] },
+  },
+};
+
+const plan: Plan<TimelineGeometry> = {
+  size: {
+    landscape: { width: 1000, height: 1260 },
+    portrait: { width: 600, height: 2450 },
+  },
+  geometry: { landscape, portrait },
+  build: (g, size): Staged => {
+    const links = chain(CARDS);
+    const staged = stageRun(
+      CARDS,
+      (card, index) => {
+        const x = g.xs[index],
+          y = g.ys[index],
+          last = card.key === "actions";
+        return {
           origin: [x, y],
-          nodes: [key],
-          marks: [index === 0 ? "source:brief" : `result:${key}`],
-        },
-        paper(x, y, w, 470, last) + output(index, x + 24, y + 250, w - 48),
+          label: place([x + g.w / 2, y + 78], "center", "middle", {
+            width: g.w - 24,
+            ground: last ? "ink" : "paper",
+          }),
+        };
+      },
+      (card, index) => {
+        const x = g.xs[index],
+          y = g.ys[index],
+          last = card.key === "actions";
+        return (
+          paper(x, y, g.w, 470, last) + output(index, x + 24, y + 250, g.w - 48)
+        );
+      },
+    );
+    const samples: Record<string, LabelPlace> = {};
+    CARDS.forEach((card, index) => {
+      samples[`${card.key}-sample`] = place(
+        [g.xs[index] + g.w / 2, g.ys[index] + 208],
+        "center",
+        "middle",
+        { width: g.w - 24, ground: card.key === "actions" ? "ink" : "paper" },
+      );
+    });
+    const connectors = g.connectors.map((connector, index) =>
+      part(
+        { name: "next", beat: index + 1, enter: "fade", links: [links[index]] },
+        arrow(connector.d, connector.tip, connector.dir),
       ),
     );
-    if (!last) {
-      const next = cards[index + 1];
-      const d = wide
-        ? index === 1
-          ? "M750 504 V522 H14 V684 H24"
-          : `M${x + w + 6} ${y + 150} H${x + w + 54}`
-        : `M300 ${y + 486} V${y + pitch - 8}`;
-      const tip: readonly [number, number] = wide
-        ? index === 1
-          ? [24, 684]
-          : [x + w + 54, y + 150]
-        : [300, y + pitch - 8];
-      parts.push(
-        part(
+    const { box } = g.decision;
+    const body =
+      `<rect class="f-red" x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" rx="5"/>` +
+      arrow(g.decision.arrow.d, g.decision.arrow.tip, "left", true);
+    const decision = part(
+      {
+        name: "decision",
+        beat: 4,
+        enter: "rise",
+        nodes: ["direction"],
+        marks: ["human:direction"],
+        links: ["direction>actions"],
+      },
+      body,
+    );
+    return {
+      parts: staged.parts.flatMap((piece, index) =>
+        index < connectors.length
+          ? [piece, connectors[index]]
+          : [piece, decision],
+      ),
+      labels: {
+        ...staged.labels,
+        ...samples,
+        direction: place(g.decision.at, "center", "middle", {
+          width: g.w - 66,
+          ground: "red",
+        }),
+        illustrative: place(
+          [size.width / 2, size.height - 110],
+          "center",
+          "middle",
           {
-            name: "next",
-            beat: index + 1,
-            enter: "fade",
-            links: [`${key}>${next}`],
+            width: size.width - 60,
           },
-          arrow(d, tip, wide ? "right" : "down"),
         ),
-      );
-    } else {
-      const my = y + 390;
-      labels.direction = place([cx, my + 38], "center", "middle", {
-        width: w - 66,
-        ground: "red",
-      });
-      parts.push(
-        part(
-          {
-            name: "decision",
-            beat: 4,
-            enter: "rise",
-            nodes: ["direction"],
-            marks: ["human:direction"],
-            links: ["direction>actions"],
-          },
-          `<rect class="f-red" x="${x + 24}" y="${my}" width="${w - 48}" height="76" rx="5"/>` +
-            arrow(
-              `M${x + w - 10} ${my + 38} H${x + w + 12} V${y + 316} H${x + w - 10}`,
-              [x + w - 10, y + 316],
-              "left",
-              true,
-            ),
-        ),
-      );
-    }
-  });
-  labels.illustrative = place([width / 2, height - 110], "center", "middle", {
-    width: width - 60,
-  });
-  return { width, height, parts: parts.join(""), labels };
-}
-export const executivesArt = (orientation: Orientation): Art =>
-  timeline(orientation);
+      },
+    };
+  },
+};
+
+export const executivesArt = drawn(plan);

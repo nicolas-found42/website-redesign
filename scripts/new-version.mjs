@@ -134,6 +134,8 @@ const meta = {
 };
 if (!meta.summary) delete meta.summary;
 if (!meta.author) delete meta.author;
+// A copied version brings its prerenderer; a blank shell has none.
+if (await exists(resolve(target, "prerender.mjs"))) meta.prerender = true;
 await writeFile(
   resolve(target, "version.json"),
   `${JSON.stringify(meta, null, 2)}\n`,

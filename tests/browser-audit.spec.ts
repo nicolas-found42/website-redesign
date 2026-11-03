@@ -1,4 +1,5 @@
 import { test, expect, type Download } from "@playwright/test";
+import { fits } from "./page";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 
@@ -97,11 +98,9 @@ for (const width of [384, 1455]) {
     await app.getByRole("link", { name: "Explore the free resources" }).click();
     await expect(page).toHaveURL(/\/resources\/#library$/);
     await expect(
-      page
-        .locator("#library")
-        .getByRole("link", {
-          name: "Download executive communications reviewer",
-        }),
+      page.locator("#library").getByRole("link", {
+        name: "Download executive communications reviewer",
+      }),
     ).toHaveAttribute("href", "/resources/skills/exec-comms-reviewer.skill");
   });
 
@@ -128,11 +127,6 @@ for (const width of [384, 1455]) {
     });
     expect(layout.rows, `${width}px rows`).toBe(1);
     expect(layout.scrolls, `${width}px scrolls`).toBe(true);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-      `${width}px`,
-    ).toBe(true);
+    expect(await fits(page), `${width}px`).toBe(true);
   });
 }

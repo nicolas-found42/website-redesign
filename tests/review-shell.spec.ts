@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { audit } from "./page";
 
 /**
  * The review shell's reviewer-facing copy and actions: the public-GitHub
@@ -43,11 +43,7 @@ async function saveDraft(page: Page, wording = "A clearer opening.") {
   await expect(panel(page)).toHaveCount(0);
 }
 
-const axe = (page: Page) =>
-  new AxeBuilder({ page })
-    .include("#found42-review")
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
+const axe = (page: Page) => audit(page, { include: "#found42-review" });
 
 test("#123 the bar warning stays verbatim and now explains what public means", async ({
   page,

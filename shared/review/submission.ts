@@ -7,7 +7,7 @@ import {
   type Outcome,
   type Submission,
 } from "./submission-contract";
-import type { FeedbackItem, Store, DeliveryReceipt } from "./store";
+import type { DraftLedger, FeedbackItem, DeliveryReceipt } from "./store";
 import { targetLabel } from "./target";
 
 export const submissionUrl = import.meta.env.VITE_REVIEW_SUBMISSION_URL;
@@ -94,11 +94,12 @@ async function withSubmissionLock<T>(run: () => Promise<T>): Promise<T> {
 }
 
 async function uploadEvidence(
-  store: Store,
+  ledger: DraftLedger,
   item: FeedbackItem,
 ): Promise<string | undefined> {
   const image = item.screenshot;
-  if (!image || store.uploadedScreenshots().includes(image.sha256)) return;
+  if (!image || ledger.snapshot().uploadedScreenshots.includes(image.sha256))
+    return;
   if (!submissionUrl)
     return "Screenshot delivery is not configured. Your draft is saved; send text without the image or try later.";
   try {
@@ -135,7 +136,7 @@ async function uploadEvidence(
       receipt.width === image.width &&
       receipt.height === image.height
     ) {
-      store.confirmScreenshot(image.sha256);
+      ledger.apply({ kind: "confirm-screenshot", sha256: image.sha256 });
       return;
     }
   } catch {
@@ -146,19 +147,19 @@ async function uploadEvidence(
 
 /** Sends the captured versions in bounded chunks, retaining every uncertain item. */
 export async function submitDrafts(
-  store: Store,
+  ledger: DraftLedger,
   site: string,
   progress: (done: number, total: number) => void,
 ) {
-  return withSubmissionLock(() => sendSnapshot(store, site, progress));
+  return withSubmissionLock(() => sendSnapshot(ledger, site, progress));
 }
 
 async function sendSnapshot(
-  store: Store,
+  ledger: DraftLedger,
   site: string,
   progress: (done: number, total: number) => void,
 ) {
-  const snapshot = structuredClone(store.items());
+  const snapshot = structuredClone(ledger.snapshot().items);
   const receipts: DeliveryReceipt[] = [];
   const remember = (item: FeedbackItem, outcome: Outcome) =>
     receipts.push({
@@ -171,7 +172,7 @@ async function sendSnapshot(
     const items: FeedbackItem[] = [];
     while (offset < snapshot.length && items.length < maxBatch) {
       const next = snapshot[offset];
-      const imageFailure = await uploadEvidence(store, next);
+      const imageFailure = await uploadEvidence(ledger, next);
       if (imageFailure) {
         remember(next, {
           id: next.id,
@@ -181,7 +182,7 @@ async function sendSnapshot(
           message: imageFailure,
         });
         offset++;
-        store.setReceipts(receipts);
+        ledger.apply({ kind: "set-receipts", receipts });
         progress(receipts.length, snapshot.length);
         continue;
       }
@@ -275,13 +276,18 @@ async function sendSnapshot(
       ) {
         if (outcome.status === "confirmed") {
           if (validIssue(outcome.issue)) {
-            revised = store.confirmSubmitted(item) || revised;
+            revised =
+              ledger.apply({ kind: "confirm-submitted", item }).revised ||
+              revised;
             remember(item, { ...outcome, id: item.id } as Outcome);
             return;
           }
         } else {
           if (outcome.reason === "screenshot" && item.screenshot)
-            store.forgetScreenshot(item.screenshot.sha256);
+            ledger.apply({
+              kind: "forget-screenshot",
+              sha256: item.screenshot.sha256,
+            });
           remember(item, { ...outcome, id: item.id } as Outcome);
           return;
         }
@@ -293,7 +299,7 @@ async function sendSnapshot(
         message: failure,
       });
     });
-    store.setReceipts(receipts);
+    ledger.apply({ kind: "set-receipts", receipts });
     progress(receipts.length, snapshot.length);
     // Stop after a transport/service failure to avoid hammering a quota-limited
     // endpoint; all remaining snapshot items still get explicit receipts.
@@ -316,6 +322,6 @@ async function sendSnapshot(
       break;
     }
   }
-  store.setReceipts(receipts);
+  ledger.apply({ kind: "set-receipts", receipts });
   return { receipts, revised };
 }

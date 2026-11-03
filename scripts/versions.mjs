@@ -46,6 +46,7 @@ export function metadataProblems(slug, meta) {
     "created",
     "author",
     "changesFacts",
+    "prerender",
   ];
   for (const key of Object.keys(meta))
     if (!allowed.includes(key)) problems.push(`unknown field "${key}"`);
@@ -56,6 +57,8 @@ export function metadataProblems(slug, meta) {
   for (const key of ["title", "summary", "author"])
     if (meta[key] !== undefined && typeof meta[key] !== "string")
       problems.push(`${key} must be text`);
+  if (meta.prerender !== undefined && typeof meta.prerender !== "boolean")
+    problems.push("prerender must be true or false");
   if (
     meta.changesFacts !== undefined &&
     (typeof meta.changesFacts !== "string" || !meta.changesFacts.trim())
@@ -85,16 +88,25 @@ export async function discoverVersions(dir = versionsDir) {
     const problems = metadataProblems(slug, meta);
     if (problems.length)
       throw new Error(`versions/${slug}/version.json: ${problems.join("; ")}`);
-    const hasPrerender = await stat(resolve(dir, slug, "prerender.mjs")).then(
+    const prerenderFile = resolve(dir, slug, "prerender.mjs");
+    const hasPrerenderFile = await stat(prerenderFile).then(
       () => true,
       () => false,
     );
+    if (meta.prerender === true && !hasPrerenderFile)
+      throw new Error(
+        `versions/${slug}/version.json: prerender is true but versions/${slug}/prerender.mjs is missing`,
+      );
+    if (meta.prerender !== true && hasPrerenderFile)
+      throw new Error(
+        `versions/${slug}/version.json: versions/${slug}/prerender.mjs exists, so version.json must declare "prerender": true`,
+      );
     found.push({
       slug,
       ...meta,
       title: meta.title ?? slug,
       baseline: slug === baseline,
-      hasPrerender,
+      prerender: meta.prerender === true,
     });
   }
   return found.sort(

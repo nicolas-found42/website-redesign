@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { previewBase } from "./page";
 
 test("the homepage follows the approved story around the deployed drawings", async ({
   page,
@@ -31,7 +32,7 @@ test("#168: services lead into complete testimonials without scripting [producti
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4179/website-redesign/current/");
+  await page.goto(`${previewBase("current")}/`);
   await expect(page.locator("#briefing")).toHaveCount(0);
   await expect(page.locator("#services + #testimonials")).toHaveCount(1);
   await expect(page.locator("#testimonials .testimonial-card")).toHaveCount(5);

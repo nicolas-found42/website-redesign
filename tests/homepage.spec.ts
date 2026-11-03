@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { fits, previewBase } from "./page";
 
 /**
  * #151: the audience skews 45+, so body copy and the small print that carries
@@ -348,9 +349,7 @@ test("the companies row keeps proportions and fits without scrolling at any widt
         0.05,
       );
     }
-    const pageFits = await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    );
+    const pageFits = await fits(page);
     expect(pageFits, `${width}px`).toBe(true);
   }
 });
@@ -427,12 +426,7 @@ test("the named marks fit without sideways overflow at 390px and 1440px", async 
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.evaluate(() => document.fonts.ready);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-      `${width}px`,
-    ).toBe(true);
+    expect(await fits(page), `${width}px`).toBe(true);
     const overflow = await page
       .locator("#companies .company-logo-name")
       .evaluateAll((elements) =>
@@ -454,7 +448,7 @@ test("the companies strip moves without script at phone and desktop widths [prod
       viewport: { width, height: 742 },
     });
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:4179/website-redesign/current/");
+    await page.goto(`${previewBase("current")}/`);
     const region = page.getByRole("region", {
       name: "Teams we have worked with",
     });
@@ -465,11 +459,7 @@ test("the companies strip moves without script at phone and desktop widths [prod
     await expect
       .poll(async () => (await mark.boundingBox())?.x)
       .toBeLessThan(first!.x - 2);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    expect(await fits(page)).toBe(true);
     await context.close();
   }
 });
@@ -492,10 +482,6 @@ test("the companies strip is still and shows every mark in wrapped rows with red
     expect(last!.y).toBeGreaterThan(first!.y);
     await page.waitForTimeout(150);
     expect((await marks.first().boundingBox())!.x).toBe(first!.x);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    expect(await fits(page)).toBe(true);
   }
 });

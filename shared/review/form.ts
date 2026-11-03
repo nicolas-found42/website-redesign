@@ -1,6 +1,7 @@
 import { sectionGloss } from "./target-meta";
 import { versionSlug } from "./paths";
 import type { Change, FeedbackItem, Kind, Priority } from "./store";
+import type { Screenshot } from "./model";
 import { clean, isMediaKind, isTextKind, type Target } from "./target";
 
 export const esc = (text: string) =>
@@ -96,7 +97,7 @@ const choices = (
  * look like, where it should go — and every item asks why and how much it
  * matters.
  */
-export function formMarkup({
+function formMarkup({
   askName,
   sections,
 }: {
@@ -225,7 +226,7 @@ const setValue = (form: HTMLFormElement, name: string, value = "") => {
 };
 
 /** Shows the fields the chosen kind and action need, and only those. */
-export function syncForm(form: HTMLFormElement) {
+function syncForm(form: HTMLFormElement) {
   // "Not sure yet" (no kind chosen) still needs somewhere to write, so the
   // target's suggested kind's fields stay on screen (#121).
   const kind = valueOf(form, "kind") || (form.dataset.suggestedKind ?? "");
@@ -273,7 +274,7 @@ const defaultKind = (target: Target): Kind | "" =>
  * new text replaces the old only while the reviewer hasn't edited it, and it
  * arrives selected so a paste replaces it rather than appending (#118).
  */
-export function applyTarget(
+function applyTarget(
   form: HTMLFormElement,
   target: Target,
   can: { widen: boolean; narrow: boolean; repick: boolean },
@@ -326,7 +327,7 @@ export function applyTarget(
 }
 
 /** Loads a saved item into the form for editing. */
-export function fillForm(form: HTMLFormElement, item: FeedbackItem) {
+function fillForm(form: HTMLFormElement, item: FeedbackItem) {
   const { change } = item;
   form.dataset.kindChosen = "yes";
   form.dataset.suggestedKind = change.kind;
@@ -409,7 +410,7 @@ const inferredKinds = (form: HTMLFormElement, target: Target): Kind[] => {
  * The kind is optional (#121): when the reviewer hasn't chosen one, the fields
  * they filled decide it, and only a comment nobody has written yet asks for it.
  */
-export function readForm(
+function readForm(
   form: HTMLFormElement,
   target: Target,
 ): { errors: [string, string][]; value?: FormValue } {
@@ -576,7 +577,7 @@ function showSummary(form: HTMLFormElement, errors: [string, string][]) {
  * Progressive by default (#122): one Save reveals only the first fix so no
  * error wall lands at once. Each later Save focuses the next missing answer.
  */
-export function showErrors(form: HTMLFormElement, errors: [string, string][]) {
+function showErrors(form: HTMLFormElement, errors: [string, string][]) {
   const shown = new Map(errors.slice(0, 1));
   form.querySelectorAll<HTMLElement>(".field-error").forEach((el) => {
     const name = el.id.slice(2);
@@ -678,4 +679,291 @@ function watchFields(form: HTMLFormElement) {
     },
     true,
   );
+}
+
+const targetReason = "tool-reason";
+
+/** Which way the current selection can grow, shrink, or be replaced. */
+export interface FormTools {
+  widen: boolean;
+  narrow: boolean;
+  repick: boolean;
+}
+
+export interface FeedbackFormOptions {
+  askName: boolean;
+  sections: { name: string; selector: string }[];
+  onSubmit: (event: SubmitEvent) => void;
+  onScreenshotFile: (file: File) => void;
+}
+
+/**
+ * The feedback dialog's form, owning its markup and every element it queries.
+ * The review flow names what changed — a target, a saved item, an image, a
+ * busy step — and this object keeps the fields, preview and tool states in
+ * step. No caller needs to know a `data-*` name.
+ */
+export class FeedbackForm {
+  readonly element: HTMLFormElement;
+  private target?: Target;
+  private image?: Screenshot;
+  private busy = false;
+  private readonly reason: HTMLElement;
+  private readonly stopLayout: () => void;
+  private readonly panel: HTMLDialogElement;
+
+  constructor(panel: HTMLDialogElement, options: FeedbackFormOptions) {
+    this.panel = panel;
+    this.panel.innerHTML = formMarkup({
+      askName: options.askName,
+      sections: options.sections,
+    });
+    this.element = panel.querySelector("form")!;
+    this.element.querySelector(".current")!.classList.add("is-pinned");
+
+    const reason = document.createElement("p");
+    reason.className = "tool-reason";
+    reason.dataset.reason = targetReason;
+    reason.id = targetReason;
+    reason.style.cssText =
+      "margin:6px 0 0;color:#5e5e58;font-size:13px;display:none";
+    this.element.querySelector(".target-tools")?.after(reason);
+    this.reason = reason;
+
+    const form = this.element;
+    form.addEventListener("change", (event) => {
+      if ((event.target as HTMLInputElement).name === "kind")
+        form.dataset.kindChosen = "yes";
+      syncForm(form);
+    });
+    // An answered field stops saying what it was missing.
+    const answered = (event: Event) => {
+      const { name } = event.target as HTMLInputElement;
+      const error = form.querySelector(`#e-${name}`);
+      if (error) error.textContent = "";
+      (event.target as Element).removeAttribute("aria-invalid");
+    };
+    form.addEventListener("input", answered);
+    form.addEventListener("change", answered);
+    form.addEventListener("submit", options.onSubmit);
+    form
+      .querySelector<HTMLInputElement>("#f-screenshot")!
+      .addEventListener("change", (event) => {
+        const file = (event.target as HTMLInputElement).files?.[0];
+        if (file) options.onScreenshotFile(file);
+      });
+
+    const body = form.querySelector<HTMLElement>(".panel-body")!;
+    const showMore = () =>
+      body.classList.toggle(
+        "has-more",
+        body.scrollTop + body.clientHeight < body.scrollHeight - 1,
+      );
+    const resizing = new ResizeObserver(showMore);
+    resizing.observe(body);
+    const changing = new MutationObserver(showMore);
+    changing.observe(body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true,
+    });
+    body.addEventListener("scroll", showMore);
+    this.stopLayout = () => {
+      resizing.disconnect();
+      changing.disconnect();
+      body.removeEventListener("scroll", showMore);
+    };
+  }
+
+  get screenshot(): Screenshot | undefined {
+    return this.image;
+  }
+
+  set screenshot(next: Screenshot | undefined) {
+    this.image = next;
+    this.drawScreenshot();
+  }
+
+  setScreenshotStatus(text: string) {
+    this.element.querySelector<HTMLElement>(
+      "[data-screenshot-status]",
+    )!.textContent = text;
+  }
+
+  /** Disables the form's controls while an image is being prepared. */
+  set screenshotBusy(busy: boolean) {
+    this.busy = busy;
+    const form = this.element;
+    if (busy) {
+      form
+        .querySelectorAll<HTMLButtonElement | HTMLInputElement>(
+          "button, #f-screenshot",
+        )
+        .forEach((control) => {
+          control.dataset.wasDisabled = String(control.disabled);
+          control.disabled = true;
+        });
+      return;
+    }
+    form
+      .querySelectorAll<HTMLButtonElement | HTMLInputElement>(
+        "[data-was-disabled]",
+      )
+      .forEach((control) => {
+        control.disabled = control.dataset.wasDisabled === "true";
+        delete control.dataset.wasDisabled;
+      });
+    form.querySelector<HTMLInputElement>("#f-screenshot")!.value = "";
+  }
+
+  /** False before the browser has offered a way to capture the tab. */
+  setCanCapture(available: boolean) {
+    this.element.querySelector<HTMLButtonElement>(
+      '[data-act="capture"]',
+    )!.disabled = !available;
+    if (!available)
+      this.element.querySelector<HTMLElement>(
+        "[data-capture-hint]",
+      )!.textContent =
+        "Native tab capture is unavailable here. Attach a screenshot file or continue with written feedback.";
+  }
+
+  applyTarget(target: Target, can: FormTools) {
+    this.target = target;
+    applyTarget(this.element, target, can);
+    this.showTools(can);
+    this.drawScreenshot();
+  }
+
+  fill(item: FeedbackItem) {
+    fillForm(this.element, item);
+  }
+
+  read(): { errors: [string, string][]; value?: FormValue } {
+    if (!this.target) return { errors: [] };
+    return readForm(this.element, this.target);
+  }
+
+  showErrors(errors: [string, string][]): HTMLElement | null {
+    return showErrors(this.element, errors);
+  }
+
+  focusScreenshot() {
+    this.element.querySelector<HTMLInputElement>("#f-screenshot")?.focus();
+  }
+
+  /** The name first, once; then new words when rewording; else the kind. */
+  focusInitial() {
+    const form = this.element;
+    const kind = form.querySelector<HTMLInputElement>(
+      'input[name="kind"]:checked',
+    );
+    (
+      form.querySelector<HTMLElement>('[name="reviewer"]') ??
+      (kind?.value === "wording"
+        ? form.querySelector<HTMLElement>('[name="proposed"]')
+        : null) ??
+      kind ??
+      form.querySelector<HTMLElement>('input[name="kind"]:not(:disabled)')
+    )?.focus();
+  }
+
+  get open() {
+    return this.panel.open;
+  }
+
+  show() {
+    if (!this.panel.open) this.panel.showModal();
+  }
+
+  close() {
+    this.panel.close();
+  }
+
+  get busyWithImage() {
+    return this.busy;
+  }
+
+  dispose() {
+    this.stopLayout();
+  }
+
+  private drawScreenshot() {
+    if (!this.target) return;
+    const preview = this.element.querySelector<HTMLElement>(
+      "[data-screenshot-preview]",
+    )!;
+    preview.replaceChildren();
+    if (this.image?.dataUrl) {
+      const image = document.createElement("img");
+      image.src = this.image.dataUrl;
+      image.alt = `Screenshot of ${this.target.element} in ${sectionGloss(this.target.section)} on ${this.target.pageName}`;
+      preview.append(image);
+      const caption = document.createElement("p");
+      caption.className = "hint";
+      caption.textContent = `${this.image.source === "tab" ? "Native tab capture" : "Attached screenshot — check that target and reviewed state match"}. ${this.image.width} × ${this.image.height}.`;
+      preview.append(caption);
+    }
+    this.element.querySelector<HTMLButtonElement>(
+      '[data-act="remove-screenshot"]',
+    )!.hidden = !this.image;
+  }
+
+  /**
+   * Names each target tool by its effect and never leaves a dead grey button:
+   * an impossible tool is renamed for the reviewer, described by its reason and
+   * explained on screen, while keeping the stable accessible name the shipped
+   * journey looks for.
+   */
+  private showTools(can: FormTools) {
+    const tools: { act: string; name: string; impossible: string }[] = [
+      {
+        act: "wider",
+        name: "Larger area — select a bigger part of the page",
+        impossible: "nothing larger to select here",
+      },
+      {
+        act: "narrower",
+        name: "Smaller area — go back to the smaller part",
+        impossible: "already the smallest part of this selection",
+      },
+      {
+        act: "repick",
+        name: "Pick again — choose a different part of the page",
+        impossible: "this page isn’t open for picking",
+      },
+    ];
+    for (const tool of tools) {
+      const button = this.element.querySelector<HTMLButtonElement>(
+        `[data-act="${tool.act}"]`,
+      );
+      if (!button) continue;
+      const enabled =
+        tool.act === "wider"
+          ? can.widen
+          : tool.act === "narrower"
+            ? can.narrow
+            : can.repick;
+      button.disabled = !enabled;
+      button.setAttribute(
+        "aria-label",
+        enabled ? tool.name : `${tool.name} — ${tool.impossible}`,
+      );
+      // #125: an impossible tool is never a silent grey pill. It stays put and
+      // self-explaining instead of vanishing, so the shipped journey can still
+      // find it, name it and assert its disabled state.
+      if (enabled) button.removeAttribute("aria-describedby");
+      else button.setAttribute("aria-describedby", targetReason);
+    }
+    this.reason.textContent =
+      !can.widen && !can.narrow
+        ? "You’ve reached the smallest and largest part of this selection."
+        : !can.widen
+          ? "There’s nothing larger around this to select."
+          : !can.narrow
+            ? "Already the smallest part of this selection."
+            : "";
+    this.reason.style.display = !can.widen || !can.narrow ? "block" : "none";
+  }
 }
