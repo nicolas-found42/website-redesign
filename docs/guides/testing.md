@@ -77,8 +77,9 @@ only one comparison arm.
 
 CI prepares each shard with `scripts/list-project-shard.mjs`: it applies native
 sharding within each configured project and combines the selected tests into
-one native test list. This keeps every engine represented across runners rather
-than concentrating WebKit on the last runner. Native file/serial groups remain
+one native test list. Project shard indices are cyclically staggered so neither
+WebKit nor the same expensive file cohort concentrates on one runner.
+Native file/serial groups remain
 intact; only the large, context-isolated drawing and review-mode specs explicitly
 allow test-level sharding. The selector round-trips the test list and checks
 exact test IDs before execution. The worker cap and browser coverage are unchanged.

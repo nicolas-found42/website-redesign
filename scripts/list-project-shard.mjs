@@ -58,12 +58,19 @@ function tests(report) {
   return result;
 }
 
-const projects = list().config.projects.map((project) => project.name);
-// Native sharding preserves file/serial groups and the specs that explicitly
-// permit test-level sharding. Apply it within each engine, not across engines.
-const selected = projects.flatMap((project) =>
-  tests(list(`--project=${project}`, `--shard=${shard}`)),
+// Validate the requested shard with Playwright before deriving project shards.
+const projects = list(`--shard=${shard}`).config.projects.map(
+  (project) => project.name,
 );
+const [current, total] = shard.split("/").map(Number);
+// Keep native file/serial groups, but stagger projects so the same expensive
+// file cohort does not land on one runner in every browser engine.
+const selected = projects.flatMap((project, index) => {
+  const projectShard = ((current - 1 - (index % total) + total) % total) + 1;
+  return tests(
+    list(`--project=${project}`, `--shard=${projectShard}/${total}`),
+  );
+});
 if (selected.length === 0) throw new Error(`Shard ${shard} selected no tests.`);
 writeFileSync(outputFile, `${selected.map((test) => test.line).join("\n")}\n`);
 
