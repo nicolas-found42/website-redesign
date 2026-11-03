@@ -125,9 +125,7 @@ async function settle(page: import("@playwright/test").Page) {
   // reveal before advancing, then all final opacities, without forcing state.
   const targets = await page.locator("[data-reveal]").all();
   for (const target of targets) {
-    await target.evaluate((element) =>
-      element.scrollIntoView({ block: "center", behavior: "instant" }),
-    );
+    await target.scrollIntoViewIfNeeded();
     await expect(target).toHaveClass(/\bis-in\b/);
     // Do not serialize entrance durations: visit the next reveal while this
     // one animates, then verify every target's actual final opacity below.
