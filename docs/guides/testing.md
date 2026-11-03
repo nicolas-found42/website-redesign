@@ -90,3 +90,6 @@ Accessibility scans still observe each reveal entering before scrolling on, but
 verify final opacities together so independent entrance durations overlap.
 Contributor drawing scenarios set the intended motion preference before their
 first navigation rather than loading the same page twice.
+Resize-during-transition scenarios let a wide rail jump land at its selected
+article before the next resize. They do not scroll the shared sticky drawing,
+which can navigate to a different article in this scroll-controlled section.

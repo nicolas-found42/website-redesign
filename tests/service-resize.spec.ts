@@ -146,7 +146,27 @@ for (const [name, id] of [
       await page.getByRole("button", { name, exact: true }).click();
       const field =
         width <= 960 ? portrait : page.locator(".services-art .system-field");
-      await field.scrollIntoViewIfNeeded();
+      if (width <= 960) {
+        await field.scrollIntoViewIfNeeded();
+      } else {
+        // The rail already scrolls to the selected article. Scrolling the
+        // shared sticky drawing instead can select a different article, or
+        // leave that jump moving when the next resize begins.
+        const article = page.locator(`#service-${id}`);
+        await expect
+          .poll(
+            () =>
+              article.evaluate((element) => {
+                const box = element.getBoundingClientRect();
+                return (
+                  box.top <= innerHeight / 2 && box.bottom >= innerHeight / 2
+                );
+              }),
+            { intervals: [100] },
+          )
+          .toBe(true);
+        await expect(field).toBeInViewport();
+      }
       await expect
         .poll(
           async () =>
